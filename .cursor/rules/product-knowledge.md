@@ -1,6 +1,6 @@
 ---
-description: ThoughtSpot product context and domain knowledge for development
-globs: ["src/**/*.tsx", "src/**/*.ts"]
+description: ThoughtSpot product terminology and domain knowledge including Answer, Liveboard, SpotIQ, Worksheet, Monitor, Connection, and SpotApp concepts. Use when prototypes reference ThoughtSpot features, user roles, or product-specific UI patterns. Do NOT load for generic UI work unrelated to ThoughtSpot features.
+alwaysApply: false
 ---
 
 # ThoughtSpot Product Knowledge

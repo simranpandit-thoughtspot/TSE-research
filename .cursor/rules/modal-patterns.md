@@ -1,6 +1,6 @@
 ---
-description: Modal patterns M1-M4 for Radiant prototypes
-globs: ["src/prototypes/**/*.tsx", "src/components/Modal/**/*"]
+description: Modal and dialog patterns including size selection (M1-M4), wizard modals, subnavigation modals, splashscreen modals, footer button placement, and progress bars. Use when building modals, dialogs, confirmation prompts, or multi-step wizards. Do NOT use for inline alerts or toasts (see widget-patterns.md).
+alwaysApply: false
 ---
 
 # Modal Patterns (M1-M4)

@@ -1,5 +1,5 @@
 ---
-description: Complete inventory of Radiant components with use cases and selection guidance
+description: Complete inventory of 72+ Radiant components with decision tree for selecting the right component. Use when choosing between Button/TextInput/Table/Select/Modal/Alert/Chip/Avatar/Menu/Tabs/Accordion and other components, or when checking if a component already exists before creating a custom one.
 globs: ["src/prototypes/**/*.tsx", "src/components/**/*.tsx"]
 ---
 

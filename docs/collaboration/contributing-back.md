@@ -1,6 +1,6 @@
 # Contributing Back
 
-How to contribute your improvements back to the main Radiant Prototyping Kit.
+How to contribute your improvements back to the main Radiant Play.
 
 ## Why Contribute?
 
@@ -95,9 +95,9 @@ git commit -m "Add: DatePicker component
 git push origin contribution/your-feature-name
 ```
 
-Then on GitHub:
+Then on galaxy:
 
-1. Go to the upstream repository
+1. Go to `https://galaxy.corp.thoughtspot.com/mohammed-faris/radiantplay`
 2. Click "Pull requests" → "New pull request"
 3. Click "compare across forks"
 4. Select your fork and branch

@@ -1,10 +1,10 @@
-# Radiant Prototyping Kit — To-Do
+# Radiant Play — To-Do
 
 ---
 
 ## Documentation
 
-- [ ] Update `SETUP-GUIDE.md` example prototypes table — some listed prototypes have been removed or renamed
+- [x] ~~Update `SETUP-GUIDE.md` example prototypes table~~ — done 2026-03-04
 - [ ] `FORK-WORKFLOW.md` — add section on syncing a fork with upstream after a major update
 
 ---
@@ -28,7 +28,7 @@
 ## Prototypes & Registry
 
 - [ ] Add thumbnail images to ImpersonationV2, MuseChat, SpotterModel in the registry
-- [ ] Archive or remove the `_examples/FilterDialog` example (superseded by FilterModal component)
+- [x] ~~Archive or remove the `_examples/FilterDialog` example~~ — done 2026-03-04
 
 ---
 
@@ -47,3 +47,6 @@
 - [x] Changelog v2.1.0 entry added — 2026-03-02
 - [x] Rollup path traversal vulnerability patched (GHSA-mw96-cpmx-2vgc) — 2026-03-02
 - [x] Stale planning docs and completed .cursor/plans/ cleaned up — 2026-03-03
+- [x] Add Claude Code support (CLAUDE.md + memory baseline) — 2026-03-04
+- [x] Archive planning docs to docs/archive/ — 2026-03-04
+- [x] Sync project.config.ts with all 8 prototypes — 2026-03-04

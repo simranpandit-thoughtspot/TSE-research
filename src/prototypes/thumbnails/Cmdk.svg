@@ -1,5 +1,5 @@
 <svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="800" height="450" fill="#1D232F"/>
+  <rect width="800" height="450" fill="#E8EBF0"/>
   <rect x="200" y="80" width="400" height="290" rx="12" fill="white"/>
   <rect x="200" y="80" width="400" height="50" fill="#F6F8FA"/>
   <circle cx="230" cy="105" r="10" fill="#A5ACB9"/>
@@ -10,5 +10,5 @@
   <rect x="220" y="225" width="300" height="12" rx="4" fill="#EAEDF2"/>
   <rect x="220" y="250" width="270" height="12" rx="4" fill="#EAEDF2"/>
   <rect x="200" y="340" width="400" height="30" fill="#F6F8FA"/>
-  <text x="400" y="410" fill="white" font-family="system-ui" font-size="20" text-anchor="middle" font-weight="500">Command Palette</text>
+  <text x="400" y="410" fill="#64748B" font-family="system-ui" font-size="20" text-anchor="middle" font-weight="500">Command Palette</text>
 </svg>

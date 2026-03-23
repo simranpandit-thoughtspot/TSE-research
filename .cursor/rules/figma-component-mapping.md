@@ -1,6 +1,6 @@
 ---
-description: Rules for mapping Figma designs to Radiant components
-globs: ["src/prototypes/**/*.tsx"]
+description: Mapping tables from Figma layer names, variants, colors, typography, and icons to Radiant components and design tokens. Use when converting a Figma screenshot or Figma design data into Radiant prototype code. Do NOT use for general prototyping without Figma input.
+alwaysApply: false
 ---
 
 # Figma-to-Radiant Component Mapping

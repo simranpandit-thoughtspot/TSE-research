@@ -390,10 +390,10 @@ Here's the complete lifecycle of building a prototype in this project:
 # 1. Fork the repo on GitHub (click the "Fork" button on the repo page)
 
 # 2. Clone your fork to your computer
-git clone https://github.com/YOUR-USERNAME/figmaradiant.git
+git clone https://github.com/YOUR-USERNAME/radiantplay.git
 
 # 3. Open the folder
-cd figmaradiant
+cd radiantplay
 
 # 4. Install dependencies (downloads all the libraries the project needs)
 npm install
@@ -402,14 +402,14 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) — you should see the Radiant Prototyping Kit homepage.
+Open [http://localhost:5173](http://localhost:5173) — you should see the Radiant Play homepage.
 
 ```
 What just happened:
 
   GitHub (cloud)                Your Computer
   ┌────────────────┐           ┌────────────────────────────┐
-  │ figmaradiant   │  clone →  │ figmaradiant/              │
+  │ radiantplay   │  clone →  │ radiantplay/              │
   │ (your fork)    │           │ ├── src/                   │
   │                │           │ │   ├── components/  (35+) │
   │                │           │ │   ├── prototypes/        │
@@ -591,7 +591,7 @@ your branch   = Your personal workspace
 `origin` is the nickname for your GitHub repo's URL. When you say `git push origin`, you're saying "upload to GitHub."
 
 ```
-origin = https://github.com/your-username/figmaradiant.git
+origin = https://github.com/your-username/radiantplay.git
          (just a shortcut so you don't type the full URL every time)
 ```
 
@@ -609,4 +609,4 @@ origin = https://github.com/your-username/figmaradiant.git
 
 ---
 
-*Built for ThoughtSpot designers who are new to code.* — Radiant Prototyping Kit
+*Built for ThoughtSpot designers who are new to code.* — Radiant Play

@@ -1,6 +1,5 @@
 ---
-description: Patterns for interactive states — loading, error, empty, disabled, and transitions in prototypes
-globs: ["src/prototypes/**/*.tsx"]
+description: Patterns for interactive states including loading spinners, skeleton screens, error states, empty states, disabled states, form validation, and transitions/animations. Use when implementing loading behavior, error handling, disabled controls with tooltips, or animated transitions in prototypes.
 alwaysApply: false
 ---
 

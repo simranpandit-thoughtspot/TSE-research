@@ -1,6 +1,6 @@
 # Forking Guide
 
-How to fork and set up the Radiant Prototyping Kit for your own use.
+How to fork and set up the Radiant Play for your own use.
 
 ## Overview
 
@@ -13,7 +13,7 @@ Each designer should work in their own fork of the repository. This allows:
 
 ### 1. Fork the Repository
 
-1. Go to the GitHub repository
+1. Go to the galaxy repository at `https://galaxy.corp.thoughtspot.com/mohammed-faris/radiantplay`
 2. Click the **Fork** button in the top right
 3. Select your account as the destination
 4. Wait for the fork to complete
@@ -22,13 +22,13 @@ Each designer should work in their own fork of the repository. This allows:
 
 ```bash
 # Clone your fork (replace YOUR-USERNAME)
-git clone https://github.com/YOUR-USERNAME/figmaradiant.git
+git clone https://galaxy.corp.thoughtspot.com/YOUR-USERNAME/radiantplay.git
 
 # Navigate to the project
-cd figmaradiant
+cd radiantplay
 
 # Add upstream remote for syncing
-git remote add upstream https://github.com/faris-ts/figmaradiant.git
+git remote add upstream https://galaxy.corp.thoughtspot.com/mohammed-faris/radiantplay.git
 ```
 
 ### 3. Install Dependencies
@@ -84,7 +84,15 @@ Use descriptive prefixes:
 
 ## Syncing with Upstream
 
-Keep your fork updated with the main repository:
+The easiest way is to use the `/sync-upstream` skill in Cursor — it handles fetching, merging, conflict resolution in `registry.ts`, build verification, and pushing automatically.
+
+Just open Cursor in your repo and type:
+
+```
+/sync-upstream
+```
+
+### Manual sync (if needed)
 
 ```bash
 # Fetch upstream changes
@@ -102,11 +110,13 @@ git push origin main
 
 ### Resolving Conflicts
 
-If you have conflicts:
+The most common conflict is in `src/prototypes/registry.ts`. The `/sync-upstream` skill resolves this automatically — it keeps upstream entries first and preserves your prototype entries with `section: 'mine'`.
+
+If you're resolving manually:
 
 1. Git will show which files have conflicts
 2. Open those files and look for conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`)
-3. Manually resolve by choosing which changes to keep
+3. Keep both sides — upstream entries first, your entries below
 4. Stage the resolved files: `git add <filename>`
 5. Complete the merge: `git commit`
 
@@ -168,7 +178,7 @@ git checkout -b contribution/my-feature
 git push origin contribution/my-feature
 ```
 
-Then create a Pull Request on GitHub from your fork to the upstream repository.
+Then create a Pull Request on galaxy from your fork to the upstream repository.
 
 ### PR Guidelines
 
@@ -197,8 +207,8 @@ If multiple designers are working on related features, coordinate to avoid confl
 
 ```bash
 # Start fresh
-git clone https://github.com/YOUR-USERNAME/figmaradiant.git
-cd figmaradiant
+git clone https://galaxy.corp.thoughtspot.com/YOUR-USERNAME/radiantplay.git
+cd radiantplay
 npm install
 npm run dev
 

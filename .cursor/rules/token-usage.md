@@ -1,6 +1,6 @@
 ---
-description: Design token usage guidance for Radiant components and prototypes
-globs: ["src/**/*.tsx", "src/**/*.ts", "src/**/*.css"]
+description: Design token reference for colors, spacing, and typography. Covers the 3-layer token hierarchy (reference/system/component), spacing scale (A-N), CSS variables, and common anti-patterns like hardcoded hex values or magic pixel numbers. Always consult when writing styles.
+globs: ["src/prototypes/**/*.tsx", "src/components/**/*.tsx", "src/components/**/*.css"]
 ---
 
 # Radiant Design Token Usage Guide

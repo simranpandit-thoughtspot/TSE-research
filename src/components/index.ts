@@ -89,3 +89,6 @@ export type { FormField as FormSchemaField } from './FormBuilder';
 export { DynamicForm, hasDynamicFormError } from './DynamicForm';
 export type { DynamicFormProps } from './DynamicForm';
 export * from './FacetSortBar';
+
+// Liveboard
+export * from './LiveboardHeader';

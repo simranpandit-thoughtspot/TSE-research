@@ -1,6 +1,6 @@
 ---
-description: Folder structure and organization for Radiant prototypes
-globs: ["src/prototypes/**/*"]
+description: Folder structure, file organization, naming conventions, thumbnail creation, and registry registration for Radiant prototypes. Use when creating a new prototype folder, organizing files into simple/medium/complex structures, creating thumbnails, or registering a prototype in registry.ts.
+alwaysApply: false
 ---
 
 # Radiant Prototype Structure Guide

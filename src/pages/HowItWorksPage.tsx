@@ -1,9 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { systemColors, referenceColors } from '../tokens/colors';
-import { spacing } from '../tokens/spacing';
-import { Icon } from '../components/icons';
-import { Button } from '../components/Button';
+import { getComponentCount } from '../data/componentRegistry';
 
 const PRIORITY_FILES = [
   { priority: 1, file: '_orchestration.md', role: 'Router', desc: 'Determines which guidelines to consult based on the task type' },
@@ -19,103 +16,166 @@ const PRIORITY_FILES = [
 ];
 
 const DECISION_BRANCHES = [
-  { input: 'Figma screenshot or URL', route: 'figma-component-mapping.md → prototype-generation.md', color: systemColors.light['content-brand'] },
-  { input: 'Text description of a UI', route: 'prototype-generation.md + component-inventory.md', color: systemColors.light['content-success'] },
-  { input: 'Dashboard / admin / settings', route: 'layout-patterns.md → prototype-generation.md', color: '#8B5CF6' },
-  { input: 'Modal / wizard / dialog', route: 'modal-patterns.md → prototype-generation.md', color: referenceColors.yellow['70'] },
-  { input: 'Table / menu / alert / toast', route: 'widget-patterns.md → prototype-generation.md', color: systemColors.light['content-failure'] },
+  { input: 'Figma screenshot or URL', route: 'figma-component-mapping → prototype-generation', color: '#2770EF', emoji: '🎨' },
+  { input: 'Text description of a UI', route: 'prototype-generation + component-inventory', color: '#06BF7F', emoji: '💬' },
+  { input: 'Dashboard / admin / settings', route: 'layout-patterns → prototype-generation', color: '#7B61FF', emoji: '📊' },
+  { input: 'Modal / wizard / dialog', route: 'modal-patterns → prototype-generation', color: '#F5A623', emoji: '🪟' },
+  { input: 'Table / menu / alert / toast', route: 'widget-patterns → prototype-generation', color: '#EF4444', emoji: '📋' },
 ];
 
 export const HowItWorksPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div style={styles.container}>
-      <main style={styles.main}>
-        {/* Back link */}
-        <div style={styles.backRow}>
-          <Button variant="tertiary" size="small" onClick={() => navigate('/playground')}>
-            &larr; Back to Playground
-          </Button>
-        </div>
+    <div style={styles.page}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        .hiw-back:hover { background: rgba(255,255,255,.12) !important; color: rgba(255,255,255,.7) !important; border-color: rgba(255,255,255,.2) !important; }
+        .hiw-branch:hover { background: rgba(255,255,255,.08) !important; transform: translateX(4px); }
+        .hiw-priority:hover { background: rgba(255,255,255,.08) !important; }
+        .hiw-reuse:hover { background: rgba(255,255,255,.08) !important; transform: translateY(-3px); }
+        .hiw-cta:hover { transform: translateY(-3px) !important; box-shadow: 0 12px 36px rgba(39,112,239,.5) !important; }
+        .hiw-cta:hover svg { transform: translateX(3px); }
+        .hiw-cta svg { transition: transform .2s; }
+        @keyframes drawLine { from { stroke-dashoffset: 600; } to { stroke-dashoffset: 0; } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(.75); } }
+      `}</style>
 
-        {/* Hero */}
-        <div style={styles.hero}>
-          <div style={styles.heroBadge}>
-            <span style={styles.heroBadgeIcon}>✦</span>
+      {/* ── Chrome ──────────────────────────────────────────── */}
+      <div style={styles.wordmark} onClick={() => navigate('/')} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate('/')}>
+        <div style={styles.wordmarkIcon}>R</div>
+        <div style={styles.wordmarkText}>Radiant<span style={{ color: '#ABC7F9' }}>Play</span></div>
+      </div>
+
+      <button className="hiw-back" style={styles.backBtn} onClick={() => navigate('/')}>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M12.6667 8H3.33334" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M8 3.33334L3.33334 8L8 12.6667" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        Back to home
+      </button>
+
+      {/* ── Hero ────────────────────────────────────────────── */}
+      <section style={styles.hero}>
+        <div style={styles.heroInner}>
+          <div style={styles.heroEyebrow}>
+            <div style={styles.heroDot} />
+            Behind the scenes
           </div>
-          <h1 style={styles.heroTitle}>How Prototyping Works</h1>
-          <p style={styles.heroSubtitle}>
-            When you ask Cursor to build a prototype, it follows a structured system of guideline files.
-            An orchestrator routes the AI to the right files based on your request, ensuring consistent,
-            production-quality output every time.
+          <h1 style={styles.heroTitle}>
+            How prototyping <em style={styles.heroTitleEm}>works</em>
+          </h1>
+          <p style={styles.heroSub}>
+            When you describe a UI, the AI doesn't guess — it follows a structured system of guideline files.
+            An orchestrator routes your request to the right rules, ensuring consistent, production-quality output every time.
           </p>
         </div>
+      </section>
 
-        {/* Section 1: The AI Pipeline */}
-        <section style={styles.section}>
-          <h2 style={styles.sectionTitle}>The AI Pipeline</h2>
-          <p style={styles.sectionDesc}>
-            Every request flows through a 5-step pipeline. The orchestrator classifies your task,
-            loads the right guidelines, checks existing components, and generates code.
-          </p>
+      {/* ── Section 1: Pipeline ─────────────────────────────── */}
+      <section style={styles.section}>
+        <div style={styles.sectionInner}>
+          <div style={styles.label}>Step by step</div>
+          <h2 style={styles.h2}>The AI pipeline</h2>
+          <p style={styles.sub}>Every request flows through a 5-step pipeline — from your natural language prompt to production-quality React code.</p>
 
-          <div style={styles.pipelineFlow}>
-            {[
-              { label: 'Your prompt', color: systemColors.light['content-brand'], desc: 'Describe what you want in Cursor chat' },
-              { label: 'Orchestrator classifies task', color: systemColors.light['content-success'], desc: '_orchestration.md reads your input type' },
-              { label: 'Loads priority-ordered guidelines', color: '#8B5CF6', desc: 'Up to 10 rule files consulted in order' },
-              { label: 'Checks existing 40+ components', color: referenceColors.yellow['70'], desc: 'Reuses before creating new ones' },
-              { label: 'Generates code', color: systemColors.light['content-failure'], desc: 'Outputs production-quality React + tokens' },
-            ].map((step, i) => (
-              <React.Fragment key={i}>
-                <div style={styles.pipelineStep}>
-                  <div style={{ ...styles.pipelineDot, backgroundColor: step.color }} />
-                  <div>
-                    <div style={styles.pipelineLabel}>{step.label}</div>
-                    <div style={styles.pipelineDesc}>{step.desc}</div>
-                  </div>
-                </div>
-                {i < 4 && <div style={styles.pipelineArrow}>↓</div>}
-              </React.Fragment>
-            ))}
+          {/* Pipeline SVG illustration */}
+          <div style={styles.pipelineWrap}>
+            <svg viewBox="0 0 760 320" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', display: 'block' }}>
+              {/* Connecting line */}
+              <path d="M 380 30 L 380 290" stroke="rgba(113,161,244,.2)" strokeWidth="2" strokeDasharray="6 4" />
+
+              {/* Step nodes */}
+              {[
+                { y: 20, color: '#2770EF', label: 'Your prompt', desc: 'Describe what you want in plain English' },
+                { y: 88, color: '#7B61FF', label: 'Orchestrator classifies', desc: '_orchestration.md reads your input type' },
+                { y: 156, color: '#06BF7F', label: 'Loads guidelines', desc: 'Up to 10 rule files consulted in order' },
+                { y: 224, color: '#F5A623', label: `Checks ${getComponentCount()}+ components`, desc: 'Reuses existing before creating new' },
+                { y: 292, color: '#EF4444', label: 'Generates code', desc: 'Outputs React + TypeScript + tokens' },
+              ].map((step, i) => (
+                <g key={i}>
+                  <circle cx="380" cy={step.y} r="14" fill={step.color} opacity="0.15" />
+                  <circle cx="380" cy={step.y} r="8" fill={step.color} />
+                  <text x="410" y={step.y - 4} fill="#fff" fontSize="14" fontWeight="700" fontFamily="Inter, sans-serif">{step.label}</text>
+                  <text x="410" y={step.y + 14} fill="rgba(255,255,255,.4)" fontSize="12" fontFamily="Inter, sans-serif">{step.desc}</text>
+                  {/* Step number on left */}
+                  <text x="350" y={step.y + 5} fill={step.color} fontSize="13" fontWeight="800" fontFamily="Inter, sans-serif" textAnchor="end">{i + 1}</text>
+                </g>
+              ))}
+            </svg>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Section 2: Smart Routing */}
-        <section style={styles.section}>
-          <h2 style={styles.sectionTitle}>Smart Routing</h2>
-          <p style={styles.sectionDesc}>
-            The orchestrator reads your input type and routes to the most relevant guideline files first.
-            Different inputs trigger different file paths.
-          </p>
+      {/* ── Section 2: Smart Routing ────────────────────────── */}
+      <section style={{ ...styles.section, background: 'radial-gradient(ellipse at 70% 30%, #0d2040 0%, #1D232F 65%)' }}>
+        <div style={styles.sectionInner}>
+          <div style={styles.label}>Intelligent routing</div>
+          <h2 style={styles.h2}>Smart routing</h2>
+          <p style={styles.sub}>The orchestrator reads your input type and routes to the most relevant guideline files. Different inputs trigger different file paths.</p>
 
           <div style={styles.branchGrid}>
             {DECISION_BRANCHES.map((branch, i) => (
-              <div key={i} style={styles.branchCard}>
-                <div style={{ ...styles.branchDot, backgroundColor: branch.color }} />
-                <div>
+              <div key={i} className="hiw-branch" style={styles.branchCard}>
+                <div style={{ ...styles.branchEmoji, background: `${branch.color}20` }}>{branch.emoji}</div>
+                <div style={{ flex: 1 }}>
                   <div style={styles.branchInput}>{branch.input}</div>
                   <div style={styles.branchRoute}>{branch.route}</div>
                 </div>
+                <div style={{ ...styles.branchDot, background: branch.color }} />
               </div>
             ))}
           </div>
-        </section>
 
-        {/* Section 3: Priority Reference Files */}
-        <section style={styles.section}>
-          <h2 style={styles.sectionTitle}>Priority Reference Files</h2>
-          <p style={styles.sectionDesc}>
-            The AI consults these 10 files in priority order. All live in <code style={styles.inlineCode}>.cursor/rules/</code> and
-            are loaded automatically by Cursor based on glob patterns.
+          {/* Routing illustration */}
+          <div style={styles.routingIllustration}>
+            <svg viewBox="0 0 700 160" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', display: 'block' }}>
+              {/* Center node */}
+              <rect x="280" y="55" width="140" height="50" rx="12" fill="rgba(39,112,239,.15)" stroke="rgba(39,112,239,.4)" strokeWidth="1.5" />
+              <text x="350" y="77" fill="#71A1F4" fontSize="11" fontWeight="700" fontFamily="Inter, sans-serif" textAnchor="middle" letterSpacing=".08em">ORCHESTRATOR</text>
+              <text x="350" y="93" fill="rgba(255,255,255,.35)" fontSize="10" fontFamily="Inter, sans-serif" textAnchor="middle">routes your request</text>
+
+              {/* Left: Input */}
+              <rect x="30" y="60" width="120" height="40" rx="10" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.1)" strokeWidth="1" />
+              <text x="90" y="84" fill="rgba(255,255,255,.6)" fontSize="12" fontWeight="600" fontFamily="Inter, sans-serif" textAnchor="middle">Your prompt</text>
+              <path d="M 150 80 L 280 80" stroke="rgba(113,161,244,.3)" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#arrowB)" />
+
+              {/* Right: outputs */}
+              {[
+                { y: 20, label: 'Layout rules', color: '#7B61FF' },
+                { y: 60, label: 'Component check', color: '#06BF7F' },
+                { y: 100, label: 'Token enforcement', color: '#F5A623' },
+                { y: 140, label: 'Code generation', color: '#EF4444' },
+              ].map((item, i) => (
+                <g key={i}>
+                  <path d={`M 420 80 Q 470 ${item.y + 15} 530 ${item.y + 15}`} stroke={`${item.color}50`} strokeWidth="1.5" fill="none" />
+                  <circle cx="530" cy={item.y + 15} r="4" fill={item.color} />
+                  <text x="542" y={item.y + 19} fill="rgba(255,255,255,.55)" fontSize="11" fontWeight="600" fontFamily="Inter, sans-serif">{item.label}</text>
+                </g>
+              ))}
+
+              <defs>
+                <marker id="arrowB" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+                  <path d="M 0 0 L 8 4 L 0 8" fill="none" stroke="rgba(113,161,244,.5)" strokeWidth="1.5" />
+                </marker>
+              </defs>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Section 3: Priority Files ───────────────────────── */}
+      <section style={{ ...styles.section, background: 'radial-gradient(ellipse at 20% 70%, #0a1a12 0%, #1D232F 55%)' }}>
+        <div style={styles.sectionInner}>
+          <div style={styles.label}>Reference system</div>
+          <h2 style={styles.h2}>Priority reference files</h2>
+          <p style={styles.sub}>
+            The AI consults these 10 files in priority order. All live in <code style={styles.inlineCode}>.cursor/rules/</code> and are loaded automatically based on glob patterns.
           </p>
 
           <div style={styles.priorityGrid}>
             {PRIORITY_FILES.map((item) => (
-              <div key={item.priority} style={styles.priorityCard}>
-                <span style={styles.priorityBadge}>{item.priority}</span>
-                <div style={styles.priorityContent}>
+              <div key={item.priority} className="hiw-priority" style={styles.priorityCard}>
+                <div style={styles.priorityNum}>{item.priority}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={styles.priorityFile}>{item.file}</div>
                   <div style={styles.priorityRole}>{item.role}</div>
                   <div style={styles.priorityDesc}>{item.desc}</div>
@@ -123,522 +183,475 @@ export const HowItWorksPage: React.FC = () => {
               </div>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Section 4: Component Reuse */}
-        <section style={styles.section}>
-          <h2 style={styles.sectionTitle}>Component Reuse Strategy</h2>
-          <p style={styles.sectionDesc}>
-            The AI always prefers existing Radiant components. New components are only created when nothing
-            suitable exists — and they stay local to your prototype.
-          </p>
+      {/* ── Section 4: Component Reuse ──────────────────────── */}
+      <section style={{ ...styles.section, background: 'radial-gradient(ellipse at 75% 25%, #150b2a 0%, #1D232F 60%)' }}>
+        <div style={styles.sectionInner}>
+          <div style={styles.label}>Reuse strategy</div>
+          <h2 style={styles.h2}>Component reuse</h2>
+          <p style={styles.sub}>The AI always prefers existing Radiant components. New components are only created when nothing suitable exists — and they stay local to your prototype.</p>
 
           <div style={styles.reuseGrid}>
-            <div style={styles.reuseCard}>
-              <div style={{ ...styles.reuseDot, backgroundColor: systemColors.light['content-success'] }} />
-              <div>
-                <div style={styles.reuseLabel}>Exact match</div>
-                <div style={styles.reuseDesc}>Imports directly from the shared component library</div>
+            {[
+              { emoji: '✅', title: 'Exact match', desc: 'Imports directly from the shared component library', color: '#06BF7F', tag: 'Preferred' },
+              { emoji: '🔧', title: 'Close match', desc: 'Uses existing component with custom props or styling overrides', color: '#2770EF', tag: 'Common' },
+              { emoji: '🆕', title: 'No match', desc: 'Creates a local component in your prototype folder', color: '#F5A623', tag: 'Last resort' },
+            ].map((item, i) => (
+              <div key={i} className="hiw-reuse" style={styles.reuseCard}>
+                <div style={styles.reuseEmoji}>{item.emoji}</div>
+                <h3 style={styles.reuseTitle}>{item.title}</h3>
+                <p style={styles.reuseDesc}>{item.desc}</p>
+                <span style={{ ...styles.reuseTag, background: `${item.color}15`, color: item.color }}>{item.tag}</span>
               </div>
-            </div>
-            <div style={styles.reuseCard}>
-              <div style={{ ...styles.reuseDot, backgroundColor: systemColors.light['content-brand'] }} />
-              <div>
-                <div style={styles.reuseLabel}>Close match</div>
-                <div style={styles.reuseDesc}>Uses existing component with custom props or styling overrides</div>
-              </div>
-            </div>
-            <div style={styles.reuseCard}>
-              <div style={{ ...styles.reuseDot, backgroundColor: referenceColors.yellow['70'] }} />
-              <div>
-                <div style={styles.reuseLabel}>No match</div>
-                <div style={styles.reuseDesc}>Creates a local component in <code style={styles.inlineCode}>src/prototypes/YourProject/components/</code></div>
-              </div>
-            </div>
+            ))}
           </div>
 
-          <div style={styles.reuseNote}>
-            Local components follow the same design-system rules (tokens, forwardRef, TypeScript) but live inside
-            your prototype folder, keeping the shared library clean.
+          {/* Reuse illustration */}
+          <div style={styles.reuseIllustration}>
+            <svg viewBox="0 0 700 120" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', display: 'block' }}>
+              {/* Shared library box */}
+              <rect x="20" y="20" width="200" height="80" rx="16" fill="rgba(6,191,127,.06)" stroke="rgba(6,191,127,.25)" strokeWidth="1.5" />
+              <text x="120" y="50" fill="#06BF7F" fontSize="11" fontWeight="700" fontFamily="Inter, sans-serif" textAnchor="middle" letterSpacing=".06em">SHARED LIBRARY</text>
+              <text x="120" y="68" fill="rgba(255,255,255,.35)" fontSize="11" fontFamily="Inter, sans-serif" textAnchor="middle">{getComponentCount()}+ components</text>
+              <text x="120" y="84" fill="rgba(255,255,255,.25)" fontSize="10" fontFamily="Inter, sans-serif" textAnchor="middle">src/components/</text>
+
+              {/* Arrow */}
+              <path d="M 220 60 L 310 60" stroke="rgba(255,255,255,.15)" strokeWidth="1.5" strokeDasharray="4 3" />
+              <text x="265" y="50" fill="rgba(255,255,255,.25)" fontSize="10" fontWeight="600" fontFamily="Inter, sans-serif" textAnchor="middle">imports</text>
+
+              {/* Prototype box */}
+              <rect x="310" y="20" width="200" height="80" rx="16" fill="rgba(39,112,239,.06)" stroke="rgba(39,112,239,.25)" strokeWidth="1.5" />
+              <text x="410" y="50" fill="#71A1F4" fontSize="11" fontWeight="700" fontFamily="Inter, sans-serif" textAnchor="middle" letterSpacing=".06em">YOUR PROTOTYPE</text>
+              <text x="410" y="68" fill="rgba(255,255,255,.35)" fontSize="11" fontFamily="Inter, sans-serif" textAnchor="middle">Uses shared + local</text>
+              <text x="410" y="84" fill="rgba(255,255,255,.25)" fontSize="10" fontFamily="Inter, sans-serif" textAnchor="middle">src/prototypes/Name/</text>
+
+              {/* Local components */}
+              <path d="M 510 60 L 570 60" stroke="rgba(255,255,255,.1)" strokeWidth="1.5" strokeDasharray="4 3" />
+              <rect x="570" y="30" width="120" height="60" rx="12" fill="rgba(245,166,35,.06)" stroke="rgba(245,166,35,.2)" strokeWidth="1" />
+              <text x="630" y="55" fill="#F5A623" fontSize="10" fontWeight="700" fontFamily="Inter, sans-serif" textAnchor="middle" letterSpacing=".06em">LOCAL ONLY</text>
+              <text x="630" y="72" fill="rgba(255,255,255,.3)" fontSize="10" fontFamily="Inter, sans-serif" textAnchor="middle">components/</text>
+            </svg>
           </div>
-        </section>
 
-        {/* Section 5: Getting Started */}
-        <section style={styles.section}>
-          <h2 style={styles.sectionTitle}>Quick Start</h2>
-          <p style={styles.sectionDesc}>
-            Two ways to create a new prototype. Both auto-register the project in the Playground gallery.
-          </p>
-
-          <div style={styles.optionsGrid}>
-            {/* Option A */}
-            <div style={styles.optionCard}>
-              <div style={styles.optionHeader}>
-                <div style={{ ...styles.optionBadge, background: systemColors.light['content-brand'] }}>A</div>
-                <h3 style={styles.optionTitle}>Tell Cursor in chat</h3>
-              </div>
-              <p style={styles.optionDesc}>
-                Describe what you want in the Cursor chat panel. Cursor will create the prototype folder,
-                register it, and generate the UI in one step.
-              </p>
-              <div style={styles.promptExamples}>
-                <div style={styles.promptItem}>
-                  "Create a new prototype called UserOnboarding with a 3-step wizard"
-                </div>
-                <div style={styles.promptItem}>
-                  "Create a prototype from this" + paste a Figma screenshot
-                </div>
-              </div>
-              <p style={styles.optionHint}>Best for: quick starts, Figma-to-code, when you know what you want</p>
-            </div>
-
-            {/* Option B */}
-            <div style={styles.optionCard}>
-              <div style={styles.optionHeader}>
-                <div style={{ ...styles.optionBadge, background: systemColors.light['content-success'] }}>B</div>
-                <h3 style={styles.optionTitle}>Scaffold via terminal</h3>
-              </div>
-              <p style={styles.optionDesc}>
-                Run the CLI command to generate a boilerplate prototype, then open the file and describe your UI.
-              </p>
-              <div style={styles.codeBlock}>
-                <div style={styles.codeBlockHeader}>Terminal</div>
-                <pre style={styles.codePre}>
-                  <code style={styles.code}>npm run new-prototype MyPrototype</code>
-                </pre>
-              </div>
-              <p style={styles.optionDesc}>
-                Then open <code style={styles.inlineCode}>src/prototypes/MyPrototype/index.tsx</code> and use <strong>Cmd+K</strong> or the Chat panel.
-              </p>
-              <p style={styles.optionHint}>Best for: iterating in stages, starting with template boilerplate</p>
-            </div>
+          <div style={styles.noteCard}>
+            <span style={{ fontSize: '16px', flexShrink: 0 }}>💡</span>
+            <span>
+              Local components follow the same design-system rules (tokens, forwardRef, TypeScript) but live inside your prototype folder, keeping the shared library clean.
+            </span>
           </div>
-        </section>
-
-        {/* Tip */}
-        <div style={styles.tipBar}>
-          <Icon name="info-circle" size="s" />
-          <span>
-            All guideline files live in <code style={styles.inlineCode}>.cursor/rules/</code> and are automatically loaded by Cursor
-            based on glob patterns matching the files you're editing. The orchestrator ensures the AI never misses a relevant rule.
-          </span>
         </div>
+      </section>
 
-        {/* CTA */}
-        <div style={styles.ctaSection}>
-          <button
-            style={styles.ctaPrimary}
-            onClick={() => navigate('/playground')}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(39, 112, 239, 0.4)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(39, 112, 239, 0.3)'; }}
+      {/* ── Tip ─────────────────────────────────────────────── */}
+      <section style={{ ...styles.section, background: 'radial-gradient(ellipse at 50% 50%, #0a1f4d 0%, #1D232F 65%)' }}>
+        <div style={{ ...styles.sectionInner, textAlign: 'center' }}>
+          <div style={styles.noteCardCentered}>
+            <span style={{ fontSize: '18px' }}>📁</span>
+            <span>
+              All guideline files live in <code style={styles.inlineCode}>.cursor/rules/</code> and are automatically loaded by Cursor based on glob patterns matching the files you're editing. The orchestrator ensures the AI never misses a relevant rule.
+            </span>
+          </div>
+
+          <a
+            href="/guide.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hiw-cta"
+            style={styles.cta}
           >
-            Open Playground
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            Getting started guide
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
               <path d="M3.33334 8H12.6667" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M8 3.33334L12.6667 8L8 12.6667" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-          </button>
+          </a>
         </div>
-      </main>
+      </section>
     </div>
   );
 };
 
+/* ── Styles ──────────────────────────────────────────────────────── */
+
 const styles: Record<string, React.CSSProperties> = {
-  container: {
+  page: {
     minHeight: '100vh',
-    background: `linear-gradient(180deg, ${systemColors.light['background-sunken']} 0%, ${systemColors.light['background-base']} 100%)`,
-    fontFamily: '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    background: '#1D232F',
+    fontFamily: '"Inter", system-ui, sans-serif',
+    color: '#fff',
+    WebkitFontSmoothing: 'antialiased',
   },
-  main: {
-    maxWidth: '860px',
-    margin: '0 auto',
-    padding: `${spacing.J}px ${spacing.H}px ${spacing.L}px`,
+
+  // Chrome
+  wordmark: {
+    position: 'fixed',
+    top: 18,
+    left: 32,
+    zIndex: 200,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    cursor: 'pointer',
+    textDecoration: 'none',
   },
-  backRow: {
-    marginBottom: `${spacing.F}px`,
+  wordmarkIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 9,
+    background: 'linear-gradient(135deg, #2770EF 0%, #163772 100%)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 14,
+    fontWeight: 900,
+    color: '#fff',
+    letterSpacing: '-.5px',
+    boxShadow: '0 2px 8px rgba(39,112,239,.4)',
+    flexShrink: 0,
+  },
+  wordmarkText: {
+    fontSize: 14,
+    fontWeight: 800,
+    color: '#fff',
+    letterSpacing: '-.02em',
+    lineHeight: 1,
+  },
+  backBtn: {
+    position: 'fixed',
+    top: 18,
+    left: 160,
+    zIndex: 200,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    fontFamily: '"Inter", system-ui, sans-serif',
+    fontSize: 13,
+    fontWeight: 500,
+    color: 'rgba(255,255,255,.4)',
+    background: 'rgba(255,255,255,.06)',
+    border: '1px solid rgba(255,255,255,.1)',
+    borderRadius: 100,
+    padding: '6px 16px 6px 12px',
+    cursor: 'pointer',
+    transition: 'all .18s',
+    backdropFilter: 'blur(10px)',
   },
 
   // Hero
   hero: {
-    textAlign: 'center',
-    marginBottom: `${spacing.J}px`,
-  },
-  heroBadge: {
-    width: '56px',
-    height: '56px',
-    borderRadius: '16px',
-    background: 'linear-gradient(135deg, #2770EF 0%, #1E5BBB 100%)',
-    display: 'inline-flex',
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: `${spacing.E}px`,
-    boxShadow: '0 8px 24px rgba(39, 112, 239, 0.3)',
+    minHeight: '100vh',
+    padding: '52px 72px',
+    background: 'linear-gradient(145deg, #082559 0%, #163772 40%, #1a3a8a 100%)',
+    position: 'relative',
+    overflow: 'hidden',
   },
-  heroBadgeIcon: {
-    fontSize: '24px',
-    color: '#ffffff',
+  heroInner: {
+    maxWidth: 780,
+    position: 'relative',
+    zIndex: 1,
+  },
+  heroEyebrow: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 8,
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: '.14em',
+    textTransform: 'uppercase',
+    color: '#ABC7F9',
+    marginBottom: 24,
+  },
+  heroDot: {
+    width: 6,
+    height: 6,
+    background: '#71A1F4',
+    borderRadius: '50%',
+    animation: 'pulseDot 2s infinite',
   },
   heroTitle: {
-    fontSize: '36px',
-    fontWeight: 700,
-    color: systemColors.light['content-primary'],
-    marginBottom: `${spacing.D}px`,
-    letterSpacing: '-1px',
-    lineHeight: 1.2,
+    fontSize: 'clamp(36px, 4.2vw, 58px)',
+    fontWeight: 900,
+    letterSpacing: '-.03em',
+    lineHeight: 1.08,
+    marginBottom: 22,
   },
-  heroSubtitle: {
-    fontSize: '16px',
-    fontWeight: 400,
-    color: systemColors.light['content-secondary'],
-    lineHeight: 1.6,
-    maxWidth: '620px',
-    margin: '0 auto',
+  heroTitleEm: {
+    fontStyle: 'normal',
+    color: '#ABC7F9',
+  },
+  heroSub: {
+    fontSize: 18,
+    color: 'rgba(255,255,255,.65)',
+    lineHeight: 1.65,
+    maxWidth: 520,
+    marginBottom: 40,
   },
 
   // Sections
   section: {
-    background: systemColors.light['background-base'],
-    border: `1px solid ${systemColors.light['background-subtle']}`,
-    borderRadius: `${spacing.D}px`,
-    padding: `${spacing.H}px`,
-    marginBottom: `${spacing.E}px`,
-    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.04)',
+    padding: '52px 72px',
+    background: '#1D232F',
   },
-  sectionTitle: {
-    fontSize: '20px',
-    fontWeight: 600,
-    color: systemColors.light['content-primary'],
-    marginBottom: `${spacing.B}px`,
-    letterSpacing: '-0.3px',
+  sectionInner: {
+    maxWidth: 1020,
+    margin: '0 auto',
   },
-  sectionDesc: {
-    fontSize: '14px',
-    fontWeight: 400,
-    color: systemColors.light['content-secondary'],
-    lineHeight: 1.6,
-    marginBottom: `${spacing.F}px`,
+  label: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 6,
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: '.12em',
+    textTransform: 'uppercase',
+    color: '#71A1F4',
+    background: 'rgba(39,112,239,.12)',
+    borderRadius: 100,
+    padding: '5px 14px',
+    marginBottom: 18,
+  },
+  h2: {
+    fontSize: 'clamp(24px, 2.8vw, 38px)',
+    fontWeight: 800,
+    letterSpacing: '-.025em',
+    lineHeight: 1.15,
+    marginBottom: 8,
+  },
+  sub: {
+    fontSize: 15.5,
+    color: 'rgba(255,255,255,.46)',
+    lineHeight: 1.65,
+    marginBottom: 32,
+    maxWidth: 560,
   },
 
   // Pipeline
-  pipelineFlow: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: `${spacing.A}px`,
-    maxWidth: '480px',
-  },
-  pipelineStep: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: `${spacing.C}px`,
-    padding: `${spacing.C}px ${spacing.D}px`,
-    backgroundColor: systemColors.light['background-sunken'],
-    borderRadius: `${spacing.B}px`,
-    border: `1px solid ${systemColors.light['background-subtle']}`,
-  },
-  pipelineDot: {
-    width: '10px',
-    height: '10px',
-    borderRadius: '50%',
-    flexShrink: 0,
-    marginTop: '4px',
-  },
-  pipelineLabel: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: systemColors.light['content-primary'],
-    marginBottom: '2px',
-  },
-  pipelineDesc: {
-    fontSize: '12px',
-    fontWeight: 400,
-    color: systemColors.light['content-secondary'],
-  },
-  pipelineArrow: {
-    textAlign: 'center',
-    fontSize: '12px',
-    color: systemColors.light['content-tertiary'],
-    lineHeight: '14px',
-    paddingLeft: '14px',
+  pipelineWrap: {
+    background: 'rgba(255,255,255,.03)',
+    border: '1px solid rgba(255,255,255,.08)',
+    borderRadius: 24,
+    padding: '40px 40px 32px',
   },
 
   // Branches
   branchGrid: {
     display: 'flex',
     flexDirection: 'column',
-    gap: `${spacing.B}px`,
+    gap: 11,
+    marginBottom: 28,
   },
   branchCard: {
     display: 'flex',
-    alignItems: 'flex-start',
-    gap: `${spacing.C}px`,
-    padding: `${spacing.C}px ${spacing.D}px`,
-    backgroundColor: systemColors.light['background-sunken'],
-    borderRadius: `${spacing.B}px`,
-    border: `1px solid ${systemColors.light['background-subtle']}`,
+    alignItems: 'center',
+    gap: 16,
+    padding: '18px 20px',
+    background: 'rgba(255,255,255,.045)',
+    border: '1px solid rgba(255,255,255,.08)',
+    borderRadius: 16,
+    transition: 'all .2s',
+    cursor: 'default',
   },
-  branchDot: {
-    width: '10px',
-    height: '10px',
-    borderRadius: '50%',
+  branchEmoji: {
+    width: 38,
+    height: 38,
+    borderRadius: 11,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 18,
     flexShrink: 0,
-    marginTop: '4px',
   },
   branchInput: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: systemColors.light['content-primary'],
-    marginBottom: '2px',
+    fontSize: 14,
+    fontWeight: 700,
+    marginBottom: 3,
   },
   branchRoute: {
-    fontSize: '12px',
-    fontWeight: 400,
-    color: systemColors.light['content-secondary'],
-    fontFamily: '"SF Mono", Monaco, monospace',
+    fontSize: 12,
+    color: 'rgba(255,255,255,.38)',
+    fontFamily: '"SF Mono", "Fira Code", monospace',
+  },
+  branchDot: {
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    flexShrink: 0,
+  },
+
+  // Routing illustration
+  routingIllustration: {
+    background: 'rgba(255,255,255,.03)',
+    border: '1px solid rgba(255,255,255,.08)',
+    borderRadius: 24,
+    padding: '40px 40px 32px',
+    marginTop: 28,
   },
 
   // Priority files
   priorityGrid: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: `${spacing.B}px`,
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: 16,
   },
   priorityCard: {
     display: 'flex',
     alignItems: 'flex-start',
-    gap: `${spacing.B}px`,
-    padding: `${spacing.C}px ${spacing.D}px`,
-    backgroundColor: systemColors.light['background-sunken'],
-    borderRadius: `${spacing.B}px`,
-    border: `1px solid ${systemColors.light['background-subtle']}`,
+    gap: 14,
+    padding: '18px 20px',
+    background: 'rgba(255,255,255,.04)',
+    border: '1px solid rgba(255,255,255,.08)',
+    borderRadius: 16,
+    transition: 'all .2s',
   },
-  priorityBadge: {
-    width: '22px',
-    height: '22px',
-    borderRadius: '6px',
-    backgroundColor: systemColors.light['background-subtle'],
-    color: referenceColors.gray['70'],
+  priorityNum: {
+    width: 30,
+    height: 30,
+    borderRadius: 9,
+    background: 'rgba(39,112,239,.12)',
+    border: '1.5px solid rgba(39,112,239,.25)',
+    color: '#ABC7F9',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '11px',
-    fontWeight: 700,
+    fontSize: 12,
+    fontWeight: 800,
     flexShrink: 0,
-    marginTop: '1px',
-  },
-  priorityContent: {
-    flex: 1,
-    minWidth: 0,
   },
   priorityFile: {
-    fontSize: '12px',
-    fontWeight: 600,
-    color: systemColors.light['content-primary'],
-    fontFamily: '"SF Mono", Monaco, monospace',
-    marginBottom: '1px',
+    fontSize: 13,
+    fontWeight: 700,
+    fontFamily: '"SF Mono", "Fira Code", monospace',
+    marginBottom: 2,
   },
   priorityRole: {
-    fontSize: '11px',
-    fontWeight: 600,
-    color: systemColors.light['content-brand'],
-    marginBottom: '2px',
+    fontSize: 11,
+    fontWeight: 700,
+    color: '#71A1F4',
+    letterSpacing: '.04em',
+    textTransform: 'uppercase',
+    marginBottom: 4,
   },
   priorityDesc: {
-    fontSize: '12px',
-    fontWeight: 400,
-    color: systemColors.light['content-secondary'],
-    lineHeight: '16px',
+    fontSize: 12,
+    color: 'rgba(255,255,255,.42)',
+    lineHeight: 1.55,
   },
 
   // Reuse
   reuseGrid: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: `${spacing.B}px`,
-    marginBottom: `${spacing.D}px`,
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: 16,
+    marginBottom: 28,
   },
   reuseCard: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: `${spacing.C}px`,
-    padding: `${spacing.C}px ${spacing.D}px`,
-    backgroundColor: systemColors.light['background-sunken'],
-    borderRadius: `${spacing.B}px`,
-    border: `1px solid ${systemColors.light['background-subtle']}`,
-  },
-  reuseDot: {
-    width: '10px',
-    height: '10px',
-    borderRadius: '50%',
-    flexShrink: 0,
-    marginTop: '4px',
-  },
-  reuseLabel: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: systemColors.light['content-primary'],
-    marginBottom: '2px',
-  },
-  reuseDesc: {
-    fontSize: '13px',
-    fontWeight: 400,
-    color: systemColors.light['content-secondary'],
-    lineHeight: '18px',
-  },
-  reuseNote: {
-    fontSize: '13px',
-    fontWeight: 400,
-    color: systemColors.light['content-secondary'],
-    lineHeight: '20px',
-    backgroundColor: systemColors.light['background-sunken'],
-    border: `1px solid ${systemColors.light['background-subtle']}`,
-    borderRadius: '8px',
-    padding: '12px 16px',
-  },
-
-  // Options
-  optionsGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: `${spacing.D}px`,
-  },
-  optionCard: {
-    background: systemColors.light['background-sunken'],
-    border: `1px solid ${systemColors.light['background-subtle']}`,
-    borderRadius: `${spacing.C}px`,
-    padding: `${spacing.E}px`,
-  },
-  optionHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: `${spacing.B}px`,
-    marginBottom: `${spacing.B}px`,
-  },
-  optionBadge: {
-    width: '26px',
-    height: '26px',
-    borderRadius: '6px',
-    color: '#ffffff',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '13px',
-    fontWeight: 700,
-    flexShrink: 0,
-  },
-  optionTitle: {
-    fontSize: '15px',
-    fontWeight: 600,
-    color: systemColors.light['content-primary'],
-    margin: 0,
-  },
-  optionDesc: {
-    fontSize: '13px',
-    fontWeight: 400,
-    color: systemColors.light['content-secondary'],
-    lineHeight: '20px',
-    margin: `0 0 ${spacing.C}px 0`,
-  },
-  optionHint: {
-    fontSize: '12px',
-    fontWeight: 500,
-    color: systemColors.light['content-tertiary'],
-    fontStyle: 'italic',
-    margin: 0,
-  },
-  promptExamples: {
+    background: 'rgba(255,255,255,.04)',
+    border: '1px solid rgba(255,255,255,.08)',
+    borderRadius: 24,
+    padding: '28px 26px',
+    transition: 'all .22s',
     display: 'flex',
     flexDirection: 'column',
-    gap: `${spacing.B}px`,
-    marginBottom: `${spacing.C}px`,
   },
-  promptItem: {
-    fontSize: '12px',
-    fontWeight: 400,
-    color: referenceColors.gray['70'],
-    lineHeight: '18px',
-    fontStyle: 'italic',
-    padding: `${spacing.B}px`,
-    background: systemColors.light['background-base'],
-    borderRadius: `${spacing.B}px`,
-    border: `1px solid ${systemColors.light['background-subtle']}`,
+  reuseEmoji: {
+    fontSize: 26,
+    marginBottom: 12,
+  },
+  reuseTitle: {
+    fontSize: 17,
+    fontWeight: 800,
+    marginBottom: 10,
+  },
+  reuseDesc: {
+    fontSize: 13.5,
+    color: 'rgba(255,255,255,.45)',
+    lineHeight: 1.6,
+    marginBottom: 18,
+    flex: 1,
+  },
+  reuseTag: {
+    display: 'inline-block',
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '.1em',
+    textTransform: 'uppercase',
+    padding: '3px 10px',
+    borderRadius: 6,
+    alignSelf: 'flex-start',
   },
 
-  // Code block
-  codeBlock: {
-    background: '#1E1E2E',
-    borderRadius: `${spacing.C}px`,
-    overflow: 'hidden',
-    marginBottom: `${spacing.C}px`,
+  // Reuse illustration
+  reuseIllustration: {
+    background: 'rgba(255,255,255,.03)',
+    border: '1px solid rgba(255,255,255,.08)',
+    borderRadius: 24,
+    padding: '28px 24px',
+    marginBottom: 24,
   },
-  codeBlockHeader: {
-    fontSize: '11px',
-    fontWeight: 600,
-    color: 'rgba(255, 255, 255, 0.4)',
-    padding: `${spacing.B}px ${spacing.D}px 0`,
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.5px',
+
+  // Note
+  noteCard: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 12,
+    padding: '16px 20px',
+    background: 'rgba(39,112,239,.08)',
+    border: '1px solid rgba(39,112,239,.18)',
+    borderRadius: 16,
+    fontSize: 13,
+    color: 'rgba(255,255,255,.6)',
+    lineHeight: 1.6,
   },
-  codePre: {
-    margin: 0,
-    padding: `${spacing.C}px ${spacing.D}px`,
-    overflow: 'auto',
-  },
-  code: {
-    fontFamily: '"SF Mono", "Fira Code", Consolas, monospace',
-    fontSize: '13px',
-    lineHeight: 1.7,
-    color: '#CDD6F4',
-    whiteSpace: 'pre' as const,
+  noteCardCentered: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 12,
+    padding: '18px 24px',
+    background: 'rgba(255,255,255,.04)',
+    border: '1px solid rgba(255,255,255,.08)',
+    borderRadius: 24,
+    fontSize: 14,
+    color: 'rgba(255,255,255,.55)',
+    lineHeight: 1.65,
+    textAlign: 'left',
+    marginBottom: 36,
+    maxWidth: 620,
+    margin: '0 auto 36px',
   },
 
   // Inline code
   inlineCode: {
-    fontFamily: '"SF Mono", Consolas, monospace',
-    fontSize: '12.5px',
+    fontFamily: '"SF Mono", "Fira Code", monospace',
+    fontSize: 12,
     fontWeight: 500,
-    color: systemColors.light['content-brand'],
-    background: referenceColors.blue['10'],
-    padding: `2px ${spacing.A}px`,
-    borderRadius: `${spacing.A}px`,
-    border: `1px solid ${systemColors.light['background-information']}`,
-  },
-
-  // Tip bar
-  tipBar: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: `${spacing.B}px`,
-    padding: `${spacing.C}px ${spacing.D}px`,
-    backgroundColor: referenceColors.blue['10'],
-    borderRadius: `${spacing.B}px`,
-    border: `1px solid ${systemColors.light['background-information']}`,
-    fontSize: '13px',
-    fontWeight: 400,
-    color: systemColors.light['content-secondary'],
-    lineHeight: '20px',
-    marginBottom: `${spacing.F}px`,
+    color: '#71A1F4',
+    background: 'rgba(39,112,239,.1)',
+    padding: '2px 6px',
+    borderRadius: 5,
   },
 
   // CTA
-  ctaSection: {
-    textAlign: 'center',
-  },
-  ctaPrimary: {
+  cta: {
     display: 'inline-flex',
     alignItems: 'center',
-    gap: '8px',
-    padding: '12px 28px',
-    fontSize: '15px',
-    fontWeight: 600,
-    fontFamily: '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    color: '#ffffff',
-    background: 'linear-gradient(135deg, #2770EF 0%, #1E5BBB 100%)',
+    gap: 10,
+    fontFamily: '"Inter", system-ui, sans-serif',
+    fontSize: 16,
+    fontWeight: 700,
+    color: '#fff',
+    background: 'linear-gradient(135deg, #2770EF 0%, #163772 100%)',
     border: 'none',
-    borderRadius: '10px',
+    borderRadius: 14,
+    padding: '16px 36px',
     cursor: 'pointer',
-    transition: 'all 200ms ease',
-    boxShadow: '0 4px 16px rgba(39, 112, 239, 0.3)',
+    transition: 'all .22s',
+    boxShadow: '0 6px 24px rgba(39,112,239,.4)',
+    textDecoration: 'none',
   },
 };
 

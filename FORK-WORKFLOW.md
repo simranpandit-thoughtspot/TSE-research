@@ -1,109 +1,90 @@
-# Fork Workflow — Designer Onboarding Guide
+# Fork Workflow — Designer Guide
 
-How to get started with the Radiant Prototyping Kit as a designer.
+How to set up your fork, build prototypes, and stay in sync with the latest changes from the main repo.
 
 ---
 
 ## Overview
 
-Each designer works on their own **fork** (personal copy) of the project. This keeps the main repo safe — no one can accidentally overwrite production code. Changes flow back only through Pull Requests that are reviewed and approved.
+Each designer works on their own **fork** (personal copy) of the project. This keeps the main repo safe — no one can accidentally overwrite shared code. Changes flow back only through Pull Requests.
 
 ```
-Main repo (faris-ts/figmaradiant)       ← source of truth, deployed to Vercel
+Main repo (galaxy: mohammed-faris/radiantplay)  ← source of truth
     ↑ Pull Requests (reviewed by maintainer)
     |
-Your fork (your-username/figmaradiant)  ← your personal copy, full control
+Your fork (galaxy: your-username/radiantplay)   ← your personal copy
+    |
+Your machine (local clone)                      ← where you build
 ```
+
+**Galaxy** (`galaxy.corp.thoughtspot.com`) is the source of truth — not GitHub. Always fork and pull from Galaxy.
 
 ---
 
-## Prerequisites
+## Part 1 — First-time setup
 
-| Tool | Link | Notes |
-|------|------|-------|
-| **GitHub account** | [github.com](https://github.com) | You'll receive a collaborator invite |
-| **Node.js 18+** | [nodejs.org](https://nodejs.org) | Download the LTS version |
-| **Cursor IDE** | [cursor.so](https://cursor.so) | AI-powered code editor |
+### Step 1: Fork the repo on Galaxy
 
----
+1. Go to `https://galaxy.corp.thoughtspot.com/mohammed-faris/radiantplay`
+2. Click **Fork** (top right)
+3. You now have `galaxy.corp.thoughtspot.com/your-username/radiantplay`
 
-## Step 1: Accept the invite
-
-You'll receive a GitHub collaborator invite via email or at [github.com/notifications](https://github.com/notifications). Accept it to get access to the private repo.
-
-## Step 2: Fork the repo
-
-1. Go to [github.com/faris-ts/figmaradiant](https://github.com/faris-ts/figmaradiant)
-2. Click the **Fork** button (top right)
-3. Select your personal account as the destination
-4. You now have `your-username/figmaradiant` — your own private copy
-
-## Step 3: Clone your fork
-
-Open a terminal and run:
+### Step 2: Clone your fork
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/figmaradiant.git
-cd figmaradiant
+git clone https://galaxy.corp.thoughtspot.com/YOUR-USERNAME/radiantplay.git
+cd radiantplay
 ```
 
-Replace `YOUR-USERNAME` with your actual GitHub username.
+### Step 3: Add the upstream remote
 
-## Step 4: Add the upstream remote
-
-This connects your fork to the original repo so you can pull updates:
+This connects your fork to the main repo so you can pull updates later:
 
 ```bash
-git remote add upstream https://github.com/faris-ts/figmaradiant.git
+git remote add upstream https://galaxy.corp.thoughtspot.com/mohammed-faris/radiantplay.git
 ```
 
-Verify with:
+Verify the setup:
 
 ```bash
 git remote -v
 ```
 
-You should see:
+Expected output:
 
 ```
-origin    https://github.com/YOUR-USERNAME/figmaradiant.git  (your fork)
-upstream  https://github.com/faris-ts/figmaradiant.git       (main repo)
+origin    https://galaxy.corp.thoughtspot.com/YOUR-USERNAME/radiantplay.git  (your fork)
+upstream  https://galaxy.corp.thoughtspot.com/mohammed-faris/radiantplay.git (main repo)
 ```
 
-## Step 5: Install and run
+### Step 4: Install dependencies and run
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser. You should see the Radiant Playground.
+Open `http://localhost:5173`. You should see Radiant Play.
 
 ---
 
-## Building prototypes
+## Part 2 — Building your prototype
 
 ### Create a new prototype
-
-Open a second terminal and run:
 
 ```bash
 npm run new-prototype MyPrototypeName
 ```
 
-Then open `src/prototypes/MyPrototypeName/index.tsx` and use Cursor AI to build your UI:
+This scaffolds `src/prototypes/MyPrototypeName/` and registers it in the gallery automatically.
 
-- **Cmd+K** — inline edit
-- **Chat panel** — describe what you want in natural language
-- **Paste a Figma screenshot** — say "Recreate this using Radiant components"
-
-The AI already knows all Radiant components, tokens, and patterns.
+Then open `src/prototypes/MyPrototypeName/index.tsx` in Cursor and describe what you want to build. The AI knows all Radiant components, tokens, and patterns.
 
 ### Save your work
 
 ```bash
 git add .
-git commit -m "Add my prototype"
+git commit -m "feat: add my prototype"
 git push origin main
 ```
 
@@ -111,38 +92,195 @@ This pushes to **your fork only** — the main repo is unaffected.
 
 ---
 
-## Staying in sync
+## Part 3 — Staying in sync with the main repo
 
-The main repo gets updates regularly (new components, fixes, improvements). Pull them into your fork:
+The main repo gets updates regularly — new components, bug fixes, tooling improvements. Here is how to pull those in without losing your prototype work.
 
-### Option A: Command line
+### First time only: get the sync skill
+
+The `/sync-upstream` skill automates the entire sync process. If you forked before March 17, 2026 you may not have it yet. Run these two commands once to get it:
 
 ```bash
 git fetch upstream
-git merge upstream/main
-git push origin main
+git checkout upstream/main -- .claude/commands/sync-upstream.md
 ```
 
-### Option B: GitHub UI
+This copies just the skill file from the main repo — no merge, no conflicts. You only need to do this once. From now on, `/sync-upstream` handles all future syncs for you.
 
-1. Go to your fork on GitHub
-2. You'll see a banner: "This branch is X commits behind faris-ts:main"
-3. Click **Sync fork** → **Update branch**
-
-Do this regularly to stay up to date.
+> If you forked after March 17, 2026 the skill is already in your clone. Skip this.
 
 ---
 
-## Contributing back (optional)
+### Syncing with the skill (recommended)
 
-If you've built something that should be in the main repo:
+Open Claude Code in your project folder and run:
 
-1. Push your changes to your fork
-2. Go to your fork on GitHub
-3. Click **Contribute** → **Open pull request**
-4. Set the base to `faris-ts/figmaradiant` branch `staging`
-5. Describe your changes and submit
-6. The maintainer reviews and merges (or requests changes)
+```
+/sync-upstream
+```
+
+Claude will commit any unsaved work, fetch upstream, merge, resolve the `registry.ts` conflict automatically, verify the build, and push to your fork. Nothing else needed.
+
+---
+
+### Syncing manually (if you prefer)
+
+### Why your prototype is safe
+
+Your prototype lives in `src/prototypes/YourName/` — files you created from scratch. Git only conflicts on files that **both sides modified**. Since nobody on the main repo touches your prototype folder, it will never conflict. The only file that typically needs manual resolution is `src/prototypes/registry.ts`.
+
+---
+
+### Step-by-step sync
+
+**Step 1: Make sure your local work is committed**
+
+Before syncing, commit everything you have in progress. Do not sync with uncommitted changes.
+
+```bash
+git status
+```
+
+If you see modified files:
+
+```bash
+git add .
+git commit -m "WIP: save progress before sync"
+```
+
+**Step 2: Fetch the latest from upstream**
+
+```bash
+git fetch upstream
+```
+
+This downloads the latest commits from the main repo but does not change your files yet.
+
+**Step 3: Check how far behind you are** (optional but useful)
+
+```bash
+git log --oneline HEAD..upstream/main
+```
+
+This lists every commit on the main repo that you do not have yet.
+
+**Step 4: Merge upstream into your branch**
+
+```bash
+git merge upstream/main
+```
+
+One of two things will happen:
+
+- **Auto-merge succeeds** — git prints `Merge made by the 'ort' strategy` and you are done. Skip to Step 7.
+- **Conflict** — git prints `CONFLICT (content): Merge conflict in src/prototypes/registry.ts`. Continue to Step 5.
+
+---
+
+### Step 5: Resolve the conflict in `registry.ts`
+
+Open `src/prototypes/registry.ts` in Cursor. Find the conflict markers — they look like this:
+
+```ts
+<<<<<<< HEAD
+  // Your prototype entry
+  {
+    id: 'MyDashboard',
+    name: 'My Dashboard',
+    component: MyDashboard,
+    author: 'Your Name',
+  },
+=======
+  // New entries added to the main repo
+  {
+    id: 'AdminLang',
+    name: 'Admin language settings',
+    section: 'sample',
+    ...
+  },
+  {
+    id: 'MiniSpotters',
+    ...
+  },
+>>>>>>> upstream/main
+```
+
+**Keep both blocks.** Delete the conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) and arrange it so the new upstream entries come first, your entry comes last:
+
+```ts
+  // New entries from upstream
+  {
+    id: 'AdminLang',
+    name: 'Admin language settings',
+    section: 'sample',
+    ...
+  },
+  {
+    id: 'MiniSpotters',
+    section: 'sample',
+    ...
+  },
+  // Your prototype
+  {
+    id: 'MyDashboard',
+    name: 'My Dashboard',
+    component: MyDashboard,
+    author: 'Your Name',
+    section: 'mine',  // ← add this if it is not already there
+  },
+```
+
+> **Note on `section: 'mine'`** — this field was added in March 2026. It tells the gallery which section to show your prototype under. Always add `section: 'mine'` to your own entry. The sample prototypes from the main repo use `section: 'sample'`.
+
+**Step 6: Mark the conflict as resolved and commit**
+
+```bash
+git add src/prototypes/registry.ts
+git commit
+```
+
+Git will pre-fill a merge commit message — just save and close the editor.
+
+**Step 7: Push to your fork**
+
+```bash
+git push origin main
+```
+
+Your fork is now up to date and your prototype is intact.
+
+---
+
+### Quick sync reference
+
+```bash
+# 1. Commit your work first
+git add . && git commit -m "WIP: save before sync"
+
+# 2. Fetch and merge
+git fetch upstream
+git merge upstream/main
+
+# 3. If conflict — edit registry.ts, then:
+git add src/prototypes/registry.ts && git commit
+
+# 4. Push to your fork
+git push origin main
+```
+
+---
+
+## Part 4 — Contributing your prototype back
+
+If you want your prototype to appear in the main repo:
+
+1. Make sure your fork is synced (Part 3 above)
+2. Push your latest changes: `git push origin main`
+3. Go to your fork on Galaxy
+4. Click **Contribute** → **Open pull request**
+5. Set base repo to `mohammed-faris/radiantplay`, base branch to `staging`
+6. Describe what you built and submit
+7. The maintainer reviews and merges
 
 ---
 
@@ -153,10 +291,9 @@ If you've built something that should be in the main repo:
 | Clone and run the project | Yes |
 | Build prototypes in your fork | Yes |
 | Push to your fork | Yes |
-| Push to the main repo | No |
+| Push directly to the main repo | No |
 | Open Pull Requests to the main repo | Yes |
-| Merge your own PRs | No (maintainer only) |
-| Delete or modify the main repo | No |
+| Merge your own PRs | No — maintainer only |
 
 ---
 
@@ -165,10 +302,11 @@ If you've built something that should be in the main repo:
 | Task | Command |
 |------|---------|
 | Start dev server | `npm run dev` |
-| Create prototype | `npm run new-prototype Name` |
+| Create a prototype | `npm run new-prototype Name` |
 | Save changes | `git add . && git commit -m "message" && git push` |
-| Pull latest updates | `git fetch upstream && git merge upstream/main` |
-| Check remote setup | `git remote -v` |
+| Sync with main repo | `/sync-upstream` (or manually: `git fetch upstream && git merge upstream/main`) |
+| Check what you are missing | `git log --oneline HEAD..upstream/main` |
+| Check remotes | `git remote -v` |
 
 ---
 
@@ -176,11 +314,12 @@ If you've built something that should be in the main repo:
 
 | Problem | Solution |
 |---------|----------|
-| Can't fork the repo | Make sure you've accepted the collaborator invite first |
-| `npm install` fails | Verify Node.js is installed: `node --version` (need 18+) |
-| AI doesn't know components | Make sure you opened the `figmaradiant` folder in Cursor (not a parent folder) |
-| "Upstream" merge conflicts | Run `git merge upstream/main`, resolve conflicts in Cursor, then commit |
-| Changes not showing in browser | Make sure `npm run dev` is still running |
+| `git merge` shows conflicts in `registry.ts` | Keep both your entry and the upstream entries — see Step 5 above |
+| My prototype disappeared after syncing | Check `registry.ts` — your entry may have been lost during conflict resolution. Re-add it. |
+| `upstream` remote not found | Run `git remote add upstream https://galaxy.corp.thoughtspot.com/mohammed-faris/radiantplay.git` |
+| `npm install` fails | Verify Node.js 18+: `node --version` |
+| AI in Cursor does not know Radiant components | Make sure you opened the `radiantplay` folder directly in Cursor, not a parent folder |
+| Changes not showing in browser | Make sure `npm run dev` is still running in a terminal |
 
 ---
 

@@ -12,6 +12,7 @@ dist/
 .vscode/
 *.swp
 *.swo
+.cursor/*.log
 
 # Environment
 .env

@@ -67,6 +67,7 @@ import { RichTextEditor } from '../components/RichTextEditor';
 import { FormBuilder } from '../components/FormBuilder';
 import { DynamicForm } from '../components/DynamicForm';
 import { FacetSortBar } from '../components/FacetSortBar';
+import { LiveboardHeader } from '../components/LiveboardHeader';
 import { systemColors, referenceColors } from '../tokens/colors';
 
 interface PropDefinition {
@@ -938,6 +939,24 @@ const componentDocs: Record<string, {
       { name: 'onSortChange', type: '(id: string) => void', description: 'Sort change handler' },
     ],
   },
+  // Liveboard
+  liveboardheader: {
+    name: 'LiveboardHeader',
+    description: 'Unified Liveboard header that renders PrimaryNav + ViewHeader in view mode, or EditToolbar + EditSubHeader in edit mode. Handles tabs, filters, personalised views, and SpotterViz toggle.',
+    props: [
+      { name: 'mode', type: "'view' | 'edit'", description: 'Current Liveboard mode' },
+      { name: 'title', type: 'string', description: 'Liveboard title' },
+      { name: 'activeTab', type: 'string', description: 'Currently active tab ID' },
+      { name: 'tabs', type: '{ label: string; id: string }[]', description: 'Tab definitions' },
+      { name: 'filters', type: '{ label: string; value: string }[]', description: 'Active filter chips' },
+      { name: 'onTabChange', type: '(id: string) => void', description: 'Tab change handler' },
+      { name: 'onEdit', type: '() => void', description: 'Enter edit mode' },
+      { name: 'onSave', type: '() => void', description: 'Save and exit edit mode' },
+      { name: 'onCancel', type: '() => void', description: 'Cancel and exit edit mode' },
+      { name: 'onToggleSpotter', type: '() => void', description: 'Toggle SpotterViz side panel (edit mode)' },
+      { name: 'spotterOpen', type: 'boolean', default: 'false', description: 'Whether SpotterViz panel is open' },
+    ],
+  },
 };
 
 export const ComponentDocPage: React.FC<ComponentDocPageProps> = ({ componentId }) => {
@@ -992,6 +1011,9 @@ export const ComponentDocPage: React.FC<ComponentDocPageProps> = ({ componentId 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [selectedFacet, setSelectedFacet] = useState('all');
   const [selectedSort, setSelectedSort] = useState('newest');
+  const [lbMode, setLbMode] = useState<'view' | 'edit'>('view');
+  const [lbActiveTab, setLbActiveTab] = useState('overview');
+  const [lbSpotterOpen, setLbSpotterOpen] = useState(false);
 
   if (!doc) {
     return (
@@ -2496,6 +2518,40 @@ export const ComponentDocPage: React.FC<ComponentDocPageProps> = ({ componentId 
               selectedSort={selectedSort}
               onSortChange={setSelectedSort}
             />
+          </div>
+        );
+
+      case 'liveboardheader':
+        return (
+          <div style={styles.exampleContent}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                <Button variant={lbMode === 'view' ? 'primary' : 'secondary'} size="sm" onClick={() => { setLbMode('view'); setLbSpotterOpen(false); }}>View mode</Button>
+                <Button variant={lbMode === 'edit' ? 'primary' : 'secondary'} size="sm" onClick={() => setLbMode('edit')}>Edit mode</Button>
+              </div>
+              <div style={{ borderRadius: '8px', overflow: 'hidden', border: `1px solid ${referenceColors.gray['20']}` }}>
+                <LiveboardHeader
+                  mode={lbMode}
+                  title="Online retail sales"
+                  activeTab={lbActiveTab}
+                  tabs={[
+                    { id: 'overview', label: 'Overview' },
+                    { id: 'revenue', label: 'Revenue' },
+                    { id: 'pipeline', label: 'Pipeline' },
+                  ]}
+                  filters={[
+                    { label: 'Region', value: 'North America' },
+                    { label: 'Period', value: 'Last 90 days' },
+                  ]}
+                  onTabChange={setLbActiveTab}
+                  onEdit={() => setLbMode('edit')}
+                  onSave={() => { setLbMode('view'); setLbSpotterOpen(false); }}
+                  onCancel={() => { setLbMode('view'); setLbSpotterOpen(false); }}
+                  onToggleSpotter={() => setLbSpotterOpen(!lbSpotterOpen)}
+                  spotterOpen={lbSpotterOpen}
+                />
+              </div>
+            </div>
           </div>
         );
 

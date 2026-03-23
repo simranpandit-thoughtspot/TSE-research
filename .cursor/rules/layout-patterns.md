@@ -1,6 +1,6 @@
 ---
-description: Standard layout patterns for Radiant prototypes
-globs: ["src/prototypes/**/*.tsx"]
+description: Layout templates for dashboards, admin panels, settings pages, form pages, and data table pages. Use when building a full page layout, choosing between AppShell/sidebar/content area patterns, or applying responsive breakpoints. Do NOT use for individual widget behavior (see widget-patterns.md) or modal sizing (see modal-patterns.md).
+alwaysApply: false
 ---
 
 # Radiant Layout Patterns

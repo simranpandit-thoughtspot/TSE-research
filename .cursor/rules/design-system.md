@@ -1,5 +1,5 @@
 ---
-description: Core design system rules for creating and modifying React components
+description: Component creation standards for the shared Radiant design system including forwardRef patterns, TypeScript interfaces, CSS Modules with camelCase, accessibility requirements, and Icon validation. Use when creating or modifying components in src/components/. Do NOT use for prototype-local components (those follow simpler patterns).
 globs: ["src/components/**/*.tsx", "src/components/**/*.ts", "src/components/**/*.css"]
 ---
 

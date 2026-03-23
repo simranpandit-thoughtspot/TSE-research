@@ -1,6 +1,6 @@
 ---
-description: Widget interaction patterns from Radiant Pro design system for building prototypes
-globs: ["src/prototypes/**/*.tsx", "src/prototypes/**/*.ts"]
+description: Widget interaction patterns for alerts, banners, toasts, tables, action menus, tooltips, empty states, date pickers, delete confirmations, drag-and-drop, and tree views. Use when building any of these widget types in a prototype. Do NOT use for page-level layouts (see layout-patterns.md) or modal sizing (see modal-patterns.md).
+alwaysApply: false
 ---
 
 # Radiant Widget Patterns

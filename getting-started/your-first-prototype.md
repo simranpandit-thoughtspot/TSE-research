@@ -11,12 +11,12 @@ A step-by-step guide to creating your first interactive prototype.
 ## Step 1: Start the Dev Server
 
 ```bash
-cd figmaradiant
+cd radiantplay
 npm install
 npm run dev
 ```
 
-Open http://localhost:5173 in your browser. You should see the Radiant Prototyping Kit welcome page.
+Open http://localhost:5173 in your browser. You should see the Radiant Play welcome page.
 
 ## Step 2: Create Your Prototype
 

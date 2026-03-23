@@ -1,4 +1,4 @@
-# Radiant Prototyping Kit - One Pager
+# Radiant Play - One Pager
 
 This document outlines the approach for improving the design and development experience within ThoughtSpot through an AI-assisted prototyping system.
 
@@ -21,7 +21,7 @@ The primary goal is to achieve a better ThoughtSpot product with a faster design
 
 ## What We Built
 
-The **Radiant Prototyping Kit** — a fork-ready repository where designers create interactive prototypes using ThoughtSpot's Radiant design system with AI assistance.
+The **Radiant Play** — a fork-ready repository where designers create interactive prototypes using ThoughtSpot's Radiant design system with AI assistance.
 
 ### How It Works
 

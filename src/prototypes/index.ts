@@ -13,15 +13,11 @@
  * ## Structure
  * 
  * - `_template/` - Starter template for new prototypes
- * - `_examples/` - Reference implementations of common patterns
  * - `YourPrototype/` - Your custom prototypes go here
  */
 
 // Template
 export { PrototypeTemplate } from './_template';
-
-// Examples
-export { FilterDialogExample } from './_examples';
 
 // Prototypes
 // Add your prototype exports here

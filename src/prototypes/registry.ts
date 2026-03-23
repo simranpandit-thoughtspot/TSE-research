@@ -1,6 +1,6 @@
 /**
  * Project Registry
- * 
+ *
  * Central registry for discovering and managing playground projects.
  * Projects are folders in src/prototypes/ that export a default component.
  */
@@ -11,7 +11,10 @@ import React from 'react';
 import CmdkThumbnail from './thumbnails/Cmdk.svg';
 import AdminGroupsThumbnail from './thumbnails/AdminGroups.svg';
 import SpotterMemoryThumbnail from './thumbnails/SpotterMemory.svg';
-import LiveboardThumbnail from './thumbnails/Liveboard.svg';
+import SpotterModelThumbnail from './thumbnails/SpotterModel.svg';
+import AdminLangThumbnail from './thumbnails/AdminLang.svg';
+import MiniSpottersThumbnail from './thumbnails/MiniSpotters.svg';
+import LiveboardTemplateThumbnail from './thumbnails/LiveboardTemplate.svg';
 
 /**
  * Metadata for a playground project
@@ -35,23 +38,24 @@ export interface ProjectMeta {
   dsComponents?: number;
   /** Number of custom/local components created for this prototype */
   customComponents?: number;
+  /** Which gallery section: 'sample' for built-in examples, 'mine' for user-created (default) */
+  section?: 'sample' | 'mine';
 }
 
 /**
  * Project registry
- * 
+ *
  * Projects are auto-registered by `npm run new-prototype`.
- * To add a thumbnail later, import an SVG and add it to the entry.
  */
 
 // Import project components (lazy-loaded for code splitting)
-const Liveboard = React.lazy(() => import('./Liveboard'));
 const Cmdk = React.lazy(() => import('./Cmdk'));
 const SpotterMemory = React.lazy(() => import('./SpotterMemory'));
 const AdminGroups = React.lazy(() => import('./AdminGroups'));
-const ImpersonationV2 = React.lazy(() => import('./ImpersonationV2'));
-const MuseChat = React.lazy(() => import('./MuseChat'));
 const SpotterModelProto = React.lazy(() => import('./SpotterModel'));
+const AdminLang = React.lazy(() => import('./AdminLang'));
+const MiniSpotters = React.lazy(() => import('./MiniSpotters'));
+const LiveboardTemplate = React.lazy(() => import('./_liveboard-template'));
 const AdminPortal2 = React.lazy(() => import('./AdminPortal2'));
 const NewUIAdmin2 = React.lazy(() => import('./NewUIAdmin2'));
 const Customisation = React.lazy(() => import('./Customisation'));
@@ -62,71 +66,88 @@ const Admin2Vision = React.lazy(() => import('./Admin2Vision'));
  */
 export const projectRegistry: ProjectMeta[] = [
   {
-    id: 'Liveboard',
-    name: 'Liveboard',
-    description: 'TSE Business Overview dashboard with KPIs, charts, and regional data visualization.',
-    author: 'Design Team',
-    thumbnail: LiveboardThumbnail,
-    component: Liveboard,
-    dsComponents: 10,
-    customComponents: 10,
-  },
-  {
     id: 'Cmdk',
     name: 'Command Palette',
     description: 'Command-K interface for quick navigation and actions with keyboard shortcuts and context-aware filtering.',
     author: 'Design Team',
+    lastModified: '2026-02-19',
     thumbnail: CmdkThumbnail,
     component: Cmdk,
     dsComponents: 12,
     customComponents: 11,
+    section: 'sample',
   },
   {
     id: 'SpotterMemory',
     name: 'Spotter Memory',
     description: 'Memory Sources object table experience with search, filtering, and pagination.',
     author: 'Design Team',
+    lastModified: '2026-02-19',
     thumbnail: SpotterMemoryThumbnail,
     component: SpotterMemory,
     dsComponents: 6,
     customComponents: 5,
+    section: 'sample',
   },
   {
     id: 'AdminGroups',
     name: 'Admin Groups',
     description: 'Group creation wizard with bulk org assignment and role management.',
     author: 'Design Team',
+    lastModified: '2026-02-19',
     thumbnail: AdminGroupsThumbnail,
     component: AdminGroups,
     dsComponents: 9,
     customComponents: 10,
-  },
-  {
-    id: 'ImpersonationV2',
-    name: 'Admin Impersonation',
-    description: 'Admin palette impersonation — blue viewport border, GlobalHeader icon, session timer popup, and Toast notification.',
-    author: 'Design Team',
-    component: ImpersonationV2,
-    dsComponents: 11,
-    customComponents: 3,
-  },
-  {
-    id: 'MuseChat',
-    name: 'MuseChat',
-    description: 'Spotter AI chat interface with conversational data exploration, embedded charts, and animated typing indicators.',
-    author: 'Design Team',
-    component: MuseChat,
-    dsComponents: 4,
-    customComponents: 6,
+    section: 'sample',
   },
   {
     id: 'SpotterModel',
     name: 'Spotter Model',
     description: 'SpotterModel agent edit flow — onboarding, table/join recommendations, columns editing, and impact-aware delete.',
     author: 'Design Team',
+    lastModified: '2026-03-03',
+    thumbnail: SpotterModelThumbnail,
     component: SpotterModelProto,
     dsComponents: 5,
     customComponents: 14,
+    section: 'sample',
+  },
+  {
+    id: 'AdminLang',
+    name: 'Admin language settings',
+    description: 'Admin settings for CSV-based translation of Liveboards and Answers with upload, validation, and object picker.',
+    author: 'Design Team',
+    lastModified: '2026-03-12',
+    thumbnail: AdminLangThumbnail,
+    component: AdminLang,
+    dsComponents: 10,
+    customComponents: 4,
+    section: 'sample',
+  },
+  {
+    id: 'MiniSpotters',
+    name: 'MiniSpotters',
+    description: 'Curated, domain-specific Spotter instances with bounded context, prompt libraries, and simulated chat.',
+    author: 'Design Team',
+    lastModified: '2026-03-12',
+    thumbnail: MiniSpottersThumbnail,
+    component: MiniSpotters,
+    dsComponents: 8,
+    customComponents: 5,
+    section: 'sample',
+  },
+  {
+    id: '_liveboard-template',
+    name: 'Liveboard template',
+    description: 'Starter template for Liveboard prototypes — includes AnswerTile, KPI tile, bar chart, and SpotterViz panel.',
+    author: 'Design Team',
+    lastModified: '2026-03-17',
+    thumbnail: LiveboardTemplateThumbnail,
+    component: LiveboardTemplate,
+    dsComponents: 8,
+    customComponents: 4,
+    section: 'sample',
   },
   {
     id: 'AdminPortal2',
@@ -136,6 +157,7 @@ export const projectRegistry: ProjectMeta[] = [
     component: AdminPortal2,
     dsComponents: 10,
     customComponents: 7,
+    section: 'mine',
   },
   {
     id: 'NewUIAdmin2',
@@ -145,6 +167,7 @@ export const projectRegistry: ProjectMeta[] = [
     component: NewUIAdmin2,
     dsComponents: 6,
     customComponents: 4,
+    section: 'mine',
   },
   {
     id: 'Customisation',
@@ -154,6 +177,7 @@ export const projectRegistry: ProjectMeta[] = [
     component: Customisation,
     dsComponents: 6,
     customComponents: 8,
+    section: 'mine',
   },
   {
     id: 'Admin2Vision',
@@ -163,17 +187,16 @@ export const projectRegistry: ProjectMeta[] = [
     component: Admin2Vision,
     dsComponents: 0,
     customComponents: 20,
+    section: 'mine',
   },
-  // Add more projects here as they are created
+  // Add more projects here. New prototypes default to 'mine' section.
+  // Set section: 'sample' to show under Sample prototypes instead.
   // {
   //   id: 'my-project',
   //   name: 'My Project',
   //   description: 'Description of my project',
   //   author: 'Designer Name',
-  //   thumbnail: MyProjectThumbnail,
   //   component: React.lazy(() => import('./my-project')),
-  //   dsComponents: 0,
-  //   customComponents: 0,
   // },
 ];
 

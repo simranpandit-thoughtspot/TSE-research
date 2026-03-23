@@ -1,6 +1,6 @@
 # Branching Strategy
 
-A guide to organizing your work with Git branches in the Radiant Prototyping Kit.
+A guide to organizing your work with Git branches in the Radiant Play.
 
 ## Branch Types
 

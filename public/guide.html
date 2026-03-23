@@ -69,6 +69,27 @@ body { font-family:var(--font); background:var(--gray-90); color:#fff; height:10
 .kbd-hint { position:fixed;bottom:28px;right:32px;font-size:11px;color:rgba(255,255,255,.2);display:flex;align-items:center;gap:5px; }
 kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:2px 5px;font-family:var(--mono);font-size:10px; }
 
+/* ── tab pills ── */
+.tab-pills {
+  position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:200;
+  display:flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:100px;padding:3px;
+  backdrop-filter:blur(10px);
+}
+.tab-pill {
+  font-family:var(--font);font-size:12px;font-weight:600;
+  color:rgba(255,255,255,.4);
+  background:transparent;
+  border:none;border-radius:100px;
+  padding:6px 18px;
+  cursor:pointer;transition:all .18s;
+  text-decoration:none;white-space:nowrap;
+}
+.tab-pill:hover { color:rgba(255,255,255,.7);background:rgba(255,255,255,.06); }
+.tab-pill.active { color:#fff;background:rgba(39,112,239,.3);box-shadow:0 1px 4px rgba(0,0,0,.2); }
+
 /* ── slides ── */
 .slides { width:100%;height:100vh;position:relative; }
 .slide { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:52px 72px;opacity:0;transform:translateX(48px);transition:opacity .42s cubic-bezier(.4,0,.2,1),transform .42s cubic-bezier(.4,0,.2,1);pointer-events:none; }
@@ -310,9 +331,11 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
 
 /* ════ SLIDE 8 — FIRST PROTOTYPE ════ */
 .s-proto { background:radial-gradient(ellipse at 35% 65%,#130a1f 0%,var(--gray-90) 55%); }
-.proto-layout { display:grid;grid-template-columns:1fr 1fr;gap:48px;max-width:1020px;width:100%;align-items:start; }
-.tips { display:flex;flex-direction:column;gap:11px; }
-.tip { background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:14px 18px;display:flex;gap:13px;align-items:flex-start;transition:all .18s; }
+.proto-layout { display:grid;grid-template-columns:1fr 1fr;gap:36px;max-width:1020px;width:100%;align-items:start; }
+.s-proto .label { margin-bottom:8px; }
+.s-proto .h2 { font-size:clamp(22px,2.4vw,32px); }
+.tips { display:flex;flex-direction:column;gap:8px; }
+.tip { background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:12px 16px;display:flex;gap:12px;align-items:flex-start;transition:all .18s; }
 .tip:hover { background:rgba(255,255,255,.07); }
 .tip-ico { font-size:20px;flex-shrink:0;margin-top:1px; }
 .tip h4 { font-size:13px;font-weight:700;margin-bottom:3px; }
@@ -333,7 +356,43 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
 .bubble code { font-family:var(--mono);font-size:10.5px;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px;color:var(--blue-40); }
 .bubble strong { font-weight:700;color:#fff; }
 
-/* ════ SLIDE 9 — RESOURCES ════ */
+/* ════ SLIDE 9 — MODEL USAGE ════ */
+.s-models { background:radial-gradient(ellipse at 60% 40%,#0d1a2e 0%,var(--gray-90) 60%); }
+.s-models .label { margin-bottom:10px; }
+.s-models .sec-title { font-size:clamp(22px,2.4vw,32px);margin-bottom:4px; }
+.s-models .sec-sub { margin-bottom:16px; }
+.models-layout { display:grid;grid-template-columns:1fr 1fr;gap:36px;max-width:1020px;width:100%;align-items:start; }
+.model-tier { background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:12px 16px;transition:all .18s; }
+.model-tier:hover { background:rgba(255,255,255,.07); }
+.model-tier-header { display:flex;align-items:center;gap:8px;margin-bottom:4px; }
+.model-tier-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+.model-tier-name { font-size:13px;font-weight:800; }
+.model-tier-cost { font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.35);margin-left:auto; }
+.model-tier-tasks { list-style:none;padding:0;margin:0; }
+.model-tier-tasks li { font-size:11px;color:rgba(255,255,255,.5);padding:2px 0;padding-left:12px;position:relative; }
+.model-tier-tasks li::before { content:'';position:absolute;left:0;top:8px;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.15); }
+.model-tiers { display:flex;flex-direction:column;gap:8px; }
+.model-insight { background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:16px 18px; }
+.model-bar-row { display:flex;align-items:center;gap:8px;margin-bottom:8px; }
+.model-bar-label { font-size:11px;font-weight:600;width:70px;flex-shrink:0;text-align:right;color:rgba(255,255,255,.5); }
+.model-bar-track { flex:1;height:22px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;position:relative; }
+.model-bar-fill { height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:10px;font-weight:700;color:#fff;min-width:28px;transition:width .8s cubic-bezier(.4,0,.2,1); }
+.model-bar-fill.bad { background:linear-gradient(90deg,#EF4444 0%,#DC2626 100%); }
+.model-bar-fill.good { background:linear-gradient(90deg,var(--green) 0%,#05a36d 100%); }
+.model-bar-fill.mid { background:linear-gradient(90deg,var(--orange) 0%,#d4911e 100%); }
+.model-bar-fill.blue { background:linear-gradient(90deg,var(--blue-60) 0%,var(--blue-70) 100%); }
+.model-bar-fill.purple { background:linear-gradient(90deg,var(--purple) 0%,#6347d9 100%); }
+.model-insight-label { font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px; }
+.model-callout { display:flex;align-items:flex-start;gap:8px;padding:10px 14px;background:rgba(6,191,127,.08);border:1px solid rgba(6,191,127,.18);border-radius:var(--r);margin-top:10px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.5; }
+.model-callout-icon { font-size:16px;flex-shrink:0; }
+.model-flowchart { background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);padding:14px 16px;margin-top:10px; }
+.flow-step { display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04); }
+.flow-step:last-child { border-bottom:none; }
+.flow-q { font-size:12px;color:rgba(255,255,255,.55);flex:1; }
+.flow-arrow { color:rgba(255,255,255,.2);font-size:12px;flex-shrink:0; }
+.flow-answer { font-size:12px;font-weight:700;flex-shrink:0;padding:3px 10px;border-radius:6px; }
+
+/* ════ SLIDE 10 — RESOURCES ════ */
 .s-res { background:radial-gradient(ellipse at 50% 40%,#0a1f4d 0%,var(--gray-90) 65%); }
 .s-res::before { content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(39,112,239,.08) 0%,transparent 60%);pointer-events:none; }
 .res-inner { max-width:780px;width:100%;text-align:center;position:relative; }
@@ -357,7 +416,7 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
 <body>
 
 <div class="progress-bar" id="progressBar"></div>
-<div class="slide-badge" id="slideBadge">01 / 09</div>
+<div class="slide-badge" id="slideBadge">01 / 10</div>
 <div class="wordmark">
   <div class="wordmark-icon">R</div>
   <div class="wordmark-text">Radiant<span>Play</span></div>
@@ -367,24 +426,29 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
   Back to home
 </a>
 
+<!-- Tab pills -->
+<div class="tab-pills">
+  <a class="tab-pill active" href="/guide.html">Getting started</a>
+  <a class="tab-pill" href="/how-it-works.html">How it works</a>
+</div>
+
 <div class="slides">
 
 <!-- ══════════════════════════════
      SLIDE 1 — HERO
 ══════════════════════════════ -->
 <div class="slide s-hero active" data-index="0">
-  <div style="max-width:780px">
+  <div style="max-width:780px;width:100%">
     <div class="hero-eyebrow"><div class="hero-dot"></div>ThoughtSpot Design · Getting Started</div>
     <h1 class="h1 hero-title" style="margin-bottom:22px">
       Radiant<em>Play</em>
     </h1>
     <p class="hero-sub">A playground for building interactive prototypes with real Radiant components — so every screen stays consistent with the design system. Describe what you want, AI builds it, and you iterate in real time.</p>
-    <div style="font-size:14px;color:rgba(255,255,255,.4);margin-bottom:32px;line-height:1.6">No coding experience needed. This guide walks you through setup, scaffolding, and your first prototype.</div>
+    <div style="font-size:14px;color:rgba(255,255,255,.4);margin-bottom:32px;line-height:1.6">This guide walks you through setup and building your first prototype.</div>
     <div class="hero-chips">
-      <div class="hero-chip">74 Radiant components</div>
-      <div class="hero-chip">AI-powered in Cursor</div>
+      <div class="hero-chip">73+ Radiant components</div>
+      <div class="hero-chip">AI-assisted in Cursor</div>
       <div class="hero-chip">Interactive in the browser</div>
-      <div class="hero-chip">No code required</div>
     </div>
   </div>
 </div>
@@ -420,7 +484,7 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
         <div class="cc-ico" style="background:var(--green-bg)">🎨</div>
         <div>
           <h4>Radiant Play — the kit</h4>
-          <p>74 components, design tokens, AI rules, and mock data — all pre-configured. You just describe the UI.</p>
+          <p>73+ components, design tokens, AI rules, and mock data — all pre-configured. You describe the UI.</p>
           <span class="cc-tag" style="background:var(--green-bg);color:var(--green)">What you prototype with</span>
         </div>
       </div>
@@ -496,13 +560,13 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
 <div class="slide s-git" data-index="3">
   <div class="git-inner">
     <div class="git-header">
-      <div class="label">Git in Figma terms</div>
+      <div class="label">Git basics</div>
       <h2 class="h2" style="margin-bottom:8px">You already know this — different names</h2>
-      <p class="sub" style="margin:0 auto">Hover each card to see the Git equivalent of something you already do in Figma.</p>
+      <p class="sub" style="margin:0 auto">Hover each card to see the Git equivalent of something you already do with design files.</p>
     </div>
     <div class="flip-grid">
       <div class="flip-card"><div class="flip-inner">
-        <div class="flip-front"><div class="flip-emoji">📄</div><div class="flip-term">Duplicate a file</div><div class="flip-sub">Make your own copy of a shared Figma file</div><div class="flip-hint">↻ hover to reveal</div></div>
+        <div class="flip-front"><div class="flip-emoji">📄</div><div class="flip-term">Duplicate a file</div><div class="flip-sub">Make your own copy of a shared file</div><div class="flip-hint">↻ hover to reveal</div></div>
         <div class="flip-back"><div class="flip-bl">In Git</div><div class="flip-bt">Fork</div><div class="flip-bd">Your personal copy of the Radiant Play repo — what you do first on Galaxy.</div></div>
       </div></div>
       <div class="flip-card"><div class="flip-inner">
@@ -568,7 +632,7 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
           <div class="sn">1</div>
           <div>
             <h4>Go to Radiant Play on Galaxy</h4>
-            <p>galaxy.corp.thoughtspot.com/mohammed-faris/radiantplay</p>
+            <p>Find the Radiant Play repository on Galaxy</p>
           </div>
         </div>
         <div class="step-item">
@@ -592,7 +656,7 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
         <div class="repo-ico">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7AB2F8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
         </div>
-        <div><h5>mohammed-faris / radiantplay</h5><p>Source of truth</p></div>
+        <div><h5>radiantplay</h5><p>Source of truth</p></div>
         <span class="repo-badge">Original</span>
       </div>
       <div class="fork-mid">
@@ -640,7 +704,8 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
           <strong style="color:#fff">Option B:</strong> Click the branch icon in the left sidebar → "Clone Repository"<br>
           Paste your fork URL, choose a folder (Desktop is fine). Cursor downloads the project.</div>
           <div class="wcode"><span class="cmt"># Paste your fork URL — looks like this:</span>
-<span class="cmd">https://galaxy.corp.thoughtspot.com/your-name/radiantplay.git</span></div>
+<span class="cmd">https://galaxy.corp.thoughtspot.com/your-name/radiantplay.git</span>
+<span class="cmt"># Replace "your-name" with your Galaxy username</span></div>
           <div class="wizard-nav">
             <button class="wbtn-p" onclick="setTab(1)">Next →</button>
             <button class="wbtn-g" disabled>← Back</button>
@@ -700,7 +765,7 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
     <div>
       <div class="label">Step 3</div>
       <h2 class="h2" style="margin-bottom:12px">Build your first prototype</h2>
-      <p class="sub" style="margin-bottom:22px">Just describe what you want. Cursor knows all 74 components and ThoughtSpot patterns.</p>
+      <p class="sub" style="margin-bottom:22px">Describe what you want. Cursor knows all 73+ components and ThoughtSpot patterns.</p>
       <div class="tips">
         <div class="tip">
           <div class="tip-ico">⌨️</div>
@@ -722,14 +787,14 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
           <div class="tip-ico">💬</div>
           <div>
             <h4>Open AI chat and describe your UI</h4>
-            <p><code>Cmd+L</code> (Mac) / <code>Ctrl+L</code> (Windows) — type a description, or <strong style="color:rgba(255,255,255,.6)">drag a Figma screenshot</strong> into the chat and say "Recreate this using Radiant components"</p>
+            <p><code>Cmd+L</code> (Mac) / <code>Ctrl+L</code> (Windows) — type a description, or <strong style="color:rgba(255,255,255,.6)">drag a screenshot</strong> into the chat and say "Recreate this using Radiant components"</p>
           </div>
         </div>
         <div class="tip">
           <div class="tip-ico">🔗</div>
           <div>
             <h4>Share your prototype</h4>
-            <p>Anyone on the same WiFi can open your URL. To share remotely: push to your Galaxy fork — the link is:<br><code>localhost:5173/playground</code> locally, or share the Vercel deploy link</p>
+            <p>Anyone on the same WiFi can open your URL locally at <code>localhost:5173/playground</code>. To share remotely, push to your Galaxy fork.</p>
           </div>
         </div>
       </div>
@@ -764,13 +829,118 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
 <!-- ══════════════════════════════
      SLIDE 9 — RESOURCES
 ══════════════════════════════ -->
-<div class="slide s-res" data-index="8">
+<!-- ══════════════════════════════ SLIDE 9 — MODEL USAGE ══════════════════════════════ -->
+<div class="slide s-models" data-index="8">
+  <div class="models-layout">
+    <!-- Left: Models + when to use -->
+    <div>
+      <div class="label"><span class="label-dot"></span>Model cheat sheet</div>
+      <h2 class="sec-title">500 credits / month</h2>
+      <p class="sec-sub">Click the model name next to "Agent" to switch anytime.</p>
+
+      <div class="model-tiers">
+        <div class="model-tier" style="border-color:rgba(39,112,239,.25);">
+          <div class="model-tier-header">
+            <div class="model-tier-dot" style="background:var(--blue-60)"></div>
+            <div class="model-tier-name">Opus high</div>
+            <div class="model-tier-cost">1 cr &middot; default</div>
+          </div>
+          <ul class="model-tier-tasks">
+            <li>Your everyday model for all tasks</li>
+            <li>Edits, questions, components, fixes</li>
+          </ul>
+        </div>
+
+        <div class="model-tier">
+          <div class="model-tier-header">
+            <div class="model-tier-dot" style="background:var(--orange)"></div>
+            <div class="model-tier-name">Opus high (thinking)</div>
+            <div class="model-tier-cost">2 cr &middot; deep work</div>
+          </div>
+          <ul class="model-tier-tasks">
+            <li>Planning, architecture, multi-file changes</li>
+            <li>Complex bugs, full page builds</li>
+          </ul>
+        </div>
+
+        <div class="model-tier">
+          <div class="model-tier-header">
+            <div class="model-tier-dot" style="background:var(--green)"></div>
+            <div class="model-tier-name">Sonnet medium</div>
+            <div class="model-tier-cost">1 cr &middot; budget</div>
+          </div>
+          <ul class="model-tier-tasks">
+            <li>Switch to this when credits run low</li>
+            <li>Keeps costs down in billing mode</li>
+          </ul>
+        </div>
+
+        <div class="model-tier">
+          <div class="model-tier-header">
+            <div class="model-tier-dot" style="background:var(--purple)"></div>
+            <div class="model-tier-name">GPT Codex fast</div>
+            <div class="model-tier-cost">2 cr &middot; alternate</div>
+          </div>
+          <ul class="model-tier-tasks">
+            <li>Boilerplate, general code questions</li>
+            <li>Less familiar with Radiant rules</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Usage data + flowchart -->
+    <div>
+      <div class="model-insight">
+        <div class="model-insight-label">Team usage — what to fix</div>
+        <div class="model-bar-row">
+          <div class="model-bar-label">Regular</div>
+          <div class="model-bar-track"><div class="model-bar-fill good" style="width:55%">55%</div></div>
+        </div>
+        <div class="model-bar-row">
+          <div class="model-bar-label">Thinking</div>
+          <div class="model-bar-track"><div class="model-bar-fill bad" style="width:37%">37%</div></div>
+        </div>
+        <div class="model-bar-row">
+          <div class="model-bar-label">Other</div>
+          <div class="model-bar-track"><div class="model-bar-fill mid" style="width:8%">8%</div></div>
+        </div>
+        <div class="model-callout">
+          <div class="model-callout-icon">&#x26A0;</div>
+          <div>37% of requests used thinking mode (2 cr each). Save thinking for planning and hard problems — use Opus regular for everything else.</div>
+        </div>
+      </div>
+
+      <div class="model-flowchart">
+        <div class="model-insight-label">When to use what</div>
+        <div class="flow-step">
+          <div class="flow-q">Most tasks — edits, fixes, questions</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-answer" style="background:rgba(39,112,239,.15);color:var(--blue-50)">Opus &middot; 1</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-q">Planning, architecture, hard bugs</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-answer" style="background:var(--orange-bg);color:var(--orange)">Opus thinking &middot; 2</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-q">Credits running low or in billing</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-answer" style="background:rgba(6,191,127,.15);color:var(--green)">Sonnet &middot; 1</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ SLIDE 10 — RESOURCES ══════════════════════════════ -->
+<div class="slide s-res" data-index="9">
   <div class="res-inner">
     <span class="celebrate">🚀</span>
     <h1 class="fin-title">You're ready. Let's build.</h1>
     <p class="fin-sub">You've got the tools, the components, and AI on your side. Open Cursor, describe what you want, and watch it come to life.</p>
-    <a class="fin-cta" href="https://galaxy.corp.thoughtspot.com/mohammed-faris/radiantplay" target="_blank">
-      Fork the repo and start
+    <a class="fin-cta" href="/playground" target="_blank">
+      Open the playground
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
     </a>
     <div class="res-grid">
@@ -795,8 +965,8 @@ kbd { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);bor
       <div class="res-card">
         <div class="res-icon">💙</div>
         <h4>Thank you</h4>
-        <p>For trying RadiantPlay. Every prototype you build makes the design system better for everyone.</p>
-        <code>Happy building!</code>
+        <p>For trying Radiant Play. Every prototype you build makes the design system better for everyone.</p>
+        <span style="font-size:12px;color:rgba(255,255,255,.35)">Happy building!</span>
       </div>
     </div>
   </div>

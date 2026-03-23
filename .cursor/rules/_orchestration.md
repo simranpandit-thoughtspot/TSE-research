@@ -1,92 +1,120 @@
 ---
-description: Master orchestration guide for AI — determines which rule files to consult and in what order
+description: Master orchestration guide for AI — determines which rule files to read and in what order for every task
 globs: ["src/**/*.tsx", "src/**/*.ts", "src/**/*.css"]
 alwaysApply: true
 ---
 
 # Radiant Rules Orchestration
 
-This file tells you **which guideline files to consult** depending on the task. Always read this file first when working in the Radiant codebase.
+CRITICAL: Before writing ANY code for a prototype, you MUST scan the designer's request and proactively load every relevant rule file listed below. Do NOT wait for the designer to tell you which rules to use. Most prototype requests need multiple rule files loaded simultaneously.
 
 ---
 
 ## Task: Generating a Prototype
 
-When a designer asks you to create or modify a prototype (files in `src/prototypes/`), consult these files in order:
+### Step 1: Scan the request and load ALL relevant rules
 
-| Priority | File | When to consult |
-|----------|------|-----------------|
-| 1 | `prototype-generation.md` | **Always** — core workflow, code structure, and import patterns |
-| 2 | `component-inventory.md` | **Always** — find the right component via decision tree |
-| 3 | `widget-patterns.md` | When building alerts, toasts, tables, menus, tooltips, empty states, delete confirmations, or any multi-component interaction pattern |
-| 3b | `interaction-patterns.md` | When building loading states, error handling, empty states, disabled states, or transitions |
-| 4 | `layout-patterns.md` | When building a full page — pick a layout template (dashboard, admin, form, table page, wizard) |
-| 5a | `figma-mcp-workflow.md` | When the input is a Figma URL — MCP tool-call sequence and adaptation |
-| 5b | `figma-component-mapping.md` | When the input is a Figma screenshot or Figma layer names |
-| 6 | `modal-patterns.md` | When building modals or dialogs — size selection (M1-M4), type (simple/wizard/subnav/splash), footer button placement |
-| 7 | `token-usage.md` | **Always** — styling reference, never hard-code values |
-| 8 | `content-guidelines.md` | **Always** — all UI text must follow ThoughtSpot content rules |
-| 9 | `product-knowledge.md` | When the prototype references ThoughtSpot features (Answers, Liveboards, Spotter, Connections, SpotIQ, Monitors) |
-| 10 | `prototype-structure.md` | When organizing files, creating thumbnails, or registering a prototype |
+Read the designer's request and check EVERY row below. If the condition matches, you MUST read that rule file BEFORE writing code. Most requests match 3-5 conditions.
 
-### Quick decision tree
+| Condition | Rule file to read | Examples that match |
+|-----------|-------------------|---------------------|
+| **Any Liveboard prototype** | `liveboard-ia.md` | **Priority 0** — IA structure, component map, mode scaffolding. Ask user about mode (View/Edit/Both) before starting. |
+| **Any prototype work** | `prototype-generation.md` | Always |
+| **Any prototype work** | `component-inventory.md` | Always — loaded automatically via globs |
+| **Any prototype work** | `compliance-checklist.md` | Always — loaded automatically |
+| Building a full page, dashboard, admin panel, settings page, or any layout with header/sidebar | `layout-patterns.md` | "build a dashboard", "create a settings page", "admin panel", any full-page UI |
+| Building a table, list, alert, toast, menu, tooltip, empty state, date picker, or delete confirmation | `widget-patterns.md` | "data table", "action menu", "empty state", "toast notification", "filter list" |
+| Building a modal, dialog, wizard, or confirmation prompt | `modal-patterns.md` | "settings modal", "delete confirmation", "multi-step wizard", "filter dialog" |
+| Building loading states, error handling, disabled controls, or animations | `interaction-patterns.md` | "loading spinner", "error state", "disabled button with tooltip", "skeleton screen" |
+| Input is a Figma URL (figma.com/design/...) | `figma-mcp-workflow.md` | Any Figma URL |
+| Input is a Figma screenshot or mentions Figma layers | `figma-component-mapping.md` | Pasted screenshot, Figma layer names, "convert this Figma" |
+| Prototype references ThoughtSpot features | `product-knowledge.md` | "Liveboard", "Answer", "SpotIQ", "Worksheet", "Monitor" |
+| Creating a new prototype folder or registering it | `prototype-structure.md` | "create new prototype", "add to registry", organizing files |
+
+**Common combinations — load ALL listed files:**
+- "Build a dashboard with data table" → `layout-patterns.md` + `widget-patterns.md`
+- "Build a settings page with a filter modal" → `layout-patterns.md` + `modal-patterns.md` + `widget-patterns.md`
+- "Build a table page with action menus and delete confirmation" → `widget-patterns.md` + `modal-patterns.md`
+- "Implement this Figma" → `figma-mcp-workflow.md` + `figma-component-mapping.md` + `layout-patterns.md`
+
+### Step 2: Follow the generation workflow
+
+After loading all relevant rules, follow `prototype-generation.md` for the step-by-step build process.
+
+### Input-type quick reference
 
 ```
-What is the input?
-├── "Create a new prototype" (via chat or screenshot)
-│   → Create folder in src/prototypes/, auto-register in registry.ts, then follow prototype-generation.md
-├── Figma URL (figma.com/design/...)
-│   → Start with figma-mcp-workflow.md for the MCP tool-call sequence
-│   → Use figma-component-mapping.md to map Figma values to Radiant tokens
-│   → Then prototype-generation.md for the build workflow
-│   → MUST drill into Figma sub-nodes when design is too large (see prototype-generation.md §10)
-│   → MUST visually verify output against Figma before declaring done (see prototype-generation.md §9)
-├── Figma screenshot (pasted image, no URL)
-│   → Start with figma-component-mapping.md to map layers/colors/icons, then prototype-generation.md
-├── Text description of a UI
-│   → Start with prototype-generation.md + component-inventory.md
-├── "Build a dashboard / admin panel / settings page"
-│   → Start with layout-patterns.md for the template, then prototype-generation.md
-├── "Build a modal / wizard / dialog"
-│   → Start with modal-patterns.md, then prototype-generation.md
-└── "Add a table / menu / alert / toast"
-    → Start with widget-patterns.md for interaction rules, then prototype-generation.md
+Figma URL (figma.com/design/...)
+  → Read figma-mcp-workflow.md + figma-component-mapping.md
+  → Then prototype-generation.md
+  → MUST drill into sub-nodes when design is too large (§10)
+  → MUST visually verify against Figma before declaring done (§9)
+
+Figma screenshot (pasted image, no URL)
+  → Read figma-component-mapping.md
+  → Then prototype-generation.md
+
+Text description
+  → Scan for layout/widget/modal/interaction keywords (see table above)
+  → Load matching rule files
+  → Then prototype-generation.md
 ```
 
 ---
 
 ## Task: Creating or Modifying a Component
 
-When creating or modifying a component in `src/components/`, consult these files:
+When creating or modifying a component in `src/components/`, read these files:
 
-| Priority | File | When to consult |
-|----------|------|-----------------|
-| 1 | `design-system.md` | **Always** — file structure, forwardRef, TypeScript patterns, accessibility |
-| 2 | `token-usage.md` | **Always** — CSS variables in modules, TypeScript imports for inline styles |
-| 3 | `content-guidelines.md` | **Always** — default labels, placeholder text, error messages |
-| 4 | `component-inventory.md` | Before creating — check if a component already exists |
+| File | When |
+|------|------|
+| `design-system.md` | **Always** — forwardRef, TypeScript, CSS Modules, accessibility |
+| `token-usage.md` | **Always** — CSS variables, TypeScript token imports |
+| `content-guidelines.md` | **Always** — default labels, placeholder text, error messages |
+| `component-inventory.md` | **Always** — check if a component already exists before creating |
 
 ---
 
 ## Task: Writing UI Text or Labels
 
-For any user-facing text (buttons, titles, errors, descriptions):
+For any user-facing text (buttons, titles, errors, descriptions, toasts, tooltips, empty states):
 
-| Priority | File | Scope |
-|----------|------|-------|
-| 1 | `content-guidelines.md` | Quick rules for buttons, labels, titles, errors |
-| 2 | `product-knowledge.md` | Capitalized ThoughtSpot terms (Answer, Liveboard, SpotIQ, etc.) |
+| File | Scope |
+|------|-------|
+| `content-guidelines.md` | Hard constraints by element type — word counts, approved verbs, casing, punctuation |
+| `docs/ux-writing-rules.md` | Full 79-rule source of truth — consult for edge cases |
+| `product-knowledge.md` | Capitalized ThoughtSpot terms (Answer, Liveboard, SpotIQ, etc.) |
+
+---
+
+## How Rules Load
+
+**Auto-loaded (always in context for prototype files):**
+- `_orchestration.md` — this file (alwaysApply)
+- `compliance-checklist.md` — quality gate (alwaysApply)
+- `prototype-generation.md` — core workflow (globs: prototype files)
+- `component-inventory.md` — 72+ components (globs: prototype + component files)
+- `token-usage.md` — design tokens (globs: prototype + component files)
+- `content-guidelines.md` — UX writing (globs: prototype + component files)
+
+**On-demand (you must proactively read these based on the task — see the condition table above):**
+- `layout-patterns.md` — dashboards, admin panels, AppShell, responsive grids
+- `widget-patterns.md` — alerts, tables, menus, tooltips, empty states, date pickers
+- `modal-patterns.md` — modal sizes M1-M4, wizards, dialogs, confirmation prompts
+- `interaction-patterns.md` — loading, error, disabled, transition states
+- `figma-mcp-workflow.md` — Figma URL → MCP tool-call sequence
+- `figma-component-mapping.md` — Figma layers/colors/icons → Radiant tokens
+- `prototype-structure.md` — folder organization, thumbnails, registry
+- `product-knowledge.md` — ThoughtSpot terminology and domain context
+- `design-system.md` — component creation standards (src/components/ only)
 
 ---
 
 ## Key Rules (Always Apply)
 
-1. **Never hard-code colors, spacing, or typography** — use design tokens (see `token-usage.md`)
-2. **Always prefer existing components** — check `component-inventory.md` before creating custom elements. The library now has **72 components** (was 37).
-3. **Follow ThoughtSpot content rules** — sentence case, imperative verbs, no periods in buttons (see `content-guidelines.md`)
+1. **Run compliance checklist** on every file before declaring done — see `compliance-checklist.md`
+2. **Always use Radiant components** — check `component-inventory.md`, never use raw HTML for covered patterns
+3. **Follow UX writing rules** — every UI string through `content-guidelines.md`
 4. **Use mock data** — import from `../../mocks` for realistic content
-5. **Use the component decision tree** in `component-inventory.md` to pick the right component
-6. **Follow widget interaction rules** in `widget-patterns.md` for correct behavior (alert types, menu ordering, tooltip timing, empty states)
-7. **Reuse existing components** — Always search `component-inventory.md` first. Only create a new component if no existing Radiant component can serve the purpose. If a close match exists, prefer using it with props/styling over creating something new.
-8. **Local components only** — When a new component IS needed during prototype generation, create it inside the prototype's own folder (`src/prototypes/MyPrototype/components/`), NOT in the shared `src/components/` directory. Follow `design-system.md` for structure even for local components (forwardRef, TypeScript types, design tokens).
-9. **Use layout primitives** — Always use `Horizontal`/`Vertical`/`View` instead of inline `display: flex` styles. Use `Grid`/`RdGrid` instead of inline `display: grid` styles. See `layout-patterns.md` for the Layout Primitives section.
+5. **Local components only** — prototype-specific components go in `src/prototypes/MyPrototype/components/`, NOT in `src/components/`
+6. **Use layout primitives** — `Horizontal`/`Vertical`/`View` not inline flex; `Grid`/`RdGrid` not inline grid

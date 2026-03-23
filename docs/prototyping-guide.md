@@ -1,6 +1,6 @@
 # Radiant Prototyping Guide
 
-A comprehensive guide for designers using the Radiant Prototyping Kit to create interactive prototypes.
+A comprehensive guide for designers using the Radiant Play to create interactive prototypes.
 
 ## Table of Contents
 
@@ -26,8 +26,8 @@ A comprehensive guide for designers using the Radiant Prototyping Kit to create 
 1. **Fork the repository** on GitHub
 2. **Clone your fork:**
    ```bash
-   git clone https://github.com/YOUR-USERNAME/figmaradiant.git
-   cd figmaradiant
+   git clone https://github.com/YOUR-USERNAME/radiantplay.git
+   cd radiantplay
    ```
 
 3. **Install dependencies:**
@@ -48,7 +48,7 @@ A comprehensive guide for designers using the Radiant Prototyping Kit to create 
 ### Project Structure
 
 ```
-figmaradiant/
+radiantplay/
 ├── src/
 │   ├── components/       # Radiant components
 │   ├── prototypes/       # Your prototypes go here

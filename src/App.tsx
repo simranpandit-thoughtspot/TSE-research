@@ -14,11 +14,8 @@ import { VersionHistoryPage } from './pages/VersionHistoryPage';
 import { ColorSystemPage } from './pages/ColorSystemPage';
 import { TypographyPage } from './pages/TypographyPage';
 // import { RoadmapPage } from './pages/RoadmapPage';
-import { HowItWorksPage } from './pages/HowItWorksPage';
-import { systemColors } from './tokens/colors';
 
-// Prototype examples
-import { FilterDialogExample } from './prototypes/_examples/FilterDialog';
+import { systemColors } from './tokens/colors';
 
 // Navigation icons
 const HomeIcon = () => (
@@ -110,9 +107,8 @@ const ROUTES = {
   surfaces: '/radiant/surfaces',
   registry: '/radiant/registry',
   changelog: '/radiant/changelog',
-  // Example prototypes
-  'example-filter-dialog': '/radiant/examples/filter-dialog',
   // Widgets
+  liveboardheader: '/radiant/components/liveboardheader',
   globalheader: '/radiant/components/globalheader',
   appsidebar: '/radiant/components/appsidebar',
   appshell: '/radiant/components/appshell',
@@ -220,12 +216,6 @@ const RadiantLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       return componentId;
     }
     
-    // Check if it's an example page
-    if (path.startsWith('/radiant/examples/')) {
-      const exampleId = path.replace('/radiant/examples/', '');
-      return `example-${exampleId}`;
-    }
-    
     return 'radiant';
   };
 
@@ -241,8 +231,8 @@ const RadiantLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       'registry': '/radiant/registry',
       'changelog': '/radiant/changelog',
       // 'roadmap': '/radiant/roadmap',
-      'example-filter-dialog': '/radiant/examples/filter-dialog',
       // Widgets
+      'liveboardheader': '/radiant/components/liveboardheader',
       'globalheader': '/radiant/components/globalheader',
       'appsidebar': '/radiant/components/appsidebar',
       'appshell': '/radiant/components/appshell',
@@ -341,10 +331,10 @@ const RadiantLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     // { id: 'roadmap', label: 'Roadmap', icon: <RoadmapIcon />, type: 'item', badge: 'New' },
     { id: 'divider0', label: '', type: 'divider' },
     { id: 'widgets-section', label: 'Widgets', type: 'section' },
+    { id: 'liveboardheader', label: 'LiveboardHeader', icon: <ComponentIcon />, type: 'item', badge: 'New' },
     { id: 'globalheader', label: 'GlobalHeader', icon: <ComponentIcon />, type: 'item', badge: 'New' },
     { id: 'appsidebar', label: 'AppSidebar', icon: <ComponentIcon />, type: 'item', badge: 'New' },
     { id: 'appshell', label: 'AppShell', icon: <ComponentIcon />, type: 'item', badge: 'New' },
-    { id: 'example-filter-dialog', label: 'Filter Dialog', icon: <ComponentIcon />, type: 'item' },
     { id: 'divider1', label: '', type: 'divider' },
     { id: 'components-section', label: 'Selection Controls', type: 'section' },
     { id: 'button', label: 'Button', icon: <ComponentIcon />, type: 'item', badge: '3' },
@@ -489,6 +479,7 @@ const RadiantHomePageWrapper: React.FC = () => {
       'registry': '/radiant/registry',
       'architecture': '/radiant/architecture',
       // Widgets
+      'liveboardheader': '/radiant/components/liveboardheader',
       'globalheader': '/radiant/components/globalheader',
       'appsidebar': '/radiant/components/appsidebar',
       'appshell': '/radiant/components/appshell',
@@ -531,9 +522,10 @@ const RadiantHomePageWrapper: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Routes>
-      {/* Home - Simple split page */}
-      <Route path="/" element={<HomePage />} />
-      <Route path="/how-it-works" element={<HowItWorksPage />} />
+      {/* Prototyping gallery — default landing page */}
+      <Route path="/" element={<PlaygroundGallery />} />
+      <Route path="/home" element={<HomePage />} />
+      {/* How it works is now a static HTML page at /how-it-works.html */}
       
       {/* Radiant Section - With sidebar */}
       <Route path="/radiant" element={<RadiantLayout><RadiantHomePageWrapper /></RadiantLayout>} />
@@ -549,12 +541,10 @@ const App: React.FC = () => {
       <Route path="/radiant/colors" element={<Navigate to="/radiant/colours" replace />} />
       
       {/* Widget documentation pages */}
+      <Route path="/radiant/components/liveboardheader" element={<RadiantLayout><ComponentDocPage componentId="liveboardheader" /></RadiantLayout>} />
       <Route path="/radiant/components/globalheader" element={<RadiantLayout><ComponentDocPage componentId="globalheader" /></RadiantLayout>} />
       <Route path="/radiant/components/appsidebar" element={<RadiantLayout><ComponentDocPage componentId="appsidebar" /></RadiantLayout>} />
       <Route path="/radiant/components/appshell" element={<RadiantLayout><ComponentDocPage componentId="appshell" /></RadiantLayout>} />
-      
-      {/* Example prototypes */}
-      <Route path="/radiant/examples/filter-dialog" element={<RadiantLayout><FilterDialogExample /></RadiantLayout>} />
       
       {/* Component documentation pages - Selection Controls */}
       <Route path="/radiant/components/button" element={<RadiantLayout><ComponentDocPage componentId="button" /></RadiantLayout>} />
@@ -651,7 +641,7 @@ const App: React.FC = () => {
       <Route path="/radiant/components/icongallery" element={<Navigate to="/radiant/icons" replace />} />
       
       {/* Playground Section - No sidebar */}
-      <Route path="/playground" element={<PlaygroundGallery />} />
+      <Route path="/playground" element={<Navigate to="/" replace />} />
       <Route path="/playground/:projectName" element={<PlaygroundProject />} />
       
       {/* Legacy redirects - redirect old routes to new structure */}
@@ -662,7 +652,7 @@ const App: React.FC = () => {
       <Route path="/examples/*" element={<Navigate to="/radiant" replace />} />
       
       {/* Catch-all redirect */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/playground" replace />} />
     </Routes>
   );
 };

@@ -1,7 +1,7 @@
 /**
  * Project Configuration
  *
- * Fill this out when you fork the Radiant Prototyping Kit.
+ * Fill this out when you fork Radiant Play.
  * This metadata provides context for AI tools and developer handoff.
  *
  * Usage:
@@ -10,7 +10,7 @@
 
 export const projectConfig = {
   // --- Project Info ---
-  name: 'Radiant Prototyping Kit',
+  name: 'Radiant Play',
   description: 'AI-assisted interactive prototype builder using ThoughtSpot\'s Radiant design system',
 
   // --- Team ---
@@ -58,6 +58,34 @@ export const projectConfig = {
       status: 'in-progress' as 'planning' | 'in-progress' | 'ready-for-dev' | 'handed-off',
       figmaFrame: '',
       priority: 'medium' as 'high' | 'medium' | 'low',
+    },
+    {
+      id: 'impersonation-v2',
+      name: 'Admin Impersonation',
+      status: 'in-progress' as 'planning' | 'in-progress' | 'ready-for-dev' | 'handed-off',
+      figmaFrame: '',
+      priority: 'medium' as 'high' | 'medium' | 'low',
+    },
+    {
+      id: 'modal-patterns',
+      name: 'Modal Patterns',
+      status: 'in-progress' as 'planning' | 'in-progress' | 'ready-for-dev' | 'handed-off',
+      figmaFrame: '',
+      priority: 'low' as 'high' | 'medium' | 'low',
+    },
+    {
+      id: 'muse-chat',
+      name: 'MuseChat',
+      status: 'in-progress' as 'planning' | 'in-progress' | 'ready-for-dev' | 'handed-off',
+      figmaFrame: '',
+      priority: 'high' as 'high' | 'medium' | 'low',
+    },
+    {
+      id: 'spotter-model',
+      name: 'Spotter Model',
+      status: 'in-progress' as 'planning' | 'in-progress' | 'ready-for-dev' | 'handed-off',
+      figmaFrame: '',
+      priority: 'high' as 'high' | 'medium' | 'low',
     },
   ],
 };

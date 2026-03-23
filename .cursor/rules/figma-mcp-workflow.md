@@ -1,6 +1,5 @@
 ---
-description: Workflow for using the Figma MCP tools to convert Figma designs into Radiant prototypes
-globs: ["src/prototypes/**/*.tsx"]
+description: Step-by-step workflow for using Figma MCP tools (get_design_context, get_metadata, get_variable_defs, get_screenshot) to convert Figma URLs into Radiant prototypes. Use when the user provides a Figma URL (figma.com/design/...). Do NOT use for screenshots or text descriptions without a Figma URL.
 alwaysApply: false
 ---
 

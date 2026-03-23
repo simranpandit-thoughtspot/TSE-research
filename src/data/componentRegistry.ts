@@ -1062,6 +1062,20 @@ export const componentRegistry: ComponentMeta[] = [
     author: 'Engineering Team',
     category: 'Advanced',
   },
+  // Liveboard
+  {
+    id: 'liveboardheader',
+    name: 'LiveboardHeader',
+    description: 'Unified Liveboard header that renders PrimaryNav + ViewHeader (view mode) or EditToolbar + EditSubHeader (edit mode)',
+    states: ['view-mode', 'edit-mode', 'spotter-open'],
+    path: '/radiant/components/liveboardheader',
+    lastModified: '2026-03-13',
+    source: 'custom',
+    status: 'new',
+    variants: 2,
+    author: 'Engineering Team',
+    category: 'Widgets',
+  },
 ];
 
 /**
