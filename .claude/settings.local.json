@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sips -c 800 600 \"/Users/simran.pandit/Desktop/Screenshot 2026-03-20 at 1.38.53 AM.png\" --out /tmp/admin_full.png)",
+      "Bash(sips -c 400 300 --cropOffset 70 200 \"/Users/simran.pandit/Desktop/Screenshot 2026-03-20 at 1.38.53 AM.png\" --out /tmp/admin_top.png)",
+      "Bash(sips '/Users/simran.pandit/Desktop/Screenshot 2026-03-20 at 1.38.53 AM.png' -g all)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(npx tsc:*)",
+      "Bash(find /Users/simran.pandit/CODE/Radiantplay/src/components -type f -name *ppShell* -o -name *ppSidebar* -o -name *lobal*eader*)",
+      "Bash(npm run:)",
+      "Bash(git remote:*)",
+      "Bash(git fetch:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "figma"
+  ]
+}

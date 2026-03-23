@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { AppShell } from '../../components/AppShell';
+import type { AppSidebarProps, SidebarTab, SidebarCategory } from '../../components/AppSidebar/AppSidebar';
 import { ADMIN_NAV_COMMANDS } from './data/mockData';
 import { CommandCentre } from './pages/CommandCentre';
 import { UsersOrgs } from './pages/UsersOrgs';
@@ -16,17 +18,10 @@ import { Placeholder } from './pages/Placeholder';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-const SIDEBAR_BG = '#1d232f';
-const SIDEBAR_ACTIVE_BG = 'rgba(113,161,244,0.12)';
-const SIDEBAR_ACTIVE_TEXT = '#71a1f4';
-const SIDEBAR_HIGHLIGHT_BG = 'rgba(113,161,244,0.3)';
-const SIDEBAR_HOVER_BG = 'rgba(113,161,244,0.06)';
-const SIDEBAR_NAV_TEXT = '#dbdfe7';
-const SIDEBAR_CATEGORY_LABEL = '#a5acb9';
-const SIDEBAR_BORDER = '#323946';
-const TOPNAV_BG = '#1d232f';
 const CONTENT_BG = '#f6f8fa';
 const BLUE = '#71a1f4';
+const SIDEBAR_CATEGORY_LABEL = '#a5acb9';
+const SIDEBAR_NAV_TEXT = '#dbdfe7';
 
 type SidebarTabId = 'insights' | 'data' | 'develop' | 'admin';
 type PageId =
@@ -70,433 +65,72 @@ const PAGE_TITLES: Record<PageId, string> = {
   'billing-stats': 'Billing Stats',
 };
 
-type ScopeId = 'all' | 'primary';
+// ─── Sidebar Config ───────────────────────────────────────────────────────────
 
-interface NavCategory {
-  title: string;
-  items: { id: PageId; label: string }[];
-}
-
-const ADMIN_CATEGORIES: NavCategory[] = [
-  {
-    title: 'OVERVIEW',
-    items: [
-      { id: 'command-centre', label: 'Command centre' },
-      { id: 'ai-bi-stats', label: 'AI & BI Stats' },
-      { id: 'object-usage', label: 'Object usage' },
-    ],
-  },
-  {
-    title: 'USERS & IDENTITY',
-    items: [
-      { id: 'users-orgs', label: 'Users & Orgs' },
-      { id: 'authentication', label: 'Authentication' },
-      { id: 'user-adoption', label: 'User adoption' },
-    ],
-  },
-  {
-    title: 'APPLICATION SETTINGS',
-    items: [
-      { id: 'general-settings', label: 'General settings' },
-      { id: 'agent-settings', label: 'Agent settings' },
-      { id: 'feature-management', label: 'Feature management' },
-      { id: 'customisations', label: 'Customisations' },
-      { id: 'variables', label: 'Variables' },
-      { id: 'version-control', label: 'Version control' },
-    ],
-  },
-  {
-    title: 'SECURITY',
-    items: [
-      { id: 'simulations', label: 'Simulations & Impersonation' },
-      { id: 'governance', label: 'Governance & Security' },
-    ],
-  },
-  {
-    title: 'SUPPORT AND INFRASTRUCTURE',
-    items: [
-      { id: 'connections', label: 'Connections & Integrations' },
-      { id: 'infrastructure', label: 'Infrastructure & Support' },
-    ],
-  },
+// No icon prop — AppSidebar uses built-in icons for the standard tab IDs
+const SIDEBAR_TABS: SidebarTab[] = [
+  { id: 'insights', label: 'Insights', headerTitle: 'Insights' },
+  { id: 'data', label: 'Data', headerTitle: 'Data' },
+  { id: 'develop', label: 'Develop', headerTitle: 'Develop' },
+  { id: 'admin', label: 'Admin', headerTitle: 'Admin' },
 ];
 
-// ─── SVG Icons ───────────────────────────────────────────────────────────────
+const SIDEBAR_CATEGORIES: Record<string, SidebarCategory[]> = {
+  insights: [],
+  data: [],
+  develop: [],
+  admin: [
+    {
+      title: 'OVERVIEW',
+      items: [
+        { id: 'command-centre', label: 'Command centre' },
+        { id: 'ai-bi-stats', label: 'AI & BI Stats' },
+        { id: 'object-usage', label: 'Object usage' },
+      ],
+    },
+    {
+      title: 'USERS & IDENTITY',
+      items: [
+        { id: 'users-orgs', label: 'Users & Orgs' },
+        { id: 'authentication', label: 'Authentication' },
+        { id: 'user-adoption', label: 'User adoption' },
+      ],
+    },
+    {
+      title: 'APPLICATION SETTINGS',
+      items: [
+        { id: 'general-settings', label: 'General settings' },
+        { id: 'agent-settings', label: 'Agent settings' },
+        { id: 'feature-management', label: 'Feature management' },
+        { id: 'customisations', label: 'Customisations' },
+        { id: 'variables', label: 'Variables' },
+        { id: 'version-control', label: 'Version control' },
+      ],
+    },
+    {
+      title: 'SECURITY',
+      items: [
+        { id: 'simulations', label: 'Simulations & Impersonation' },
+        { id: 'governance', label: 'Governance & Security' },
+      ],
+    },
+    {
+      title: 'SUPPORT AND INFRASTRUCTURE',
+      items: [
+        { id: 'connections', label: 'Connections & Integrations' },
+        { id: 'infrastructure', label: 'Infrastructure & Support' },
+      ],
+    },
+  ],
+};
 
-const IconBarChart: React.FC<{ size?: number; color?: string }> = ({ size = 18, color = 'currentColor' }) => (
-  <svg width={size} height={size} viewBox="0 0 18 18" fill="none">
-    <rect x="2" y="10" width="3" height="6" rx="1" fill={color} />
-    <rect x="7.5" y="6" width="3" height="10" rx="1" fill={color} />
-    <rect x="13" y="2" width="3" height="14" rx="1" fill={color} />
-  </svg>
-);
-
-const IconGrid: React.FC<{ size?: number; color?: string }> = ({ size = 18, color = 'currentColor' }) => (
-  <svg width={size} height={size} viewBox="0 0 18 18" fill="none">
-    <rect x="2" y="2" width="6" height="6" rx="1.5" stroke={color} strokeWidth="1.4" />
-    <rect x="10" y="2" width="6" height="6" rx="1.5" stroke={color} strokeWidth="1.4" />
-    <rect x="2" y="10" width="6" height="6" rx="1.5" stroke={color} strokeWidth="1.4" />
-    <rect x="10" y="10" width="6" height="6" rx="1.5" stroke={color} strokeWidth="1.4" />
-  </svg>
-);
-
-const IconCode: React.FC<{ size?: number; color?: string }> = ({ size = 18, color = 'currentColor' }) => (
-  <svg width={size} height={size} viewBox="0 0 18 18" fill="none">
-    <path d="M6 5L2 9L6 13" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M12 5L16 9L12 13" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
-const IconGear: React.FC<{ size?: number; color?: string }> = ({ size = 18, color = 'currentColor' }) => (
-  <svg width={size} height={size} viewBox="0 0 18 18" fill="none">
-    <circle cx="9" cy="9" r="2.5" stroke={color} strokeWidth="1.4" />
-    <path d="M9 2v1.5M9 14.5V16M2 9h1.5M14.5 9H16M4.1 4.1l1.06 1.06M12.84 12.84l1.06 1.06M4.1 13.9l1.06-1.06M12.84 5.16l1.06-1.06" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
-  </svg>
-);
-
+// ─── Search icon for Command Palette ─────────────────────────────────────────
 const IconSearch: React.FC<{ size?: number; color?: string }> = ({ size = 16, color = 'currentColor' }) => (
   <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
     <circle cx="6.5" cy="6.5" r="4.5" stroke={color} strokeWidth="1.3" />
     <line x1="10" y1="10" x2="13.5" y2="13.5" stroke={color} strokeWidth="1.3" strokeLinecap="round" />
   </svg>
 );
-
-const IconBell: React.FC<{ size?: number; color?: string }> = ({ size = 16, color = 'currentColor' }) => (
-  <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
-    <path d="M8 2a5 5 0 0 0-5 5v2l-1 2h12l-1-2V7a5 5 0 0 0-5-5Z" stroke={color} strokeWidth="1.3" strokeLinecap="round" />
-    <path d="M6.5 13a1.5 1.5 0 0 0 3 0" stroke={color} strokeWidth="1.3" strokeLinecap="round" />
-  </svg>
-);
-
-const IconQuestion: React.FC<{ size?: number; color?: string }> = ({ size = 16, color = 'currentColor' }) => (
-  <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
-    <circle cx="8" cy="8" r="6" stroke={color} strokeWidth="1.3" />
-    <path d="M6.5 6a1.5 1.5 0 0 1 3 0c0 1-1.5 1.5-1.5 3" stroke={color} strokeWidth="1.3" strokeLinecap="round" />
-    <circle cx="8" cy="12" r="0.7" fill={color} />
-  </svg>
-);
-
-// ─── Avatar ───────────────────────────────────────────────────────────────────
-const Avatar: React.FC = () => (
-  <div
-    style={{
-      width: '30px',
-      height: '30px',
-      borderRadius: '50%',
-      backgroundColor: BLUE,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: '12px',
-      fontWeight: 700,
-      color: '#fff',
-      fontFamily: font,
-      flexShrink: 0,
-      cursor: 'pointer',
-    }}
-  >
-    AS
-  </div>
-);
-
-// ─── TopNav ───────────────────────────────────────────────────────────────────
-interface TopNavProps {
-  onOpenPalette: () => void;
-}
-
-const TopNav: React.FC<TopNavProps> = ({ onOpenPalette }) => (
-  <div
-    style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      height: '60px',
-      backgroundColor: TOPNAV_BG,
-      borderBottom: `1px solid ${SIDEBAR_BORDER}`,
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 20px',
-      gap: '16px',
-      zIndex: 100,
-    }}
-  >
-    {/* Logo */}
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '220px', flexShrink: 0 }}>
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <rect width="28" height="28" rx="7" fill={BLUE} />
-        <path d="M8 20L14 8L20 20" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <line x1="10" y1="16" x2="18" y2="16" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-      <span style={{ fontFamily: font, fontSize: '15px', fontWeight: 700, color: '#fff', letterSpacing: '-0.01em' }}>
-        ThoughtSpot
-      </span>
-    </div>
-
-    {/* Search */}
-    <button
-      onClick={onOpenPalette}
-      style={{
-        flex: 1,
-        maxWidth: '480px',
-        height: '36px',
-        backgroundColor: 'rgba(255,255,255,0.06)',
-        border: '1px solid rgba(255,255,255,0.12)',
-        borderRadius: '8px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        padding: '0 14px',
-        cursor: 'pointer',
-        transition: 'background-color 0.15s, border-color 0.15s',
-      }}
-      onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,0.1)'; }}
-      onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,0.06)'; }}
-    >
-      <IconSearch color="#a5acb9" />
-      <span style={{ fontFamily: font, fontSize: '13px', color: '#a5acb9', flex: 1, textAlign: 'left' }}>
-        Search or jump to…
-      </span>
-      <kbd style={{ fontFamily: font, fontSize: '11px', color: '#777e8b', backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', padding: '2px 6px' }}>
-        ⌘K
-      </kbd>
-    </button>
-
-    {/* Right icons */}
-    <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
-      {[IconQuestion, IconBell].map((Icon, i) => (
-        <button
-          key={i}
-          style={{
-            width: '34px',
-            height: '34px',
-            borderRadius: '7px',
-            border: 'none',
-            backgroundColor: 'transparent',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            color: '#a5acb9',
-          }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,0.08)'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent'; }}
-        >
-          <Icon color="#a5acb9" />
-        </button>
-      ))}
-      <div style={{ marginLeft: '8px' }}>
-        <Avatar />
-      </div>
-    </div>
-  </div>
-);
-
-// ─── Sidebar ──────────────────────────────────────────────────────────────────
-interface SidebarProps {
-  activeTab: SidebarTabId;
-  onTabChange: (tab: SidebarTabId) => void;
-  activePage: PageId;
-  onPageChange: (page: PageId) => void;
-  scope: ScopeId;
-  onScopeChange: (scope: ScopeId) => void;
-  highlightedPage: PageId | null;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({
-  activeTab,
-  onTabChange,
-  activePage,
-  onPageChange,
-  scope,
-  onScopeChange,
-  highlightedPage,
-}) => {
-  const sidebarTabs: { id: SidebarTabId; Icon: React.FC<{ size?: number; color?: string }> }[] = [
-    { id: 'insights', Icon: IconBarChart },
-    { id: 'data', Icon: IconGrid },
-    { id: 'develop', Icon: IconCode },
-    { id: 'admin', Icon: IconGear },
-  ];
-
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        top: '60px',
-        left: 0,
-        bottom: 0,
-        width: '261px',
-        backgroundColor: SIDEBAR_BG,
-        borderRight: `1px solid ${SIDEBAR_BORDER}`,
-        display: 'flex',
-        flexDirection: 'column',
-        zIndex: 90,
-        overflow: 'hidden',
-      }}
-    >
-      {/* Tab icons row */}
-      <div
-        style={{
-          display: 'flex',
-          borderBottom: `1px solid ${SIDEBAR_BORDER}`,
-          padding: '0 8px',
-          flexShrink: 0,
-        }}
-      >
-        {sidebarTabs.map(({ id, Icon }) => (
-          <button
-            key={id}
-            onClick={() => onTabChange(id)}
-            title={id.charAt(0).toUpperCase() + id.slice(1)}
-            style={{
-              flex: 1,
-              height: '52px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: 'none',
-              background: 'none',
-              cursor: 'pointer',
-              borderBottom: activeTab === id ? `2px solid ${BLUE}` : '2px solid transparent',
-              marginBottom: '-1px',
-              transition: 'background-color 0.15s',
-            }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = SIDEBAR_HOVER_BG; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent'; }}
-          >
-            <Icon
-              size={18}
-              color={activeTab === id ? SIDEBAR_ACTIVE_TEXT : SIDEBAR_CATEGORY_LABEL}
-            />
-          </button>
-        ))}
-      </div>
-
-      {/* Nav area — scrollable */}
-      {activeTab === 'admin' ? (
-        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
-          {/* Scope Toggle */}
-          <div style={{ padding: '16px 12px 8px' }}>
-            <div
-              style={{
-                display: 'flex',
-                backgroundColor: 'rgba(255,255,255,0.06)',
-                borderRadius: '8px',
-                padding: '3px',
-                gap: '2px',
-              }}
-            >
-              {[
-                { id: 'all' as ScopeId, label: 'All Orgs' },
-                { id: 'primary' as ScopeId, label: 'Primary Org' },
-              ].map(({ id, label }) => (
-                <button
-                  key={id}
-                  onClick={() => onScopeChange(id)}
-                  style={{
-                    flex: 1,
-                    height: '28px',
-                    border: 'none',
-                    borderRadius: '6px',
-                    backgroundColor: scope === id ? 'rgba(113,161,244,0.2)' : 'transparent',
-                    color: scope === id ? SIDEBAR_ACTIVE_TEXT : SIDEBAR_CATEGORY_LABEL,
-                    fontFamily: font,
-                    fontSize: '12px',
-                    fontWeight: scope === id ? 600 : 400,
-                    cursor: 'pointer',
-                    transition: 'background-color 0.15s, color 0.15s',
-                  }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Categories */}
-          {ADMIN_CATEGORIES.map((cat) => (
-            <div key={cat.title} style={{ marginBottom: '4px' }}>
-              <div
-                style={{
-                  padding: '10px 16px 4px',
-                  fontFamily: font,
-                  fontSize: '10.5px',
-                  fontWeight: 600,
-                  color: SIDEBAR_CATEGORY_LABEL,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                }}
-              >
-                {cat.title}
-              </div>
-              {cat.items.map((item) => {
-                const isActive = activePage === item.id;
-                const isHighlighted = highlightedPage === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => onPageChange(item.id)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      width: 'calc(100% - 12px)',
-                      padding: '8px 16px',
-                      border: 'none',
-                      textAlign: 'left',
-                      fontFamily: font,
-                      fontSize: '13px',
-                      fontWeight: isActive ? 600 : 400,
-                      color: isActive ? SIDEBAR_ACTIVE_TEXT : isHighlighted ? SIDEBAR_ACTIVE_TEXT : SIDEBAR_NAV_TEXT,
-                      backgroundColor: isHighlighted ? SIDEBAR_HIGHLIGHT_BG : isActive ? SIDEBAR_ACTIVE_BG : 'transparent',
-                      cursor: 'pointer',
-                      borderRadius: '6px',
-                      margin: '1px 6px',
-                      transition: 'background-color 0.15s, color 0.15s',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isActive && !isHighlighted) (e.currentTarget as HTMLButtonElement).style.backgroundColor = SIDEBAR_HOVER_BG;
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive && !isHighlighted) (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
-                    }}
-                  >
-                    {item.label}
-                  </button>
-                );
-              })}
-            </div>
-          ))}
-          <div style={{ height: '24px' }} />
-        </div>
-      ) : (
-        <div
-          style={{
-            flex: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '32px 16px',
-            flexDirection: 'column',
-            gap: '12px',
-          }}
-        >
-          <div
-            style={{
-              fontFamily: font,
-              fontSize: '12.5px',
-              color: SIDEBAR_CATEGORY_LABEL,
-              textAlign: 'center',
-              lineHeight: 1.5,
-            }}
-          >
-            Switch to the <strong style={{ color: SIDEBAR_ACTIVE_TEXT }}>Admin</strong> tab to<br />manage your instance.
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 // ─── Command Palette ──────────────────────────────────────────────────────────
 interface CommandPaletteProps {
@@ -822,7 +456,7 @@ const renderPage = (page: PageId, onNavigate: (page: PageId) => void) => {
 export const Admin2Vision: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SidebarTabId>('admin');
   const [activePage, setActivePage] = useState<PageId>('command-centre');
-  const [scope, setScope] = useState<ScopeId>('all');
+  const [scope, setScope] = useState<'all' | 'primary'>('all');
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [highlightedPage, setHighlightedPage] = useState<PageId | null>(null);
 
@@ -841,53 +475,82 @@ export const Admin2Vision: React.FC = () => {
   const navigateTo = useCallback((page: PageId) => {
     setActiveTab('admin');
     setActivePage(page);
-    // Highlight animation
     setHighlightedPage(page);
     const timer = setTimeout(() => setHighlightedPage(null), 2000);
     return () => clearTimeout(timer);
   }, []);
 
-  const handlePaletteNavigate = useCallback((page: PageId) => {
-    navigateTo(page);
-  }, [navigateTo]);
+  const sidebarProps: AppSidebarProps = {
+    tabs: SIDEBAR_TABS,
+    activeTab,
+    onTabChange: (id) => setActiveTab(id as SidebarTabId),
+    categories: SIDEBAR_CATEGORIES,
+    selectedNav: activePage,
+    onNavSelect: (id) => setActivePage(id as PageId),
+    scopeToggle: {
+      options: [
+        { id: 'all', label: 'All Orgs' },
+        { id: 'primary', label: 'Primary Org' },
+      ],
+      activeId: scope,
+      onChange: (id) => setScope(id as 'all' | 'primary'),
+    },
+    highlightedItem: highlightedPage,
+  };
 
   return (
-    <div style={{ fontFamily: font, minHeight: '100vh', backgroundColor: CONTENT_BG }}>
-      <TopNav onOpenPalette={() => setPaletteOpen(true)} />
-
-      <Sidebar
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        activePage={activePage}
-        onPageChange={setActivePage}
-        scope={scope}
-        onScopeChange={setScope}
-        highlightedPage={highlightedPage}
-      />
-
-      {/* Main content */}
-      <div
-        style={{
-          marginLeft: '261px',
-          marginTop: '60px',
-          minHeight: 'calc(100vh - 60px)',
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: CONTENT_BG,
-        }}
-      >
-        <PageHeader title={PAGE_TITLES[activePage] || activePage} />
-        <div style={{ flex: 1, overflowY: 'auto' }}>
-          {renderPage(activePage, navigateTo)}
+    <AppShell
+      style={{ height: '100vh' }}
+      headerProps={{
+        searchMode: 'trigger',
+        searchPlaceholder: 'Search or jump to…',
+        onSearchClick: () => setPaletteOpen(true),
+        showKeyboardHint: true,
+        userName: 'Admin',
+        showDefaultActions: true,
+      }}
+      sidebarProps={sidebarProps}
+      contentBackground={CONTENT_BG}
+      overlaySlot={
+        <CommandPalette
+          open={paletteOpen}
+          onClose={() => setPaletteOpen(false)}
+          onNavigate={navigateTo}
+        />
+      }
+    >
+      {activeTab === 'admin' ? (
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
+          <PageHeader title={PAGE_TITLES[activePage] || activePage} />
+          <div style={{ flex: 1, overflowY: 'auto' }}>
+            {renderPage(activePage, navigateTo)}
+          </div>
         </div>
-      </div>
-
-      <CommandPalette
-        open={paletteOpen}
-        onClose={() => setPaletteOpen(false)}
-        onNavigate={handlePaletteNavigate}
-      />
-    </div>
+      ) : (
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '32px',
+            minHeight: '100%',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: font,
+              fontSize: '13px',
+              color: '#6b7280',
+              textAlign: 'center',
+              lineHeight: 1.6,
+            }}
+          >
+            Switch to the <strong style={{ color: BLUE }}>Admin</strong> tab to manage your instance.
+          </div>
+        </div>
+      )}
+    </AppShell>
   );
 };
 
