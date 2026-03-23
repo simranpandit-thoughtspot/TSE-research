@@ -52,6 +52,9 @@ const AdminGroups = React.lazy(() => import('./AdminGroups'));
 const ImpersonationV2 = React.lazy(() => import('./ImpersonationV2'));
 const MuseChat = React.lazy(() => import('./MuseChat'));
 const SpotterModelProto = React.lazy(() => import('./SpotterModel'));
+const AdminPortal2 = React.lazy(() => import('./AdminPortal2'));
+const NewUIAdmin2 = React.lazy(() => import('./NewUIAdmin2'));
+const Customisation = React.lazy(() => import('./Customisation'));
 
 /**
  * All registered projects
@@ -123,6 +126,33 @@ export const projectRegistry: ProjectMeta[] = [
     component: SpotterModelProto,
     dsComponents: 5,
     customComponents: 14,
+  },
+  {
+    id: 'AdminPortal2',
+    name: 'Admin Portal 2.0',
+    description: 'Admin Portal 2.0 Groups tab with group listing, 2-step creation wizard, roles, parent groups, and user assignment.',
+    author: 'Design Team',
+    component: AdminPortal2,
+    dsComponents: 10,
+    customComponents: 7,
+  },
+  {
+    id: 'NewUIAdmin2',
+    name: 'New UI Admin 2.0',
+    description: 'Application Settings screen from Admin 2.0 — cluster settings, administration toggles, and downloads & schedules.',
+    author: 'Design Team',
+    component: NewUIAdmin2,
+    dsComponents: 6,
+    customComponents: 4,
+  },
+  {
+    id: 'Customisation',
+    name: 'Admin 2.0 — Customisation',
+    description: 'Customisation page from Admin 2.0 — Style tab with logo upload, font selection, theme colour, chart palettes, and footer text.',
+    author: 'Design Team',
+    component: Customisation,
+    dsComponents: 6,
+    customComponents: 8,
   },
   // Add more projects here as they are created
   // {
