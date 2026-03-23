@@ -55,6 +55,7 @@ const SpotterModelProto = React.lazy(() => import('./SpotterModel'));
 const AdminPortal2 = React.lazy(() => import('./AdminPortal2'));
 const NewUIAdmin2 = React.lazy(() => import('./NewUIAdmin2'));
 const Customisation = React.lazy(() => import('./Customisation'));
+const Admin2Vision = React.lazy(() => import('./Admin2Vision'));
 
 /**
  * All registered projects
@@ -153,6 +154,15 @@ export const projectRegistry: ProjectMeta[] = [
     component: Customisation,
     dsComponents: 6,
     customComponents: 8,
+  },
+  {
+    id: 'Admin2Vision',
+    name: 'Admin 2.0 Vision',
+    description: 'Full Admin 2.0 portal — custom dark sidebar, 12+ pages, command palette (⌘K), and complete navigation across users, settings, AI stats, and infrastructure.',
+    author: 'Design Team',
+    component: Admin2Vision,
+    dsComponents: 0,
+    customComponents: 20,
   },
   // Add more projects here as they are created
   // {
