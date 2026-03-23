@@ -58,7 +58,6 @@ const MiniSpotters = React.lazy(() => import('./MiniSpotters'));
 const LiveboardTemplate = React.lazy(() => import('./_liveboard-template'));
 const AdminPortal2 = React.lazy(() => import('./AdminPortal2'));
 const NewUIAdmin2 = React.lazy(() => import('./NewUIAdmin2'));
-const Customisation = React.lazy(() => import('./Customisation'));
 const Admin2Vision = React.lazy(() => import('./Admin2Vision'));
 
 /**
@@ -167,16 +166,6 @@ export const projectRegistry: ProjectMeta[] = [
     component: NewUIAdmin2,
     dsComponents: 6,
     customComponents: 4,
-    section: 'mine',
-  },
-  {
-    id: 'Customisation',
-    name: 'Admin 2.0 — Customisation',
-    description: 'Customisation page from Admin 2.0 — Style tab with logo upload, font selection, theme colour, chart palettes, and footer text.',
-    author: 'Design Team',
-    component: Customisation,
-    dsComponents: 6,
-    customComponents: 8,
     section: 'mine',
   },
   {

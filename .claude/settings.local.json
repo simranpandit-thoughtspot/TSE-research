@@ -11,7 +11,12 @@
       "Bash(find /Users/simran.pandit/CODE/Radiantplay/src/components -type f -name *ppShell* -o -name *ppSidebar* -o -name *lobal*eader*)",
       "Bash(npm run:)",
       "Bash(git remote:*)",
-      "Bash(git fetch:*)"
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)",
+      "Bash(npm run:*)",
+      "Bash(git push:*)",
+      "Bash(git branch:*)",
+      "Bash(echo $?)"
     ]
   },
   "enableAllProjectMcpServers": true,

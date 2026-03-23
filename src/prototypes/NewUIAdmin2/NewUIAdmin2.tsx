@@ -3,7 +3,7 @@ import { AppShell } from '../../components/AppShell';
 import type { AppSidebarProps, SidebarTab, SidebarCategory, ScopeToggle } from '../../components/AppSidebar';
 import type { GlobalHeaderProps } from '../../components/GlobalHeader';
 import { systemColors, referenceColors } from '../../tokens/colors';
-import { CustomisationPageContent } from '../Customisation/Customisation';
+import { CustomisationPageContent } from './CustomisationPageContent';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
