@@ -13,6 +13,8 @@ import { VersionControlPageContent } from './VersionControlPageContent';
 import { OnboardingPageContent } from './OnboardingPageContent';
 import { OrgManagementPageContent } from './OrgManagementPageContent';
 import { UsageAdoptionPageContent } from './UsageAdoptionPageContent';
+import { PerformanceTrackingPageContent } from './PerformanceTrackingPageContent';
+import { AIBIStatsPageContent } from './AIBIStatsPageContent';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -451,6 +453,8 @@ export const NewUIAdmin2: React.FC = () => {
     >
       {/* Route to Customisation page when that nav item is selected */}
       {sidebarNav === 'user-adoption' ? <UsageAdoptionPageContent /> :
+       sidebarNav === 'performance-tracking' ? <PerformanceTrackingPageContent /> :
+       sidebarNav === 'ai-bi-stats' ? <AIBIStatsPageContent /> :
        sidebarNav === 'org-management' ? <OrgManagementPageContent /> :
        sidebarNav === 'customisation' ? <CustomisationPageContent scope={scope} /> :
        sidebarNav === 'ai-settings' ? <AISettingsPageContent /> :
