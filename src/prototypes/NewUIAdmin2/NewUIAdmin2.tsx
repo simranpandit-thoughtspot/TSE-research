@@ -419,7 +419,16 @@ export const NewUIAdmin2: React.FC = () => {
       { id: 'primary-org', label: 'Primary Org' },
     ],
     activeId: scope,
-    onChange: (id: string) => setScope(id as 'all-orgs' | 'primary-org'),
+    onChange: (id: string) => {
+      setScope(id as 'all-orgs' | 'primary-org');
+      // Reset nav when switching scope — avoid landing on a page that doesn't exist in the new scope
+      const primaryIds = SIDEBAR_CATEGORIES_PRIMARY.admin.flatMap((c) => c.items.map((i) => i.id));
+      const allIds = SIDEBAR_CATEGORIES.admin.flatMap((c) => c.items.map((i) => i.id));
+      const validIds = id === 'primary-org' ? primaryIds : allIds;
+      if (!validIds.includes(sidebarNav)) {
+        setSidebarNav('home');
+      }
+    },
   };
 
   const headerProps: GlobalHeaderProps = {
