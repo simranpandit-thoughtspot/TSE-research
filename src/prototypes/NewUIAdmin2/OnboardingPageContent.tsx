@@ -115,20 +115,23 @@ const CollapsibleSection: React.FC<{
         borderBottom: open ? '1px solid #E5E7EB' : 'none',
         cursor: 'pointer',
       }} onClick={() => setOpen(!open)}>
-        <div>
-          <div style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>{title}</div>
-          {subtitle && (
-            <div style={{ fontSize: '12.5px', color: '#6B7280', fontFamily: font, marginTop: '2px' }}>{subtitle}</div>
-          )}
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }} onClick={(e) => e.stopPropagation()}>
-          {onReset && <ResetLink onClick={onReset} />}
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-            style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.15s ease' }}
-            onClick={(e) => { e.stopPropagation(); setOpen(!open); }}>
-            <path d="M3 5.5l5 5 5-5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+            style={{ flexShrink: 0, transform: open ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.15s ease' }}>
+            <path d="M3 5.5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
+          <div>
+            <div style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>{title}</div>
+            {subtitle && (
+              <div style={{ fontSize: '12.5px', color: '#6B7280', fontFamily: font, marginTop: '2px' }}>{subtitle}</div>
+            )}
+          </div>
         </div>
+        {onReset && (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ResetLink onClick={onReset} />
+          </div>
+        )}
       </div>
 
       {/* Content */}
