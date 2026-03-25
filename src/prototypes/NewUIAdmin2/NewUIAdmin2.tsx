@@ -4,6 +4,11 @@ import type { AppSidebarProps, SidebarTab, SidebarCategory, ScopeToggle } from '
 import type { GlobalHeaderProps } from '../../components/GlobalHeader';
 import { systemColors, referenceColors } from '../../tokens/colors';
 import { CustomisationPageContent } from './CustomisationPageContent';
+import { AISettingsPageContent } from './AISettingsPageContent';
+import { SearchSpotIQPageContent } from './SearchSpotIQPageContent';
+import { UserManagementPageContent } from './UserManagementPageContent';
+import { FeatureManagementPageContent } from './FeatureManagementPageContent';
+import { VariablesPageContent } from './VariablesPageContent';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -100,11 +105,13 @@ const Toggle: React.FC<{ checked: boolean; onChange: () => void }> = ({ checked,
 const Dropdown: React.FC<{ value: string; options: string[]; width?: number }> = ({
   value: initialValue,
   options,
-  width = 220,
+  width = 280,
 }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(initialValue);
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number; width: number }>({ top: 0, left: 0, width });
   const ref = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -114,11 +121,19 @@ const Dropdown: React.FC<{ value: string; options: string[]; width?: number }> =
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  const handleToggle = () => {
+    if (!open && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setMenuPos({ top: rect.bottom + 4, left: rect.left, width: rect.width });
+    }
+    setOpen(!open);
+  };
+
   return (
     <div ref={ref} style={{ position: 'relative', width, flexShrink: 0 }}>
-      {/* Trigger */}
       <button
-        onClick={() => setOpen(!open)}
+        ref={buttonRef}
+        onClick={handleToggle}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -134,11 +149,12 @@ const Dropdown: React.FC<{ value: string; options: string[]; width?: number }> =
           fontSize: '13px',
           color: '#111827',
           outline: 'none',
+          textAlign: 'left',
           boxShadow: open ? `0 0 0 2px ${brand}22` : 'none',
           transition: 'border-color 0.15s, box-shadow 0.15s',
         }}
       >
-        <span>{selected}</span>
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>{selected}</span>
         <svg
           width="12"
           height="12"
@@ -155,21 +171,19 @@ const Dropdown: React.FC<{ value: string; options: string[]; width?: number }> =
         </svg>
       </button>
 
-      {/* Menu */}
       {open && (
         <div
           style={{
-            position: 'absolute',
-            top: 'calc(100% + 4px)',
-            left: 0,
-            right: 0,
+            position: 'fixed',
+            top: menuPos.top,
+            left: menuPos.left,
+            width: menuPos.width,
             backgroundColor: '#FFFFFF',
             border: '1px solid #E5E7EB',
             borderRadius: '8px',
             boxShadow: '0 8px 24px rgba(0,0,0,0.10)',
-            zIndex: 100,
+            zIndex: 9999,
             overflow: 'hidden',
-            animation: 'dropdownFade 0.15s ease',
           }}
         >
           {options.map((opt) => (
@@ -272,6 +286,7 @@ const Card: React.FC<{
             width: '100%',
             padding: '16px 24px',
             border: 'none',
+            borderBottom: open ? '1px solid #E5E7EB' : 'none',
             background: 'none',
             cursor: 'pointer',
             fontFamily: font,
@@ -296,7 +311,7 @@ const Card: React.FC<{
           </span>
         </button>
       ) : (
-        <div style={{ padding: '16px 24px 12px' }}>
+        <div style={{ padding: '16px 24px 12px', borderBottom: '1px solid #E5E7EB' }}>
           <div style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>
             {title}
           </div>
@@ -316,7 +331,7 @@ const Card: React.FC<{
           transition: collapsible ? 'max-height 0.25s ease' : undefined,
         }}
       >
-        <div style={{ padding: '0 16px 16px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div style={{ padding: '16px 16px 16px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {children}
         </div>
       </div>
@@ -393,7 +408,12 @@ export const NewUIAdmin2: React.FC = () => {
       style={{ height: '100vh' }}
     >
       {/* Route to Customisation page when that nav item is selected */}
-      {sidebarNav === 'customisation' ? <CustomisationPageContent /> : (
+      {sidebarNav === 'customisation' ? <CustomisationPageContent /> :
+       sidebarNav === 'ai-settings' ? <AISettingsPageContent /> :
+       sidebarNav === 'search-spot-iq' ? <SearchSpotIQPageContent /> :
+       sidebarNav === 'user-management' ? <UserManagementPageContent /> :
+       sidebarNav === 'feature-management' ? <FeatureManagementPageContent /> :
+       sidebarNav === 'variables' ? <VariablesPageContent /> : (
 
       <div style={{ height: '100%', overflowY: 'auto', backgroundColor: '#FFFFFF' }}>
 

@@ -169,7 +169,7 @@ const Card: React.FC<{
 }> = ({ title, description, open, onToggle, rightAction, children }) => (
   <div style={{ backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '12px' }}>
     {/* Header row: chevron + title + optional description + optional right action */}
-    <div style={{ display: 'flex', alignItems: 'flex-start', padding: '14px 24px 10px' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-start', padding: '14px 24px 10px', borderBottom: open ? '1px solid #E5E7EB' : 'none' }}>
       <button
         onClick={onToggle}
         style={{
@@ -196,7 +196,7 @@ const Card: React.FC<{
 
     {/* Collapsible body */}
     <div style={{ maxHeight: open ? '3000px' : '0px', overflow: 'hidden', transition: 'max-height 0.25s ease' }}>
-      <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <div style={{ padding: '16px 16px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {children}
       </div>
     </div>
@@ -490,6 +490,429 @@ const AddFontLink: React.FC = () => (
   </button>
 );
 
+// ─── Modal primitives ─────────────────────────────────────────────────────────
+
+const ModalOverlay: React.FC<{ onClose: () => void; width?: number; children: React.ReactNode }> = ({ onClose, width = 700, children }) => (
+  <div
+    style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15,23,42,0.45)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+    onClick={onClose}
+  >
+    <div
+      style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', width, maxWidth: '92vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.18)' }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {children}
+    </div>
+  </div>
+);
+
+const ModalHeader: React.FC<{ title: string; divider?: boolean }> = ({ title, divider = true }) => (
+  <div style={{ flexShrink: 0 }}>
+    <div style={{ padding: '24px 28px 20px' }}>
+      <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#0F172A', fontFamily: font }}>{title}</h2>
+    </div>
+    {divider && <div style={{ height: '1px', backgroundColor: '#E5E7EB', margin: '0 28px' }} />}
+  </div>
+);
+
+const ModalBody: React.FC<{ children: React.ReactNode; scrollable?: boolean }> = ({ children, scrollable }) => (
+  <div style={{ flex: 1, overflowY: scrollable ? 'auto' : 'visible', padding: '20px 28px' }}>
+    {children}
+  </div>
+);
+
+const ModalFooter: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'flex-end', gap: '12px', padding: '16px 28px 24px', borderTop: '1px solid #F3F4F6' }}>
+    {children}
+  </div>
+);
+
+const PillButton: React.FC<{ label: string; variant: 'primary' | 'secondary'; onClick: () => void }> = ({ label, variant, onClick }) => (
+  <button onClick={onClick} style={{
+    height: '36px', padding: '0 22px', borderRadius: '20px',
+    border: variant === 'secondary' ? '1px solid #D1D5DB' : 'none',
+    backgroundColor: variant === 'primary' ? brand : '#FFFFFF',
+    color: variant === 'primary' ? '#FFFFFF' : '#374151',
+    fontSize: '13.5px', fontWeight: 500, fontFamily: font, cursor: 'pointer',
+  }}>
+    {label}
+  </button>
+);
+
+const FormField: React.FC<{ label: string; required?: boolean; helper?: string; placeholder?: string }> = ({ label, required, helper, placeholder }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+    <label style={{ fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font }}>
+      {label}{required && <span style={{ color: '#EF4444', marginLeft: '2px' }}>*</span>}
+    </label>
+    <input
+      type="text" placeholder={placeholder}
+      style={{ height: '36px', padding: '0 12px', border: '1px solid #D1D5DB', borderRadius: '6px', fontSize: '13px', fontFamily: font, color: '#111827', outline: 'none', width: '100%', boxSizing: 'border-box' }}
+      onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
+      onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+    />
+    {helper && <span style={{ fontSize: '12px', color: '#9CA3AF', fontFamily: font }}>{helper}</span>}
+  </div>
+);
+
+// ─── Add / Edit Map modal ─────────────────────────────────────────────────────
+
+const AddMapModal: React.FC<{ mode: 'add' | 'edit'; onClose: () => void }> = ({ mode, onClose }) => {
+  const [source, setSource] = useState<'computer' | 'url'>('computer');
+  return (
+    <ModalOverlay onClose={onClose} width={680}>
+      <ModalHeader title={mode === 'add' ? 'Add map' : 'Edit map'} />
+      <ModalBody>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <FormField label="Map name" placeholder="Name" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <span style={{ fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font }}>Upload TopoJSON file</span>
+            <div style={{ display: 'flex', gap: '20px' }}>
+              {(['computer', 'url'] as const).map((opt) => (
+                <label key={opt} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '13px', color: '#374151', fontFamily: font }}>
+                  <input type="radio" checked={source === opt} onChange={() => setSource(opt)} style={{ accentColor: brand }} />
+                  {opt === 'computer' ? 'From computer' : 'From URL'}
+                </label>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                type="text" placeholder={source === 'computer' ? 'Select file' : 'Enter URL'}
+                style={{ flex: 1, height: '36px', padding: '0 12px', border: '1px solid #D1D5DB', borderRadius: '6px', fontSize: '13px', fontFamily: font, outline: 'none', color: '#9CA3AF' }}
+              />
+              <button style={{ height: '36px', padding: '0 18px', border: '1px solid #D1D5DB', borderRadius: '6px', backgroundColor: '#F9FAFB', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                Upload
+              </button>
+            </div>
+          </div>
+          <div style={{ height: '320px', border: '1px solid #E5E7EB', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: '13px', color: '#9CA3AF', fontFamily: font }}>Preview shown when map is uploaded</span>
+          </div>
+        </div>
+      </ModalBody>
+      <ModalFooter>
+        <PillButton label="Cancel" variant="secondary" onClick={onClose} />
+        <PillButton label={mode === 'add' ? 'Add' : 'Save'} variant="primary" onClick={onClose} />
+      </ModalFooter>
+    </ModalOverlay>
+  );
+};
+
+// ─── Delete Map confirmation ──────────────────────────────────────────────────
+
+const DeleteMapModal: React.FC<{ mapName: string; onClose: () => void }> = ({ mapName, onClose }) => (
+  <ModalOverlay onClose={onClose} width={440}>
+    <ModalHeader title="Delete custom map?" />
+    <ModalBody>
+      <p style={{ margin: 0, fontSize: '13.5px', color: '#374151', fontFamily: font, lineHeight: 1.6 }}>
+        This will permanently delete '{mapName}'
+      </p>
+    </ModalBody>
+    <ModalFooter>
+      <PillButton label="Cancel" variant="secondary" onClick={onClose} />
+      <PillButton label="Delete" variant="primary" onClick={onClose} />
+    </ModalFooter>
+  </ModalOverlay>
+);
+
+// ─── Add / Edit Chart modal ───────────────────────────────────────────────────
+
+const AddChartModal: React.FC<{ mode: 'add' | 'edit'; onClose: () => void }> = ({ mode, onClose }) => (
+  <ModalOverlay onClose={onClose} width={680}>
+    <ModalHeader title={mode === 'add' ? 'Add custom chart' : 'Edit custom chart'} />
+    <ModalBody scrollable>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <FormField label="Name" required helper="Display name of the chart" />
+        <FormField label="Description" helper="Description is shown when users hover over the chart icon in the chart selection menu" />
+        <FormField label="Application URL" required helper="Secured (https) link to the chart application host" />
+        <FormField label="Access Token" helper="Access token issued by your custom chart developer" />
+        <FormField label="Icon URL" helper="Secured (https) link to the chart display icon" />
+        <FormField label="Author name" />
+        <FormField label="Author email" />
+        <FormField label="Author organisation" />
+      </div>
+    </ModalBody>
+    <ModalFooter>
+      <PillButton label="Cancel" variant="secondary" onClick={onClose} />
+      <PillButton label={mode === 'add' ? 'Add chart' : 'Save'} variant="primary" onClick={onClose} />
+    </ModalFooter>
+  </ModalOverlay>
+);
+
+// ─── Cannot delete chart modal ────────────────────────────────────────────────
+
+const DEPENDENT_OBJECTS = [
+  { name: 'Devin - Dynamic note tile - usecases and guide', type: 'Answer' },
+  { name: 'Dynamic note tile example - Region wise sales comparison', type: 'Answer' },
+  { name: 'Dynamic note tile', type: 'Answer' },
+  { name: 'Dynamic note tile - Measure example', type: 'Answer' },
+  { name: 'Dynamic notetile example', type: 'Answer' },
+  { name: 'Test dynamic content', type: 'Answer' },
+  { name: 'Dynamic note tile - sales this month vs last month', type: 'Answer' },
+  { name: 'Dynamic note tile - usecases and guide', type: 'Answer' },
+  { name: 'Dynamic content', type: 'Answer' },
+  { name: 'viztest8', type: 'Liveboard' },
+  { name: 'Test dynamic note tiles', type: 'Liveboard' },
+  { name: 'Native muze charts demo', type: 'Liveboard' },
+  { name: 'spotterviz', type: 'Liveboard' },
+];
+
+// ─── Customise Homepage modal ─────────────────────────────────────────────────
+
+const HOMEPAGE_ITEMS_ORDER = ['Announcement', 'Spotter', 'Watchlist', 'Library', 'Trending', 'Learning', 'Favourites'];
+
+const DragHandle: React.FC = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0, cursor: 'grab' }}>
+    <circle cx="5" cy="4" r="1.2" fill="#C0C6CF" />
+    <circle cx="5" cy="8" r="1.2" fill="#C0C6CF" />
+    <circle cx="5" cy="12" r="1.2" fill="#C0C6CF" />
+    <circle cx="11" cy="4" r="1.2" fill="#C0C6CF" />
+    <circle cx="11" cy="8" r="1.2" fill="#C0C6CF" />
+    <circle cx="11" cy="12" r="1.2" fill="#C0C6CF" />
+  </svg>
+);
+
+const CustomiseHomepageModal: React.FC<{
+  toggles: Record<string, boolean>;
+  onToggle: (key: string) => void;
+  onClose: () => void;
+}> = ({ toggles, onToggle, onClose }) => {
+  const keyMap: Record<string, string> = {
+    Announcement: 'announcement', Spotter: 'spotter', Watchlist: 'watchlist',
+    Library: 'library', Trending: 'trending', Learning: 'learning', Favourites: 'favourites',
+  };
+  return (
+    <ModalOverlay onClose={onClose} width={380}>
+      <ModalHeader title="Customise homepage" divider={false} />
+      <ModalBody scrollable>
+        <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
+          {HOMEPAGE_ITEMS_ORDER.map((label, i) => {
+            const key = keyMap[label];
+            const enabled = toggles[key];
+            return (
+              <div
+                key={label}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '12px',
+                  padding: '14px 16px',
+                  borderBottom: i < HOMEPAGE_ITEMS_ORDER.length - 1 ? '1px solid #F3F4F6' : 'none',
+                  backgroundColor: '#FFFFFF',
+                }}
+              >
+                <DragHandle />
+                <span style={{ flex: 1, fontSize: '14px', color: enabled ? '#111827' : '#9CA3AF', fontFamily: font }}>
+                  {label}
+                </span>
+                <Toggle checked={enabled} onChange={() => onToggle(key)} />
+              </div>
+            );
+          })}
+        </div>
+      </ModalBody>
+      {/* Custom footer: Reset left, Cancel+Done right */}
+      <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 28px 24px', borderTop: '1px solid #F3F4F6' }}>
+        <button style={{ border: 'none', background: 'none', fontSize: '13.5px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>
+          Reset to default
+        </button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <PillButton label="Cancel" variant="secondary" onClick={onClose} />
+          <PillButton label="Done" variant="primary" onClick={onClose} />
+        </div>
+      </div>
+    </ModalOverlay>
+  );
+};
+
+// ─── Cannot delete chart modal ─────────────────────────────────────────────────
+
+const CannotDeleteChartModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
+  <ModalOverlay onClose={onClose} width={520}>
+    <ModalHeader title="Cannot delete" divider={false} />
+    <ModalBody scrollable>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <p style={{ margin: 0, fontSize: '13.5px', color: '#374151', fontFamily: font, lineHeight: 1.6 }}>
+          This chart can't be deleted because it's being used by one or more dependent objects.
+        </p>
+        <ul style={{ margin: 0, padding: '0 0 0 18px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          {DEPENDENT_OBJECTS.map((obj, i) => (
+            <li key={i} style={{ fontSize: '13.5px', fontFamily: font }}>
+              <span style={{ color: brand, cursor: 'pointer' }}>{obj.name}</span>
+              <span style={{ color: '#6B7280' }}> ({obj.type})</span>
+            </li>
+          ))}
+        </ul>
+        <p style={{ margin: 0, fontSize: '13.5px', color: '#374151', fontFamily: font, lineHeight: 1.6 }}>
+          To delete it, change the chart type of the dependent objects or delete them.
+        </p>
+      </div>
+    </ModalBody>
+    <ModalFooter>
+      <PillButton label="Close" variant="primary" onClick={onClose} />
+    </ModalFooter>
+  </ModalOverlay>
+);
+
+// ─── Avatar ───────────────────────────────────────────────────────────────────
+
+const Avatar: React.FC<{ size?: number }> = ({ size = 24 }) => (
+  <div style={{
+    width: size, height: size, borderRadius: '50%', flexShrink: 0,
+    background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontSize: Math.round(size * 0.36), fontWeight: 600, color: '#fff', fontFamily: font,
+  }}>
+    AK
+  </div>
+);
+
+// ─── Add Action Button ────────────────────────────────────────────────────────
+
+const AddAction: React.FC<{ label: string }> = ({ label }) => (
+  <button style={{
+    display: 'flex', alignItems: 'center', gap: '5px', border: 'none', background: 'none',
+    fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0,
+  }}>
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <path d="M6.5 2v9M2 6.5h9" stroke={brand} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+    {label}
+  </button>
+);
+
+// ─── Text Link ────────────────────────────────────────────────────────────────
+
+const TextLink: React.FC<{ label: string }> = ({ label }) => (
+  <button style={{
+    border: 'none', background: 'none', fontSize: '13px', fontWeight: 500,
+    color: brand, fontFamily: font, cursor: 'pointer', padding: 0,
+  }}>
+    {label}
+  </button>
+);
+
+// ─── Simple Row ───────────────────────────────────────────────────────────────
+
+const SimpleRow: React.FC<{
+  label: string;
+  description?: string;
+  learnMore?: boolean;
+  control: React.ReactNode;
+  extraAction?: React.ReactNode;
+  dimmed?: boolean;
+}> = ({ label, description, learnMore, control, extraAction, dimmed }) => (
+  <div style={{
+    display: 'flex', alignItems: description ? 'flex-start' : 'center',
+    justifyContent: 'space-between', gap: '24px',
+    padding: '14px 20px', backgroundColor: '#FFFFFF',
+    border: '1px solid #E9EAEC', borderRadius: '8px',
+  }}>
+    <div style={{ flex: 1 }}>
+      <span style={{ fontSize: '14px', color: dimmed ? '#9CA3AF' : '#111827', fontFamily: font, lineHeight: 1.4 }}>
+        {label}
+      </span>
+      {description && (
+        <div style={{ fontSize: '12.5px', color: '#9CA3AF', fontFamily: font, marginTop: '3px', lineHeight: 1.55 }}>
+          {description}{learnMore && <> <button style={{ border: 'none', background: 'none', fontSize: '12.5px', color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Learn more</button></>}
+        </div>
+      )}
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexShrink: 0, paddingTop: description ? '2px' : 0 }}>
+      {extraAction}
+      {control}
+    </div>
+  </div>
+);
+
+// ─── Value Row ────────────────────────────────────────────────────────────────
+
+const ValueRow: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+  <div style={{
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px',
+    padding: '14px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px',
+  }}>
+    <span style={{ fontSize: '14px', color: '#111827', fontFamily: font }}>{label}</span>
+    <span style={{ fontSize: '13px', color: '#6B7280', fontFamily: font, maxWidth: '340px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'right' }}>
+      {value}
+    </span>
+  </div>
+);
+
+// ─── Color Display Row (Email) ────────────────────────────────────────────────
+
+const ColorDisplayRow: React.FC<{ label: string; color: string; hex: string }> = ({ label, color, hex }) => (
+  <div style={{
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px',
+    padding: '14px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px',
+  }}>
+    <span style={{ fontSize: '14px', color: '#111827', fontFamily: font }}>{label}</span>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: '5px',
+        height: '28px', padding: '0 8px', border: '1px solid #D1D5DB', borderRadius: '6px', backgroundColor: '#fff',
+      }}>
+        <div style={{ width: '16px', height: '16px', borderRadius: '3px', backgroundColor: color, flexShrink: 0 }} />
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <path d="M2 4l3 3 3-3" stroke="#9CA3AF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      <span style={{ fontSize: '13px', color: '#374151', fontFamily: font }}>{hex}</span>
+    </div>
+  </div>
+);
+
+// ─── Object Table ─────────────────────────────────────────────────────────────
+
+const ObjectTable: React.FC<{
+  columns: { label: string; flex?: number }[];
+  rows: React.ReactNode[][];
+}> = ({ columns, rows }) => {
+  const gridCols = columns.map((c) => `${c.flex ?? 1}fr`).join(' ');
+  return (
+    <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px', overflow: 'hidden' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: gridCols, padding: '10px 20px', borderBottom: '1px solid #F3F4F6' }}>
+        {columns.map((col) => (
+          <span key={col.label} style={{ fontSize: '12.5px', fontWeight: 500, color: '#9CA3AF', fontFamily: font }}>{col.label}</span>
+        ))}
+      </div>
+      {rows.map((row, i) => (
+        <div key={i} style={{
+          display: 'grid', gridTemplateColumns: gridCols, padding: '13px 20px',
+          borderBottom: i < rows.length - 1 ? '1px solid #F3F4F6' : 'none', alignItems: 'center',
+        }}>
+          {row.map((cell, j) => <div key={j}>{cell}</div>)}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// ─── Help Menu Icons ──────────────────────────────────────────────────────────
+
+const HelpMenuIcon: React.FC<{ type: 'document' | 'video' | 'rocket' | 'people' | 'info' }> = ({ type }) => {
+  const paths: Record<string, React.ReactNode> = {
+    document: <><rect x="4" y="1.5" width="12" height="17" rx="1.5" stroke="#6B7280" strokeWidth="1.4" /><path d="M7 7h6M7 10.5h6M7 14h4" stroke="#6B7280" strokeWidth="1.3" strokeLinecap="round" /></>,
+    video:    <><rect x="1.5" y="4" width="17" height="12" rx="1.5" stroke="#6B7280" strokeWidth="1.4" /><path d="M8.5 8.5l5 2.5-5 2.5V8.5z" fill="#6B7280" /></>,
+    rocket:   <><path d="M10 2c0 0-5 4.5-5 9a5 5 0 0 0 10 0c0-4.5-5-9-5-9z" stroke="#6B7280" strokeWidth="1.4" strokeLinejoin="round" /><path d="M7 14c-1.5 1-2.5 2.5-2.5 4h11c0-1.5-1-3-2.5-4" stroke="#6B7280" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /><circle cx="10" cy="11" r="1.5" fill="#6B7280" /></>,
+    people:   <><circle cx="7.5" cy="6.5" r="3" stroke="#6B7280" strokeWidth="1.4" /><path d="M1.5 19v-1.5A5.5 5.5 0 0 1 13 17.5V19" stroke="#6B7280" strokeWidth="1.4" strokeLinecap="round" /><circle cx="15" cy="7" r="2.5" stroke="#6B7280" strokeWidth="1.2" /><path d="M18.5 19v-1a4 4 0 0 0-3-3.87" stroke="#6B7280" strokeWidth="1.2" strokeLinecap="round" /></>,
+    info:     <><circle cx="10" cy="10" r="8.5" stroke="#6B7280" strokeWidth="1.4" /><path d="M10 9.5V14" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" /><circle cx="10" cy="7" r="0.8" fill="#6B7280" /></>,
+  };
+  return <svg width="20" height="20" viewBox="0 0 20 20" fill="none">{paths[type]}</svg>;
+};
+
+// ─── Static data ──────────────────────────────────────────────────────────────
+
+const CUSTOM_MAPS = Array(5).fill(null).map(() => ({ name: 'Germany', author: 'Anje Keizer', date: '2 days ago' }));
+const CUSTOM_CHARTS = [
+  { name: 'Muze studio', author: 'Anje Keizer', date: '2 days ago' },
+  { name: 'Gauge',       author: 'Anje Keizer', date: '2 days ago' },
+];
+const HELP_ITEMS: { label: string; icon: 'document' | 'video' | 'rocket' | 'people' | 'info'; url: string }[] = [
+  { label: 'Documents',       icon: 'document', url: 'https://champagne-master-aws.thoughtspotstag...' },
+  { label: 'Getting Started', icon: 'video',    url: 'https://champagne-master-aws.thoughtspotstag...' },
+  { label: "What's New",      icon: 'rocket',   url: 'https://champagne-master-aws.thoughtspotstag...' },
+  { label: 'Contact Support', icon: 'people',   url: 'https://champagne-master-aws.thoughtspotstag...' },
+  { label: 'About',           icon: 'info',     url: 'https://champagne-master-aws.thoughtspotstag...' },
+];
+
 // ─── Color data ───────────────────────────────────────────────────────────────
 
 const PRIMARY_COLORS = ['#2770EF', '#00BCD4', '#F59E0B', '#22C55E', '#A855F7', '#F97316', '#6B7280', '#EF4444'];
@@ -515,6 +938,43 @@ export const CustomisationPageContent: React.FC = () => {
   const [footerTextOpen, setFooterTextOpen] = useState(true);
   const [disableColourRotation, setDisableColourRotation] = useState(false);
 
+  // ── Chart tab ──
+  const [chartMapsOpen, setChartMapsOpen] = useState(true);
+  const [chartChartsOpen, setChartChartsOpen] = useState(true);
+  const [mapModal, setMapModal] = useState<'add' | 'edit' | null>(null);
+  const [deleteMapModal, setDeleteMapModal] = useState(false);
+  const [chartModal, setChartModal] = useState<'add' | 'edit' | null>(null);
+  const [deleteChartModal, setDeleteChartModal] = useState(false);
+
+  // ── Homepage tab ──
+  const [customiseHomepageModal, setCustomiseHomepageModal] = useState(false);
+  const [bannerOpen, setBannerOpen] = useState(true);
+  const [customiseHomepageOpen, setCustomiseHomepageOpen] = useState(true);
+  const [translateOpen, setTranslateOpen] = useState(true);
+  const [customBanner, setCustomBanner] = useState(false);
+  const [homepageItems, setHomepageItems] = useState<Record<string, boolean>>({
+    announcement: true, spotter: true, watchlist: true,
+    library: true, trending: true, learning: false, favourites: false,
+  });
+  const [autoTranslate, setAutoTranslate] = useState(true);
+  const [csvTranslate, setCsvTranslate] = useState(true);
+
+  // ── Email tab ──
+  const [emailOpen, setEmailOpen] = useState(true);
+  const [emailPreview, setEmailPreview] = useState(false);
+  const [emailToggles, setEmailToggles] = useState<Record<string, boolean>>({
+    productName: true, phoneNumber: true, address: true,
+    mobileAppNudge: true, modifyAlert: true, unsubscribeLink: true,
+    errorMessage: true, manageNotifications: true,
+  });
+
+  // ── Help tab ──
+  const [helpMenuOpen, setHelpMenuOpen] = useState(true);
+  const [helpToggles, setHelpToggles] = useState<Record<string, boolean>>({
+    Documents: true, 'Getting Started': true, "What's New": true,
+    'Contact Support': true, About: true,
+  });
+
   const pageTabs = [
     { id: 'style', label: 'Style' },
     { id: 'chart', label: 'Chart' },
@@ -524,10 +984,10 @@ export const CustomisationPageContent: React.FC = () => {
   ];
 
   return (
-    <div style={{ height: '100%', overflowY: 'auto', backgroundColor: '#FFFFFF' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: '#FFFFFF' }}>
 
-      {/* Full-width page header */}
-      <div style={{ display: 'flex', alignItems: 'center', padding: '28px 40px 0', borderBottom: '1px solid #E5E7EB' }}>
+      {/* Sticky page header — title + tabs */}
+      <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', padding: '28px 40px 0', borderBottom: '1px solid #E5E7EB', backgroundColor: '#FFFFFF' }}>
         <h1 style={{ margin: '0 0 16px 0', fontSize: '22px', fontWeight: 700, color: '#0F172A', fontFamily: font, letterSpacing: '-0.3px', whiteSpace: 'nowrap', flexShrink: 0 }}>
           Customisations
         </h1>
@@ -552,7 +1012,8 @@ export const CustomisationPageContent: React.FC = () => {
         </div>
       </div>
 
-      {/* Centered content */}
+      {/* Scrollable content */}
+      <div style={{ flex: 1, overflowY: 'auto' }}>
       <div style={{ maxWidth: '960px', margin: '0 auto', padding: '32px 40px 64px', boxSizing: 'border-box' }}>
 
         {activeTab === 'style' && (
@@ -573,22 +1034,36 @@ export const CustomisationPageContent: React.FC = () => {
               <SettingRow label="Theme colour" control={<Dropdown value="Dark" options={['Dark', 'Light', 'Dual Tone']} width={200} />} />
             </Card>
             <Card title="Chart Colour Palettes" open={chartPaletteOpen} onToggle={() => setChartPaletteOpen(!chartPaletteOpen)} rightAction={<ResetLink />}>
-              <div style={{ padding: '16px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {/* Primary colours */}
-                <ColorRow label="Primary colours" colors={PRIMARY_COLORS} />
+              {/* Primary colours */}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: '24px',
+                padding: '16px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px',
+              }}>
+                <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827', fontFamily: font, width: '160px', flexShrink: 0 }}>
+                  Primary colours
+                </span>
+                <div style={{ display: 'flex', gap: '8px', flex: 1 }}>
+                  {PRIMARY_COLORS.map((c, i) => <ColorSwatch key={i} color={c} />)}
+                </div>
+              </div>
 
-                {/* Divider */}
-                <div style={{ height: '1px', backgroundColor: '#F3F4F6', margin: '4px 0' }} />
-
-                {/* Secondary Colors label */}
-                <div style={{ fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font }}>Secondary Colors</div>
-
-                {/* Secondary rows — no label, just swatches */}
-                {SECONDARY_COLORS.map((row, i) => (
-                  <ColorRow key={i} colors={row} />
-                ))}
-
-                <div style={{ marginTop: '4px' }}>
+              {/* Secondary Colors */}
+              <div style={{
+                padding: '16px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px',
+              }}>
+                <div style={{ display: 'flex', gap: '24px' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827', fontFamily: font, width: '160px', flexShrink: 0, paddingTop: '6px' }}>
+                    Secondary Colors
+                  </span>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+                    {SECONDARY_COLORS.map((row, i) => (
+                      <div key={i} style={{ display: 'flex', gap: '8px' }}>
+                        {row.map((c, j) => <ColorSwatch key={j} color={c} />)}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ marginTop: '16px' }}>
                   <Checkbox label="Disable Colour Rotation" checked={disableColourRotation} onChange={() => setDisableColourRotation(!disableColourRotation)} />
                 </div>
               </div>
@@ -599,13 +1074,255 @@ export const CustomisationPageContent: React.FC = () => {
           </div>
         )}
 
-        {activeTab !== 'style' && (
-          <div style={{ color: '#9CA3AF', fontFamily: font, fontSize: '13px' }}>
-            {pageTabs.find(t => t.id === activeTab)?.label} settings coming soon.
+        {/* ── Chart tab ── */}
+        {activeTab === 'chart' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Card title="Custom Maps" open={chartMapsOpen} onToggle={() => setChartMapsOpen(!chartMapsOpen)} rightAction={<span onClick={() => setMapModal('add')}><AddAction label="Add Map" /></span>}>
+              <ObjectTable
+                columns={[{ label: 'Map Name', flex: 2 }, { label: 'Created by', flex: 2 }, { label: 'Last Modified', flex: 2 }, { label: '', flex: 1 }]}
+                rows={CUSTOM_MAPS.map((row) => [
+                  <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font }}>{row.name}</span>,
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Avatar /><span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{row.author}</span></div>,
+                  <span style={{ fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>{row.date}</span>,
+                  <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
+                    <button onClick={() => setMapModal('edit')} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Edit</button>
+                    <button onClick={() => setDeleteMapModal(true)} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Delete</button>
+                  </div>,
+                ])}
+              />
+            </Card>
+            <Card title="Custom Charts" open={chartChartsOpen} onToggle={() => setChartChartsOpen(!chartChartsOpen)} rightAction={<span onClick={() => setChartModal('add')}><AddAction label="Add Chart" /></span>}>
+              <ObjectTable
+                columns={[{ label: 'Chart Name', flex: 2 }, { label: 'Created by', flex: 2 }, { label: 'Last Modified', flex: 2 }, { label: '', flex: 1 }]}
+                rows={CUSTOM_CHARTS.map((row) => [
+                  <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font }}>{row.name}</span>,
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Avatar /><span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{row.author}</span></div>,
+                  <span style={{ fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>{row.date}</span>,
+                  <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
+                    <button onClick={() => setChartModal('edit')} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Edit</button>
+                    <button onClick={() => setDeleteChartModal(true)} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Delete</button>
+                  </div>,
+                ])}
+              />
+            </Card>
+          </div>
+        )}
+
+        {/* ── Homepage tab ── */}
+        {activeTab === 'homepage' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Card title="Manage custom alert banner" description="When enabled, the alert banner will display across all pages in all your organisations." open={bannerOpen} onToggle={() => setBannerOpen(!bannerOpen)}>
+              <SimpleRow label="Custom banner" control={<Toggle checked={customBanner} onChange={() => setCustomBanner(!customBanner)} />} />
+            </Card>
+
+            <Card title="Customise homepage" description="Recommended size: 230px x 45 px." open={customiseHomepageOpen} onToggle={() => setCustomiseHomepageOpen(!customiseHomepageOpen)} rightAction={<span onClick={() => setCustomiseHomepageModal(true)}><TextLink label="Edit" /></span>}>
+              {([
+                ['announcement', 'Announcement'],
+                ['spotter',      'Spotter'],
+                ['watchlist',    'Watchlist'],
+                ['library',      'Library'],
+                ['trending',     'Trending'],
+                ['learning',     'Learning'],
+                ['favourites',   'Favourites'],
+              ] as [string, string][]).map(([key, label]) => (
+                <SimpleRow
+                  key={key}
+                  label={label}
+                  dimmed={!homepageItems[key]}
+                  extraAction={key === 'announcement' ? <TextLink label="Customise" /> : undefined}
+                  control={<Toggle checked={homepageItems[key]} onChange={() => setHomepageItems({ ...homepageItems, [key]: !homepageItems[key] })} />}
+                />
+              ))}
+            </Card>
+
+            <Card title="Translate Liveboards & Answers" open={translateOpen} onToggle={() => setTranslateOpen(!translateOpen)}>
+              <SimpleRow
+                label="Auto-translate Liveboards and Answers"
+                description="Automatically translate metadata of Liveboards and Answers such as titles, descriptions, tab names etc. into each user's preferred language."
+                learnMore
+                control={<Toggle checked={autoTranslate} onChange={() => setAutoTranslate(!autoTranslate)} />}
+              />
+              <SimpleRow
+                label="Translate Liveboards and Answers based on CSV file"
+                description="Translate meta-data of Liveboards and Answers such as titles, descriptions, tab names etc. into each user's preferred language based on the CSV translations uploaded by the Admin."
+                learnMore
+                control={<Toggle checked={csvTranslate} onChange={() => setCsvTranslate(!csvTranslate)} />}
+              />
+            </Card>
+          </div>
+        )}
+
+        {/* ── Email tab ── */}
+        {activeTab === 'email' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Card
+              title="Email customisations"
+              description="Manage the common appearance settings applied to all your customer emails"
+              open={emailOpen}
+              onToggle={() => setEmailOpen(!emailOpen)}
+              rightAction={
+                <div style={{ display: 'flex', gap: '16px' }}>
+                  <span onClick={() => setEmailPreview(!emailPreview)}>
+                    <TextLink label={emailPreview ? 'Back' : 'Preview'} />
+                  </span>
+                  <TextLink label="Edit" />
+                </div>
+              }
+            >
+              {emailPreview ? (
+                /* ── Email preview ── */
+                <div style={{ backgroundColor: '#F3F4F6', borderRadius: '8px', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontSize: '12px', color: '#9CA3AF', fontFamily: font }}>Sample email</span>
+                  <h2 style={{ margin: '0 0 16px', fontSize: '18px', fontWeight: 700, color: '#111827', fontFamily: font }}>Test email</h2>
+                  {/* Email body card */}
+                  <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden', maxHeight: '600px', overflowY: 'auto' }}>
+                    <div style={{ padding: '32px 40px', display: 'flex', flexDirection: 'column', gap: '24px', fontFamily: font }}>
+                      {/* Logo */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        <span style={{ fontSize: '16px', fontWeight: 700, color: '#111827' }}>ThoughtSpot</span>
+                      </div>
+                      {/* Heading */}
+                      <h1 style={{ margin: 0, fontSize: '26px', fontWeight: 800, color: '#111827', lineHeight: 1.3 }}>
+                        Test Email to Validate Email White labelling
+                      </h1>
+                      {/* Callout box */}
+                      <div style={{ backgroundColor: '#F9FAFB', border: '1px solid #E5E7EB', borderRadius: '6px', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {['You have updated "Answer" to Answer', 'You have updated "Liveboard" to Liveboard', 'You have updated "SpotIQ" to SpotIQ'].map((t, i) => (
+                          <span key={i} style={{ fontSize: '13.5px', color: '#374151' }}>{t}</span>
+                        ))}
+                      </div>
+                      {/* CTA button */}
+                      <div>
+                        <button style={{ padding: '12px 28px', backgroundColor: '#111827', color: '#FFFFFF', border: 'none', borderRadius: '24px', fontSize: '14px', fontWeight: 600, fontFamily: font, cursor: 'pointer' }}>
+                          Test CTA
+                        </button>
+                      </div>
+                      {/* Vocabulary */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div>
+                          <p style={{ margin: '0 0 6px', fontSize: '13.5px', fontWeight: 700, color: '#111827' }}>Sample vocabulary definitions for Answer:</p>
+                          <p style={{ margin: 0, fontSize: '13.5px', color: '#374151', lineHeight: 1.6 }}>What's an Answer? An Answer is a personalised, actionable insight created through search. You can see Answer that you and others have saved on the Answer page.</p>
+                        </div>
+                        <div>
+                          <p style={{ margin: '0 0 6px', fontSize: '13.5px', fontWeight: 700, color: '#111827' }}>Sample vocabulary definitions for Liveboard:</p>
+                          <p style={{ margin: 0, fontSize: '13.5px', color: '#374151', lineHeight: 1.6 }}>What's a Liveboard? Unlike static dashboards that show you outdated insights based on stale data, Liveboard offer a live and fully interactive view of all your cloud data so you can create personalised, actionable insights at the point of impact.</p>
+                        </div>
+                      </div>
+                      {/* Mobile app nudge */}
+                      <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          <p style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827' }}>Want data at your fingertips?</p>
+                          <p style={{ margin: 0, fontSize: '13px', color: '#6B7280', lineHeight: 1.5 }}>Scan the QR code to download the latest ThoughtSpot mobile app on your phone.</p>
+                          <div style={{ display: 'flex', gap: '10px' }}>
+                            <div style={{ backgroundColor: '#111827', color: '#fff', borderRadius: '6px', padding: '8px 14px', fontSize: '11px', fontWeight: 600, display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.2 }}>
+                              <span style={{ fontSize: '9px' }}>Download on the</span><span>App Store</span>
+                            </div>
+                            <div style={{ backgroundColor: '#111827', color: '#fff', borderRadius: '6px', padding: '8px 14px', fontSize: '11px', fontWeight: 600, display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.2 }}>
+                              <span style={{ fontSize: '9px' }}>GET IT ON</span><span>Google Play</span>
+                            </div>
+                          </div>
+                        </div>
+                        {/* QR placeholder */}
+                        <div style={{ width: '80px', height: '80px', backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="4" y="4" width="14" height="14" rx="1" stroke="#9CA3AF" strokeWidth="2"/><rect x="22" y="4" width="14" height="14" rx="1" stroke="#9CA3AF" strokeWidth="2"/><rect x="4" y="22" width="14" height="14" rx="1" stroke="#9CA3AF" strokeWidth="2"/><rect x="8" y="8" width="6" height="6" fill="#9CA3AF"/><rect x="26" y="8" width="6" height="6" fill="#9CA3AF"/><rect x="8" y="26" width="6" height="6" fill="#9CA3AF"/><rect x="22" y="22" width="4" height="4" fill="#9CA3AF"/><rect x="28" y="26" width="4" height="4" fill="#9CA3AF"/><rect x="22" y="30" width="4" height="4" fill="#9CA3AF"/></svg>
+                        </div>
+                      </div>
+                      {/* Error details */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingTop: '8px', borderTop: '1px solid #F3F4F6' }}>
+                        <div>
+                          <p style={{ margin: '0 0 4px', fontSize: '13.5px', fontWeight: 600, color: '#374151' }}>Error details</p>
+                          <p style={{ margin: 0, fontSize: '12.5px', color: '#9CA3AF' }}>Incident ID: 22187-ggh88810-dhaj211</p>
+                        </div>
+                        <p style={{ margin: 0, fontSize: '13px', color: '#374151' }}>You are receiving this notification because you have subscribed to ThoughtSpot</p>
+                        <p style={{ margin: 0, fontSize: '13px' }}>
+                          <span style={{ color: brand, cursor: 'pointer' }}>Modify alert</span>
+                          <span style={{ color: '#9CA3AF' }}> | </span>
+                          <span style={{ color: brand, cursor: 'pointer' }}>Unsubscribe</span>
+                        </p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <span style={{ fontSize: '13px', fontWeight: 600, color: '#374151' }}>ThoughtSpot</span>
+                          <span style={{ fontSize: '12.5px', color: '#6B7280' }}>(800) 508-7008</span>
+                          <span style={{ fontSize: '12.5px', color: '#6B7280' }}>444 Castro St, Suite 1000 Mountain View, CA 94041</span>
+                          <p style={{ margin: 0, fontSize: '12.5px' }}>
+                            <span style={{ color: brand, cursor: 'pointer' }}>Privacy policy</span>
+                            <span style={{ color: '#9CA3AF' }}> | </span>
+                            <span style={{ color: brand, cursor: 'pointer' }}>Contact support</span>
+                            <span style={{ color: '#9CA3AF' }}> | </span>
+                            <span style={{ color: brand, cursor: 'pointer' }}>Manage notification preferences</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* ── Email settings ── */
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', padding: '14px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px' }}>
+                    <span style={{ fontSize: '14px', color: '#111827', fontFamily: font }}>Logo</span>
+                    <button style={{ padding: '6px 14px', border: '1px solid #D1D5DB', borderRadius: '6px', backgroundColor: '#F9FAFB', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, cursor: 'pointer' }}>Same as styling</button>
+                  </div>
+                  <ColorDisplayRow label="Button colour" color="#0078F8" hex="#0078F8" />
+                  <ColorDisplayRow label="Button text colour" color="#0078F8" hex="#0078F8" />
+                  <ColorDisplayRow label="Primary content background color" color="#0078F8" hex="#0078F8" />
+                  {([
+                    ['productName',    'Product name'],
+                    ['phoneNumber',    'Phone number'],
+                    ['address',        'Address'],
+                    ['mobileAppNudge', 'Mobile app nudge'],
+                    ['modifyAlert',    'Modify alert'],
+                    ['unsubscribeLink','Unsubscribe link'],
+                    ['errorMessage',   'Error message'],
+                  ] as [string, string][]).map(([key, label]) => (
+                    <SimpleRow key={key} label={label} control={<Toggle checked={emailToggles[key]} onChange={() => setEmailToggles({ ...emailToggles, [key]: !emailToggles[key] })} />} />
+                  ))}
+                  <ValueRow label="Company signature" value="444 Castro St, Suite 1000 Mountain View, CA, 94041" />
+                  <ValueRow label="Privacy policy" value="https://www.thoughtspot.com/privacy-statement" />
+                  <ValueRow label="Contact support" value="https://www.thoughtspot.com/support" />
+                  <SimpleRow label="Manage notification preferences" control={<Toggle checked={emailToggles.manageNotifications} onChange={() => setEmailToggles({ ...emailToggles, manageNotifications: !emailToggles.manageNotifications })} />} />
+                  <ValueRow label="Company website URL" value="https://www.thoughtspot.com" />
+                </>
+              )}
+            </Card>
+          </div>
+        )}
+
+        {/* ── Help tab ── */}
+        {activeTab === 'help' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Card title="List of help menu items" open={helpMenuOpen} onToggle={() => setHelpMenuOpen(!helpMenuOpen)} rightAction={<AddAction label="Add menu item" />}>
+              <ObjectTable
+                columns={[{ label: 'Menu item label', flex: 2 }, { label: 'Custom icon', flex: 1.5 }, { label: 'Item URL', flex: 3 }, { label: '', flex: 1.5 }]}
+                rows={HELP_ITEMS.map((item) => [
+                  <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font }}>{item.label}</span>,
+                  <HelpMenuIcon type={item.icon} />,
+                  <span style={{ fontSize: '13px', color: brand, fontFamily: font, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{item.url}</span>,
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', justifyContent: 'flex-end' }}>
+                    <TextLink label="Edit" />
+                    <Toggle checked={helpToggles[item.label]} onChange={() => setHelpToggles({ ...helpToggles, [item.label]: !helpToggles[item.label] })} />
+                  </div>,
+                ])}
+              />
+            </Card>
           </div>
         )}
 
       </div>
+      </div>
+
+      {/* ── Modals ── */}
+      {customiseHomepageModal && (
+        <CustomiseHomepageModal
+          toggles={homepageItems}
+          onToggle={(key) => setHomepageItems({ ...homepageItems, [key]: !homepageItems[key] })}
+          onClose={() => setCustomiseHomepageModal(false)}
+        />
+      )}
+      {mapModal && <AddMapModal mode={mapModal} onClose={() => setMapModal(null)} />}
+      {deleteMapModal && <DeleteMapModal mapName="newhny264" onClose={() => setDeleteMapModal(false)} />}
+      {chartModal && <AddChartModal mode={chartModal} onClose={() => setChartModal(null)} />}
+      {deleteChartModal && <CannotDeleteChartModal onClose={() => setDeleteChartModal(false)} />}
 
       <style>{`
         @keyframes dropdownFade {
