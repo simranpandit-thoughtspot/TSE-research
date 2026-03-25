@@ -940,7 +940,7 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
 
         {/* ── Chart tab ── */}
         {activeTab === 'chart' && (
-          <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '12px', overflow: 'hidden' }}>
+          <div style={{ backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '12px', overflow: 'hidden' }}>
 
             {/* Inner sub-tabs */}
             <div style={{ display: 'flex', borderBottom: '1px solid #E5E7EB', padding: '0 24px' }}>
@@ -1013,6 +1013,11 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
             {/* ── Custom Charts ── */}
             {chartInnerTab === 'custom-charts' && (
               <div style={{ padding: '20px 24px 24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                  <span style={{ fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>
+                    Add and manage custom chart types available to your users.
+                  </span>
+                </div>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
                   <button style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0 }}>
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><line x1="6.5" y1="1" x2="6.5" y2="12" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/><line x1="1" y1="6.5" x2="12" y2="6.5" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/></svg>
@@ -1041,6 +1046,11 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
             {/* ── Custom Maps ── */}
             {chartInnerTab === 'custom-maps' && (
               <div style={{ padding: '20px 24px 24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                  <span style={{ fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>
+                    Upload and manage custom TopoJSON map files used in your charts.
+                  </span>
+                </div>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
                   <button style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0 }}>
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><line x1="6.5" y1="1" x2="6.5" y2="12" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/><line x1="1" y1="6.5" x2="12" y2="6.5" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/></svg>

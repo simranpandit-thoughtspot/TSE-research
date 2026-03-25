@@ -16,6 +16,8 @@ import { UsageAdoptionPageContent } from './UsageAdoptionPageContent';
 import { PerformanceTrackingPageContent } from './PerformanceTrackingPageContent';
 import { AIBIStatsPageContent } from './AIBIStatsPageContent';
 import { BillingQueryStatsPageContent } from './BillingQueryStatsPageContent';
+import { TermsPageContent } from './TermsPageContent';
+import { ScheduledMaintenancePageContent } from './ScheduledMaintenancePageContent';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -510,7 +512,9 @@ export const NewUIAdmin2: React.FC = () => {
        sidebarNav === 'feature-management' ? <FeatureManagementPageContent scope={scope} /> :
        sidebarNav === 'variables' ? <VariablesPageContent /> :
        sidebarNav === 'version-control' ? <VersionControlPageContent scope={scope} /> :
-       sidebarNav === 'onboarding' ? <OnboardingPageContent /> : (
+       sidebarNav === 'onboarding' ? <OnboardingPageContent /> :
+       sidebarNav === 'terms' ? <TermsPageContent /> :
+       sidebarNav === 'scheduled-maintenance' ? <ScheduledMaintenancePageContent /> : (
 
       <div style={{ height: '100%', overflowY: 'auto', backgroundColor: '#FFFFFF' }}>
 
