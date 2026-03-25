@@ -775,10 +775,10 @@ const HELP_ITEMS: { label: string; icon: 'document' | 'video' | 'rocket' | 'peop
 const PRIMARY_COLORS = ['#2770EF', '#00BCD4', '#F59E0B', '#22C55E', '#A855F7', '#F97316', '#6B7280', '#EF4444'];
 
 const SECONDARY_COLORS = [
-  ['#BFDBFE', '#A5F3FC', '#FEF3C7', '#BBF7D0', '#E9D5FF', '#FED7AA', '#E5E7EB', '#FECACA'],
+  ['#DBEAFE', '#CFFAFE', '#FEF9C3', '#DCFCE7', '#F3E8FF', '#FFE4E6', '#F3F4F6', '#FCE7F3'],
   ['#93C5FD', '#67E8F9', '#FDE68A', '#86EFAC', '#D8B4FE', '#FDBA74', '#D1D5DB', '#FCA5A5'],
-  ['#3B82F6', '#06B6D4', '#F59E0B', '#4ADE80', '#C084FC', '#FB923C', '#9CA3AF', '#F87171'],
-  ['#1D4ED8', '#0891B2', '#D97706', '#15803D', '#7E22CE', '#C2410C', '#374151', '#B91C1C'],
+  ['#2563EB', '#0D9488', '#CA8A04', '#16A34A', '#7C3AED', '#C2410C', '#374151', '#DC2626'],
+  ['#1E3A8A', '#134E4A', '#78350F', '#14532D', '#4C1D95', '#7C2D12', '#111827', '#7F1D1D'],
 ];
 
 // ─── Page content (reusable without AppShell) ─────────────────────────────────
