@@ -9,6 +9,8 @@ import { SearchSpotIQPageContent } from './SearchSpotIQPageContent';
 import { UserManagementPageContent } from './UserManagementPageContent';
 import { FeatureManagementPageContent } from './FeatureManagementPageContent';
 import { VariablesPageContent } from './VariablesPageContent';
+import { VersionControlPageContent } from './VersionControlPageContent';
+import { OnboardingPageContent } from './OnboardingPageContent';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -79,7 +81,7 @@ const SIDEBAR_CATEGORIES_PRIMARY: Record<SidebarTabId, SidebarCategory[]> = {
     {
       title: 'MANAGEMENT',
       items: [
-        { id: 'feature-governance', label: 'Feature governance' },
+        { id: 'feature-management', label: 'Feature management' },
         { id: 'version-control', label: 'Version control' },
       ],
     },
@@ -446,12 +448,14 @@ export const NewUIAdmin2: React.FC = () => {
       style={{ height: '100vh' }}
     >
       {/* Route to Customisation page when that nav item is selected */}
-      {sidebarNav === 'customisation' ? <CustomisationPageContent /> :
+      {sidebarNav === 'customisation' ? <CustomisationPageContent scope={scope} /> :
        sidebarNav === 'ai-settings' ? <AISettingsPageContent /> :
        sidebarNav === 'search-spot-iq' ? <SearchSpotIQPageContent /> :
        sidebarNav === 'user-management' ? <UserManagementPageContent scope={scope} /> :
-       sidebarNav === 'feature-management' ? <FeatureManagementPageContent /> :
-       sidebarNav === 'variables' ? <VariablesPageContent /> : (
+       sidebarNav === 'feature-management' ? <FeatureManagementPageContent scope={scope} /> :
+       sidebarNav === 'variables' ? <VariablesPageContent /> :
+       sidebarNav === 'version-control' ? <VersionControlPageContent scope={scope} /> :
+       sidebarNav === 'onboarding' ? <OnboardingPageContent /> : (
 
       <div style={{ height: '100%', overflowY: 'auto', backgroundColor: '#FFFFFF' }}>
 

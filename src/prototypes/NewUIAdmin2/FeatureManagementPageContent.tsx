@@ -426,15 +426,109 @@ const OrgSelector: React.FC = () => {
   );
 };
 
+// ─── Primary Org Feature Data ─────────────────────────────────────────────────
+
+const PRIMARY_ORG_FEATURES: { label: string; description: string; defaultEnabled: boolean }[] = [
+  { label: 'Advanced settings for charts',                        description: 'Access advanced configuration options for chart visualisations.',                              defaultEnabled: false },
+  { label: 'Categorise connectors',                               description: 'Organise and group data connectors into custom categories.',                                  defaultEnabled: true  },
+  { label: 'Automatic OAuth Sign-In Trigger',                     description: 'Automatically initiate OAuth authentication when users sign in.',                             defaultEnabled: true  },
+  { label: 'Build your own charts with Muze Studio',             description: 'Create custom chart types using the Muze Studio visual builder.',                             defaultEnabled: true  },
+  { label: 'Categorise and style visualisations within Liveboard', description: 'Apply custom categories and styling to visualisations on Liveboards.',                       defaultEnabled: false },
+  { label: 'ClickHouse connector',                               description: 'Connect to ClickHouse databases as a data source.',                                           defaultEnabled: true  },
+  { label: 'New connection configuration experience',             description: 'Use the redesigned interface for setting up and managing data connections.',                   defaultEnabled: false },
+  { label: 'New Pivot Table',                                     description: 'Use the updated pivot table component with enhanced sorting and formatting options.',          defaultEnabled: false },
+  { label: 'OAuth Redirection Behaviour',                         description: 'Control how users are redirected after completing OAuth authentication.',                     defaultEnabled: false },
+];
+
+// ─── Primary Org Feature Row ──────────────────────────────────────────────────
+
+const PrimaryOrgFeatureRow: React.FC<{ label: string; description: string; defaultEnabled: boolean }> = ({ label, description, defaultEnabled }) => {
+  const [enabled, setEnabled] = useState(defaultEnabled);
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      gap: '32px', padding: '16px 20px',
+      backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px',
+    }}>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontSize: '13.5px', fontWeight: 600, color: '#111827', fontFamily: font, lineHeight: 1.4 }}>{label}</div>
+        <div style={{ fontSize: '12.5px', color: '#9CA3AF', fontFamily: font, marginTop: '3px', lineHeight: 1.5 }}>{description}</div>
+      </div>
+      <Toggle checked={enabled} onChange={() => setEnabled(!enabled)} />
+    </div>
+  );
+};
+
 // ─── FeatureManagementPageContent ─────────────────────────────────────────────
 
-export const FeatureManagementPageContent: React.FC = () => {
+export const FeatureManagementPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-org' }> = ({ scope = 'all-orgs' }) => {
+  const isPrimary = scope === 'primary-org';
   const [activeTab, setActiveTab] = useState('general');
 
   const pageTabs = [
     { id: 'general', label: 'General access' },
     { id: 'early',   label: 'Early access'   },
   ];
+
+  if (isPrimary) {
+    return (
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: '#FFFFFF' }}>
+        {/* ── Sticky header ── */}
+        <div style={{ flexShrink: 0, padding: '28px 40px 20px', borderBottom: '1px solid #E5E7EB', backgroundColor: '#FFFFFF' }}>
+          <h1 style={{ margin: '0 0 4px', fontSize: '22px', fontWeight: 700, color: '#0F172A', fontFamily: font, letterSpacing: '-0.3px' }}>
+            Feature management
+          </h1>
+          <p style={{ margin: 0, fontSize: '13px', color: '#6B7280', fontFamily: font, lineHeight: 1.5 }}>
+            Manage &lsquo;Early access features&rsquo; for your org. For other features, contact your system admin.
+          </p>
+        </div>
+
+        {/* ── Scrollable content ── */}
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          <div style={{ maxWidth: '960px', margin: '0 auto', padding: '24px 40px 64px', boxSizing: 'border-box' }}>
+            {/* Toolbar */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ position: 'absolute', left: '10px' }}>
+                  <circle cx="6" cy="6" r="4.5" stroke="#9CA3AF" strokeWidth="1.4" />
+                  <line x1="9.5" y1="9.5" x2="12.5" y2="12.5" stroke="#9CA3AF" strokeWidth="1.4" strokeLinecap="round" />
+                </svg>
+                <input type="text" placeholder="Search" style={{
+                  width: '220px', height: '36px', paddingLeft: '32px', paddingRight: '12px',
+                  border: '1px solid #D1D5DB', borderRadius: '8px',
+                  fontFamily: font, fontSize: '13px', color: '#111827',
+                  outline: 'none', backgroundColor: '#FFFFFF',
+                }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+                />
+              </div>
+              <button style={{
+                display: 'flex', alignItems: 'center', gap: '6px',
+                height: '36px', padding: '0 14px',
+                border: '1px solid #D1D5DB', borderRadius: '8px',
+                backgroundColor: '#FFFFFF', cursor: 'pointer',
+                fontFamily: font, fontSize: '13px', color: '#374151',
+              }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M1 3h12M3 7h8M5 11h4" stroke="#6B7280" strokeWidth="1.4" strokeLinecap="round" />
+                </svg>
+                Orgs / Select orgs
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <path d="M2 3.5l3 3 3-3" stroke="#9CA3AF" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Feature list */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {PRIMARY_ORG_FEATURES.map((f, i) => <PrimaryOrgFeatureRow key={i} {...f} />)}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: '#FFFFFF' }}>

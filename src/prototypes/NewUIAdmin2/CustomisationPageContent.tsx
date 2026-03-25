@@ -3,6 +3,7 @@ import { AppShell } from '../../components/AppShell';
 import type { AppSidebarProps, SidebarTab, SidebarCategory, ScopeToggle } from '../../components/AppSidebar';
 import type { GlobalHeaderProps } from '../../components/GlobalHeader';
 import { systemColors, referenceColors } from '../../tokens/colors';
+import { ConfirmDialog } from './ConfirmDialog';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -473,8 +474,8 @@ const TextInputRow: React.FC<{ label: string; placeholder?: string }> = ({ label
 
 // ─── Reset link ───────────────────────────────────────────────────────────────
 
-const ResetLink: React.FC = () => (
-  <button style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>
+const ResetLink: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
+  <button onClick={onClick} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>
     Reset
   </button>
 );
@@ -926,8 +927,10 @@ const SECONDARY_COLORS = [
 
 // ─── Page content (reusable without AppShell) ─────────────────────────────────
 
-export const CustomisationPageContent: React.FC = () => {
+export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-org' }> = ({ scope = 'all-orgs' }) => {
   const [activeTab, setActiveTab] = useState('style');
+
+  const [resetSection, setResetSection] = useState<string | null>(null);
 
   const [logoDefaultOpen, setLogoDefaultOpen] = useState(true);
   const [logoWideOpen, setLogoWideOpen] = useState(true);
@@ -980,11 +983,21 @@ export const CustomisationPageContent: React.FC = () => {
     { id: 'chart', label: 'Chart' },
     { id: 'homepage', label: 'Homepage' },
     { id: 'email', label: 'Email' },
-    { id: 'help', label: 'Help' },
+    ...(scope === 'primary-org' ? [] : [{ id: 'help', label: 'Help' }]),
   ];
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: '#FFFFFF' }}>
+
+      {/* ── Reset confirm dialog ── */}
+      {resetSection && (
+        <ConfirmDialog
+          title="Reset customisation"
+          message={`This will reset the ${resetSection} to its default. Are you sure?`}
+          onConfirm={() => setResetSection(null)}
+          onCancel={() => setResetSection(null)}
+        />
+      )}
 
       {/* Sticky page header — title + tabs */}
       <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', padding: '28px 40px 0', borderBottom: '1px solid #E5E7EB', backgroundColor: '#FFFFFF' }}>
@@ -1018,10 +1031,10 @@ export const CustomisationPageContent: React.FC = () => {
 
         {activeTab === 'style' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <Card title="Application Logo (Default) & Favicon" description="Recommended size: 140px x 140 px." open={logoDefaultOpen} onToggle={() => setLogoDefaultOpen(!logoDefaultOpen)} rightAction={<ResetLink />}>
+            <Card title="Application Logo (Default) & Favicon" description="Recommended size: 140px x 140 px." open={logoDefaultOpen} onToggle={() => setLogoDefaultOpen(!logoDefaultOpen)} rightAction={<ResetLink onClick={() => setResetSection('default logo and favicon')} />}>
               <ImageUploadArea />
             </Card>
-            <Card title="Application Logo (Wide)" description="Recommended size: 230px x 45 px." open={logoWideOpen} onToggle={() => setLogoWideOpen(!logoWideOpen)} rightAction={<ResetLink />}>
+            <Card title="Application Logo (Wide)" description="Recommended size: 230px x 45 px." open={logoWideOpen} onToggle={() => setLogoWideOpen(!logoWideOpen)} rightAction={<ResetLink onClick={() => setResetSection('wide logo')} />}>
               <ImageUploadArea />
             </Card>
             <Card title="Chart Text Styles" open={chartTextOpen} onToggle={() => setChartTextOpen(!chartTextOpen)} rightAction={<AddFontLink />}>
@@ -1030,10 +1043,10 @@ export const CustomisationPageContent: React.FC = () => {
             <Card title="Table Text Styles" open={tableTextOpen} onToggle={() => setTableTextOpen(!tableTextOpen)} rightAction={<AddFontLink />}>
               <DoubleDropdownRow label="Select fonts" value1="Table Value cells" options1={['Table Value cells', 'Table Header cells', 'Table Footer']} value2="Optimo Plain, helvetica..." options2={['Optimo Plain, helvetica...', 'Inter', 'Roboto', 'DM Sans', 'IBM Plex Sans']} />
             </Card>
-            <Card title="Navigation Panel Colour" open={navColourOpen} onToggle={() => setNavColourOpen(!navColourOpen)} rightAction={<ResetLink />}>
+            <Card title="Navigation Panel Colour" open={navColourOpen} onToggle={() => setNavColourOpen(!navColourOpen)} rightAction={<ResetLink onClick={() => setResetSection('navigation panel colour')} />}>
               <SettingRow label="Theme colour" control={<Dropdown value="Dark" options={['Dark', 'Light', 'Dual Tone']} width={200} />} />
             </Card>
-            <Card title="Chart Colour Palettes" open={chartPaletteOpen} onToggle={() => setChartPaletteOpen(!chartPaletteOpen)} rightAction={<ResetLink />}>
+            <Card title="Chart Colour Palettes" open={chartPaletteOpen} onToggle={() => setChartPaletteOpen(!chartPaletteOpen)} rightAction={<ResetLink onClick={() => setResetSection('chart colour palettes')} />}>
               {/* Primary colours */}
               <div style={{
                 display: 'flex', alignItems: 'center', gap: '24px',
@@ -1068,7 +1081,7 @@ export const CustomisationPageContent: React.FC = () => {
                 </div>
               </div>
             </Card>
-            <Card title="Footer Text" open={footerTextOpen} onToggle={() => setFooterTextOpen(!footerTextOpen)} rightAction={<ResetLink />}>
+            <Card title="Footer Text" open={footerTextOpen} onToggle={() => setFooterTextOpen(!footerTextOpen)} rightAction={<ResetLink onClick={() => setResetSection('footer text')} />}>
               <TextInputRow label="Text for embedded objects" placeholder="Enter Text" />
             </Card>
           </div>
