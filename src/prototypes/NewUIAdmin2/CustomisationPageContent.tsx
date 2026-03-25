@@ -555,107 +555,7 @@ const FormField: React.FC<{ label: string; required?: boolean; helper?: string; 
   </div>
 );
 
-// ─── Add / Edit Map modal ─────────────────────────────────────────────────────
 
-const AddMapModal: React.FC<{ mode: 'add' | 'edit'; onClose: () => void }> = ({ mode, onClose }) => {
-  const [source, setSource] = useState<'computer' | 'url'>('computer');
-  return (
-    <ModalOverlay onClose={onClose} width={680}>
-      <ModalHeader title={mode === 'add' ? 'Add map' : 'Edit map'} />
-      <ModalBody>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <FormField label="Map name" placeholder="Name" />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font }}>Upload TopoJSON file</span>
-            <div style={{ display: 'flex', gap: '20px' }}>
-              {(['computer', 'url'] as const).map((opt) => (
-                <label key={opt} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '13px', color: '#374151', fontFamily: font }}>
-                  <input type="radio" checked={source === opt} onChange={() => setSource(opt)} style={{ accentColor: brand }} />
-                  {opt === 'computer' ? 'From computer' : 'From URL'}
-                </label>
-              ))}
-            </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <input
-                type="text" placeholder={source === 'computer' ? 'Select file' : 'Enter URL'}
-                style={{ flex: 1, height: '36px', padding: '0 12px', border: '1px solid #D1D5DB', borderRadius: '6px', fontSize: '13px', fontFamily: font, outline: 'none', color: '#9CA3AF' }}
-              />
-              <button style={{ height: '36px', padding: '0 18px', border: '1px solid #D1D5DB', borderRadius: '6px', backgroundColor: '#F9FAFB', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                Upload
-              </button>
-            </div>
-          </div>
-          <div style={{ height: '320px', border: '1px solid #E5E7EB', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontSize: '13px', color: '#9CA3AF', fontFamily: font }}>Preview shown when map is uploaded</span>
-          </div>
-        </div>
-      </ModalBody>
-      <ModalFooter>
-        <PillButton label="Cancel" variant="secondary" onClick={onClose} />
-        <PillButton label={mode === 'add' ? 'Add' : 'Save'} variant="primary" onClick={onClose} />
-      </ModalFooter>
-    </ModalOverlay>
-  );
-};
-
-// ─── Delete Map confirmation ──────────────────────────────────────────────────
-
-const DeleteMapModal: React.FC<{ mapName: string; onClose: () => void }> = ({ mapName, onClose }) => (
-  <ModalOverlay onClose={onClose} width={440}>
-    <ModalHeader title="Delete custom map?" />
-    <ModalBody>
-      <p style={{ margin: 0, fontSize: '13.5px', color: '#374151', fontFamily: font, lineHeight: 1.6 }}>
-        This will permanently delete '{mapName}'
-      </p>
-    </ModalBody>
-    <ModalFooter>
-      <PillButton label="Cancel" variant="secondary" onClick={onClose} />
-      <PillButton label="Delete" variant="primary" onClick={onClose} />
-    </ModalFooter>
-  </ModalOverlay>
-);
-
-// ─── Add / Edit Chart modal ───────────────────────────────────────────────────
-
-const AddChartModal: React.FC<{ mode: 'add' | 'edit'; onClose: () => void }> = ({ mode, onClose }) => (
-  <ModalOverlay onClose={onClose} width={680}>
-    <ModalHeader title={mode === 'add' ? 'Add custom chart' : 'Edit custom chart'} />
-    <ModalBody scrollable>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <FormField label="Name" required helper="Display name of the chart" />
-        <FormField label="Description" helper="Description is shown when users hover over the chart icon in the chart selection menu" />
-        <FormField label="Application URL" required helper="Secured (https) link to the chart application host" />
-        <FormField label="Access Token" helper="Access token issued by your custom chart developer" />
-        <FormField label="Icon URL" helper="Secured (https) link to the chart display icon" />
-        <FormField label="Author name" />
-        <FormField label="Author email" />
-        <FormField label="Author organisation" />
-      </div>
-    </ModalBody>
-    <ModalFooter>
-      <PillButton label="Cancel" variant="secondary" onClick={onClose} />
-      <PillButton label={mode === 'add' ? 'Add chart' : 'Save'} variant="primary" onClick={onClose} />
-    </ModalFooter>
-  </ModalOverlay>
-);
-
-// ─── Cannot delete chart modal ────────────────────────────────────────────────
-
-const DEPENDENT_OBJECTS = [
-  { name: 'Devin - Dynamic note tile - usecases and guide', type: 'Answer' },
-  { name: 'Dynamic note tile example - Region wise sales comparison', type: 'Answer' },
-  { name: 'Dynamic note tile', type: 'Answer' },
-  { name: 'Dynamic note tile - Measure example', type: 'Answer' },
-  { name: 'Dynamic notetile example', type: 'Answer' },
-  { name: 'Test dynamic content', type: 'Answer' },
-  { name: 'Dynamic note tile - sales this month vs last month', type: 'Answer' },
-  { name: 'Dynamic note tile - usecases and guide', type: 'Answer' },
-  { name: 'Dynamic content', type: 'Answer' },
-  { name: 'viztest8', type: 'Liveboard' },
-  { name: 'Test dynamic note tiles', type: 'Liveboard' },
-  { name: 'Native muze charts demo', type: 'Liveboard' },
-  { name: 'spotterviz', type: 'Liveboard' },
-];
 
 // ─── Customise Homepage modal ─────────────────────────────────────────────────
 
@@ -723,47 +623,7 @@ const CustomiseHomepageModal: React.FC<{
   );
 };
 
-// ─── Cannot delete chart modal ─────────────────────────────────────────────────
 
-const CannotDeleteChartModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
-  <ModalOverlay onClose={onClose} width={520}>
-    <ModalHeader title="Cannot delete" divider={false} />
-    <ModalBody scrollable>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <p style={{ margin: 0, fontSize: '13.5px', color: '#374151', fontFamily: font, lineHeight: 1.6 }}>
-          This chart can't be deleted because it's being used by one or more dependent objects.
-        </p>
-        <ul style={{ margin: 0, padding: '0 0 0 18px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          {DEPENDENT_OBJECTS.map((obj, i) => (
-            <li key={i} style={{ fontSize: '13.5px', fontFamily: font }}>
-              <span style={{ color: brand, cursor: 'pointer' }}>{obj.name}</span>
-              <span style={{ color: '#6B7280' }}> ({obj.type})</span>
-            </li>
-          ))}
-        </ul>
-        <p style={{ margin: 0, fontSize: '13.5px', color: '#374151', fontFamily: font, lineHeight: 1.6 }}>
-          To delete it, change the chart type of the dependent objects or delete them.
-        </p>
-      </div>
-    </ModalBody>
-    <ModalFooter>
-      <PillButton label="Close" variant="primary" onClick={onClose} />
-    </ModalFooter>
-  </ModalOverlay>
-);
-
-// ─── Avatar ───────────────────────────────────────────────────────────────────
-
-const Avatar: React.FC<{ size?: number }> = ({ size = 24 }) => (
-  <div style={{
-    width: size, height: size, borderRadius: '50%', flexShrink: 0,
-    background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    fontSize: Math.round(size * 0.36), fontWeight: 600, color: '#fff', fontFamily: font,
-  }}>
-    AK
-  </div>
-);
 
 // ─── Add Action Button ────────────────────────────────────────────────────────
 
@@ -901,10 +761,53 @@ const HelpMenuIcon: React.FC<{ type: 'document' | 'video' | 'rocket' | 'people' 
 
 // ─── Static data ──────────────────────────────────────────────────────────────
 
-const CUSTOM_MAPS = Array(5).fill(null).map(() => ({ name: 'Germany', author: 'Anje Keizer', date: '2 days ago' }));
-const CUSTOM_CHARTS = [
-  { name: 'Muze studio', author: 'Anje Keizer', date: '2 days ago' },
-  { name: 'Gauge',       author: 'Anje Keizer', date: '2 days ago' },
+
+// ─── Colour palette data ──────────────────────────────────────────────────────
+
+type ColourPalette = { id: string; name: string; colors: string[]; isDefault?: boolean };
+
+const COLOUR_PALETTES: ColourPalette[] = [
+  {
+    id: 'thoughtspot',
+    name: 'ThoughtSpot',
+    isDefault: true,
+    colors: ['#2770EF', '#44D5B5', '#F7B13F', '#FF6C6C', '#AD84E3', '#1AB3A8', '#F56E4D', '#8DC0FF', '#5E9E6B', '#E0A85C'],
+  },
+  {
+    id: 'sunrise',
+    name: 'Sunrise',
+    colors: ['#FF6B35', '#F7B13F', '#FFD166', '#ED8936', '#FF4757', '#FF7F50', '#FFA07A', '#FFB347', '#E8735A', '#FFCC80'],
+  },
+  {
+    id: 'ocean',
+    name: 'Ocean',
+    colors: ['#0077B6', '#00B4D8', '#48CAE4', '#90E0EF', '#023E8A', '#0096C7', '#ADE8F4', '#CAF0F8', '#0D47A1', '#29B6F6'],
+  },
+  {
+    id: 'forest',
+    name: 'Forest',
+    colors: ['#1B4332', '#2D6A4F', '#40916C', '#52B788', '#74C69D', '#95D5B2', '#B7E4C7', '#D8F3DC', '#388E3C', '#66BB6A'],
+  },
+  {
+    id: 'sunset',
+    name: 'Sunset',
+    colors: ['#FF006E', '#FB5607', '#FFBE0B', '#8338EC', '#3A86FF', '#FF4D6D', '#FF85A1', '#FFC8DD', '#E040FB', '#AB47BC'],
+  },
+  {
+    id: 'bold',
+    name: 'Bold',
+    colors: ['#E63946', '#2A9D8F', '#E9C46A', '#F4A261', '#264653', '#023047', '#219EBC', '#8ECAE6', '#457B9D', '#A8DADC'],
+  },
+  {
+    id: 'pastel',
+    name: 'Pastel',
+    colors: ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#D9B3FF', '#FFB3D9', '#B3FFD9', '#FFE0CC', '#E0CCFF'],
+  },
+  {
+    id: 'monochrome',
+    name: 'Monochrome',
+    colors: ['#111827', '#1F2937', '#374151', '#4B5563', '#6B7280', '#9CA3AF', '#D1D5DB', '#E5E7EB', '#F3F4F6', '#F9FAFB'],
+  },
 ];
 const HELP_ITEMS: { label: string; icon: 'document' | 'video' | 'rocket' | 'people' | 'info'; url: string }[] = [
   { label: 'Documents',       icon: 'document', url: 'https://champagne-master-aws.thoughtspotstag...' },
@@ -942,12 +845,9 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
   const [disableColourRotation, setDisableColourRotation] = useState(false);
 
   // ── Chart tab ──
-  const [chartMapsOpen, setChartMapsOpen] = useState(true);
-  const [chartChartsOpen, setChartChartsOpen] = useState(true);
-  const [mapModal, setMapModal] = useState<'add' | 'edit' | null>(null);
-  const [deleteMapModal, setDeleteMapModal] = useState(false);
-  const [chartModal, setChartModal] = useState<'add' | 'edit' | null>(null);
-  const [deleteChartModal, setDeleteChartModal] = useState(false);
+  const [colourPalettesOpen, setColourPalettesOpen] = useState(true);
+  const [selectedPaletteId, setSelectedPaletteId] = useState('thoughtspot');
+  const [hoveredPaletteId, setHoveredPaletteId] = useState<string | null>(null);
 
   // ── Homepage tab ──
   const [customiseHomepageModal, setCustomiseHomepageModal] = useState(false);
@@ -1090,33 +990,100 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
         {/* ── Chart tab ── */}
         {activeTab === 'chart' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <Card title="Custom Maps" open={chartMapsOpen} onToggle={() => setChartMapsOpen(!chartMapsOpen)} rightAction={<span onClick={() => setMapModal('add')}><AddAction label="Add Map" /></span>}>
-              <ObjectTable
-                columns={[{ label: 'Map Name', flex: 2 }, { label: 'Created by', flex: 2 }, { label: 'Last Modified', flex: 2 }, { label: '', flex: 1 }]}
-                rows={CUSTOM_MAPS.map((row) => [
-                  <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font }}>{row.name}</span>,
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Avatar /><span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{row.author}</span></div>,
-                  <span style={{ fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>{row.date}</span>,
-                  <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
-                    <button onClick={() => setMapModal('edit')} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Edit</button>
-                    <button onClick={() => setDeleteMapModal(true)} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Delete</button>
-                  </div>,
-                ])}
-              />
-            </Card>
-            <Card title="Custom Charts" open={chartChartsOpen} onToggle={() => setChartChartsOpen(!chartChartsOpen)} rightAction={<span onClick={() => setChartModal('add')}><AddAction label="Add Chart" /></span>}>
-              <ObjectTable
-                columns={[{ label: 'Chart Name', flex: 2 }, { label: 'Created by', flex: 2 }, { label: 'Last Modified', flex: 2 }, { label: '', flex: 1 }]}
-                rows={CUSTOM_CHARTS.map((row) => [
-                  <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font }}>{row.name}</span>,
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Avatar /><span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{row.author}</span></div>,
-                  <span style={{ fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>{row.date}</span>,
-                  <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
-                    <button onClick={() => setChartModal('edit')} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Edit</button>
-                    <button onClick={() => setDeleteChartModal(true)} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Delete</button>
-                  </div>,
-                ])}
-              />
+            <Card
+              title="Colour palettes"
+              open={colourPalettesOpen}
+              onToggle={() => setColourPalettesOpen(!colourPalettesOpen)}
+              rightAction={
+                <button style={{
+                  display: 'flex', alignItems: 'center', gap: '5px',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0,
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <line x1="7" y1="1" x2="7" y2="13" stroke={brand} strokeWidth="1.6" strokeLinecap="round" />
+                    <line x1="1" y1="7" x2="13" y2="7" stroke={brand} strokeWidth="1.6" strokeLinecap="round" />
+                  </svg>
+                  Add palette
+                </button>
+              }
+            >
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {COLOUR_PALETTES.map((palette, idx) => {
+                  const isSelected = palette.id === selectedPaletteId;
+                  const isHovered = palette.id === hoveredPaletteId;
+                  return (
+                    <div
+                      key={palette.id}
+                      onMouseEnter={() => setHoveredPaletteId(palette.id)}
+                      onMouseLeave={() => setHoveredPaletteId(null)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '16px',
+                        padding: '12px 0',
+                        borderBottom: idx < COLOUR_PALETTES.length - 1 ? '1px solid #F3F4F6' : 'none',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => setSelectedPaletteId(palette.id)}
+                    >
+                      {/* Radio / check indicator */}
+                      <div style={{ flexShrink: 0, width: '18px', height: '18px', borderRadius: '50%', border: isSelected ? 'none' : '1.5px solid #D1D5DB', backgroundColor: isSelected ? brand : '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}>
+                        {isSelected && (
+                          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                            <path d="M1 4L3.5 6.5L9 1" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        )}
+                      </div>
+
+                      {/* Palette name */}
+                      <div style={{ width: '120px', flexShrink: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontFamily: font, fontSize: '13.5px', fontWeight: isSelected ? 600 : 400, color: isSelected ? '#111827' : '#374151' }}>
+                            {palette.name}
+                          </span>
+                          {palette.isDefault && (
+                            <span style={{ fontSize: '11px', fontWeight: 500, color: '#6B7280', fontFamily: font, backgroundColor: '#F3F4F6', padding: '1px 6px', borderRadius: '4px' }}>
+                              Default
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Colour swatches */}
+                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {palette.colors.map((color, ci) => (
+                          <div
+                            key={ci}
+                            style={{
+                              width: '24px', height: '24px', borderRadius: '4px',
+                              backgroundColor: color,
+                              border: '1px solid rgba(0,0,0,0.06)',
+                              flexShrink: 0,
+                            }}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Row actions — visible on hover or if selected */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', opacity: isHovered || isSelected ? 1 : 0, transition: 'opacity 0.15s' }}>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); }}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 500, color: brand, padding: 0 }}
+                        >
+                          Edit
+                        </button>
+                        {!palette.isDefault && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); }}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 500, color: '#6B7280', padding: 0 }}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </Card>
           </div>
         )}
@@ -1332,10 +1299,6 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
           onClose={() => setCustomiseHomepageModal(false)}
         />
       )}
-      {mapModal && <AddMapModal mode={mapModal} onClose={() => setMapModal(null)} />}
-      {deleteMapModal && <DeleteMapModal mapName="newhny264" onClose={() => setDeleteMapModal(false)} />}
-      {chartModal && <AddChartModal mode={chartModal} onClose={() => setChartModal(null)} />}
-      {deleteChartModal && <CannotDeleteChartModal onClose={() => setDeleteChartModal(false)} />}
 
       <style>{`
         @keyframes dropdownFade {

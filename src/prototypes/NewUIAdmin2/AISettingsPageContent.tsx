@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { systemColors, referenceColors } from '../../tokens/colors';
+import { ConfirmDialog } from './ConfirmDialog';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -130,8 +131,8 @@ const SettingRow: React.FC<{
 
 // ─── ResetLink ────────────────────────────────────────────────────────────────
 
-const ResetLink: React.FC = () => (
-  <button style={{
+const ResetLink: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
+  <button onClick={onClick} style={{
     border: 'none', background: 'none', cursor: 'pointer',
     fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font,
     padding: 0, lineHeight: 1, flexShrink: 0,
@@ -149,8 +150,9 @@ const CollapsibleSection: React.FC<{
   open: boolean;
   onToggle: () => void;
   showReset?: boolean;
+  onReset?: () => void;
   children: React.ReactNode;
-}> = ({ title, subtitle, open, onToggle, showReset = true, children }) => (
+}> = ({ title, subtitle, open, onToggle, showReset = true, onReset, children }) => (
   <div style={{ backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '12px', overflow: 'hidden' }}>
     <div style={{ padding: '16px 24px 12px', borderBottom: open ? '1px solid #E5E7EB' : 'none' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -164,7 +166,7 @@ const CollapsibleSection: React.FC<{
           </svg>
           <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>{title}</span>
         </button>
-        {showReset && <ResetLink />}
+        {showReset && <ResetLink onClick={onReset} />}
       </div>
       {subtitle && (
         <div style={{ fontSize: '12.5px', color: '#9CA3AF', fontFamily: font, marginTop: '4px', lineHeight: 1.6, paddingLeft: '22px' }}>
@@ -626,6 +628,9 @@ export const AISettingsPageContent: React.FC = () => {
   // ── Modals ──
   const [addConnectorModal, setAddConnectorModal] = useState(false);
 
+  // ── Reset dialog ──
+  const [resetSection, setResetSection] = useState<string | null>(null);
+
   // ── General tab — collapsible sections ──
   const [llmOpen, setLlmOpen] = useState(true);
   const [uxOpen, setUxOpen] = useState(true);
@@ -668,6 +673,16 @@ export const AISettingsPageContent: React.FC = () => {
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: '#FFFFFF' }}>
+
+      {/* ── Reset confirm dialog ── */}
+      {resetSection && (
+        <ConfirmDialog
+          title="Reset settings"
+          message={`This will reset all ${resetSection} to their defaults. Are you sure?`}
+          onConfirm={() => setResetSection(null)}
+          onCancel={() => setResetSection(null)}
+        />
+      )}
 
       {/* ── Sticky header ── */}
       <div style={{
@@ -712,6 +727,7 @@ export const AISettingsPageContent: React.FC = () => {
                 subtitle="Choose your preferred large language model (LLM) for ThoughtSpot AI features. Bring Your Own LLM Key (BYOLLM Key) is available via support ticket. For details, please refer to our documentation"
                 open={llmOpen}
                 onToggle={() => setLlmOpen(!llmOpen)}
+                onReset={() => setResetSection('LLM configuration')}
               >
                 <SettingRow
                   label="Choose model provider"
@@ -732,6 +748,7 @@ export const AISettingsPageContent: React.FC = () => {
                 subtitle="Select optional features for Spotter"
                 open={uxOpen}
                 onToggle={() => setUxOpen(!uxOpen)}
+                onReset={() => setResetSection('user experience settings')}
               >
                 <SettingRow
                   label="Enable add to coaching from conversation"
@@ -748,6 +765,7 @@ export const AISettingsPageContent: React.FC = () => {
                 title="Other AI features"
                 open={otherOpen}
                 onToggle={() => setOtherOpen(!otherOpen)}
+                onReset={() => setResetSection('other AI feature settings')}
               >
                 <SettingRow
                   label="AI Narratives for SpotIQ"
@@ -853,6 +871,7 @@ export const AISettingsPageContent: React.FC = () => {
                 subtitle="Spotter is available on ThoughtSpot Homepage and Liveboard. Use this option to enable/disable Spotter in each surface."
                 open={spotterAccessOpen}
                 onToggle={() => setSpotterAccessOpen(!spotterAccessOpen)}
+                onReset={() => setResetSection('Spotter access settings')}
               >
                 <SettingRow
                   label="Spotter on homepage and left navigation"
@@ -870,6 +889,7 @@ export const AISettingsPageContent: React.FC = () => {
                 subtitle="Enable optional features for Spotter 3. These capabilities will only work with Spotter 3"
                 open={spotterCapabilitiesOpen}
                 onToggle={() => setSpotterCapabilitiesOpen(!spotterCapabilitiesOpen)}
+                onReset={() => setResetSection('Spotter 3 capability settings')}
               >
                 <SettingRow
                   label="Auto-mode to automatically select a data model"

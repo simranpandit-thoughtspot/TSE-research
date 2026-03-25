@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { systemColors, referenceColors } from '../../tokens/colors';
+import { ConfirmDialog } from './ConfirmDialog';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -131,8 +132,8 @@ const SettingRow: React.FC<{
 
 // ─── ResetLink ────────────────────────────────────────────────────────────────
 
-const ResetLink: React.FC = () => (
-  <button style={{
+const ResetLink: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
+  <button onClick={onClick} style={{
     border: 'none', background: 'none', cursor: 'pointer',
     fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font,
     padding: '0', lineHeight: 1,
@@ -148,8 +149,9 @@ const Section: React.FC<{
   subtitle: string;
   open: boolean;
   onToggle: () => void;
+  onReset?: () => void;
   children: React.ReactNode;
-}> = ({ title, subtitle, open, onToggle, children }) => (
+}> = ({ title, subtitle, open, onToggle, onReset, children }) => (
   <div style={{
     backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB',
     borderRadius: '12px', overflow: 'hidden',
@@ -174,7 +176,7 @@ const Section: React.FC<{
           </span>
         )}
       </button>
-      <ResetLink />
+      <ResetLink onClick={onReset} />
     </div>
 
     {/* Body */}
@@ -198,6 +200,9 @@ export const SearchSpotIQPageContent: React.FC = () => {
   const [formulaOpen, setFormulaOpen] = useState(true);
   const [queryOpen, setQueryOpen] = useState(true);
   const [spotiqOpen, setSpotiqOpen] = useState(true);
+
+  // Reset dialog
+  const [resetSection, setResetSection] = useState<string | null>(null);
 
   // Index Settings toggles
   const [indexColumns, setIndexColumns] = useState(false);
@@ -236,6 +241,16 @@ export const SearchSpotIQPageContent: React.FC = () => {
         </h1>
       </div>
 
+      {/* ── Reset confirm dialog ── */}
+      {resetSection && (
+        <ConfirmDialog
+          title="Reset settings"
+          message={`This will reset all ${resetSection} to their defaults. Are you sure?`}
+          onConfirm={() => setResetSection(null)}
+          onCancel={() => setResetSection(null)}
+        />
+      )}
+
       {/* ── Scrollable content ── */}
       <div style={{ flex: 1, overflowY: 'auto' }}>
         <div style={{ maxWidth: '960px', margin: '0 auto', padding: '32px 40px 64px', boxSizing: 'border-box' }}>
@@ -247,6 +262,7 @@ export const SearchSpotIQPageContent: React.FC = () => {
               subtitle="Manage search suggestion indexing"
               open={indexOpen}
               onToggle={() => setIndexOpen(!indexOpen)}
+              onReset={() => setResetSection('index settings')}
             >
               <SettingRow
                 label="Index columns (effective for new tables/columns only)"
@@ -292,6 +308,7 @@ export const SearchSpotIQPageContent: React.FC = () => {
               subtitle="Enable or disable formula opt-in features"
               open={formulaOpen}
               onToggle={() => setFormulaOpen(!formulaOpen)}
+              onReset={() => setResetSection('formula settings')}
             >
               <SettingRow
                 label="SQL Passthrough Functions"
@@ -311,6 +328,7 @@ export const SearchSpotIQPageContent: React.FC = () => {
               subtitle="Enable or disable SQL query generation rules"
               open={queryOpen}
               onToggle={() => setQueryOpen(!queryOpen)}
+              onReset={() => setResetSection('query settings')}
             >
               <SettingRow
                 label="Table summaries in ad hoc search (applies only to new answer experience)"
@@ -357,6 +375,7 @@ export const SearchSpotIQPageContent: React.FC = () => {
               subtitle="SpotIQ helps you find insights and receive alerts about your data."
               open={spotiqOpen}
               onToggle={() => setSpotiqOpen(!spotiqOpen)}
+              onReset={() => setResetSection('SpotIQ settings')}
             >
               <SettingRow
                 label="SpotIQ Analyse"
