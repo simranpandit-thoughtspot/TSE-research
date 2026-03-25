@@ -13,6 +13,8 @@ const USERS = [
     username: 'simran.pandit',
     orgs: ['Zeus Inc', 'Aegis Corp', 'Olympus LLC'],
     orgsExtra: 5,
+    groups: ['Admin', 'Eng', 'Finance', 'Marketing'],
+    groupsExtra: 5,
     authType: 'Local',
     created: '7 days ago',
     status: 'Active',
@@ -23,6 +25,8 @@ const USERS = [
     username: 'ninand4579',
     orgs: ['Hyperion Group', 'Phoenix Ltd'],
     orgsExtra: 9,
+    groups: ['Org Admins', 'Dev', 'QA', 'Sales'],
+    groupsExtra: 9,
     authType: 'SSO',
     created: '14 days ago',
     status: 'Active',
@@ -33,6 +37,8 @@ const USERS = [
     username: '0oafgxoewfAsYiCR81d72222Username',
     orgs: ['Hydra Co', 'Cerberus Labs', 'Minotaur Holdings', 'Siren Group'],
     orgsExtra: 0,
+    groups: ['EMEA', 'APAC', 'NA', 'IT'],
+    groupsExtra: 0,
     authType: 'SSO',
     created: '3 weeks ago',
     status: 'Pending',
@@ -43,6 +49,8 @@ const USERS = [
     username: '26485arunj',
     orgs: [],
     orgsExtra: 0,
+    groups: [],
+    groupsExtra: 0,
     authType: 'SSO',
     created: 'a month ago',
     status: 'Locked',
@@ -53,6 +61,8 @@ const USERS = [
     username: 'kiranpatelUser12345',
     orgs: [],
     orgsExtra: 0,
+    groups: [],
+    groupsExtra: 0,
     authType: 'Local',
     created: '2 months ago',
     status: 'Suspended',
@@ -63,6 +73,8 @@ const USERS = [
     username: 'leilakhanUser67890',
     orgs: [],
     orgsExtra: 0,
+    groups: [],
+    groupsExtra: 0,
     authType: 'Local',
     created: '3 months ago',
     status: 'Expired',
@@ -73,6 +85,8 @@ const USERS = [
     username: 'aisharazaUser54321',
     orgs: ['Gorgon Consortium', 'Centaur Group'],
     orgsExtra: 5,
+    groups: ['Admin', 'Eng', 'Finance', 'Marketing'],
+    groupsExtra: 5,
     authType: 'SSO',
     created: 'a year ago',
     status: 'Pending',
@@ -83,6 +97,8 @@ const USERS = [
     username: 'aisharazaUser98765',
     orgs: ['Satyr Systems', 'Nymph Co'],
     orgsExtra: 5,
+    groups: ['Admin', 'Eng', 'Finance', 'Marketing'],
+    groupsExtra: 5,
     authType: 'Local',
     created: '4 years ago',
     status: 'Deactivated',
@@ -252,7 +268,7 @@ const DotsMenu: React.FC = () => {
 
 // ─── UserManagementPageContent ────────────────────────────────────────────────
 
-export const UserManagementPageContent: React.FC = () => {
+export const UserManagementPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-org' }> = ({ scope = 'all-orgs' }) => {
   const [activeTab, setActiveTab] = useState('users');
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
   const [searchValue, setSearchValue] = useState('');
@@ -271,10 +287,19 @@ export const UserManagementPageContent: React.FC = () => {
     setSelectedRows(next);
   };
 
-  const pageTabs = [
-    { id: 'users', label: 'Users' },
-    { id: 'authentication', label: 'Authentication' },
-  ];
+  const isPrimary = scope === 'primary-org';
+
+  const pageTabs = isPrimary
+    ? [
+        { id: 'users', label: 'Users' },
+        { id: 'groups', label: 'Groups' },
+        { id: 'roles', label: 'Roles' },
+        { id: 'authentication', label: 'Authentication' },
+      ]
+    : [
+        { id: 'users', label: 'Users' },
+        { id: 'authentication', label: 'Authentication' },
+      ];
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: '#FFFFFF' }}>
@@ -425,7 +450,7 @@ export const UserManagementPageContent: React.FC = () => {
                         </svg>
                       </button>
                     </th>
-                    <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Orgs</th>
+                    <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>{isPrimary ? 'Groups' : 'Orgs'}</th>
                     <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Auth Type</th>
                     <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Created</th>
                     <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Status</th>
@@ -461,22 +486,39 @@ export const UserManagementPageContent: React.FC = () => {
                         </div>
                       </td>
 
-                      {/* Orgs */}
+                      {/* Orgs / Groups */}
                       <td style={{ padding: '16px 16px 16px 0', verticalAlign: 'middle' }}>
-                        {user.orgs.length === 0 ? (
-                          <span style={{ fontSize: '13.5px', color: '#9CA3AF', fontFamily: font }}>-</span>
+                        {isPrimary ? (
+                          user.groups.length === 0 ? (
+                            <span style={{ fontSize: '13.5px', color: '#9CA3AF', fontFamily: font }}>-</span>
+                          ) : (
+                            <div>
+                              <div style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>
+                                {user.groups.join(' , ')}
+                              </div>
+                              {user.groupsExtra > 0 && (
+                                <div style={{ fontSize: '13px', color: brand, fontFamily: font, fontWeight: 500, cursor: 'pointer', marginTop: '2px' }}>
+                                  +{user.groupsExtra} more
+                                </div>
+                              )}
+                            </div>
+                          )
                         ) : (
-                          <div>
-                            <span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>
-                              {user.orgs.join(' , ')}
-                              {user.orgsExtra > 0 ? ' , ' : ''}
-                            </span>
-                            {user.orgsExtra > 0 && (
-                              <span style={{ fontSize: '13px', color: brand, fontFamily: font, fontWeight: 500, cursor: 'pointer' }}>
-                                +{user.orgsExtra} more
+                          user.orgs.length === 0 ? (
+                            <span style={{ fontSize: '13.5px', color: '#9CA3AF', fontFamily: font }}>-</span>
+                          ) : (
+                            <div>
+                              <span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>
+                                {user.orgs.join(' , ')}
+                                {user.orgsExtra > 0 ? ' , ' : ''}
                               </span>
-                            )}
-                          </div>
+                              {user.orgsExtra > 0 && (
+                                <span style={{ fontSize: '13px', color: brand, fontFamily: font, fontWeight: 500, cursor: 'pointer' }}>
+                                  +{user.orgsExtra} more
+                                </span>
+                              )}
+                            </div>
+                          )
                         )}
                       </td>
 

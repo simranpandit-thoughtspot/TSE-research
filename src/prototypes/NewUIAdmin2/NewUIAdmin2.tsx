@@ -64,6 +64,42 @@ const SIDEBAR_CATEGORIES: Record<SidebarTabId, SidebarCategory[]> = {
   ],
 };
 
+const SIDEBAR_CATEGORIES_PRIMARY: Record<SidebarTabId, SidebarCategory[]> = {
+  insights: [{ title: '', items: [{ id: 'home', label: 'Home' }] }],
+  data: [{ title: '', items: [{ id: 'data-objects', label: 'Data objects' }] }],
+  develop: [{ title: '', items: [{ id: 'playground', label: 'Playground' }] }],
+  admin: [
+    {
+      title: '',
+      items: [
+        { id: 'home', label: 'Home' },
+        { id: 'user-management', label: 'User management' },
+      ],
+    },
+    {
+      title: 'MANAGEMENT',
+      items: [
+        { id: 'feature-governance', label: 'Feature governance' },
+        { id: 'version-control', label: 'Version control' },
+      ],
+    },
+    {
+      title: 'CONFIGURATION',
+      items: [
+        { id: 'customisation', label: 'Customisation' },
+        { id: 'onboarding', label: 'Onboarding' },
+      ],
+    },
+    {
+      title: 'MONITOR',
+      items: [
+        { id: 'scheduled-maintenance', label: 'Scheduled maintenance' },
+        { id: 'terms', label: 'Terms' },
+      ],
+    },
+  ],
+};
+
 // ─── Toggle ──────────────────────────────────────────────────────────────────
 
 const Toggle: React.FC<{ checked: boolean; onChange: () => void }> = ({ checked, onChange }) => (
@@ -368,13 +404,15 @@ export const NewUIAdmin2: React.FC = () => {
   const [adminOpen, setAdminOpen] = useState(true);
   const [downloadsOpen, setDownloadsOpen] = useState(true);
 
+  const [scope, setScope] = useState<'all-orgs' | 'primary-org'>('all-orgs');
+
   const scopeToggle: ScopeToggle = {
     options: [
       { id: 'all-orgs', label: 'All Orgs' },
       { id: 'primary-org', label: 'Primary Org' },
     ],
-    activeId: 'all-orgs',
-    onChange: () => {},
+    activeId: scope,
+    onChange: (id: string) => setScope(id as 'all-orgs' | 'primary-org'),
   };
 
   const headerProps: GlobalHeaderProps = {
@@ -388,7 +426,7 @@ export const NewUIAdmin2: React.FC = () => {
     tabs: SIDEBAR_TABS,
     activeTab: sidebarTab,
     onTabChange: (tabId) => { setSidebarTab(tabId as SidebarTabId); setSidebarNav(''); },
-    categories: SIDEBAR_CATEGORIES,
+    categories: scope === 'primary-org' ? SIDEBAR_CATEGORIES_PRIMARY : SIDEBAR_CATEGORIES,
     selectedNav: sidebarNav,
     onNavSelect: setSidebarNav,
     ...(sidebarTab === 'admin' ? { scopeToggle } : {}),
@@ -411,7 +449,7 @@ export const NewUIAdmin2: React.FC = () => {
       {sidebarNav === 'customisation' ? <CustomisationPageContent /> :
        sidebarNav === 'ai-settings' ? <AISettingsPageContent /> :
        sidebarNav === 'search-spot-iq' ? <SearchSpotIQPageContent /> :
-       sidebarNav === 'user-management' ? <UserManagementPageContent /> :
+       sidebarNav === 'user-management' ? <UserManagementPageContent scope={scope} /> :
        sidebarNav === 'feature-management' ? <FeatureManagementPageContent /> :
        sidebarNav === 'variables' ? <VariablesPageContent /> : (
 
