@@ -762,53 +762,6 @@ const HelpMenuIcon: React.FC<{ type: 'document' | 'video' | 'rocket' | 'people' 
 // ─── Static data ──────────────────────────────────────────────────────────────
 
 
-// ─── Colour palette data ──────────────────────────────────────────────────────
-
-type ColourPalette = { id: string; name: string; colors: string[]; isDefault?: boolean };
-
-const COLOUR_PALETTES: ColourPalette[] = [
-  {
-    id: 'thoughtspot',
-    name: 'ThoughtSpot',
-    isDefault: true,
-    colors: ['#2770EF', '#44D5B5', '#F7B13F', '#FF6C6C', '#AD84E3', '#1AB3A8', '#F56E4D', '#8DC0FF', '#5E9E6B', '#E0A85C'],
-  },
-  {
-    id: 'sunrise',
-    name: 'Sunrise',
-    colors: ['#FF6B35', '#F7B13F', '#FFD166', '#ED8936', '#FF4757', '#FF7F50', '#FFA07A', '#FFB347', '#E8735A', '#FFCC80'],
-  },
-  {
-    id: 'ocean',
-    name: 'Ocean',
-    colors: ['#0077B6', '#00B4D8', '#48CAE4', '#90E0EF', '#023E8A', '#0096C7', '#ADE8F4', '#CAF0F8', '#0D47A1', '#29B6F6'],
-  },
-  {
-    id: 'forest',
-    name: 'Forest',
-    colors: ['#1B4332', '#2D6A4F', '#40916C', '#52B788', '#74C69D', '#95D5B2', '#B7E4C7', '#D8F3DC', '#388E3C', '#66BB6A'],
-  },
-  {
-    id: 'sunset',
-    name: 'Sunset',
-    colors: ['#FF006E', '#FB5607', '#FFBE0B', '#8338EC', '#3A86FF', '#FF4D6D', '#FF85A1', '#FFC8DD', '#E040FB', '#AB47BC'],
-  },
-  {
-    id: 'bold',
-    name: 'Bold',
-    colors: ['#E63946', '#2A9D8F', '#E9C46A', '#F4A261', '#264653', '#023047', '#219EBC', '#8ECAE6', '#457B9D', '#A8DADC'],
-  },
-  {
-    id: 'pastel',
-    name: 'Pastel',
-    colors: ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#D9B3FF', '#FFB3D9', '#B3FFD9', '#FFE0CC', '#E0CCFF'],
-  },
-  {
-    id: 'monochrome',
-    name: 'Monochrome',
-    colors: ['#111827', '#1F2937', '#374151', '#4B5563', '#6B7280', '#9CA3AF', '#D1D5DB', '#E5E7EB', '#F3F4F6', '#F9FAFB'],
-  },
-];
 const HELP_ITEMS: { label: string; icon: 'document' | 'video' | 'rocket' | 'people' | 'info'; url: string }[] = [
   { label: 'Documents',       icon: 'document', url: 'https://champagne-master-aws.thoughtspotstag...' },
   { label: 'Getting Started', icon: 'video',    url: 'https://champagne-master-aws.thoughtspotstag...' },
@@ -845,9 +798,7 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
   const [disableColourRotation, setDisableColourRotation] = useState(false);
 
   // ── Chart tab ──
-  const [colourPalettesOpen, setColourPalettesOpen] = useState(true);
-  const [selectedPaletteId, setSelectedPaletteId] = useState('thoughtspot');
-  const [hoveredPaletteId, setHoveredPaletteId] = useState<string | null>(null);
+  const [chartInnerTab, setChartInnerTab] = useState<'palettes' | 'custom-charts' | 'custom-maps'>('palettes');
 
   // ── Homepage tab ──
   const [customiseHomepageModal, setCustomiseHomepageModal] = useState(false);
@@ -989,102 +940,129 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
 
         {/* ── Chart tab ── */}
         {activeTab === 'chart' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <Card
-              title="Colour palettes"
-              open={colourPalettesOpen}
-              onToggle={() => setColourPalettesOpen(!colourPalettesOpen)}
-              rightAction={
-                <button style={{
-                  display: 'flex', alignItems: 'center', gap: '5px',
-                  background: 'none', border: 'none', cursor: 'pointer',
-                  fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0,
-                }}>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <line x1="7" y1="1" x2="7" y2="13" stroke={brand} strokeWidth="1.6" strokeLinecap="round" />
-                    <line x1="1" y1="7" x2="13" y2="7" stroke={brand} strokeWidth="1.6" strokeLinecap="round" />
-                  </svg>
-                  Add palette
+          <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '12px', overflow: 'hidden' }}>
+
+            {/* Inner sub-tabs */}
+            <div style={{ display: 'flex', borderBottom: '1px solid #E5E7EB', padding: '0 24px' }}>
+              {([
+                { id: 'palettes',       label: 'Chart Colour Palettes' },
+                { id: 'custom-charts',  label: 'Custom Charts' },
+                { id: 'custom-maps',    label: 'Custom Maps' },
+              ] as const).map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setChartInnerTab(tab.id)}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    padding: '16px 20px 14px', marginBottom: '-1px',
+                    fontFamily: font, fontSize: '14px',
+                    fontWeight: chartInnerTab === tab.id ? 600 : 400,
+                    color: chartInnerTab === tab.id ? brand : '#6B7280',
+                    borderBottom: chartInnerTab === tab.id ? `2px solid ${brand}` : '2px solid transparent',
+                  }}
+                >
+                  {tab.label}
                 </button>
-              }
-            >
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {COLOUR_PALETTES.map((palette, idx) => {
-                  const isSelected = palette.id === selectedPaletteId;
-                  const isHovered = palette.id === hoveredPaletteId;
-                  return (
-                    <div
-                      key={palette.id}
-                      onMouseEnter={() => setHoveredPaletteId(palette.id)}
-                      onMouseLeave={() => setHoveredPaletteId(null)}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: '16px',
-                        padding: '12px 0',
-                        borderBottom: idx < COLOUR_PALETTES.length - 1 ? '1px solid #F3F4F6' : 'none',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => setSelectedPaletteId(palette.id)}
-                    >
-                      {/* Radio / check indicator */}
-                      <div style={{ flexShrink: 0, width: '18px', height: '18px', borderRadius: '50%', border: isSelected ? 'none' : '1.5px solid #D1D5DB', backgroundColor: isSelected ? brand : '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}>
-                        {isSelected && (
-                          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                            <path d="M1 4L3.5 6.5L9 1" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        )}
-                      </div>
+              ))}
+            </div>
 
-                      {/* Palette name */}
-                      <div style={{ width: '120px', flexShrink: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontFamily: font, fontSize: '13.5px', fontWeight: isSelected ? 600 : 400, color: isSelected ? '#111827' : '#374151' }}>
-                            {palette.name}
-                          </span>
-                          {palette.isDefault && (
-                            <span style={{ fontSize: '11px', fontWeight: 500, color: '#6B7280', fontFamily: font, backgroundColor: '#F3F4F6', padding: '1px 6px', borderRadius: '4px' }}>
-                              Default
-                            </span>
-                          )}
+            {/* ── Chart Colour Palettes ── */}
+            {chartInnerTab === 'palettes' && (
+              <div style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Subtitle + Reset */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>
+                    For optimal display, choose your custom chart colour palettes.
+                  </span>
+                  <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13.5px', fontWeight: 500, color: brand, padding: 0 }}>
+                    Reset to default
+                  </button>
+                </div>
+
+                {/* Primary colours */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '24px', padding: '16px 20px', border: '1px solid #E9EAEC', borderRadius: '8px' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827', fontFamily: font, width: '160px', flexShrink: 0 }}>
+                    Primary colours
+                  </span>
+                  <div style={{ display: 'flex', gap: '8px', flex: 1 }}>
+                    {PRIMARY_COLORS.map((c, i) => <ColorSwatch key={i} color={c} />)}
+                  </div>
+                </div>
+
+                {/* Secondary Colors */}
+                <div style={{ padding: '16px 20px', border: '1px solid #E9EAEC', borderRadius: '8px' }}>
+                  <div style={{ display: 'flex', gap: '24px' }}>
+                    <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827', fontFamily: font, width: '160px', flexShrink: 0, paddingTop: '6px' }}>
+                      Secondary Colors
+                    </span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+                      {SECONDARY_COLORS.map((row, i) => (
+                        <div key={i} style={{ display: 'flex', gap: '8px' }}>
+                          {row.map((c, j) => <ColorSwatch key={j} color={c} />)}
                         </div>
-                      </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ marginTop: '16px' }}>
+                    <Checkbox label="Disable Colour Rotation" checked={disableColourRotation} onChange={() => setDisableColourRotation(!disableColourRotation)} />
+                  </div>
+                </div>
+              </div>
+            )}
 
-                      {/* Colour swatches */}
-                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        {palette.colors.map((color, ci) => (
-                          <div
-                            key={ci}
-                            style={{
-                              width: '24px', height: '24px', borderRadius: '4px',
-                              backgroundColor: color,
-                              border: '1px solid rgba(0,0,0,0.06)',
-                              flexShrink: 0,
-                            }}
-                          />
-                        ))}
-                      </div>
-
-                      {/* Row actions — visible on hover or if selected */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', opacity: isHovered || isSelected ? 1 : 0, transition: 'opacity 0.15s' }}>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); }}
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 500, color: brand, padding: 0 }}
-                        >
-                          Edit
-                        </button>
-                        {!palette.isDefault && (
-                          <button
-                            onClick={(e) => { e.stopPropagation(); }}
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 500, color: '#6B7280', padding: 0 }}
-                          >
-                            Delete
-                          </button>
-                        )}
+            {/* ── Custom Charts ── */}
+            {chartInnerTab === 'custom-charts' && (
+              <div style={{ padding: '20px 24px 24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+                  <button style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0 }}>
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><line x1="6.5" y1="1" x2="6.5" y2="12" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/><line x1="1" y1="6.5" x2="12" y2="6.5" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/></svg>
+                    Add Chart
+                  </button>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {[
+                    { name: 'Muze studio', author: 'Anje Keizer', date: '2 days ago' },
+                    { name: 'Gauge',       author: 'Anje Keizer', date: '2 days ago' },
+                  ].map((row, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '14px 0', borderBottom: i === 0 ? '1px solid #F3F4F6' : 'none' }}>
+                      <span style={{ flex: 2, fontSize: '13.5px', color: '#111827', fontFamily: font }}>{row.name}</span>
+                      <span style={{ flex: 2, fontSize: '13.5px', color: '#374151', fontFamily: font }}>{row.author}</span>
+                      <span style={{ flex: 2, fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>{row.date}</span>
+                      <div style={{ display: 'flex', gap: '16px' }}>
+                        <button style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Edit</button>
+                        <button style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Delete</button>
                       </div>
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
               </div>
-            </Card>
+            )}
+
+            {/* ── Custom Maps ── */}
+            {chartInnerTab === 'custom-maps' && (
+              <div style={{ padding: '20px 24px 24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+                  <button style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0 }}>
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><line x1="6.5" y1="1" x2="6.5" y2="12" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/><line x1="1" y1="6.5" x2="12" y2="6.5" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/></svg>
+                    Add Map
+                  </button>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {Array(5).fill({ name: 'Germany', author: 'Anje Keizer', date: '2 days ago' }).map((row, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '14px 0', borderBottom: i < 4 ? '1px solid #F3F4F6' : 'none' }}>
+                      <span style={{ flex: 2, fontSize: '13.5px', color: '#111827', fontFamily: font }}>{row.name}</span>
+                      <span style={{ flex: 2, fontSize: '13.5px', color: '#374151', fontFamily: font }}>{row.author}</span>
+                      <span style={{ flex: 2, fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>{row.date}</span>
+                      <div style={{ display: 'flex', gap: '16px' }}>
+                        <button style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Edit</button>
+                        <button style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Delete</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
           </div>
         )}
 
