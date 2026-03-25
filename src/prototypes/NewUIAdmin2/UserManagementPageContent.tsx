@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { systemColors } from '../../tokens/colors';
+import { Icon } from '../../components/icons/Icon';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -442,9 +443,7 @@ export const UserManagementPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
                   onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#E5E7EB'; }}
                   onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F3F4F6'; }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path fill="#374151" d="M7.04 1.5a.5.5 0 00-.49.39l-.2 1.01a4.47 4.47 0 00-.87.51l-.97-.4a.5.5 0 00-.58.2l-1 1.73a.5.5 0 00.11.63l.8.65a4.6 4.6 0 000 1.12l-.8.65a.5.5 0 00-.11.63l1 1.73a.5.5 0 00.58.2l.97-.4c.28.19.57.37.87.51l.2 1.01a.5.5 0 00.49.39h1.92a.5.5 0 00.49-.39l.2-1.01a4.47 4.47 0 00.87-.51l.97.4a.5.5 0 00.58-.2l1-1.73a.5.5 0 00-.11-.63l-.8-.65a4.6 4.6 0 000-1.12l.8-.65a.5.5 0 00.11-.63l-1-1.73a.5.5 0 00-.58-.2l-.97.4a4.47 4.47 0 00-.87-.51L9.45 1.9a.5.5 0 00-.49-.4H7.04zM8 5.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5z" />
-                  </svg>
+                  <Icon name="settings" size="m" color="#374151" />
                 </button>
 
                 {/* Split button: Add new user + chevron */}
@@ -663,9 +662,7 @@ export const UserManagementPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
                   onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#E5E7EB'; }}
                   onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F3F4F6'; }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path fill="#374151" d="M7.04 1.5a.5.5 0 00-.49.39l-.2 1.01a4.47 4.47 0 00-.87.51l-.97-.4a.5.5 0 00-.58.2l-1 1.73a.5.5 0 00.11.63l.8.65a4.6 4.6 0 000 1.12l-.8.65a.5.5 0 00-.11.63l1 1.73a.5.5 0 00.58.2l.97-.4c.28.19.57.37.87.51l.2 1.01a.5.5 0 00.49.39h1.92a.5.5 0 00.49-.39l.2-1.01a4.47 4.47 0 00.87-.51l.97.4a.5.5 0 00.58-.2l1-1.73a.5.5 0 00-.11-.63l-.8-.65a4.6 4.6 0 000-1.12l.8-.65a.5.5 0 00.11-.63l-1-1.73a.5.5 0 00-.58-.2l-.97.4a4.47 4.47 0 00-.87-.51L9.45 1.9a.5.5 0 00-.49-.4H7.04zM8 5.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5z" />
-                  </svg>
+                  <Icon name="settings" size="m" color="#374151" />
                 </button>
                 <div style={{ display: 'flex', borderRadius: '999px', overflow: 'hidden' }}>
                   <button style={{
