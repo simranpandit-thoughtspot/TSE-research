@@ -100,6 +100,10 @@ const SIDEBAR_CATEGORIES_PRIMARY: Record<SidebarTabId, SidebarCategory[]> = {
     {
       title: 'MONITOR',
       items: [
+        { id: 'user-adoption', label: 'Usage & adoption' },
+        { id: 'performance-tracking', label: 'Performance tracking' },
+        { id: 'ai-bi-stats', label: 'AI & BI stats' },
+        { id: 'billing-query-stats', label: 'Billing query stats' },
         { id: 'scheduled-maintenance', label: 'Scheduled maintenance' },
         { id: 'terms', label: 'Terms' },
       ],

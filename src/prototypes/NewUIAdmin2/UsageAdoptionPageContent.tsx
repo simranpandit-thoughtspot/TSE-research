@@ -4,7 +4,7 @@ import { systemColors } from '../../tokens/colors';
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
 
-type TabId = 'overview' | 'usage' | 'adoption';
+type TabId = 'overview' | 'productivity' | 'object-usage' | 'object-stats';
 
 // ─── KPI Card ─────────────────────────────────────────────────────────────────
 
@@ -458,9 +458,10 @@ export const UsageAdoptionPageContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
 
   const tabs: { id: TabId; label: string }[] = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'usage',    label: 'Usage insights' },
-    { id: 'adoption', label: 'Adoption insights' },
+    { id: 'overview',      label: 'Adoption overview' },
+    { id: 'productivity',  label: 'User Productivity' },
+    { id: 'object-usage',  label: 'Object Usage' },
+    { id: 'object-stats',  label: 'Object statistics' },
   ];
 
   return (
@@ -558,8 +559,9 @@ export const UsageAdoptionPageContent: React.FC = () => {
           {/* Content */}
           <div style={{ padding: '20px' }}>
             {activeTab === 'overview'  && <OverviewContent />}
-            {activeTab === 'usage'     && <UsageInsightsContent />}
-            {activeTab === 'adoption'  && <AdoptionInsightsContent />}
+            {activeTab === 'productivity'  && <UsageInsightsContent />}
+            {activeTab === 'object-usage'  && <AdoptionInsightsContent />}
+            {activeTab === 'object-stats'  && <AdoptionInsightsContent />}
           </div>
 
         </div>
