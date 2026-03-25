@@ -980,7 +980,7 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
                 </div>
 
                 {/* Primary colours */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '24px', padding: '16px 20px', border: '1px solid #E9EAEC', borderRadius: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '24px', padding: '16px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px' }}>
                   <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827', fontFamily: font, width: '160px', flexShrink: 0 }}>
                     Primary colours
                   </span>
@@ -990,7 +990,7 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
                 </div>
 
                 {/* Secondary Colors */}
-                <div style={{ padding: '16px 20px', border: '1px solid #E9EAEC', borderRadius: '8px' }}>
+                <div style={{ padding: '16px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px' }}>
                   <div style={{ display: 'flex', gap: '24px' }}>
                     <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827', fontFamily: font, width: '160px', flexShrink: 0, paddingTop: '6px' }}>
                       Secondary Colors
