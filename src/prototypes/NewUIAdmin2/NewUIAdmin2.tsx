@@ -15,6 +15,7 @@ import { OrgManagementPageContent } from './OrgManagementPageContent';
 import { UsageAdoptionPageContent } from './UsageAdoptionPageContent';
 import { PerformanceTrackingPageContent } from './PerformanceTrackingPageContent';
 import { AIBIStatsPageContent } from './AIBIStatsPageContent';
+import { BillingQueryStatsPageContent } from './BillingQueryStatsPageContent';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -62,7 +63,7 @@ const SIDEBAR_CATEGORIES: Record<SidebarTabId, SidebarCategory[]> = {
       title: 'MONITOR',
       items: [
         { id: 'user-adoption', label: 'User & adoption' },
-        { id: 'performance-tracking', label: 'performance tracking' },
+        { id: 'performance-tracking', label: 'Performance tracking' },
         { id: 'ai-bi-stats', label: 'AI & BI stats' },
         { id: 'billing-query-stats', label: 'Billing query stats' },
       ],
@@ -452,9 +453,42 @@ export const NewUIAdmin2: React.FC = () => {
       style={{ height: '100vh' }}
     >
       {/* Route to Customisation page when that nav item is selected */}
-      {sidebarNav === 'user-adoption' ? <UsageAdoptionPageContent /> :
+      {sidebarNav === 'home' ? (
+        <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFFFFF' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '32px',
+            border: `1.5px dashed ${brand}66`, borderRadius: '12px',
+            padding: '36px 40px', maxWidth: '680px', width: '100%',
+          }}>
+            <div style={{ flexShrink: 0, width: '96px', height: '96px' }}>
+              <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+                <rect x="20" y="56" width="56" height="22" rx="4" fill="#F3F4F6" stroke="#D1D5DB" strokeWidth="1.5" />
+                <rect x="28" y="30" width="40" height="26" rx="4" fill="#F3F4F6" stroke="#D1D5DB" strokeWidth="1.5" />
+                <rect x="36" y="14" width="24" height="18" rx="4" fill="#F3F4F6" stroke="#D1D5DB" strokeWidth="1.5" />
+                <rect x="32" y="34" width="12" height="8" rx="2" fill="#D1D5DB" />
+                <rect x="48" y="34" width="12" height="3" rx="1.5" fill="#D1D5DB" />
+                <rect x="48" y="40" width="8" height="3" rx="1.5" fill="#D1D5DB" />
+                <rect x="28" y="61" width="16" height="8" rx="2" fill="#D1D5DB" />
+                <rect x="50" y="61" width="18" height="3" rx="1.5" fill="#D1D5DB" />
+                <rect x="50" y="67" width="12" height="3" rx="1.5" fill="#D1D5DB" />
+                <path d="M48 30v-4M44 26l4-4 4 4" stroke={brand} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />
+              </svg>
+            </div>
+            <div>
+              <div style={{ fontSize: '18px', fontWeight: 700, color: '#374151', fontFamily: font, lineHeight: 1.4, marginBottom: '10px' }}>
+                Admin home <span style={{ color: brand }}>coming soon</span>
+              </div>
+              <div style={{ fontSize: '14px', color: '#9CA3AF', fontFamily: font, lineHeight: 1.7 }}>
+                The admin home dashboard is being built. Check back for an at-a-glance overview of your system health, key metrics, and recent activity.
+              </div>
+            </div>
+          </div>
+        </div>
+      ) :
+       sidebarNav === 'user-adoption' ? <UsageAdoptionPageContent /> :
        sidebarNav === 'performance-tracking' ? <PerformanceTrackingPageContent /> :
        sidebarNav === 'ai-bi-stats' ? <AIBIStatsPageContent /> :
+       sidebarNav === 'billing-query-stats' ? <BillingQueryStatsPageContent /> :
        sidebarNav === 'org-management' ? <OrgManagementPageContent /> :
        sidebarNav === 'customisation' ? <CustomisationPageContent scope={scope} /> :
        sidebarNav === 'ai-settings' ? <AISettingsPageContent /> :
