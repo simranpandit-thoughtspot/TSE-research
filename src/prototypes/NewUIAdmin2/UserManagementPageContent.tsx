@@ -108,14 +108,36 @@ const USERS = [
 // ─── IDP mock data ────────────────────────────────────────────────────────────
 
 const IDP_CONNECTIONS = [
-  { id: 1, name: 'Saml-01',              idpType: 'SAML 2',   created: '2 mins ago',  enabled: true,  icon: 'saml'      },
-  { id: 2, name: 'SAML IDP 1',           idpType: 'SAML 2',   created: '1 hour ago',  enabled: true,  icon: 'saml'      },
-  { id: 3, name: 'Auth0',                idpType: 'Google',   created: '2 days ago',  enabled: false, icon: 'google'    },
-  { id: 4, name: 'Azure Active Directory',idpType: 'Google',  created: '5 mins ago',  enabled: false, icon: 'google'    },
-  { id: 5, name: 'OneLogin',             idpType: 'Google',   created: '3 weeks ago', enabled: false, icon: 'google'    },
-  { id: 6, name: 'Ping Identity',        idpType: 'Amazon',   created: '1 month ago', enabled: true,  icon: 'amazon'    },
-  { id: 7, name: 'Salesforce Identity',  idpType: 'Microsoft',created: '5 hours ago', enabled: false, icon: 'microsoft' },
-  { id: 8, name: 'Okta Identity Cloud',  idpType: 'OIDC',     created: '1 year ago',  enabled: true,  icon: 'okta'      },
+  { id: 1, name: 'Saml-01',              idpType: 'SAML 2',   clientId: 'https://identity.thoughtspot-2342342.okta.com/oauth2/default', created: '2 mins ago',  enabled: true,  icon: 'saml'      },
+  { id: 2, name: 'SAML IDP 1',           idpType: 'SAML 2',   clientId: 'https://abc.pot-342342.okta',                                  created: '1 hour ago',  enabled: true,  icon: 'saml'      },
+  { id: 3, name: 'Auth0',                idpType: 'Google',   clientId: 'https://identity.thoughtspot-2342342.okta.com/oauth2/default', created: '2 days ago',  enabled: false, icon: 'google'    },
+  { id: 4, name: 'Azure Active Directory',idpType: 'Google',  clientId: 'https://abc.pot-342342.okta',                                  created: '5 mins ago',  enabled: false, icon: 'google'    },
+  { id: 5, name: 'OneLogin',             idpType: 'Google',   clientId: 'https://abc.pot-342342.okta',                                  created: '3 weeks ago', enabled: false, icon: 'google'    },
+  { id: 6, name: 'Ping Identity',        idpType: 'Amazon',   clientId: 'https://abc.pot-342342.okta',                                  created: '1 month ago', enabled: true,  icon: 'amazon'    },
+  { id: 7, name: 'Salesforce Identity',  idpType: 'Microsoft',clientId: 'https://identity.thoughtspot-2342342.okta.com/oauth2/default', created: '5 hours ago', enabled: false, icon: 'microsoft' },
+  { id: 8, name: 'Okta Identity Cloud',  idpType: 'OIDC',     clientId: 'https://identity.thoughtspot-2342342.okta.com/oauth2/default', created: '1 year ago',  enabled: true,  icon: 'okta'      },
+];
+
+const GROUPS = [
+  { id: 1, name: 'Engineering',     description: 'Thoughtpsot Enggs',          users: 23,  created: '2 mins ago'  },
+  { id: 2, name: 'Design',          description: 'Data Insights Team',          users: 344, created: '1 hour ago'  },
+  { id: 3, name: 'Marketing',       description: 'Product Development Squad',   users: 122, created: '2 days ago'  },
+  { id: 4, name: 'Human Resources', description: 'User Experience Crew',        users: 23,  created: '5 mins ago'  },
+  { id: 5, name: 'Finance',         description: 'Quality Assurance Unit',      users: 56,  created: '3 weeks ago' },
+  { id: 6, name: 'Sales',           description: 'Marketing Innovations Group', users: 113, created: '1 month ago' },
+  { id: 7, name: 'Product',         description: 'Customer Support Team',       users: 121, created: '5 hours ago' },
+  { id: 8, name: 'Operations',      description: 'Sales Strategy Division',     users: 34,  created: '1 year ago'  },
+];
+
+const ROLES = [
+  { id: 1, name: 'role-admin',                        groups: ['Admin', 'Eng', 'Finance', 'Marketing'], groupsExtra: 5, privileges: 23  },
+  { id: 2, name: 'can produce creative designs',       groups: ['Org Admins', 'Dev', 'QA', 'Sales'],    groupsExtra: 9, privileges: 344 },
+  { id: 3, name: 'can develop marketing strategies',   groups: ['EMEA', 'APAC', 'NA', 'IT'],            groupsExtra: 0, privileges: 122 },
+  { id: 4, name: 'can support HR initiatives',         groups: [],                                       groupsExtra: 0, privileges: 23  },
+  { id: 5, name: 'can analyze financial data',         groups: [],                                       groupsExtra: 0, privileges: 56  },
+  { id: 6, name: 'can drive sales growth',             groups: [],                                       groupsExtra: 0, privileges: 113 },
+  { id: 7, name: 'can lead product launches',          groups: ['Admin', 'Eng', 'Finance', 'Marketing'], groupsExtra: 5, privileges: 121 },
+  { id: 8, name: 'can optimize operations processes',  groups: ['Admin', 'Eng', 'Finance', 'Marketing'], groupsExtra: 5, privileges: 244 },
 ];
 
 // ─── IDP brand icons ──────────────────────────────────────────────────────────
@@ -276,6 +298,9 @@ export const UserManagementPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
     Object.fromEntries(IDP_CONNECTIONS.map(c => [c.id, c.enabled]))
   );
 
+  const [selectedGroupRows, setSelectedGroupRows] = useState<Set<number>>(new Set());
+  const [selectedRoleRows, setSelectedRoleRows] = useState<Set<number>>(new Set());
+
   const allSelected = selectedRows.size === USERS.length;
   const toggleAll = () => {
     if (allSelected) setSelectedRows(new Set());
@@ -285,6 +310,28 @@ export const UserManagementPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
     const next = new Set(selectedRows);
     if (next.has(id)) next.delete(id); else next.add(id);
     setSelectedRows(next);
+  };
+
+  const allGroupsSelected = selectedGroupRows.size === GROUPS.length;
+  const toggleAllGroups = () => {
+    if (allGroupsSelected) setSelectedGroupRows(new Set());
+    else setSelectedGroupRows(new Set(GROUPS.map(g => g.id)));
+  };
+  const toggleGroupRow = (id: number) => {
+    const next = new Set(selectedGroupRows);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setSelectedGroupRows(next);
+  };
+
+  const allRolesSelected = selectedRoleRows.size === ROLES.length;
+  const toggleAllRoles = () => {
+    if (allRolesSelected) setSelectedRoleRows(new Set());
+    else setSelectedRoleRows(new Set(ROLES.map(r => r.id)));
+  };
+  const toggleRoleRow = (id: number) => {
+    const next = new Set(selectedRoleRows);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setSelectedRoleRows(next);
   };
 
   const isPrimary = scope === 'primary-org';
@@ -388,21 +435,20 @@ export const UserManagementPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 {/* Gear */}
                 <button style={{
-                  width: '36px', height: '36px', borderRadius: '50%', border: '1px solid #E5E7EB',
-                  backgroundColor: '#FFFFFF', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: '36px', height: '36px', borderRadius: '50%', border: 'none',
+                  backgroundColor: '#F3F4F6', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   transition: 'background-color 0.15s',
                 }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F9FAFB'; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#FFFFFF'; }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#E5E7EB'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F3F4F6'; }}
                 >
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <circle cx="8" cy="8" r="2.5" stroke="#6B7280" strokeWidth="1.4" />
-                    <path d="M8 1.5v1M8 13.5v1M1.5 8h1M13.5 8h1M3.4 3.4l.7.7M11.9 11.9l.7.7M11.9 4.1l-.7.7M4.1 11.9l-.7.7" stroke="#6B7280" strokeWidth="1.4" strokeLinecap="round" />
+                    <path fill="#374151" d="M7.04 1.5a.5.5 0 00-.49.39l-.2 1.01a4.47 4.47 0 00-.87.51l-.97-.4a.5.5 0 00-.58.2l-1 1.73a.5.5 0 00.11.63l.8.65a4.6 4.6 0 000 1.12l-.8.65a.5.5 0 00-.11.63l1 1.73a.5.5 0 00.58.2l.97-.4c.28.19.57.37.87.51l.2 1.01a.5.5 0 00.49.39h1.92a.5.5 0 00.49-.39l.2-1.01a4.47 4.47 0 00.87-.51l.97.4a.5.5 0 00.58-.2l1-1.73a.5.5 0 00-.11-.63l-.8-.65a4.6 4.6 0 000-1.12l.8-.65a.5.5 0 00.11-.63l-1-1.73a.5.5 0 00-.58-.2l-.97.4a4.47 4.47 0 00-.87-.51L9.45 1.9a.5.5 0 00-.49-.4H7.04zM8 5.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5z" />
                   </svg>
                 </button>
 
                 {/* Split button: Add new user + chevron */}
-                <div style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', borderRadius: '999px', overflow: 'hidden' }}>
                   <button style={{
                     height: '36px', padding: '0 16px', border: 'none', backgroundColor: brand,
                     cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: '#FFFFFF',
@@ -577,6 +623,329 @@ export const UserManagementPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
           </div>
         )}
 
+        {activeTab === 'groups' && (
+          <div>
+            {/* Toolbar */}
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '20px 40px', gap: '16px',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                {/* Search */}
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                    style={{ position: 'absolute', left: '10px', flexShrink: 0 }}>
+                    <circle cx="6" cy="6" r="4.5" stroke="#9CA3AF" strokeWidth="1.4" />
+                    <line x1="9.5" y1="9.5" x2="12.5" y2="12.5" stroke="#9CA3AF" strokeWidth="1.4" strokeLinecap="round" />
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    style={{
+                      width: '200px', height: '36px', paddingLeft: '32px', paddingRight: '12px',
+                      border: '1px solid #D1D5DB', borderRadius: '8px',
+                      fontFamily: font, fontSize: '13px', color: '#111827',
+                      outline: 'none', backgroundColor: '#FFFFFF',
+                    }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+                  />
+                </div>
+              </div>
+
+              {/* Right: gear + create new group */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <button style={{
+                  width: '36px', height: '36px', borderRadius: '50%', border: 'none',
+                  backgroundColor: '#F3F4F6', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'background-color 0.15s',
+                }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#E5E7EB'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F3F4F6'; }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path fill="#374151" d="M7.04 1.5a.5.5 0 00-.49.39l-.2 1.01a4.47 4.47 0 00-.87.51l-.97-.4a.5.5 0 00-.58.2l-1 1.73a.5.5 0 00.11.63l.8.65a4.6 4.6 0 000 1.12l-.8.65a.5.5 0 00-.11.63l1 1.73a.5.5 0 00.58.2l.97-.4c.28.19.57.37.87.51l.2 1.01a.5.5 0 00.49.39h1.92a.5.5 0 00.49-.39l.2-1.01a4.47 4.47 0 00.87-.51l.97.4a.5.5 0 00.58-.2l1-1.73a.5.5 0 00-.11-.63l-.8-.65a4.6 4.6 0 000-1.12l.8-.65a.5.5 0 00.11-.63l-1-1.73a.5.5 0 00-.58-.2l-.97.4a4.47 4.47 0 00-.87-.51L9.45 1.9a.5.5 0 00-.49-.4H7.04zM8 5.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5z" />
+                  </svg>
+                </button>
+                <div style={{ display: 'flex', borderRadius: '999px', overflow: 'hidden' }}>
+                  <button style={{
+                    height: '36px', padding: '0 16px', border: 'none', backgroundColor: brand,
+                    cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: '#FFFFFF',
+                    transition: 'opacity 0.15s', borderRight: `1px solid ${brand}cc`,
+                  }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.9'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}
+                  >
+                    Create new group
+                  </button>
+                  <button style={{
+                    width: '36px', height: '36px', border: 'none', backgroundColor: brand,
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'opacity 0.15s',
+                  }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.9'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Table */}
+            <div style={{ padding: '0 40px' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: font }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid #E5E7EB' }}>
+                    <th style={{ width: '48px', padding: '10px 12px 10px 0', textAlign: 'left' }}>
+                      <Checkbox checked={allGroupsSelected} onChange={toggleAllGroups} />
+                    </th>
+                    <th style={{ padding: '10px 16px 10px 0', textAlign: 'left' }}>
+                      <button style={{
+                        display: 'flex', alignItems: 'center', gap: '4px',
+                        border: 'none', background: 'none', cursor: 'pointer',
+                        fontFamily: font, fontSize: '13px', fontWeight: 500, color: '#6B7280', padding: 0,
+                      }}>
+                        Group name
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                          <path d="M5 7L2 3h6L5 7z" fill="#6B7280" />
+                        </svg>
+                      </button>
+                    </th>
+                    <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Users</th>
+                    <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Created</th>
+                    <th style={{ padding: '10px 0', textAlign: 'right', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {GROUPS.map((group) => (
+                    <tr key={group.id} style={{
+                      borderBottom: '1px solid #F3F4F6',
+                      backgroundColor: selectedGroupRows.has(group.id) ? `${brand}08` : 'transparent',
+                      transition: 'background-color 0.1s',
+                    }}
+                      onMouseEnter={(e) => { if (!selectedGroupRows.has(group.id)) (e.currentTarget as HTMLTableRowElement).style.backgroundColor = '#FAFAFA'; }}
+                      onMouseLeave={(e) => { if (!selectedGroupRows.has(group.id)) (e.currentTarget as HTMLTableRowElement).style.backgroundColor = 'transparent'; }}
+                    >
+                      <td style={{ padding: '16px 12px 16px 0', verticalAlign: 'middle' }}>
+                        <Checkbox checked={selectedGroupRows.has(group.id)} onChange={() => toggleGroupRow(group.id)} />
+                      </td>
+                      <td style={{ padding: '16px 16px 16px 0', verticalAlign: 'middle' }}>
+                        <div style={{ fontSize: '13.5px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer' }}>
+                          {group.name}
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#9CA3AF', fontFamily: font, marginTop: '2px' }}>
+                          {group.description}
+                        </div>
+                      </td>
+                      <td style={{ padding: '16px 16px 16px 0', verticalAlign: 'middle' }}>
+                        <span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{group.users}</span>
+                      </td>
+                      <td style={{ padding: '16px 16px 16px 0', verticalAlign: 'middle' }}>
+                        <span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{group.created}</span>
+                      </td>
+                      <td style={{ padding: '16px 0', verticalAlign: 'middle', textAlign: 'right' }}>
+                        <DotsMenu />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              gap: '8px', padding: '28px 40px 48px',
+              fontFamily: font, fontSize: '13.5px',
+            }}>
+              <span style={{ color: '#374151', fontWeight: 600 }}>1-20</span>
+              <span style={{ color: '#374151' }}>of</span>
+              <span style={{ color: '#374151', fontWeight: 600 }}>500</span>
+              <button style={{
+                display: 'flex', alignItems: 'center', gap: '4px',
+                border: 'none', background: 'none', cursor: 'pointer',
+                fontFamily: font, fontSize: '13.5px', fontWeight: 600, color: brand,
+                marginLeft: '8px', padding: 0,
+              }}>
+                Next
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M5.5 3.5L9 7l-3.5 3.5" stroke={brand} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'roles' && (
+          <div>
+            {/* Toolbar */}
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '20px 40px', gap: '16px',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                {/* Search */}
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                    style={{ position: 'absolute', left: '10px', flexShrink: 0 }}>
+                    <circle cx="6" cy="6" r="4.5" stroke="#9CA3AF" strokeWidth="1.4" />
+                    <line x1="9.5" y1="9.5" x2="12.5" y2="12.5" stroke="#9CA3AF" strokeWidth="1.4" strokeLinecap="round" />
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    style={{
+                      width: '200px', height: '36px', paddingLeft: '32px', paddingRight: '12px',
+                      border: '1px solid #D1D5DB', borderRadius: '8px',
+                      fontFamily: font, fontSize: '13px', color: '#111827',
+                      outline: 'none', backgroundColor: '#FFFFFF',
+                    }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+                  />
+                </div>
+                {/* Add filter */}
+                <button style={{
+                  display: 'flex', alignItems: 'center', gap: '6px', height: '36px', padding: '0 12px',
+                  border: 'none', background: 'none', cursor: 'pointer',
+                  fontFamily: font, fontSize: '13px', fontWeight: 500, color: '#374151',
+                }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = brand; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#374151'; }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M1 3h12M3 7h8M5 11h4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                  </svg>
+                  Add filter
+                </button>
+              </div>
+
+              {/* Right: create new role split button */}
+              <div style={{ display: 'flex', borderRadius: '999px', overflow: 'hidden' }}>
+                <button style={{
+                  height: '36px', padding: '0 16px', border: 'none', backgroundColor: brand,
+                  cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: '#FFFFFF',
+                  transition: 'opacity 0.15s', borderRight: `1px solid ${brand}cc`,
+                }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.9'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}
+                >
+                  Create new role
+                </button>
+                <button style={{
+                  width: '36px', height: '36px', border: 'none', backgroundColor: brand,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'opacity 0.15s',
+                }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.9'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Table */}
+            <div style={{ padding: '0 40px' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: font }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid #E5E7EB' }}>
+                    <th style={{ width: '48px', padding: '10px 12px 10px 0', textAlign: 'left' }}>
+                      <Checkbox checked={allRolesSelected} onChange={toggleAllRoles} />
+                    </th>
+                    <th style={{ padding: '10px 16px 10px 0', textAlign: 'left' }}>
+                      <button style={{
+                        display: 'flex', alignItems: 'center', gap: '4px',
+                        border: 'none', background: 'none', cursor: 'pointer',
+                        fontFamily: font, fontSize: '13px', fontWeight: 500, color: '#6B7280', padding: 0,
+                      }}>
+                        Role name
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                          <path d="M5 7L2 3h6L5 7z" fill="#6B7280" />
+                        </svg>
+                      </button>
+                    </th>
+                    <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Groups</th>
+                    <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Privileges</th>
+                    <th style={{ padding: '10px 0', textAlign: 'right', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ROLES.map((role) => (
+                    <tr key={role.id} style={{
+                      borderBottom: '1px solid #F3F4F6',
+                      backgroundColor: selectedRoleRows.has(role.id) ? `${brand}08` : 'transparent',
+                      transition: 'background-color 0.1s',
+                    }}
+                      onMouseEnter={(e) => { if (!selectedRoleRows.has(role.id)) (e.currentTarget as HTMLTableRowElement).style.backgroundColor = '#FAFAFA'; }}
+                      onMouseLeave={(e) => { if (!selectedRoleRows.has(role.id)) (e.currentTarget as HTMLTableRowElement).style.backgroundColor = 'transparent'; }}
+                    >
+                      <td style={{ padding: '16px 12px 16px 0', verticalAlign: 'middle' }}>
+                        <Checkbox checked={selectedRoleRows.has(role.id)} onChange={() => toggleRoleRow(role.id)} />
+                      </td>
+                      <td style={{ padding: '16px 16px 16px 0', verticalAlign: 'middle', maxWidth: '260px' }}>
+                        <span style={{ fontSize: '13.5px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer',
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                          {role.name}
+                        </span>
+                      </td>
+                      <td style={{ padding: '16px 16px 16px 0', verticalAlign: 'middle' }}>
+                        {role.groups.length === 0 ? (
+                          <span style={{ fontSize: '13.5px', color: '#9CA3AF', fontFamily: font }}>-</span>
+                        ) : (
+                          <div>
+                            <div style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>
+                              {role.groups.join(' , ')}
+                            </div>
+                            {role.groupsExtra > 0 && (
+                              <div style={{ fontSize: '13px', color: brand, fontFamily: font, fontWeight: 500, cursor: 'pointer', marginTop: '2px' }}>
+                                +{role.groupsExtra} more
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </td>
+                      <td style={{ padding: '16px 16px 16px 0', verticalAlign: 'middle' }}>
+                        <span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{role.privileges}</span>
+                      </td>
+                      <td style={{ padding: '16px 0', verticalAlign: 'middle', textAlign: 'right' }}>
+                        <DotsMenu />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              gap: '8px', padding: '28px 40px 48px',
+              fontFamily: font, fontSize: '13.5px',
+            }}>
+              <span style={{ color: '#374151', fontWeight: 600 }}>1-20</span>
+              <span style={{ color: '#374151' }}>of</span>
+              <span style={{ color: '#374151', fontWeight: 600 }}>500</span>
+              <button style={{
+                display: 'flex', alignItems: 'center', gap: '4px',
+                border: 'none', background: 'none', cursor: 'pointer',
+                fontFamily: font, fontSize: '13.5px', fontWeight: 600, color: brand,
+                marginLeft: '8px', padding: 0,
+              }}>
+                Next
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M5.5 3.5L9 7l-3.5 3.5" stroke={brand} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'authentication' && (
           <div>
             {/* Toolbar */}
@@ -652,8 +1021,13 @@ export const UserManagementPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
                         </svg>
                       </button>
                     </th>
+                    {isPrimary && (
+                      <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Client ID</th>
+                    )}
                     <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>IDP Type</th>
-                    <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Created</th>
+                    {!isPrimary && (
+                      <th style={{ padding: '10px 16px 10px 0', textAlign: 'left', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Created</th>
+                    )}
                     <th style={{ padding: '10px 0', textAlign: 'right', fontSize: '13px', fontWeight: 500, color: '#6B7280' }}>Actions</th>
                   </tr>
                 </thead>
@@ -680,14 +1054,25 @@ export const UserManagementPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
                           {conn.name}
                         </span>
                       </td>
+                      {/* Client ID (Primary Org only) */}
+                      {isPrimary && (
+                        <td style={{ padding: '18px 16px 18px 0', verticalAlign: 'middle', maxWidth: '280px' }}>
+                          <span style={{ fontSize: '13px', color: '#374151', fontFamily: font,
+                            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                            {conn.clientId}
+                          </span>
+                        </td>
+                      )}
                       {/* IDP Type */}
                       <td style={{ padding: '18px 16px 18px 0', verticalAlign: 'middle' }}>
                         <span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{conn.idpType}</span>
                       </td>
-                      {/* Created */}
-                      <td style={{ padding: '18px 16px 18px 0', verticalAlign: 'middle' }}>
-                        <span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{conn.created}</span>
-                      </td>
+                      {/* Created (All Orgs only) */}
+                      {!isPrimary && (
+                        <td style={{ padding: '18px 16px 18px 0', verticalAlign: 'middle' }}>
+                          <span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{conn.created}</span>
+                        </td>
+                      )}
                       {/* Actions */}
                       <td style={{ padding: '18px 0', verticalAlign: 'middle', textAlign: 'right' }}>
                         <DotsMenu />
