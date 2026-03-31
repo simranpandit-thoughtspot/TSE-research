@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from './HomepageV4.module.css';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
@@ -603,11 +603,35 @@ const Sparkline: React.FC<{ sparkKey: SparkKey }> = ({ sparkKey }) => {
   );
 };
 
+// ─── Popular queries data ─────────────────────────────────────────────────────
+
+const POPULAR_QUERIES = [
+  'What is the average deal size by industry?',
+  'What were the sales in Q3 of 2024?',
+  'What are the current inventory levels in the Central region?',
+  'What are the primary drivers of revenue growth?',
+  'What are the sales trends in the Nordic region?',
+];
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export const HomepageV4: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('insights');
   const [selectedNav, setSelectedNav] = useState('home');
+  const [spotterOpen, setSpotterOpen] = useState(false);
+  const [queryText, setQueryText] = useState('What is the average deal size by industry?');
+  const spotterRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (spotterRef.current && !spotterRef.current.contains(e.target as Node)) {
+        setSpotterOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   return (
     <div
@@ -673,64 +697,117 @@ export const HomepageV4: React.FC = () => {
               {' '}into your data.
             </h1>
 
-            {/* Animated gradient spotter box */}
-            <div className={styles.spotterGlowOuter}>
-              <div className={styles.spotterBox}>
-                {/* Query text */}
-                <div style={{ padding: '20px 24px 14px' }}>
-                  <p
+            {/* Animated gradient spotter box — click to expand popular queries */}
+            <div ref={spotterRef} style={{ position: 'relative', maxWidth: 680, width: '100%' }}>
+              <div
+                className={styles.spotterGlowOuter}
+                onClick={() => setSpotterOpen(true)}
+                style={{ cursor: spotterOpen ? 'default' : 'text' }}
+              >
+                <div className={styles.spotterBox}>
+                  {/* Query / placeholder text */}
+                  <div style={{ padding: '20px 24px 14px' }}>
+                    {spotterOpen ? (
+                      <p
+                        style={{
+                          margin: 0, fontSize: 14,
+                          color: '#9CA3AF', fontFamily: font, lineHeight: 1.5,
+                        }}
+                      >
+                        Ask me a question. Use &apos;@&apos; to select columns and values.
+                      </p>
+                    ) : (
+                      <p
+                        style={{
+                          margin: 0, fontSize: 14,
+                          color: '#374151', fontFamily: font, lineHeight: 1.5,
+                        }}
+                      >
+                        {queryText}
+                        <span className={styles.queryCursor} />
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Toolbar */}
+                  <div
                     style={{
-                      margin: 0,
-                      fontSize: 14,
-                      color: '#374151',
-                      fontFamily: font,
-                      lineHeight: 1.5,
+                      display: 'flex', alignItems: 'center', gap: 6,
+                      padding: '10px 16px 12px',
+                      borderTop: '1px solid #F3F4F6',
                     }}
                   >
-                    What is the average deal size by industry?
-                    <span className={styles.queryCursor} />
-                  </p>
-                </div>
+                    <button className={styles.iconBtn} aria-label="Chart type"><SpotterChartIcon /></button>
+                    <button className={styles.iconBtn} aria-label="AI mode"><SpotterAIIcon /></button>
+                    <div style={{ width: 1, height: 18, background: '#E5E7EB', margin: '0 2px' }} />
+                    <button className={styles.dataModelPill}>
+                      All data model
+                      <ChevronDownIcon />
+                    </button>
+                    <button className={styles.plusBtn} aria-label="Add source">
+                      <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                        <path d="M5.5 1v9M1 5.5h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      </svg>
+                    </button>
+                    <div style={{ flex: 1 }} />
+                    <button className={styles.iconBtn} aria-label="Filter"><FilterIcon /></button>
+                    <button className={styles.sendBtn} aria-label="Submit"><ArrowUpIcon /></button>
+                  </div>
 
-                {/* Toolbar */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    padding: '10px 16px 12px',
-                    borderTop: '1px solid #F3F4F6',
-                  }}
-                >
-                  <button className={styles.iconBtn} aria-label="Chart type"><SpotterChartIcon /></button>
-                  <button className={styles.iconBtn} aria-label="AI mode"><SpotterAIIcon /></button>
-
-                  <div style={{ width: 1, height: 18, background: '#E5E7EB', margin: '0 2px' }} />
-
-                  {/* Data model selector */}
-                  <button className={styles.dataModelPill}>
-                    All data model
-                    <ChevronDownIcon />
-                  </button>
-
-                  {/* Plus */}
-                  <button className={styles.plusBtn} aria-label="Add source">
-                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-                      <path d="M5.5 1v9M1 5.5h9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                    </svg>
-                  </button>
-
-                  <div style={{ flex: 1 }} />
-
-                  {/* Filter */}
-                  <button className={styles.iconBtn} aria-label="Filter">
-                    <FilterIcon />
-                  </button>
-
-                  {/* Send */}
-                  <button className={styles.sendBtn} aria-label="Submit">
-                    <ArrowUpIcon />
-                  </button>
+                  {/* Popular queries — rendered inside the white box when open */}
+                  {spotterOpen && (
+                    <div style={{ borderTop: '1px solid #F3F4F6' }}>
+                      <div
+                        style={{
+                          padding: '12px 20px 6px',
+                          fontSize: 12, fontWeight: 500,
+                          color: '#9CA3AF', fontFamily: font,
+                          letterSpacing: '0.01em',
+                        }}
+                      >
+                        Popular queries
+                      </div>
+                      {POPULAR_QUERIES.map((query, i) => {
+                        // "What" is always the first word — render it bold
+                        const rest = query.slice(4); // everything after "What"
+                        return (
+                          <button
+                            key={i}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setQueryText(query);
+                              setSpotterOpen(false);
+                            }}
+                            style={{
+                              display: 'flex', alignItems: 'center', gap: 12,
+                              width: '100%', padding: '10px 20px',
+                              border: 'none', background: 'none',
+                              cursor: 'pointer', textAlign: 'left',
+                              fontFamily: font, fontSize: 14, color: '#111827',
+                              transition: 'background 0.1s',
+                            }}
+                            onMouseEnter={(e) => {
+                              (e.currentTarget as HTMLButtonElement).style.background = '#F9FAFB';
+                            }}
+                            onMouseLeave={(e) => {
+                              (e.currentTarget as HTMLButtonElement).style.background = 'none';
+                            }}
+                          >
+                            {/* Search icon */}
+                            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style={{ flexShrink: 0, color: '#9CA3AF' }}>
+                              <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.4"/>
+                              <path d="M10.5 10.5l3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                            </svg>
+                            <span>
+                              <strong style={{ fontWeight: 600 }}>What</strong>
+                              {rest}
+                            </span>
+                          </button>
+                        );
+                      })}
+                      <div style={{ height: 8 }} />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
