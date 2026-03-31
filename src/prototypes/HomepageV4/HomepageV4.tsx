@@ -675,7 +675,7 @@ export const HomepageV4: React.FC = () => {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '70px 24px',
+              padding: '70px 48px',
               boxSizing: 'border-box',
             }}
           >
@@ -698,7 +698,7 @@ export const HomepageV4: React.FC = () => {
             </h1>
 
             {/* Animated gradient spotter box — click to expand popular queries */}
-            <div ref={spotterRef} style={{ position: 'relative', maxWidth: 680, width: '100%' }}>
+            <div ref={spotterRef} style={{ position: 'relative', width: '100%' }}>
               <div
                 className={styles.spotterGlowOuter}
                 onClick={() => setSpotterOpen(true)}
