@@ -754,62 +754,75 @@ export const HomepageV4: React.FC = () => {
                     <button className={styles.sendBtn} aria-label="Submit"><ArrowUpIcon /></button>
                   </div>
 
-                  {/* Popular queries — rendered inside the white box when open */}
-                  {spotterOpen && (
-                    <div style={{ borderTop: '1px solid #F3F4F6' }}>
-                      <div
-                        style={{
-                          padding: '12px 20px 6px',
-                          fontSize: 12, fontWeight: 500,
-                          color: '#9CA3AF', fontFamily: font,
-                          letterSpacing: '0.01em',
-                        }}
-                      >
-                        Popular queries
-                      </div>
-                      {POPULAR_QUERIES.map((query, i) => {
-                        // "What" is always the first word — render it bold
-                        const rest = query.slice(4); // everything after "What"
-                        return (
-                          <button
-                            key={i}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setQueryText(query);
-                              setSpotterOpen(false);
-                            }}
-                            style={{
-                              display: 'flex', alignItems: 'center', gap: 12,
-                              width: '100%', padding: '10px 20px',
-                              border: 'none', background: 'none',
-                              cursor: 'pointer', textAlign: 'left',
-                              fontFamily: font, fontSize: 14, color: '#111827',
-                              transition: 'background 0.1s',
-                            }}
-                            onMouseEnter={(e) => {
-                              (e.currentTarget as HTMLButtonElement).style.background = '#F9FAFB';
-                            }}
-                            onMouseLeave={(e) => {
-                              (e.currentTarget as HTMLButtonElement).style.background = 'none';
-                            }}
-                          >
-                            {/* Search icon */}
-                            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style={{ flexShrink: 0, color: '#9CA3AF' }}>
-                              <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.4"/>
-                              <path d="M10.5 10.5l3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-                            </svg>
-                            <span>
-                              <strong style={{ fontWeight: 600 }}>What</strong>
-                              {rest}
-                            </span>
-                          </button>
-                        );
-                      })}
-                      <div style={{ height: 8 }} />
-                    </div>
-                  )}
                 </div>
               </div>
+
+              {/* Popular queries — overlay card, floats below the prompt box */}
+              {spotterOpen && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 8px)',
+                    left: 2,
+                    right: 2,
+                    background: '#ffffff',
+                    borderRadius: 14,
+                    border: '1px solid #E9EAEC',
+                    boxShadow: '0 12px 32px rgba(0,0,0,0.13)',
+                    zIndex: 50,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: '12px 20px 6px',
+                      fontSize: 12, fontWeight: 500,
+                      color: '#9CA3AF', fontFamily: font,
+                      letterSpacing: '0.01em',
+                    }}
+                  >
+                    Popular queries
+                  </div>
+                  {POPULAR_QUERIES.map((query, i) => {
+                    const rest = query.slice(4);
+                    return (
+                      <button
+                        key={i}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setQueryText(query);
+                          setSpotterOpen(false);
+                        }}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 12,
+                          width: '100%', padding: '10px 20px',
+                          border: 'none', background: 'none',
+                          cursor: 'pointer', textAlign: 'left',
+                          fontFamily: font, fontSize: 14, color: '#111827',
+                          transition: 'background 0.1s',
+                          boxSizing: 'border-box',
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLButtonElement).style.background = '#F9FAFB';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLButtonElement).style.background = 'none';
+                        }}
+                      >
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style={{ flexShrink: 0, color: '#9CA3AF' }}>
+                          <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.4"/>
+                          <path d="M10.5 10.5l3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                        </svg>
+                        <span>
+                          <strong style={{ fontWeight: 600 }}>What</strong>
+                          {rest}
+                        </span>
+                      </button>
+                    );
+                  })}
+                  <div style={{ height: 8 }} />
+                </div>
+              )}
             </div>
 
             {/* Quick action chips */}
