@@ -1,4 +1,4 @@
-/* ─── Animated gradient glow wrapper for the Spotter box ─────────────────── */
+/* ─── Animated gradient glow around the Spotter box ─────────────────────── */
 
 @keyframes gradientShift {
   0%   { background-position: 0% 50%; }
@@ -7,65 +7,56 @@
 }
 
 @keyframes glowPulse {
-  0%   { opacity: 0.55; }
-  50%  { opacity: 0.85; }
-  100% { opacity: 0.55; }
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 0.8; }
 }
 
 .spotterGlowOuter {
   position: relative;
   border-radius: 18px;
   padding: 2px;
+  max-width: 680px;
+  width: 100%;
   background: linear-gradient(
     -45deg,
     #c7b8f5,
     #a5c0f8,
-    #8fb8fc,
-    #c7b8f5,
-    #d4acf5,
-    #a5c0f8
+    #90b8fc,
+    #d4b0f8,
+    #c7b8f5
   );
   background-size: 400% 400%;
   animation: gradientShift 7s ease infinite;
-  max-width: 700px;
-  width: 100%;
 }
 
 .spotterGlowOuter::before {
   content: '';
   position: absolute;
-  inset: -6px;
-  border-radius: 22px;
+  inset: -8px;
+  border-radius: 24px;
   background: linear-gradient(
     -45deg,
-    rgba(167, 139, 250, 0.4),
-    rgba(129, 140, 248, 0.3),
-    rgba(96, 165, 250, 0.35),
-    rgba(196, 130, 255, 0.3),
-    rgba(167, 139, 250, 0.4)
+    rgba(167, 139, 250, 0.45),
+    rgba(129, 140, 248, 0.35),
+    rgba(96, 165, 250, 0.4),
+    rgba(196, 130, 255, 0.35),
+    rgba(167, 139, 250, 0.45)
   );
   background-size: 400% 400%;
   animation: gradientShift 7s ease infinite, glowPulse 4s ease-in-out infinite;
-  filter: blur(12px);
+  filter: blur(14px);
   z-index: 0;
 }
 
 .spotterBox {
+  position: relative;
+  z-index: 1;
   background: #ffffff;
   border-radius: 16px;
   overflow: hidden;
-  position: relative;
-  z-index: 1;
 }
 
-/* ─── Spotter query text ─────────────────────────────────────────────────── */
-
-.queryText {
-  font-size: 14px;
-  color: #374151;
-  font-family: "Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.5;
-}
+/* ─── Blinking cursor ─────────────────────────────────────────────────────── */
 
 .queryCursor {
   display: inline-block;
@@ -82,13 +73,32 @@
   50%       { opacity: 0; }
 }
 
-/* ─── Data model pill ─────────────────────────────────────────────────────── */
+/* ─── Spotter toolbar elements ────────────────────────────────────────────── */
+
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #6B7280;
+  flex-shrink: 0;
+  transition: background 0.12s;
+}
+
+.iconBtn:hover {
+  background: #F3F4F6;
+}
 
 .dataModelPill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 10px 5px 12px;
+  gap: 5px;
+  padding: 5px 10px;
   border: 1px solid #E5E7EB;
   border-radius: 999px;
   background: #fff;
@@ -97,6 +107,7 @@
   font-weight: 500;
   color: #374151;
   font-family: "Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  white-space: nowrap;
   transition: border-color 0.15s;
 }
 
@@ -104,91 +115,12 @@
   border-color: #9CA3AF;
 }
 
-/* ─── Quick action chips ─────────────────────────────────────────────────── */
-
-.actionChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border: 1px solid #E5E7EB;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.75);
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  color: #374151;
-  font-family: "Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
-
-.actionChip:hover {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: #C7D2E0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-}
-
-.newBadge {
-  display: inline-block;
-  padding: 1px 7px;
-  border-radius: 999px;
-  background: #111827;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  font-family: "Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-/* ─── Icon button (filter, add) ──────────────────────────────────────────── */
-
-.iconBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: #6B7280;
-  transition: background 0.12s;
-  flex-shrink: 0;
-}
-
-.iconBtn:hover {
-  background: #F3F4F6;
-}
-
-.sendBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: #2770EF;
-  cursor: pointer;
-  color: #fff;
-  flex-shrink: 0;
-  transition: background 0.15s;
-}
-
-.sendBtn:hover {
-  background: #1E5BBB;
-}
-
-/* ─── Plus button in spotter toolbar ─────────────────────────────────────── */
-
 .plusBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   border: 1px solid #E5E7EB;
   background: #fff;
@@ -202,7 +134,63 @@
   background: #F3F4F6;
 }
 
-/* ─── Watchlist badges ───────────────────────────────────────────────────── */
+.sendBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: #2770EF;
+  cursor: pointer;
+  color: #fff;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.sendBtn:hover {
+  background: #1E5BBB;
+}
+
+/* ─── Quick action chips ─────────────────────────────────────────────────── */
+
+.actionChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  font-family: "Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  transition: all 0.15s;
+}
+
+.actionChip:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #D1D5DB;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.newBadge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: "Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ─── Watchlist trend badges ─────────────────────────────────────────────── */
 
 .badgeUp {
   display: inline-flex;
@@ -211,10 +199,11 @@
   border-radius: 999px;
   background: #DCFCE7;
   color: #15803D;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   font-family: "Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .badgeDown {
@@ -224,8 +213,9 @@
   border-radius: 999px;
   background: #FEE2E2;
   color: #DC2626;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   font-family: "Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   white-space: nowrap;
+  flex-shrink: 0;
 }
