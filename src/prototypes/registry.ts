@@ -59,6 +59,7 @@ const LiveboardTemplate = React.lazy(() => import('./_liveboard-template'));
 const AdminPortal2 = React.lazy(() => import('./AdminPortal2'));
 const NewUIAdmin2 = React.lazy(() => import('./NewUIAdmin2'));
 const Admin2Vision = React.lazy(() => import('./Admin2Vision'));
+const HomepageV4 = React.lazy(() => import('./HomepageV4'));
 
 /**
  * All registered projects
@@ -176,6 +177,17 @@ export const projectRegistry: ProjectMeta[] = [
     component: Admin2Vision,
     dsComponents: 0,
     customComponents: 20,
+    section: 'mine',
+  },
+  {
+    id: 'HomepageV4',
+    name: 'HOMEPAGE V4',
+    description: 'ThoughtSpot homepage with animated Spotter prompt box, quick action chips, Recents, and Watchlist KPIs.',
+    author: 'Design Team',
+    lastModified: '2026-03-31',
+    component: HomepageV4,
+    dsComponents: 4,
+    customComponents: 6,
     section: 'mine',
   },
   // Add more projects here. New prototypes default to 'mine' section.
