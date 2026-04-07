@@ -90,17 +90,16 @@ export const NavigationSidebar: React.FC = () => {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={sectionTitleStyle}>{group.label}</span>
-              <Icon 
-                name="plus" 
-                size="xs" 
-                style={{ color: systemColors.light['content-tertiary'] }}
-              />
+              <span style={{ color: systemColors.light['content-tertiary'], display: 'flex' }}>
+                <Icon name="plus" size="xs" />
+              </span>
             </div>
-            <Icon 
-              name={expandedGroups.includes(group.id) ? 'chevron-down' : 'chevron-right'} 
-              size="xs" 
-              style={{ color: systemColors.light['content-tertiary'] }}
-            />
+            <span style={{ color: systemColors.light['content-tertiary'], display: 'flex' }}>
+              <Icon
+                name={expandedGroups.includes(group.id) ? 'chevron-down' : 'chevron-right'}
+                size="xs"
+              />
+            </span>
           </div>
 
           {/* Group Items */}

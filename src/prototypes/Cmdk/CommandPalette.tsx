@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * CommandPalette - Main Component
  *

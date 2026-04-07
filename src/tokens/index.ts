@@ -95,7 +95,7 @@ export {
 } from './theme';
 
 // Convenience re-exports
-import { brandColors } from './colors';
+import { referenceColors as brandColors } from './colors';
 import { textStyles, v2TextStyles } from './typography';
 import { spacing, componentSpacing } from './spacing';
 import { radius, componentRadius } from './radius';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select } from '../../../components/Select';
 import { roleAssignStyles as styles } from '../styles';
-import { organizations, roles, Organization } from '../data/mockData';
+import { organizations, roles } from '../data/mockData';
 import { systemColors } from '../../../tokens/colors';
 
 interface RoleAssignment {
@@ -63,7 +63,7 @@ export const RoleAssignStep: React.FC<RoleAssignStepProps> = ({
 
   // Role options for select
   const roleOptions = roles.map(role => ({
-    value: role.id,
+    id: role.id,
     label: role.name,
   }));
 
@@ -78,7 +78,7 @@ export const RoleAssignStep: React.FC<RoleAssignStepProps> = ({
         <span style={styles.bulkLabel}>Apply to all:</span>
         <div style={{ width: '180px' }}>
           <Select
-            options={[{ value: '', label: 'Select role' }, ...roleOptions]}
+            options={[{ id: '', label: 'Select role' }, ...roleOptions]}
             value=""
             onChange={(value) => {
               if (value) handleApplyToAll(value);
@@ -109,7 +109,7 @@ export const RoleAssignStep: React.FC<RoleAssignStepProps> = ({
               <div style={styles.orgName}>{org.name}</div>
               <div style={styles.roleSelect}>
                 <Select
-                  options={[{ value: '', label: 'Select role' }, ...roleOptions]}
+                  options={[{ id: '', label: 'Select role' }, ...roleOptions]}
                   value={getRoleForOrg(org.id)}
                   onChange={(value) => handleRoleChange(org.id, value)}
                   placeholder="Select role"

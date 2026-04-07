@@ -41,6 +41,26 @@ export const availableDataSources: DataSource[] = [
   { id: 'ds-15', name: 'Market Data', type: 'connection' },
 ];
 
+/** Quick insights cue cards */
+export interface QuickInsight {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+  query: string;
+}
+
+export const quickInsightsData: QuickInsight[] = [
+  { id: 'qi-1', icon: 'trending-up', title: 'Revenue trends', description: 'Track revenue over time by segment', query: 'Show me revenue trends over the last 6 months' },
+  { id: 'qi-2', icon: 'users', title: 'Customer health', description: 'Monitor churn risk and retention', query: 'What is the current customer health and churn risk?' },
+  { id: 'qi-3', icon: 'bar-chart', title: 'Pipeline analysis', description: 'View open deals by stage and owner', query: 'Analyze the current sales pipeline by stage' },
+  { id: 'qi-4', icon: 'target', title: 'Forecast accuracy', description: 'Compare forecast vs actuals', query: 'How accurate are our forecasts compared to actuals?' },
+  { id: 'qi-5', icon: 'grid', title: 'Product usage', description: 'Feature adoption and engagement', query: 'Show me product usage and feature adoption metrics' },
+  { id: 'qi-6', icon: 'alert-circle', title: 'Support metrics', description: 'Ticket volume and resolution time', query: 'What are our support ticket trends and resolution times?' },
+  { id: 'qi-7', icon: 'settings', title: 'Operations', description: 'Ops efficiency and throughput', query: 'Give me an overview of operational efficiency this quarter' },
+  { id: 'qi-8', icon: 'dollar-sign', title: 'Finance summary', description: 'P&L, burn rate, and margins', query: 'Summarize our financial performance including margins and burn rate' },
+];
+
 /** Available tools/connectors */
 export interface Tool {
   id: string;

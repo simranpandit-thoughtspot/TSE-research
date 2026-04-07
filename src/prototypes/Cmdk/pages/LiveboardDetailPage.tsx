@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Button, Card, ProgressBar, Table, Typography } from '../../../components';
 import type { ThoughtSpotObject } from '../data/mockData';

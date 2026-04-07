@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import {
   Modal,
-  ModalHeader,
   ModalFooter,
-  ModalWizardProgress,
   ModalNavPanel,
   ModalNavItem,
   ModalSplashContent,
-  ModalSize,
-  ModalType,
 } from '../../components/Modal';
+import type { ModalSize, ModalType } from '../../components/Modal';
 import { Button } from '../../components/Button';
 import { systemColors, referenceColors } from '../../tokens/colors';
 import { spacing } from '../../tokens/spacing';

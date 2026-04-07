@@ -498,15 +498,15 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 
                 <div className={styles.monthsGrid}>
                   {MONTHS_SHORT.map((month, i) => {
-                    const isSelected = value && value.getMonth() === i && value.getFullYear() === viewDate.getFullYear();
+                    const isSelected = !!value && value.getMonth() === i && value.getFullYear() === viewDate.getFullYear();
                     const isCurrent = new Date().getMonth() === i && new Date().getFullYear() === viewDate.getFullYear();
-                    
+
                     const monthClasses = [
                       styles.monthCell,
                       isSelected && styles.monthCellSelected,
                       isCurrent && styles.monthCellCurrent,
                     ].filter(Boolean).join(' ');
-                    
+
                     return (
                       <button
                         key={i}
@@ -550,7 +550,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 
                 <div className={styles.yearsGrid}>
                   {getYearRange(viewDate.getFullYear()).map((year) => {
-                    const isSelected = value && value.getFullYear() === year;
+                    const isSelected = !!value && value.getFullYear() === year;
                     const isCurrent = new Date().getFullYear() === year;
                     
                     const yearClasses = [

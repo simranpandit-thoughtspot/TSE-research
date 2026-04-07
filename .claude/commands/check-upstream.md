@@ -72,13 +72,25 @@ From this, identify:
 
 ### 5. Check for conflicts with your work
 
-Run:
+Detect the designer's modified files using multiple methods (works whether they are on `main` or a `prototype/<slug>` branch):
+
 ```
-git diff HEAD upstream/main -- src/prototypes/registry.ts
+git diff --name-only HEAD
+git diff --name-only --cached
 ```
 
-- If `registry.ts` has upstream changes AND you have local prototype entries → flag as **"Expected conflict — auto-resolved by /sync-upstream"**
-- Check if any files you've modified locally (`git diff --name-only main...HEAD`) overlap with files changed in upstream → flag as **"Potential conflict — review before syncing"**
+If on a `prototype/<slug>` branch, also check:
+```
+git diff --name-only main...HEAD
+```
+
+Combine all results into a single list of the designer's modified files.
+
+Then check if any of those files overlap with files changed in upstream (from step 4's `--stat` output):
+
+- **registry.ts** overlaps → flag as **"Expected conflict — auto-resolved by /sync-upstream"**
+- **Any other file** overlaps → flag as **"Potential conflict — review before syncing"** with details on what both sides changed
+- **No overlaps** → flag as **"Safe — no overlap with your prototype files"**
 
 ---
 

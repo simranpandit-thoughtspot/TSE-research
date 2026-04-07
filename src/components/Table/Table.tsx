@@ -1,7 +1,8 @@
 import React, { forwardRef, useState, useMemo, ReactNode } from 'react';
 import { Icon } from '../icons';
 import { Avatar, AvatarSize } from '../Avatar';
-import { Chip, ChipVariant } from '../Chip';
+import { Chip } from '../Chip';
+import type { ChipType } from '../Chip';
 import styles from './Table.module.css';
 
 /**
@@ -344,14 +345,14 @@ export const TableCellRenderers = {
    * Render a cell with a single chip/tag
    */
   chip: (options: {
-    variantMap?: Record<string, ChipVariant>;
-    defaultVariant?: ChipVariant;
+    variantMap?: Record<string, ChipType>;
+    defaultVariant?: ChipType;
   } = {}) => {
-    const { variantMap = {}, defaultVariant = 'neutral' } = options;
+    const { variantMap = {}, defaultVariant = 'attribute' } = options;
     return (value: unknown): ReactNode => {
       const label = String(value ?? '');
       const variant = variantMap[label] || defaultVariant;
-      return <Chip label={label} variant={variant} size="small" />;
+      return <Chip label={label} type={variant}  />;
     };
   },
 
@@ -359,11 +360,11 @@ export const TableCellRenderers = {
    * Render a cell with multiple chips/tags
    */
   chips: (options: {
-    variantMap?: Record<string, ChipVariant>;
-    defaultVariant?: ChipVariant;
+    variantMap?: Record<string, ChipType>;
+    defaultVariant?: ChipType;
     max?: number;
   } = {}) => {
-    const { variantMap = {}, defaultVariant = 'neutral', max = 3 } = options;
+    const { variantMap = {}, defaultVariant = 'attribute', max = 3 } = options;
     return (value: unknown): ReactNode => {
       if (!Array.isArray(value)) return null;
       const items = value.slice(0, max);
@@ -373,9 +374,9 @@ export const TableCellRenderers = {
           {items.map((item, i) => {
             const label = String(item);
             const variant = variantMap[label] || defaultVariant;
-            return <Chip key={i} label={label} variant={variant} size="small" />;
+            return <Chip key={i} label={label} type={variant}  />;
           })}
-          {overflow > 0 && <Chip label={`+${overflow}`} variant="neutral" size="small" />}
+          {overflow > 0 && <Chip label={`+${overflow}`} type="attribute"  />}
         </div>
       );
     };
@@ -384,12 +385,12 @@ export const TableCellRenderers = {
   /**
    * Render a cell with a status indicator
    */
-  status: (statusConfig: Record<string, { label: string; variant: ChipVariant }>) => {
+  status: (statusConfig: Record<string, { label: string; type: ChipType }>) => {
     return (value: unknown): ReactNode => {
       const key = String(value ?? '');
       const config = statusConfig[key];
       if (!config) return key;
-      return <Chip label={config.label} variant={config.variant} size="small" />;
+      return <Chip label={config.label} type={config.type}  />;
     };
   },
 
@@ -401,11 +402,11 @@ export const TableCellRenderers = {
     locale?: string;
   } = {}) => {
     const { format = 'medium', locale = 'en-US' } = options;
-    const formatOptions: Intl.DateTimeFormatOptions = {
-      short: { month: 'numeric', day: 'numeric', year: '2-digit' },
-      medium: { month: 'short', day: 'numeric', year: 'numeric' },
-      long: { month: 'long', day: 'numeric', year: 'numeric' },
-    }[format];
+    const formatOptions: Intl.DateTimeFormatOptions = ({
+      short: { month: 'numeric' as const, day: 'numeric' as const, year: '2-digit' as const },
+      medium: { month: 'short' as const, day: 'numeric' as const, year: 'numeric' as const },
+      long: { month: 'long' as const, day: 'numeric' as const, year: 'numeric' as const },
+    } as const)[format];
     
     return (value: unknown): ReactNode => {
       if (!value) return '';
@@ -451,14 +452,14 @@ export const TableCellRenderers = {
   boolean: (options: {
     trueLabel?: string;
     falseLabel?: string;
-    trueVariant?: ChipVariant;
-    falseVariant?: ChipVariant;
+    trueVariant?: ChipType;
+    falseVariant?: ChipType;
   } = {}) => {
     const { 
       trueLabel = 'Yes', 
       falseLabel = 'No',
-      trueVariant = 'success',
-      falseVariant = 'neutral',
+      trueVariant = 'attribute',
+      falseVariant = 'filter',
     } = options;
     
     return (value: unknown): ReactNode => {
@@ -466,8 +467,8 @@ export const TableCellRenderers = {
       return (
         <Chip 
           label={isTrue ? trueLabel : falseLabel} 
-          variant={isTrue ? trueVariant : falseVariant} 
-          size="small" 
+          type={isTrue ? trueVariant : falseVariant} 
+           
         />
       );
     };

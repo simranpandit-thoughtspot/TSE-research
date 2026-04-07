@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { colors, typography } from '../styles';
+import { colors } from '../styles';
 import { fontFamily } from '@tokens/typography';
 
 const FONT = fontFamily.primary;

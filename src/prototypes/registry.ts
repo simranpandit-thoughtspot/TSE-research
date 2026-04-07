@@ -61,6 +61,7 @@ const NewUIAdmin2 = React.lazy(() => import('./NewUIAdmin2'));
 const Admin2Vision = React.lazy(() => import('./Admin2Vision'));
 const HomepageV4 = React.lazy(() => import('./HomepageV4'));
 
+
 /**
  * All registered projects
  */

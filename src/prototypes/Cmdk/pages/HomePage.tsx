@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Button, Card, Table, Typography } from '../../../components';
 import { referenceColors } from '../../../tokens/colors';

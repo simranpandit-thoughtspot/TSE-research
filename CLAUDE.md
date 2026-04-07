@@ -20,7 +20,11 @@ Do NOT add unsolicited UI elements, badges, tooltips, or visual embellishments t
 
 ## Git & Deployment
 
-This project uses two git remotes. After committing, always push to BOTH remotes unless told otherwise. Verify remote URLs are current before pushing. Default deploy target is **staging**, not main — do not push to main unless explicitly asked.
+**If `galaxy` remote exists** (main maintainer setup): push to BOTH `origin` and `galaxy` after every commit. Verify remote URLs are current before pushing.
+
+**If only `origin` exists** (designer fork): push to `origin` only. Do not attempt to add or push to `galaxy`.
+
+Run `git remote -v` to determine which applies before pushing. Default deploy target is **staging**, not main — do not push to main unless explicitly asked.
 
 ## Tech Stack
 
@@ -170,9 +174,14 @@ The `.cursor/rules/` directory contains 16 detailed rule files (~5,300 lines). T
 
 ### Remotes
 
-Both remotes must stay in sync for `main` and `staging`:
+**Designer forks** have one remote:
+- `origin` — the designer's own fork (GitHub or galaxy)
+
+**Main maintainer** has two remotes that must stay in sync:
 - `origin` — GitHub (`https://github.com/faris-ts/radiantplay.git`)
 - `galaxy` — ThoughtSpot (`https://galaxy.corp.thoughtspot.com/mohammed-faris/radiantplay.git`)
+
+Always run `git remote -v` to confirm which remotes exist before pushing.
 
 ### Skills (Slash Commands)
 
@@ -183,6 +192,7 @@ Both remotes must stay in sync for `main` and `staging`:
 | `/release [version]` | Write changelog, prep production merge |
 | `/status` | Branch, commits, uncommitted changes |
 | `/sync-upstream` | Pull latest from upstream, resolve registry.ts conflict, push to fork |
+
 
 ### Typical Session Flow
 

@@ -1,8 +1,5 @@
 import React from 'react';
-import { colors, typography } from '../styles';
-import { fontFamily } from '@tokens/typography';
-
-const FONT = fontFamily.primary;
+import { colors } from '../styles';
 
 interface SampleKPITileProps {
   sparkline: number[];

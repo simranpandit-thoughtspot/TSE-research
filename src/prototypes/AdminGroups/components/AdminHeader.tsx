@@ -37,17 +37,16 @@ export const AdminHeader: React.FC = () => {
       <div style={styles.center}>
         <div style={styles.searchContainer}>
           <div style={{ position: 'relative' }}>
-            <Icon 
-              name="magnifying-glass" 
-              size="s" 
-              style={{ 
-                position: 'absolute', 
-                left: '14px', 
-                top: '50%', 
+            <span style={{
+                position: 'absolute',
+                left: '14px',
+                top: '50%',
                 transform: 'translateY(-50%)',
                 color: 'rgba(255, 255, 255, 0.5)',
-              }} 
-            />
+                display: 'flex',
+              }}>
+              <Icon name="magnifying-glass" size="s" />
+            </span>
             <input
               type="text"
               placeholder="Search"

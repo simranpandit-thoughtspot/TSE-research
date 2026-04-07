@@ -5,7 +5,6 @@ import {
   getChangeTypeColor, 
   getVersionTypeLabel,
   VersionEntry,
-  ChangeType,
   VersionType
 } from '../data/versionHistory';
 import { SearchInput } from '../components/SearchInput';
@@ -233,7 +232,6 @@ export const VersionHistoryPage: React.FC = () => {
             placeholder="Search by component name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            onClear={() => setSearchQuery('')}
           />
         </div>
         <div className={styles.expandControls}>

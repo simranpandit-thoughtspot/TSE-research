@@ -6,33 +6,20 @@ Follow these steps in order. Stop immediately if any step fails and explain what
 
 ---
 
-### 1. Check working tree and stashes
-
-**Check the working tree:**
+### 1. Save in-progress work
 
 Run `git status`.
 
-- If the output is `nothing to commit, working tree clean` — proceed to the stash check.
-- If there are modified or untracked files — stage and commit them:
+- If the working tree is clean — proceed to step 2.
+- If there are modified or untracked files — auto-stash them:
   ```
-  git add .
-  git commit -m "chore: save WIP before syncing with upstream"
+  git stash push -m "radiant-sync-wip"
   ```
+  Print: **"Saved your in-progress work. It will be restored after the sync."**
 
-**Check for stashes:**
+Do NOT ask the designer about stashes or require any git knowledge. This is handled automatically.
 
-Run `git stash list`.
-
-- If there are no stashes — proceed to step 2.
-- If stashes exist — show the user what is in each stash:
-  ```
-  git stash show stash@{0}
-  git stash show stash@{1}
-  ...
-  ```
-  Then ask: **"You have stashed work. Do you want to apply it before syncing, or leave it stashed?"**
-  - If the user wants to apply it: run `git stash pop` and handle any conflicts before continuing.
-  - If the user wants to leave it stashed: proceed to step 2. The stash is safe — merging upstream does not affect stashed work.
+Remember whether a stash was created — you will need to restore it at the end (step 9).
 
 ---
 
@@ -71,7 +58,8 @@ If the output is empty, print:
 ```
 Already up to date with upstream. Nothing to merge.
 ```
-And stop — there is nothing to do.
+If a stash was created in step 1, restore it now: `git stash pop`
+Then stop — there is nothing to do.
 
 ---
 
@@ -134,11 +122,11 @@ npm run build
 
 **Common post-merge build errors and fixes:**
 
-| Error | Fix |
+| Error pattern | Fix |
 |---|---|
-| `Cannot find module './MuseChat'` | Remove the `const MuseChat = React.lazy(...)` line from `registry.ts` and its registry entry |
-| `Cannot find module './_examples'` | Remove `export { FilterDialogExample } from './_examples'` from `src/prototypes/index.ts` |
-| TypeScript error in designer's prototype | This is unrelated to the sync — flag it to the designer and proceed with the push anyway |
+| `Cannot find module './<Name>'` in registry.ts | A prototype was removed upstream but the lazy import still references it. Remove the `const <Name> = React.lazy(...)` line and its registry entry. |
+| `Cannot find module` in an index or barrel file | An export references a deleted file. Remove the broken export line. |
+| TypeScript error in designer's own prototype files | This is unrelated to the sync — flag it to the designer and proceed with the push anyway. |
 
 After fixing, re-run `npm run build` to confirm it passes before continuing.
 
@@ -146,13 +134,32 @@ After fixing, re-run `npm run build` to confirm it passes before continuing.
 
 ### 8. Push to fork
 
+Push the synced state to the designer's remote:
+
 ```
 git push origin main
 ```
 
+This is a mandatory step — the sync is not complete until the remote fork is updated.
+
 ---
 
-### 9. Report
+### 9. Restore in-progress work
+
+If a stash was created in step 1, restore it now:
+
+```
+git stash pop
+```
+
+- If the pop succeeds cleanly — proceed to the report.
+- If there are conflicts — tell the designer which files conflicted and help resolve them. These are conflicts between their in-progress work and the upstream changes.
+
+If no stash was created in step 1, skip this step.
+
+---
+
+### 10. Report
 
 Print a summary in this format:
 
@@ -168,7 +175,6 @@ Your prototype: intact — src/prototypes/<name>/ was not touched.
 registry.ts: conflict resolved — your entry preserved with section: 'mine'.
 
 Your fork is now up to date.
-Next: keep building, or /ship when ready to push to staging.
 ```
 
 If there was nothing to sync:

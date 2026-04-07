@@ -45,20 +45,21 @@ export const PlaygroundGallery: React.FC = () => {
             { label: 'Getting started', href: '/home' },
             { label: 'How it works', href: '/how-it-works.html' },
             { label: 'Design system', href: '/radiant' },
+            { label: 'Claude setup & skills', href: '/cursor-to-claude-setup.html' },
           ].map(({ label, href }) => (
             <a
               key={href}
               href={href}
               style={styles.navLink}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = systemColors.light['background-subtle'];
-                e.currentTarget.style.borderColor = systemColors.light['border-default'];
-                e.currentTarget.style.color = systemColors.light['content-primary'];
+                e.currentTarget.style.background = '#D6E8FF';
+                e.currentTarget.style.borderColor = '#2770EF';
+                e.currentTarget.style.color = '#2770EF';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.borderColor = systemColors.light['border-divider'];
-                e.currentTarget.style.color = systemColors.light['content-secondary'];
+                e.currentTarget.style.background = '#EBF2FF';
+                e.currentTarget.style.borderColor = '#C3D9FF';
+                e.currentTarget.style.color = systemColors.light['content-primary'];
               }}
             >{label}</a>
           ))}
@@ -253,14 +254,14 @@ const styles: Record<string, React.CSSProperties> = {
   },
   navLink: {
     fontSize: '13px',
-    fontWeight: 400,
-    color: systemColors.light['content-secondary'],
+    fontWeight: 500,
+    color: '#2770EF',
     textDecoration: 'none',
     fontFamily: '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    padding: '5px 12px',
+    padding: '5px 14px',
     borderRadius: '100px',
-    border: `1px solid ${systemColors.light['border-divider']}`,
-    background: 'transparent',
+    border: `1px solid #C3D9FF`,
+    background: '#EBF2FF',
     transition: 'all 0.15s',
   },
 

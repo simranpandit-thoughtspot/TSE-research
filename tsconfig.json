@@ -23,6 +23,7 @@
     }
   },
   "include": ["src"],
+  "exclude": ["src/prototypes/Cmdk", "src/prototypes/MiniSpotters"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
 

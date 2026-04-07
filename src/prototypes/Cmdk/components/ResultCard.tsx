@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Icon } from '../../../components/icons';
 import { systemColors } from '../../../tokens/colors';

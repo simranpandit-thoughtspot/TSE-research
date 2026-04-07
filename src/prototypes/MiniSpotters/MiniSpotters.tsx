@@ -9,6 +9,7 @@ import {
   ContextChips,
   SuggestedQuestions,
   CreatorWizard,
+  QuickInsights,
 } from './components';
 import { homeStyles, chatStyles, colors, font } from './styles';
 import { spacing } from '../../tokens/spacing';
@@ -294,6 +295,9 @@ export const MiniSpotters: React.FC = () => {
                 questions={activeSpotter.suggestedQuestions}
                 onQuestionClick={handleSendMessage}
               />
+
+              {/* Quick insights */}
+              <QuickInsights onQueryClick={handleSendMessage} />
             </div>
           </div>
         ) : (

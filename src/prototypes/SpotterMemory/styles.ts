@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react';
 import { systemColors, referenceColors } from '../../tokens/colors';
-import { spacing, componentSpacing } from '../../tokens/spacing';
+import { spacing } from '../../tokens/spacing';
 
 /**
  * Styles for Spotter Memory prototype

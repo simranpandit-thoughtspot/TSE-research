@@ -320,6 +320,83 @@ export const suggestStyles: Record<string, React.CSSProperties> = {
   },
 };
 
+/** Quick insights cue cards */
+export const quickInsightStyles: Record<string, React.CSSProperties> = {
+  section: {
+    width: '100%',
+    marginTop: `${spacing.F}px`,
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: `${spacing.B}px`,
+    marginBottom: `${spacing.D}px`,
+  },
+  title: {
+    fontFamily: font.family,
+    fontSize: font.size.sm,
+    fontWeight: font.weight.semibold,
+    color: colors.textPrimary,
+    margin: 0,
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: `${spacing.C}px`,
+  },
+  card: {
+    padding: `${spacing.D}px`,
+    borderRadius: `${radius.card}px`,
+    border: `1px solid ${colors.borderDivider}`,
+    backgroundColor: colors.bg,
+    cursor: 'pointer',
+    textAlign: 'left',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: `${spacing.B}px`,
+    transition: 'all 0.15s ease',
+  },
+  cardIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 32,
+    height: 32,
+    borderRadius: `${radius.sm}px`,
+    backgroundColor: colors.bgSubtle,
+    flexShrink: 0,
+  },
+  cardTitle: {
+    fontFamily: font.family,
+    fontSize: font.size.sm,
+    fontWeight: font.weight.semibold,
+    color: colors.textPrimary,
+    margin: 0,
+    lineHeight: `${font.line.md}px`,
+  },
+  cardDescription: {
+    fontFamily: font.family,
+    fontSize: font.size.xs,
+    fontWeight: font.weight.regular,
+    color: colors.textSecondary,
+    margin: 0,
+    lineHeight: `${font.line.sm}px`,
+  },
+  cardFeatured: {
+    backgroundColor: colors.bgBrand,
+    borderColor: 'transparent',
+  },
+  cardIconFeatured: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  cardTitleFeatured: {
+    color: colors.textWhite,
+  },
+  cardDescFeatured: {
+    color: 'rgba(255,255,255,0.75)',
+  },
+};
+
 /** Chat conversation view */
 export const chatStyles: Record<string, React.CSSProperties> = {
   container: {

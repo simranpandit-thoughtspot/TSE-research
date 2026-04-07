@@ -96,7 +96,7 @@ export const GroupsTable: React.FC<GroupsTableProps> = ({
             {/* Orgs */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
               {displayOrgs.map((orgName, i) => (
-                <Chip key={i} label={orgName} size="s" />
+                <Chip key={i} label={orgName} />
               ))}
               {moreCount > 0 && (
                 <span style={{ fontSize: '12px', color: systemColors.light['content-brand'], fontWeight: 500 }}>

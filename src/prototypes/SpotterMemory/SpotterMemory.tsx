@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppShell, Toast } from '../../components';
+import { AppShell } from '../../components';
 import type { AppSidebarProps, SidebarTab, SidebarCategory } from '../../components/AppSidebar';
 import type { GlobalHeaderProps } from '../../components/GlobalHeader';
 import {

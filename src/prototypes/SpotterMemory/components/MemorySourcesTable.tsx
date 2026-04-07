@@ -150,13 +150,13 @@ export const MemorySourcesTable: React.FC<MemorySourcesTableProps> = ({
   return (
     <div style={styles.container}>
       <Table
-        columns={columns}
-        data={data}
+        columns={columns as unknown as import('../../../components/Table/Table').TableColumn<Record<string, unknown>>[]}
+        data={data as unknown as Record<string, unknown>[]}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
         onSelectionChange={setSelectedKeys}
-        onRowClick={(row) => onRowClick?.(row as Liveboard)}
+        onRowClick={(row) => onRowClick?.(row as unknown as Liveboard)}
         hoverable
       />
       

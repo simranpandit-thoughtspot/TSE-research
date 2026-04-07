@@ -2526,8 +2526,8 @@ export const ComponentDocPage: React.FC<ComponentDocPageProps> = ({ componentId 
           <div style={styles.exampleContent}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                <Button variant={lbMode === 'view' ? 'primary' : 'secondary'} size="sm" onClick={() => { setLbMode('view'); setLbSpotterOpen(false); }}>View mode</Button>
-                <Button variant={lbMode === 'edit' ? 'primary' : 'secondary'} size="sm" onClick={() => setLbMode('edit')}>Edit mode</Button>
+                <Button variant={lbMode === 'view' ? 'primary' : 'secondary'} size="small" onClick={() => { setLbMode('view'); setLbSpotterOpen(false); }}>View mode</Button>
+                <Button variant={lbMode === 'edit' ? 'primary' : 'secondary'} size="small" onClick={() => setLbMode('edit')}>Edit mode</Button>
               </div>
               <div style={{ borderRadius: '8px', overflow: 'hidden', border: `1px solid ${referenceColors.gray['20']}` }}>
                 <LiveboardHeader

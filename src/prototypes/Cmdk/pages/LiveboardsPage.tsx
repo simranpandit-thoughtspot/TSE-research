@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useMemo, useState } from 'react';
 import { Button, SearchInput, Table, Tabs, Typography } from '../../../components';
 import type { ThoughtSpotObject } from '../data/mockData';

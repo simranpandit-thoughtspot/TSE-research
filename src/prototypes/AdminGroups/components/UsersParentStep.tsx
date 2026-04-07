@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Select } from '../../../components/Select';
 import { Chip } from '../../../components/Chip';
 import { Icon } from '../../../components/icons';
-import { usersParentStyles as styles, formStyles } from '../styles';
-import { users, existingGroups, User } from '../data/mockData';
+import { usersParentStyles as styles } from '../styles';
+import { users, existingGroups } from '../data/mockData';
 import { systemColors } from '../../../tokens/colors';
 
 interface UsersParentStepProps {
@@ -29,9 +29,9 @@ export const UsersParentStep: React.FC<UsersParentStepProps> = ({
 
   // Parent group options
   const parentGroupOptions = [
-    { value: '', label: 'No parent group' },
+    { id: '', label: 'No parent group' },
     ...existingGroups.map(group => ({
-      value: group.id,
+      id: group.id,
       label: group.displayName,
     })),
   ];
@@ -67,7 +67,7 @@ export const UsersParentStep: React.FC<UsersParentStepProps> = ({
         <Select
           options={parentGroupOptions}
           value={parentGroupId}
-          onChange={onParentGroupChange}
+          onChange={(value) => onParentGroupChange(value)}
           placeholder="Select parent group"
         />
       </div>
@@ -82,17 +82,16 @@ export const UsersParentStep: React.FC<UsersParentStepProps> = ({
         {/* User search input with dropdown */}
         <div style={{ position: 'relative' }}>
           <div style={{ position: 'relative' }}>
-            <Icon
-              name="magnifying-glass"
-              size="m"
-              style={{
+            <span style={{
                 position: 'absolute',
                 left: '12px',
                 top: '50%',
                 transform: 'translateY(-50%)',
                 color: systemColors.light['content-tertiary'],
-              }}
-            />
+                display: 'flex',
+              }}>
+              <Icon name="magnifying-glass" size="m" />
+            </span>
             <input
               type="text"
               placeholder="Search users"
@@ -176,7 +175,7 @@ export const UsersParentStep: React.FC<UsersParentStepProps> = ({
               <Chip
                 key={user.id}
                 label={user.name}
-                onRemove={() => handleRemoveUser(user.id)}
+                onDelete={() => handleRemoveUser(user.id)}
               />
             ))}
           </div>

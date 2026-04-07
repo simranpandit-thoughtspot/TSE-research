@@ -26,3 +26,6 @@ npm-debug.log*
 # Vite
 *.local
 .vercel
+
+# Local plans (not for repo)
+plans/

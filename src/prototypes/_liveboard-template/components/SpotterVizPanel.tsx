@@ -20,7 +20,7 @@ export const SpotterVizPanel: React.FC<SpotterVizPanelProps> = ({ onClose }) => 
           <span style={s.headerTitle}>SpotterViz</span>
         </div>
         <button style={s.closeBtn} onClick={onClose}>
-          <Icon name="close" size="xs" color={colors.textSecondary} />
+          <Icon name="cross" size="xs" color={colors.textSecondary} />
         </button>
       </div>
 

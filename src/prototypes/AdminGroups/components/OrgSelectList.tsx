@@ -76,17 +76,16 @@ export const OrgSelectList: React.FC<OrgSelectListProps> = ({
       {/* Search input */}
       <div style={styles.searchContainer}>
         <div style={{ position: 'relative' }}>
-          <Icon
-            name="magnifying-glass"
-            size="m"
-            style={{
+          <span style={{
               position: 'absolute',
               left: '12px',
               top: '50%',
               transform: 'translateY(-50%)',
               color: systemColors.light['content-tertiary'],
-            }}
-          />
+              display: 'flex',
+            }}>
+            <Icon name="magnifying-glass" size="m" />
+          </span>
           <input
             type="text"
             placeholder="Search"
@@ -150,7 +149,6 @@ export const OrgSelectList: React.FC<OrgSelectListProps> = ({
           <Toggle
             checked={showSelectedOnly}
             onChange={setShowSelectedOnly}
-            size="s"
           />
           <span style={styles.toggleLabel}>Show selected</span>
         </div>

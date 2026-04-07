@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { Table } from '../../components/Table';
 import { Typography } from '../../components/Typography';
 import { GlobalHeader } from '../../components/GlobalHeader';
-import { Button } from '../../components/Button';
 import { Icon } from '../../components/icons';
 import { Tooltip } from '../../components/Tooltip';
-import { Avatar } from '../../components/Avatar';
 import { AppSidebar } from '../../components/AppSidebar';
 import type { SidebarTab, SidebarCategory } from '../../components/AppSidebar';
 import {
@@ -39,7 +37,7 @@ const SIDEBAR_TABS: SidebarTab[] = [
   { id: 'admin', label: 'Admin', headerTitle: 'Admin' },
 ];
 
-const SIDEBAR_CATEGORIES: Record<SidebarTabId, SidebarCategory[]> = {
+const SIDEBAR_CATEGORIES: Record<string, SidebarCategory[]> = {
   insights: [
     {
       title: 'Navigation',
@@ -93,7 +91,7 @@ const SIDEBAR_CATEGORIES: Record<SidebarTabId, SidebarCategory[]> = {
 };
 
 export const Liveboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('bookings');
+  const [_activeTab, _setActiveTab] = useState('bookings');
   const [filters, setFilters] = useState({
     view: 'default',
     region: 'north-america',
