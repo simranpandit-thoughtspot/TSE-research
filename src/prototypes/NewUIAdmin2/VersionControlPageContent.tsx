@@ -461,13 +461,99 @@ const SetupWizardModal: React.FC<{
   );
 };
 
+// ─── Edit Credentials Modal ───────────────────────────────────────────────────
+
+const EditCredentialsModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const [repo, setRepo] = useState('');
+  const [username, setUsername] = useState('');
+  const [token, setToken] = useState('');
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%', height: '40px', padding: '0 14px',
+    border: '1px solid #E5E7EB', borderRadius: '6px',
+    fontSize: '13.5px', color: '#111827', fontFamily: font,
+    outline: 'none', boxSizing: 'border-box', backgroundColor: '#FFFFFF',
+  };
+
+  const focusStyle = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = brand;
+    e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`;
+  };
+  const blurStyle = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = '#E5E7EB';
+    e.currentTarget.style.boxShadow = 'none';
+  };
+
+  return (
+    <div
+      style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15,23,42,0.45)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      onClick={onClose}
+    >
+      <div
+        style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', width: 720, maxWidth: '92vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.18)' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div style={{ padding: '28px 32px 20px' }}>
+          <div style={{ fontSize: '12px', fontWeight: 500, color: '#6B7280', fontFamily: font, marginBottom: '6px' }}>
+            Version control
+          </div>
+          <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: '#111827', fontFamily: font }}>
+            Enter GitHub credentials
+          </h2>
+        </div>
+        <div style={{ height: '1px', backgroundColor: '#E5E7EB', margin: '0 32px' }} />
+
+        {/* Body */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '28px 32px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Repository</label>
+              <input type="text" placeholder='Ex : "Lorem Ipsum"' value={repo} onChange={(e) => setRepo(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Username</label>
+              <input type="text" placeholder="Enter Username" value={username} onChange={(e) => setUsername(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Token</label>
+              <input type="text" placeholder="Enter 12 digit token" value={token} onChange={(e) => setToken(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
+            </div>
+          </div>
+        </div>
+
+        {/* Progress bar */}
+        <div style={{ height: '3px', backgroundColor: '#E5E7EB', margin: '0 32px' }}>
+          <div style={{ width: '50%', height: '100%', backgroundColor: brand, borderRadius: '2px' }} />
+        </div>
+
+        {/* Footer */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 32px 24px' }}>
+          <button
+            onClick={onClose}
+            style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '13.5px', fontWeight: 500, color: brand, fontFamily: font, padding: 0 }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onClose}
+            style={{ height: '38px', padding: '0 28px', borderRadius: '20px', border: 'none', backgroundColor: brand, color: '#FFFFFF', fontSize: '13.5px', fontWeight: 600, fontFamily: font, cursor: 'pointer' }}
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ─── VersionControlPageContent ─────────────────────────────────────────────────
 
 export const VersionControlPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-org' }> = ({ scope = 'all-orgs' }) => {
   const isPrimary = scope === 'primary-org';
 
   // Enabled state per scope
-  const [primaryEnabled, setPrimaryEnabled] = useState(false);
+  const [primaryEnabled, setPrimaryEnabled] = useState(true);
   const [allOrgsEnabled, setAllOrgsEnabled] = useState(false);
   const vcEnabled = isPrimary ? primaryEnabled : allOrgsEnabled;
 
@@ -490,6 +576,7 @@ export const VersionControlPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
 
   // Reset dialog
   const [resetDialog, setResetDialog] = useState(false);
+  const [editCredModal, setEditCredModal] = useState(false);
 
   const handleEnable = () => {
     if (isPrimary) setPrimaryEnabled(true);
@@ -515,7 +602,7 @@ export const VersionControlPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
 
       {/* ── Scrollable content ── */}
       <div style={{ flex: 1, overflowY: 'auto' }}>
-        <div style={{ maxWidth: '960px', margin: '0 auto', padding: '32px 40px 64px', boxSizing: 'border-box' }}>
+        <div style={isPrimary ? { maxWidth: '960px', margin: '0 auto', padding: '32px 40px 64px', boxSizing: 'border-box' } : { padding: '32px 24px 64px', boxSizing: 'border-box' }}>
 
           {/* ── EMPTY STATE (both scopes, before enabling) ── */}
           {!vcEnabled && (
@@ -582,13 +669,13 @@ export const VersionControlPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
                     </span>
                   </button>
                   <button
-                    onClick={() => setResetDialog(true)}
+                    onClick={() => setEditCredModal(true)}
                     style={{
                       border: 'none', background: 'none', cursor: 'pointer',
                       fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, padding: 0,
                     }}
                   >
-                    Reset
+                    Edit
                   </button>
                 </div>
                 <div style={{
@@ -597,36 +684,30 @@ export const VersionControlPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
                 }}>
                   <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {[
-                      { label: 'Repository',     value: credRepo,           setter: setCredRepo           },
-                      { label: 'Username',        value: credUsername,       setter: setCredUsername       },
-                      { label: 'Token',           value: credToken,          setter: setCredToken          },
-                      { label: 'Branch',          value: credBranch,         setter: setCredBranch         },
-                      { label: 'GUID branch',     value: credGuidBranch,     setter: setCredGuidBranch     },
-                      { label: 'Version history', value: credVersionHistory, setter: setCredVersionHistory },
-                    ].map(({ label, value, setter }) => (
+                      { label: 'Repository',     value: credRepo           },
+                      { label: 'Username',        value: credUsername       },
+                      { label: 'Token',           value: credToken          },
+                      { label: 'Branch',          value: credBranch         },
+                      { label: 'GUID branch',     value: credGuidBranch     },
+                      { label: 'Version history', value: credVersionHistory },
+                    ].map(({ label, value }) => (
                       <div key={label} style={{
                         display: 'flex', alignItems: 'center',
                         justifyContent: 'space-between', gap: '32px',
                         padding: '18px 24px', backgroundColor: '#FFFFFF',
                         border: '1px solid #E9EAEC', borderRadius: '8px',
                       }}>
-                        <div style={{ fontSize: '14px', fontWeight: 500, color: '#111827', fontFamily: font, minWidth: '140px' }}>
+                        <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827', fontFamily: font, minWidth: '140px' }}>
                           {label}
                         </div>
-                        <input
-                          type="text"
-                          value={value}
-                          onChange={(e) => setter(e.target.value)}
-                          style={{
-                            flex: 1, maxWidth: '400px', height: '38px',
-                            border: '1px solid #D1D5DB', borderRadius: '6px',
-                            padding: '0 14px', fontSize: '13.5px', color: '#374151',
-                            fontFamily: font, backgroundColor: '#FFFFFF',
-                            outline: 'none', transition: 'border-color 0.15s, box-shadow 0.15s',
-                          }}
-                          onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
-                          onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
-                        />
+                        <div style={{
+                          flex: 1, maxWidth: '400px', height: '38px',
+                          borderRadius: '6px', padding: '0 14px',
+                          fontSize: '13.5px', color: '#374151', fontFamily: font,
+                          backgroundColor: '#F3F4F6', display: 'flex', alignItems: 'center',
+                        }}>
+                          {value}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -757,6 +838,9 @@ export const VersionControlPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
           onCancel={() => setResetDialog(false)}
         />
       )}
+
+      {/* ── Edit credentials modal ── */}
+      {editCredModal && <EditCredentialsModal onClose={() => setEditCredModal(false)} />}
     </div>
   );
 };

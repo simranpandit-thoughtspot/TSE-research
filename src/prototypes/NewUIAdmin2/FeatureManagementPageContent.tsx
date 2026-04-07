@@ -4,6 +4,25 @@ import { systemColors } from '../../tokens/colors';
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
 
+const Toggle: React.FC<{ checked: boolean; onChange: () => void }> = ({ checked, onChange }) => (
+  <button
+    onClick={onChange}
+    role="switch"
+    aria-checked={checked}
+    style={{
+      position: 'relative', width: '36px', height: '20px', borderRadius: '10px',
+      border: 'none', backgroundColor: checked ? brand : '#D1D5DB',
+      cursor: 'pointer', padding: 0, flexShrink: 0, transition: 'background-color 0.2s ease',
+    }}
+  >
+    <span style={{
+      position: 'absolute', top: '2px', left: checked ? '18px' : '2px',
+      width: '16px', height: '16px', borderRadius: '50%', backgroundColor: '#fff',
+      transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.18)',
+    }} />
+  </button>
+);
+
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const SAMPLE_ORGS = ['Solidaris', 'Besins Healthcare', 'SymphonyAI', 'HIS', 'Conagra Brands'];

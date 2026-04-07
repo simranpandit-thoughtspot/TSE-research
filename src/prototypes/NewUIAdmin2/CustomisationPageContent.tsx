@@ -697,6 +697,19 @@ const ValueRow: React.FC<{ label: string; value: string }> = ({ label, value }) 
   </div>
 );
 
+// ─── Chart Avatar ─────────────────────────────────────────────────────────────
+
+const ChartAvatar: React.FC = () => (
+  <div style={{
+    width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+    background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontSize: 10, fontWeight: 600, color: '#fff', fontFamily: font,
+  }}>
+    AK
+  </div>
+);
+
 // ─── Color Display Row (Email) ────────────────────────────────────────────────
 
 const ColorDisplayRow: React.FC<{ label: string; color: string; hex: string }> = ({ label, color, hex }) => (
@@ -757,6 +770,106 @@ const HelpMenuIcon: React.FC<{ type: 'document' | 'video' | 'rocket' | 'people' 
     info:     <><circle cx="10" cy="10" r="8.5" stroke="#6B7280" strokeWidth="1.4" /><path d="M10 9.5V14" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" /><circle cx="10" cy="7" r="0.8" fill="#6B7280" /></>,
   };
   return <svg width="20" height="20" viewBox="0 0 20 20" fill="none">{paths[type]}</svg>;
+};
+
+// ─── Edit Help Menu Item Modal ────────────────────────────────────────────────
+
+const EditHelpMenuItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const [enabled, setEnabled] = useState(true);
+  const [label, setLabel] = useState('test2');
+  const [url, setUrl] = useState('https://champagne-master-aws.thoughtspotstaging.c');
+  const [iconFile, setIconFile] = useState<string | null>('test2.png');
+  const [showPreview, setShowPreview] = useState(true);
+
+  const fieldRow = (labelText: string, content: React.ReactNode) => (
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '32px', marginBottom: '24px' }}>
+      <span style={{ width: '160px', flexShrink: 0, fontSize: '14px', fontWeight: 500, color: '#111827', fontFamily: font, paddingTop: '8px' }}>
+        {labelText}
+      </span>
+      <div style={{ flex: 1 }}>{content}</div>
+    </div>
+  );
+
+  return (
+    <ModalOverlay onClose={onClose} width={640}>
+      <div style={{ padding: '32px 36px 28px' }}>
+        <h2 style={{ margin: '0 0 32px', fontSize: '20px', fontWeight: 700, color: '#111827', fontFamily: font }}>Edit menu item</h2>
+
+        {/* Status */}
+        {fieldRow('Status', (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingTop: '6px' }}>
+            <Toggle checked={enabled} onChange={() => setEnabled(!enabled)} />
+            <span style={{ fontSize: '14px', color: '#374151', fontFamily: font }}>Enable</span>
+          </div>
+        ))}
+
+        {/* Menu item label */}
+        {fieldRow('Menu item label', (
+          <input
+            type="text" value={label} onChange={(e) => setLabel(e.target.value)}
+            style={{ width: '100%', height: '40px', padding: '0 14px', border: '1px solid #D1D5DB', borderRadius: '8px', fontSize: '13.5px', color: '#111827', fontFamily: font, outline: 'none', boxSizing: 'border-box', backgroundColor: '#FFFFFF' }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+          />
+        ))}
+
+        {/* Item URL */}
+        {fieldRow('Item URL', (
+          <input
+            type="text" value={url} onChange={(e) => setUrl(e.target.value)}
+            style={{ width: '100%', height: '40px', padding: '0 14px', border: '1px solid #D1D5DB', borderRadius: '8px', fontSize: '13.5px', color: '#111827', fontFamily: font, outline: 'none', boxSizing: 'border-box', backgroundColor: '#FFFFFF' }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+          />
+        ))}
+
+        {/* Custom icon */}
+        {fieldRow('Custom icon', (
+          <div>
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+              <input
+                type="text" value={iconFile ?? ''} readOnly placeholder="No file chosen"
+                style={{ flex: 1, height: '40px', padding: '0 14px', border: '1px solid #D1D5DB', borderRadius: '8px', fontSize: '13.5px', color: '#374151', fontFamily: font, outline: 'none', backgroundColor: '#F9FAFB', cursor: 'default' }}
+              />
+              <button style={{ height: '40px', padding: '0 20px', border: '1px solid #D1D5DB', borderRadius: '8px', backgroundColor: '#F3F4F6', fontSize: '13.5px', fontWeight: 500, color: '#374151', fontFamily: font, cursor: 'pointer', flexShrink: 0 }}>
+                Upload
+              </button>
+            </div>
+            <span style={{ fontSize: '12px', color: '#9CA3AF', fontFamily: font }}>Icon should be in PNG format and less than 100 KB in size</span>
+            {showPreview && (
+              <div style={{ marginTop: '12px', position: 'relative', display: 'inline-block' }}>
+                <div style={{ width: '80px', height: '80px', border: '1.5px dashed #D1D5DB', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#F9FAFB' }}>
+                  <svg width="42" height="42" viewBox="0 0 20 20" fill="none">
+                    <rect x="3" y="1" width="11" height="15" rx="1" fill="#6B7280" />
+                    <rect x="5" y="5" width="7" height="1.5" rx="0.75" fill="#FFFFFF" />
+                    <rect x="5" y="8" width="7" height="1.5" rx="0.75" fill="#FFFFFF" />
+                    <rect x="5" y="11" width="5" height="1.5" rx="0.75" fill="#FFFFFF" />
+                  </svg>
+                </div>
+                <button
+                  onClick={() => setShowPreview(false)}
+                  style={{ position: 'absolute', top: '-8px', right: '-8px', width: '20px', height: '20px', borderRadius: '50%', border: 'none', backgroundColor: '#111827', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}
+                >
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
+
+        {/* Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '8px' }}>
+          <PillButton label="Save" variant="primary" onClick={onClose} />
+          <PillButton label="Cancel" variant="secondary" onClick={onClose} />
+        </div>
+        <div style={{ marginTop: '20px' }}>
+          <button style={{ border: 'none', background: 'none', fontSize: '13.5px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>
+            Delete item
+          </button>
+        </div>
+      </div>
+    </ModalOverlay>
+  );
 };
 
 // ─── Static data ──────────────────────────────────────────────────────────────
@@ -824,6 +937,7 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
 
   // ── Help tab ──
   const [helpMenuOpen, setHelpMenuOpen] = useState(true);
+  const [helpMenuItemModal, setHelpMenuItemModal] = useState(false);
   const [helpToggles, setHelpToggles] = useState<Record<string, boolean>>({
     Documents: true, 'Getting Started': true, "What's New": true,
     'Contact Support': true, About: true,
@@ -897,41 +1011,7 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
             <Card title="Navigation Panel Colour" open={navColourOpen} onToggle={() => setNavColourOpen(!navColourOpen)} rightAction={<ResetLink onClick={() => setResetSection('navigation panel colour')} />}>
               <SettingRow label="Theme colour" control={<Dropdown value="Dark" options={['Dark', 'Light', 'Dual Tone']} width={200} />} />
             </Card>
-            <Card title="Chart Colour Palettes" open={chartPaletteOpen} onToggle={() => setChartPaletteOpen(!chartPaletteOpen)} rightAction={<ResetLink onClick={() => setResetSection('chart colour palettes')} />}>
-              {/* Primary colours */}
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: '24px',
-                padding: '16px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px',
-              }}>
-                <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827', fontFamily: font, width: '160px', flexShrink: 0 }}>
-                  Primary colours
-                </span>
-                <div style={{ display: 'flex', gap: '8px', flex: 1 }}>
-                  {PRIMARY_COLORS.map((c, i) => <ColorSwatch key={i} color={c} />)}
-                </div>
-              </div>
 
-              {/* Secondary Colors */}
-              <div style={{
-                padding: '16px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px',
-              }}>
-                <div style={{ display: 'flex', gap: '24px' }}>
-                  <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827', fontFamily: font, width: '160px', flexShrink: 0, paddingTop: '6px' }}>
-                    Secondary Colors
-                  </span>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-                    {SECONDARY_COLORS.map((row, i) => (
-                      <div key={i} style={{ display: 'flex', gap: '8px' }}>
-                        {row.map((c, j) => <ColorSwatch key={j} color={c} />)}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div style={{ marginTop: '16px' }}>
-                  <Checkbox label="Disable Colour Rotation" checked={disableColourRotation} onChange={() => setDisableColourRotation(!disableColourRotation)} />
-                </div>
-              </div>
-            </Card>
             <Card title="Footer Text" open={footerTextOpen} onToggle={() => setFooterTextOpen(!footerTextOpen)} rightAction={<ResetLink onClick={() => setResetSection('footer text')} />}>
               <TextInputRow label="Text for embedded objects" placeholder="Enter Text" />
             </Card>
@@ -1012,31 +1092,39 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
 
             {/* ── Custom Charts ── */}
             {chartInnerTab === 'custom-charts' && (
-              <div style={{ padding: '20px 24px 24px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+              <div style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Description + Add button on same row */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>
                     Add and manage custom chart types available to your users.
                   </span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
-                  <button style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0 }}>
+                  <button style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0, flexShrink: 0, marginLeft: '16px' }}>
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><line x1="6.5" y1="1" x2="6.5" y2="12" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/><line x1="1" y1="6.5" x2="12" y2="6.5" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/></svg>
-                    Add Chart
+                    Add chart
                   </button>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {/* Table */}
+                <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
+                  {/* Header */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 2fr 70px 80px', padding: '12px 20px', borderBottom: '1px solid #E5E7EB' }}>
+                    {['Chart Name', 'Created by', 'Last Modified', '', ''].map((h, idx) => (
+                      <span key={idx} style={{ fontSize: '12.5px', fontWeight: 500, color: '#9CA3AF', fontFamily: font }}>{h}</span>
+                    ))}
+                  </div>
+                  {/* Rows */}
                   {[
                     { name: 'Muze studio', author: 'Anje Keizer', date: '2 days ago' },
                     { name: 'Gauge',       author: 'Anje Keizer', date: '2 days ago' },
-                  ].map((row, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '14px 0', borderBottom: i === 0 ? '1px solid #F3F4F6' : 'none' }}>
-                      <span style={{ flex: 2, fontSize: '13.5px', color: '#111827', fontFamily: font }}>{row.name}</span>
-                      <span style={{ flex: 2, fontSize: '13.5px', color: '#374151', fontFamily: font }}>{row.author}</span>
-                      <span style={{ flex: 2, fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>{row.date}</span>
-                      <div style={{ display: 'flex', gap: '16px' }}>
-                        <button style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Edit</button>
-                        <button style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Delete</button>
+                  ].map((row, i, arr) => (
+                    <div key={i} style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 2fr 70px 80px', alignItems: 'center', borderBottom: i < arr.length - 1 ? '1px solid #F3F4F6' : 'none' }}>
+                      <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font, padding: '14px 20px' }}>{row.name}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 20px 14px 0' }}>
+                        <ChartAvatar />
+                        <span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{row.author}</span>
                       </div>
+                      <span style={{ fontSize: '13.5px', color: '#6B7280', fontFamily: font, padding: '14px 20px 14px 0' }}>{row.date}</span>
+                      <button style={{ border: 'none', borderLeft: '1px solid #F3F4F6', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: '14px 0', textAlign: 'center' }}>Edit</button>
+                      <button style={{ border: 'none', borderLeft: '1px solid #F3F4F6', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: '14px 20px 14px 0', textAlign: 'center' }}>Delete</button>
                     </div>
                   ))}
                 </div>
@@ -1045,28 +1133,36 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
 
             {/* ── Custom Maps ── */}
             {chartInnerTab === 'custom-maps' && (
-              <div style={{ padding: '20px 24px 24px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+              <div style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Description + Add button on same row */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>
-                    Upload and manage custom TopoJSON map files used in your charts.
+                    For optimal display, choose your custom chart colour palettes.
                   </span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
-                  <button style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0 }}>
+                  <button style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0, flexShrink: 0, marginLeft: '16px' }}>
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><line x1="6.5" y1="1" x2="6.5" y2="12" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/><line x1="1" y1="6.5" x2="12" y2="6.5" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/></svg>
-                    Add Map
+                    Add maps
                   </button>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  {Array(5).fill({ name: 'Germany', author: 'Anje Keizer', date: '2 days ago' }).map((row, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '14px 0', borderBottom: i < 4 ? '1px solid #F3F4F6' : 'none' }}>
-                      <span style={{ flex: 2, fontSize: '13.5px', color: '#111827', fontFamily: font }}>{row.name}</span>
-                      <span style={{ flex: 2, fontSize: '13.5px', color: '#374151', fontFamily: font }}>{row.author}</span>
-                      <span style={{ flex: 2, fontSize: '13.5px', color: '#6B7280', fontFamily: font }}>{row.date}</span>
-                      <div style={{ display: 'flex', gap: '16px' }}>
-                        <button style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Edit</button>
-                        <button style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Delete</button>
+                {/* Table */}
+                <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
+                  {/* Header */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 2fr 70px 80px', padding: '12px 20px', borderBottom: '1px solid #E5E7EB' }}>
+                    {['Map Name', 'Created by', 'Last Modified', '', ''].map((h, idx) => (
+                      <span key={idx} style={{ fontSize: '12.5px', fontWeight: 500, color: '#9CA3AF', fontFamily: font }}>{h}</span>
+                    ))}
+                  </div>
+                  {/* Rows */}
+                  {Array(8).fill({ name: 'Germany', author: 'Anje Keizer', date: '2 days ago' }).map((row, i) => (
+                    <div key={i} style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 2fr 70px 80px', alignItems: 'center', borderBottom: i < 7 ? '1px solid #F3F4F6' : 'none' }}>
+                      <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font, padding: '14px 20px' }}>{row.name}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 20px 14px 0' }}>
+                        <ChartAvatar />
+                        <span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{row.author}</span>
                       </div>
+                      <span style={{ fontSize: '13.5px', color: '#6B7280', fontFamily: font, padding: '14px 20px 14px 0' }}>{row.date}</span>
+                      <button style={{ border: 'none', borderLeft: '1px solid #F3F4F6', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: '14px 0', textAlign: 'center' }}>Edit</button>
+                      <button style={{ border: 'none', borderLeft: '1px solid #F3F4F6', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: '14px 20px 14px 0', textAlign: 'center' }}>Delete</button>
                     </div>
                   ))}
                 </div>
@@ -1258,23 +1354,40 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
 
         {/* ── Help tab ── */}
         {activeTab === 'help' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <Card title="List of help menu items" open={helpMenuOpen} onToggle={() => setHelpMenuOpen(!helpMenuOpen)} rightAction={<AddAction label="Add menu item" />}>
-              <ObjectTable
-                columns={[{ label: 'Menu item label', flex: 2 }, { label: 'Custom icon', flex: 1.5 }, { label: 'Item URL', flex: 3 }, { label: '', flex: 1.5 }]}
-                rows={HELP_ITEMS.map((item) => [
-                  <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font }}>{item.label}</span>,
-                  <HelpMenuIcon type={item.icon} />,
-                  <span style={{ fontSize: '13px', color: brand, fontFamily: font, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{item.url}</span>,
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', justifyContent: 'flex-end' }}>
-                    <TextLink label="Edit" />
+          <div style={{ backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '12px', overflow: 'hidden' }}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid #E5E7EB' }}>
+              <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>List of help menu items</span>
+              <button onClick={() => setHelpMenuItemModal(true)} style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0 }}>
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><line x1="6.5" y1="1" x2="6.5" y2="12" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/><line x1="1" y1="6.5" x2="12" y2="6.5" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/></svg>
+                Add menu item
+              </button>
+            </div>
+            {/* Table */}
+            <div style={{ padding: '16px' }}>
+              <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
+                {/* Header row */}
+                <div style={{ display: 'grid', gridTemplateColumns: '100px 2fr 1.5fr 3fr 80px', padding: '12px 20px', borderBottom: '1px solid #E5E7EB' }}>
+                  {['Status', 'Menu item label', 'Custom icon', 'Item URL', 'Action'].map((h) => (
+                    <span key={h} style={{ fontSize: '12.5px', fontWeight: 400, color: '#9CA3AF', fontFamily: font }}>{h}</span>
+                  ))}
+                </div>
+                {/* Rows */}
+                {HELP_ITEMS.map((item, i) => (
+                  <div key={item.label} style={{ display: 'grid', gridTemplateColumns: '100px 2fr 1.5fr 3fr 80px', padding: '16px 20px', alignItems: 'center', borderBottom: i < HELP_ITEMS.length - 1 ? '1px solid #F3F4F6' : 'none' }}>
                     <Toggle checked={helpToggles[item.label]} onChange={() => setHelpToggles({ ...helpToggles, [item.label]: !helpToggles[item.label] })} />
-                  </div>,
-                ])}
-              />
-            </Card>
+                    <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font }}>{item.label}</span>
+                    <HelpMenuIcon type={item.icon} />
+                    <span style={{ fontSize: '13px', color: brand, fontFamily: font, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.url}</span>
+                    <button onClick={() => setHelpMenuItemModal(true)} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Edit</button>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
+
+        {helpMenuItemModal && <EditHelpMenuItemModal onClose={() => setHelpMenuItemModal(false)} />}
 
       </div>
       </div>
