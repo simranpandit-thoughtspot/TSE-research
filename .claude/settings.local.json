@@ -16,7 +16,16 @@
       "Bash(npm run:*)",
       "Bash(git push:*)",
       "Bash(git branch:*)",
-      "Bash(echo $?)"
+      "Bash(echo $?)",
+      "Bash(grep:*)",
+      "Bash(npx vercel:*)",
+      "Bash(vercel deploy:*)",
+      "Bash(bash ~/.claude/statusline-command.sh)",
+      "mcp__figma__get_design_context",
+      "mcp__figma__get_code_connect_suggestions",
+      "mcp__figma__get_screenshot",
+      "Bash(git stash:*)",
+      "Bash(ls src/prototypes/registry*.ts)"
     ]
   },
   "enableAllProjectMcpServers": true,
