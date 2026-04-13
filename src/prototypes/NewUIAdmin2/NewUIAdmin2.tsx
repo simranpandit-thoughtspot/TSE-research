@@ -311,8 +311,9 @@ const Card: React.FC<{
   description?: string;
   open?: boolean;
   onToggle?: () => void;
+  onReset?: () => void;
   children: React.ReactNode;
-}> = ({ title, description, open, onToggle, children }) => {
+}> = ({ title, description, open, onToggle, onReset, children }) => {
   const collapsible = onToggle !== undefined;
 
   return (
@@ -326,39 +327,37 @@ const Card: React.FC<{
     >
       {/* Card header */}
       {collapsible ? (
-        <button
-          onClick={onToggle}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            width: '100%',
-            padding: '16px 24px',
-            border: 'none',
-            borderBottom: open ? '1px solid #E5E7EB' : 'none',
-            background: 'none',
-            cursor: 'pointer',
-            fontFamily: font,
-            textAlign: 'left',
-          }}
-        >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
+        <div style={{
+          display: 'flex', alignItems: 'center',
+          borderBottom: open ? '1px solid #E5E7EB' : 'none',
+          padding: '16px 24px',
+        }}>
+          <button
+            onClick={onToggle}
             style={{
-              flexShrink: 0,
-              transform: open ? 'rotate(0deg)' : 'rotate(-90deg)',
-              transition: 'transform 0.22s ease',
+              display: 'flex', alignItems: 'center', gap: '8px', flex: 1,
+              border: 'none', background: 'none', cursor: 'pointer',
+              fontFamily: font, textAlign: 'left', padding: 0,
             }}
           >
-            <path d="M3 5.5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>
-            {title}
-          </span>
-        </button>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+              style={{ flexShrink: 0, transform: open ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.22s ease' }}
+            >
+              <path d="M3 5.5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>
+              {title}
+            </span>
+          </button>
+          {onReset && (
+            <button onClick={onReset} style={{
+              border: 'none', background: 'none', cursor: 'pointer', padding: 0,
+              fontFamily: font, fontSize: '13px', fontWeight: 500, color: brand, flexShrink: 0,
+            }}>
+              Reset to default
+            </button>
+          )}
+        </div>
       ) : (
         <div style={{ padding: '16px 24px 12px', borderBottom: '1px solid #E5E7EB' }}>
           <div style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>
@@ -401,7 +400,10 @@ export const NewUIAdmin2: React.FC = () => {
 
   const [includeCoverPages, setIncludeCoverPages] = useState(false);
   const [hideMetadataHeader, setHideMetadataHeader] = useState(false);
-  const [downloadInstructions, setDownloadInstructions] = useState(false);
+  const [downloadedFileInstructions, setDownloadedFileInstructions] = useState('Test');
+  const [a4PdfResolution, setA4PdfResolution] = useState('');
+  const [showButtonInEmails, setShowButtonInEmails] = useState(true);
+  const [whitelistedDomains, setWhitelistedDomains] = useState('');
 
   // Data modelling toggles
   const [newTmlUtility, setNewTmlUtility] = useState(false);
@@ -606,7 +608,7 @@ export const NewUIAdmin2: React.FC = () => {
                     <Dropdown
                       value="Asia/Calcutta"
                       options={['Asia/Calcutta', 'UTC', 'America/New_York', 'America/Los_Angeles', 'Europe/London', 'Asia/Tokyo']}
-                      width={220}
+                      width={311}
                     />
                   }
                 />
@@ -616,7 +618,7 @@ export const NewUIAdmin2: React.FC = () => {
                     <Dropdown
                       value="DD/MM/YYYY"
                       options={['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD', 'MMM DD, YYYY']}
-                      width={220}
+                      width={311}
                     />
                   }
                 />
@@ -661,10 +663,10 @@ export const NewUIAdmin2: React.FC = () => {
               </Card>
 
               {/* Downloads & Schedules */}
-              <Card title="Downloads & Schedules" open={downloadsOpen} onToggle={() => setDownloadsOpen(!downloadsOpen)}>
+              <Card title="Downloads & Schedules" open={downloadsOpen} onToggle={() => setDownloadsOpen(!downloadsOpen)} onReset={() => {}}>
                 <SettingRow
                   label="Include cover and filter pages in the Liveboard PDF by default"
-                  description="Control whether cover and filter pages are included by default in Liveboard PDFs. Users can always override this setting per download or schedule."
+                  description="Information in tooltip comes here"
                   control={<Toggle checked={includeCoverPages} onChange={() => setIncludeCoverPages(!includeCoverPages)} />}
                 />
                 <SettingRow
@@ -673,8 +675,56 @@ export const NewUIAdmin2: React.FC = () => {
                 />
                 <SettingRow
                   label="Downloaded file instructions"
-                  description="Text will appear in all downloaded files for answers and Liveboards. It will appear at the bottom of the page in PDF and PNG files and on top in CSV and XLSX files."
-                  control={<Toggle checked={downloadInstructions} onChange={() => setDownloadInstructions(!downloadInstructions)} />}
+                  description="Information in tooltip comes here"
+                  control={
+                    <input
+                      value={downloadedFileInstructions}
+                      onChange={(e) => setDownloadedFileInstructions(e.target.value)}
+                      placeholder="Text"
+                      style={{
+                        width: '311px', height: '36px', padding: '0 12px',
+                        border: '1px solid #D1D5DB', borderRadius: '6px',
+                        fontFamily: font, fontSize: '13px', color: '#111827',
+                        outline: 'none', boxSizing: 'border-box' as const,
+                      }}
+                    />
+                  }
+                />
+                <SettingRow
+                  label="A4 PDF Resolution"
+                  control={
+                    <input
+                      value={a4PdfResolution}
+                      onChange={(e) => setA4PdfResolution(e.target.value)}
+                      placeholder="Text"
+                      style={{
+                        width: '311px', height: '36px', padding: '0 12px',
+                        border: '1px solid #D1D5DB', borderRadius: '6px',
+                        fontFamily: font, fontSize: '13px', color: '#111827',
+                        outline: 'none', boxSizing: 'border-box' as const,
+                      }}
+                    />
+                  }
+                />
+                <SettingRow
+                  label="Show button in Emails"
+                  control={<Toggle checked={showButtonInEmails} onChange={() => setShowButtonInEmails(!showButtonInEmails)} />}
+                />
+                <SettingRow
+                  label="Whitelisted Domains"
+                  control={
+                    <input
+                      value={whitelistedDomains}
+                      onChange={(e) => setWhitelistedDomains(e.target.value)}
+                      placeholder="Text"
+                      style={{
+                        width: '311px', height: '36px', padding: '0 12px',
+                        border: '1px solid #D1D5DB', borderRadius: '6px',
+                        fontFamily: font, fontSize: '13px', color: '#111827',
+                        outline: 'none', boxSizing: 'border-box' as const,
+                      }}
+                    />
+                  }
                 />
               </Card>
 

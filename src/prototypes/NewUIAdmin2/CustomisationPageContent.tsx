@@ -309,7 +309,7 @@ const DoubleDropdownRow: React.FC<{
     </span>
     <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
       <Dropdown value={value1} options={options1} width={160} />
-      <Dropdown value={value2} options={options2} width={190} />
+      <Dropdown value={value2} options={options2} width={311} />
     </div>
   </div>
 );
@@ -1009,7 +1009,7 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
               <DoubleDropdownRow label="Select fonts" value1="Table Value cells" options1={['Table Value cells', 'Table Header cells', 'Table Footer']} value2="Optimo Plain, helvetica..." options2={['Optimo Plain, helvetica...', 'Inter', 'Roboto', 'DM Sans', 'IBM Plex Sans']} />
             </Card>
             <Card title="Navigation Panel Colour" open={navColourOpen} onToggle={() => setNavColourOpen(!navColourOpen)} rightAction={<ResetLink onClick={() => setResetSection('navigation panel colour')} />}>
-              <SettingRow label="Theme colour" control={<Dropdown value="Dark" options={['Dark', 'Light', 'Dual Tone']} width={200} />} />
+              <SettingRow label="Theme colour" control={<Dropdown value="Dark" options={['Dark', 'Light', 'Dual Tone']} width={311} />} />
             </Card>
 
             <Card title="Footer Text" open={footerTextOpen} onToggle={() => setFooterTextOpen(!footerTextOpen)} rightAction={<ResetLink onClick={() => setResetSection('footer text')} />}>

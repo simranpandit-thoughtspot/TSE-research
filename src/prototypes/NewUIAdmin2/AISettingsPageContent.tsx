@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { systemColors, referenceColors } from '../../tokens/colors';
+import { systemColors, referenceColors, rdComponentColors } from '../../tokens/colors';
 import { ConfirmDialog } from './ConfirmDialog';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
@@ -7,13 +7,17 @@ const brand = systemColors.light['content-brand'];
 
 // ─── Toggle ───────────────────────────────────────────────────────────────────
 
-const Toggle: React.FC<{ checked: boolean; onChange: () => void }> = ({ checked, onChange }) => (
+const Toggle: React.FC<{ checked: boolean; onChange: () => void; disabled?: boolean }> = ({ checked, onChange, disabled }) => (
   <button
-    onClick={onChange} role="switch" aria-checked={checked}
+    onClick={disabled ? undefined : onChange}
+    role="switch" aria-checked={checked} aria-disabled={disabled}
     style={{
       position: 'relative', width: '36px', height: '20px', borderRadius: '10px',
-      border: 'none', backgroundColor: checked ? brand : referenceColors.gray['30'],
-      cursor: 'pointer', padding: 0, flexShrink: 0, transition: 'background-color 0.2s ease',
+      border: 'none',
+      backgroundColor: checked ? (disabled ? `${brand}80` : brand) : referenceColors.gray['30'],
+      cursor: disabled ? 'not-allowed' : 'pointer',
+      padding: 0, flexShrink: 0, transition: 'background-color 0.2s ease',
+      opacity: disabled ? 0.6 : 1,
     }}
   >
     <span style={{
@@ -27,12 +31,14 @@ const Toggle: React.FC<{ checked: boolean; onChange: () => void }> = ({ checked,
 
 // ─── Dropdown ────────────────────────────────────────────────────────────────
 
-const Dropdown: React.FC<{ value: string; options: string[]; width?: number }> = ({
-  value: initialValue, options, width = 280,
+const Dropdown: React.FC<{ value: string; options: string[]; width?: number; onChange?: (val: string) => void }> = ({
+  value: initialValue, options, width = 280, onChange,
 }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(initialValue);
   const [menuPos, setMenuPos] = useState<{ top: number; left: number; width: number }>({ top: 0, left: 0, width });
+
+  useEffect(() => { setSelected(initialValue); }, [initialValue]);
   const ref = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -80,7 +86,7 @@ const Dropdown: React.FC<{ value: string; options: string[]; width?: number }> =
           boxShadow: '0 8px 24px rgba(0,0,0,0.10)', zIndex: 9999, overflow: 'hidden',
         }}>
           {options.map((opt) => (
-            <button key={opt} onClick={() => { setSelected(opt); setOpen(false); }}
+            <button key={opt} onClick={() => { setSelected(opt); setOpen(false); onChange?.(opt); }}
               style={{
                 display: 'block', width: '100%', padding: '10px 16px',
                 border: 'none', textAlign: 'left', fontFamily: font, fontSize: '13px',
@@ -100,6 +106,32 @@ const Dropdown: React.FC<{ value: string; options: string[]; width?: number }> =
     </div>
   );
 };
+
+// ─── Toast ───────────────────────────────────────────────────────────────────
+
+const Toast: React.FC<{ message: string; cta?: string; onCta?: () => void; onClose: () => void }> = ({ message, cta, onCta, onClose }) => (
+  <div style={{
+    position: 'fixed', bottom: '28px', left: '50%', transform: 'translateX(-50%)',
+    display: 'flex', alignItems: 'center', gap: '16px',
+    backgroundColor: '#1F2937', color: '#FFFFFF',
+    padding: '12px 20px', borderRadius: '10px',
+    boxShadow: '0 8px 24px rgba(0,0,0,0.20)',
+    fontFamily: font, fontSize: '13.5px', fontWeight: 500,
+    zIndex: 10002, whiteSpace: 'nowrap' as const,
+  }}>
+    <span>{message}</span>
+    {cta && (
+      <button onClick={onCta} style={{
+        border: 'none', background: 'none', cursor: 'pointer',
+        color: brand, fontFamily: font, fontSize: '13.5px', fontWeight: 600, padding: 0,
+      }}>{cta}</button>
+    )}
+    <button onClick={onClose} style={{
+      border: 'none', background: 'none', cursor: 'pointer',
+      color: '#9CA3AF', fontFamily: font, fontSize: '18px', lineHeight: 1, padding: 0, marginLeft: '4px',
+    }}>×</button>
+  </div>
+);
 
 // ─── SettingRow ───────────────────────────────────────────────────────────────
 
@@ -141,12 +173,141 @@ const ResetLink: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
   </button>
 );
 
+// ─── LLMTable ────────────────────────────────────────────────────────────────
+
+const LLM_ROWS = [
+  { model: 'GPT 5.1',           provider: 'Azure OpenAI',      type: 'ThoughtSpot provided', services: 'Spotter, AI Answers', moreCount: 5, icon: 'openai'    },
+  { model: 'GPT 5.1',           provider: 'Azure OpenAI',      type: 'ThoughtSpot provided', services: 'Lumos, Aurora',       moreCount: 0, icon: 'openai'    },
+  { model: 'Claude Sonnet 4.5', provider: 'Azure OpenAI',      type: 'ThoughtSpot provided', services: 'AI Context',          moreCount: 0, icon: 'anthropic' },
+  { model: 'Claude Sonnet 4.5', provider: 'Google Vertex AI',  type: 'ThoughtSpot provided', services: 'AI Context',          moreCount: 0, icon: 'anthropic' },
+  { model: 'Gemini 3 Pro',      provider: 'Google Vertex AI',  type: 'ThoughtSpot provided', services: 'AI Context',          moreCount: 0, icon: 'gemini'    },
+  { model: 'Gemini 3 Pro',      provider: 'Google Vertex AI',  type: 'ThoughtSpot provided', services: 'AI Context',          moreCount: 0, icon: 'gemini'    },
+  { model: 'Gemini 3 Pro',      provider: 'Google Vertex AI',  type: 'ThoughtSpot provided', services: 'AI Context',          moreCount: 0, icon: 'gemini'    },
+];
+
+const ModelIcon: React.FC<{ type: string }> = ({ type }) => {
+  if (type === 'openai') return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={{ color: '#111827', flexShrink: 0 }}>
+      <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.032.067L9.76 19.958a4.5 4.5 0 0 1-6.16-1.654zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.843-3.369 2.02-1.168a.076.076 0 0 1 .071 0l4.83 2.786a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.402-.676zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08-4.778 2.758a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/>
+    </svg>
+  );
+  if (type === 'anthropic') return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="#D97559" style={{ flexShrink: 0 }} xmlns="http://www.w3.org/2000/svg">
+      <path d="M13.827 3.52h-3.654L6 20.48h3.654l4.173-16.96zm-7.327 0H3L6.413 12 3 20.48h3.5L10.24 12 6.5 3.52zm14.654 0H17.5L13.76 12l3.74 8.48H21L17.587 12 21.154 3.52z"/>
+    </svg>
+  );
+  // gemini — proper multicolor 4-point star
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" style={{ flexShrink: 0 }} fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C11.5 6.5 9.5 10 2 12C9.5 14 11.5 17.5 12 22C12.5 17.5 14.5 14 22 12C14.5 10 12.5 6.5 12 2Z" fill="url(#geminiGrad)"/>
+      <defs>
+        <linearGradient id="geminiGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#4285F4"/>
+          <stop offset="33%" stopColor="#EA4335"/>
+          <stop offset="66%" stopColor="#FBBC04"/>
+          <stop offset="100%" stopColor="#34A853"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+
+const MORE_SERVICES = ['SpotIQ', 'AI Highlights', 'AI Narratives', 'Smart Suggestions', 'Sage'];
+
+const LLMTable: React.FC = () => {
+  const [popoverAnchor, setPopoverAnchor] = useState<{ top: number; left: number } | null>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+        setPopoverAnchor(null);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const handleMoreClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setPopoverAnchor(popoverAnchor ? null : { top: rect.bottom + 6, left: rect.left });
+  };
+
+  const thStyle: React.CSSProperties = {
+    fontSize: '13px', color: '#6B7280', fontWeight: 400, fontFamily: font,
+    padding: '12px 16px', textAlign: 'left', borderBottom: '1px solid #E5E7EB',
+    backgroundColor: '#FFFFFF',
+  };
+  const tdStyle: React.CSSProperties = {
+    fontSize: '14px', color: '#111827', fontFamily: font,
+    padding: '20px 16px', borderBottom: '1px solid #E5E7EB', verticalAlign: 'middle',
+  };
+
+  return (
+    <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#FFFFFF' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th style={{ ...thStyle, width: '24%' }}>Model</th>
+            <th style={{ ...thStyle, width: '22%' }}>Provider</th>
+            <th style={{ ...thStyle, width: '22%' }}>Type</th>
+            <th style={{ ...thStyle, width: '32%' }}>Services</th>
+          </tr>
+        </thead>
+        <tbody>
+          {LLM_ROWS.map((row, i) => (
+            <tr key={i} style={{ backgroundColor: '#FFFFFF' }}>
+              <td style={tdStyle}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <ModelIcon type={row.icon} />
+                  <span>{row.model}</span>
+                </div>
+              </td>
+              <td style={tdStyle}>{row.provider}</td>
+              <td style={tdStyle}>{row.type}</td>
+              <td style={tdStyle}>
+                <span>{row.services}</span>
+                {row.moreCount > 0 && (
+                  <button onClick={handleMoreClick} style={{
+                    border: 'none', background: 'none', cursor: 'pointer', padding: 0,
+                    color: brand, fontWeight: 500, fontFamily: font, fontSize: '14px', marginLeft: '4px',
+                  }}>
+                    +{row.moreCount} more
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {popoverAnchor && (
+        <div ref={popoverRef} style={{
+          position: 'fixed', top: popoverAnchor.top, left: popoverAnchor.left,
+          backgroundColor: '#FFFFFF', borderRadius: '10px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.14)', zIndex: 9999,
+          minWidth: '200px', overflow: 'hidden',
+        }}>
+          {MORE_SERVICES.map((s) => (
+            <div key={s} style={{
+              padding: '14px 20px', fontFamily: font, fontSize: '14px',
+              color: '#111827', borderBottom: '1px solid #F3F4F6',
+            }}>
+              {s}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ─── CollapsibleSection ───────────────────────────────────────────────────────
 // Header: chevron + title (right-aligned Reset) + subtitle on next line
 
 const CollapsibleSection: React.FC<{
   title: string;
-  subtitle?: string;
+  subtitle?: string | React.ReactNode;
   open: boolean;
   onToggle: () => void;
   showReset?: boolean;
@@ -280,7 +441,7 @@ const WebsearchIcon = () => (
 
 // ─── AddConnectorModal ────────────────────────────────────────────────────────
 
-const AddConnectorModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const AddConnectorModal: React.FC<{ onClose: () => void; onSave: () => void }> = ({ onClose, onSave }) => {
   const [authType, setAuthType] = useState('None');
   const [authOpen, setAuthOpen] = useState(false);
   const authRef = useRef<HTMLDivElement>(null);
@@ -416,7 +577,7 @@ const AddConnectorModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           >
             Cancel
           </button>
-          <button onClick={onClose} style={{
+          <button onClick={() => { onClose(); onSave(); }} style={{
             height: '36px', padding: '0 24px', borderRadius: '20px',
             border: 'none', backgroundColor: brand,
             cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: '#FFFFFF',
@@ -627,6 +788,13 @@ export const AISettingsPageContent: React.FC = () => {
 
   // ── Modals ──
   const [addConnectorModal, setAddConnectorModal] = useState(false);
+  const [disableAIModal, setDisableAIModal] = useState(false);
+  const [spotterVersion, setSpotterVersion] = useState('Spotter 3');
+  const [pendingSpotterVersion, setPendingSpotterVersion] = useState<string | null>(null);
+  const [retentionPeriod, setRetentionPeriod] = useState('180 days');
+  const [pendingRetention, setPendingRetention] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+  const showToast = (msg: string) => { setToast(msg); };
 
   // ── Reset dialog ──
   const [resetSection, setResetSection] = useState<string | null>(null);
@@ -674,12 +842,63 @@ export const AISettingsPageContent: React.FC = () => {
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: '#FFFFFF' }}>
 
+      {/* ── Disable AI search modal ── */}
+      {disableAIModal && (
+        <ConfirmDialog
+          title="Disable AI search on all data models"
+          message={
+            <ul style={{ margin: 0, padding: '0 0 0 18px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <li>AI search will be disabled on all data models, excluding system generated models.</li>
+              <li>AI query and fragments feedback will be stored and not be accessible while AI search is disabled.</li>
+            </ul>
+          }
+          confirmLabel="Disable"
+          cancelLabel="Cancel"
+          onConfirm={() => { setDisableAIModal(false); showToast('AI search disabled on all data models.'); }}
+          onCancel={() => setDisableAIModal(false)}
+        />
+      )}
+
+      {/* ── Chat history retention modal ── */}
+      {pendingRetention && (
+        <ConfirmDialog
+          title="Chat history retention period"
+          message={`Are you sure you want to update the chat history retention period from <${retentionPeriod}> to <${pendingRetention}>?`}
+          confirmLabel="Save"
+          cancelLabel="Cancel"
+          onConfirm={() => { setRetentionPeriod(pendingRetention); setPendingRetention(null); showToast('Changes saved.'); }}
+          onCancel={() => setPendingRetention(null)}
+        />
+      )}
+
+      {/* ── Spotter version modal ── */}
+      {pendingSpotterVersion && (
+        <ConfirmDialog
+          title="Spotter Version"
+          message="Enabling Spotter 3 allows your ThoughtSpot Cloud instance to use more contextual data to generate higher-quality insights. Please refer to our documentation for details."
+          confirmLabel="Save"
+          cancelLabel="Cancel"
+          onConfirm={() => { setSpotterVersion(pendingSpotterVersion!); setPendingSpotterVersion(null); showToast('Changes saved.'); }}
+          onCancel={() => setPendingSpotterVersion(null)}
+        />
+      )}
+
+      {/* ── Toast ── */}
+      {toast && (
+        <Toast
+          message={toast}
+          cta="Refresh now"
+          onCta={() => window.location.reload()}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       {/* ── Reset confirm dialog ── */}
       {resetSection && (
         <ConfirmDialog
           title="Reset settings"
           message={`This will reset all ${resetSection} to their defaults. Are you sure?`}
-          onConfirm={() => setResetSection(null)}
+          onConfirm={() => { setResetSection(null); showToast('Settings reset to defaults.'); }}
           onCancel={() => setResetSection(null)}
         />
       )}
@@ -724,22 +943,12 @@ export const AISettingsPageContent: React.FC = () => {
               {/* LLM Configuration */}
               <CollapsibleSection
                 title="LLM Configuration"
-                subtitle="Choose your preferred large language model (LLM) for ThoughtSpot AI features. Bring Your Own LLM Key (BYOLLM Key) is available via support ticket. For details, please refer to our documentation"
+                subtitle={<span>Manage LLM connections for your ThoughtSpot environment. If you want connect your own model, contact <a href="#" style={{ color: brand, textDecoration: 'none' }}>ThoughtSpot support.</a></span>}
                 open={llmOpen}
                 onToggle={() => setLlmOpen(!llmOpen)}
-                onReset={() => setResetSection('LLM configuration')}
+                showReset={false}
               >
-                <SettingRow
-                  label="Choose model provider"
-                  description="For the best experience with the latest models, we recommend using Auto-select"
-                  control={
-                    <Dropdown
-                      value="Auto-select (Recommended)"
-                      options={['Auto-select (Recommended)', 'OpenAI GPT-4o', 'Anthropic Claude', 'Google Gemini', 'Custom (BYOLLM)']}
-                      width={240}
-                    />
-                  }
-                />
+                <LLMTable />
               </CollapsibleSection>
 
               {/* Configure user experience */}
@@ -787,14 +996,11 @@ export const AISettingsPageContent: React.FC = () => {
                 subtitle="Add global third party connectors on Spotter."
                 action={
                   <button onClick={() => setAddConnectorModal(true)} style={{
-                    height: '32px', padding: '0 14px', borderRadius: '6px',
-                    border: '1px solid #D1D5DB', backgroundColor: '#FFFFFF',
+                    height: '32px', padding: '0 14px', borderRadius: '999px',
+                    border: 'none', backgroundColor: rdComponentColors['button-secondary-default'],
                     cursor: 'pointer', fontFamily: font, fontSize: '13px',
-                    fontWeight: 500, color: '#374151', transition: 'border-color 0.15s, background-color 0.15s',
-                  }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F9FAFB'; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#FFFFFF'; }}
-                  >
+                    fontWeight: 500, color: '#374151',
+                  }}>
                     Add custom connector
                   </button>
                 }
@@ -810,11 +1016,31 @@ export const AISettingsPageContent: React.FC = () => {
               <FlatSection
                 title="Data Models"
                 subtitle="Enable AI on data models from the data workspace."
+                action={
+                  <button onClick={() => setDisableAIModal(true)} style={{
+                    height: '32px', padding: '0 14px', borderRadius: '999px',
+                    border: 'none', backgroundColor: rdComponentColors['button-secondary-default'],
+                    cursor: 'pointer', fontFamily: font, fontSize: '13px',
+                    fontWeight: 500, color: '#374151', whiteSpace: 'nowrap' as const,
+                  }}>
+                    Disable AI search on all data models
+                  </button>
+                }
               >
-                <SettingRow
-                  label="Enable AI on data models"
-                  control={<Toggle checked={aiOnDataModels} onChange={() => setAiOnDataModels(!aiOnDataModels)} />}
-                />
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '18px 24px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px',
+                }}>
+                  <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>
+                    AI on data models
+                  </span>
+                  <button style={{
+                    border: 'none', background: 'none', cursor: 'pointer',
+                    fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, padding: 0,
+                  }}>
+                    Click to enable AI
+                  </button>
+                </div>
               </FlatSection>
 
               {/* User privileges */}
@@ -857,9 +1083,10 @@ export const AISettingsPageContent: React.FC = () => {
                   description="Select the version of Spotter you want to use. For the best experience, Spotter 3 is recommended"
                   control={
                     <Dropdown
-                      value="Spotter 3"
+                      value={spotterVersion}
                       options={['Spotter 3', 'Spotter Agent (Spotter 2)', 'Spotter Classic (Spotter 1)', 'Sage / Ask Sage (Deprecated)']}
-                      width={240}
+                      width={311}
+                      onChange={(val) => { if (val !== spotterVersion) setPendingSpotterVersion(val); }}
                     />
                   }
                 />
@@ -908,9 +1135,10 @@ export const AISettingsPageContent: React.FC = () => {
                   description="Only applicable when chat history is enabled"
                   control={
                     <Dropdown
-                      value="180 days"
+                      value={retentionPeriod}
                       options={['7 days', '30 days', '90 days', '180 days', '1 year']}
-                      width={180}
+                      width={311}
+                      onChange={(val) => { if (val !== retentionPeriod) setPendingRetention(val); }}
                     />
                   }
                 />
@@ -984,7 +1212,7 @@ export const AISettingsPageContent: React.FC = () => {
       </div>
 
       {/* ── Modals ── */}
-      {addConnectorModal && <AddConnectorModal onClose={() => setAddConnectorModal(false)} />}
+      {addConnectorModal && <AddConnectorModal onClose={() => setAddConnectorModal(false)} onSave={() => showToast('Connector added.')} />}
 
     </div>
   );

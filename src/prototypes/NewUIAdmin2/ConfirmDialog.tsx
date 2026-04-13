@@ -31,14 +31,14 @@ export const ConfirmDialog: React.FC<{
       }}
     >
       {/* Title */}
-      <div style={{ padding: '28px 32px 20px' }}>
+      <div style={{ padding: '28px 32px 20px', borderBottom: '1px solid #E5E7EB' }}>
         <div style={{ fontSize: '17px', fontWeight: 700, color: '#111827', fontFamily: font }}>
           {title}
         </div>
       </div>
 
       {/* Body */}
-      <div style={{ padding: '0 32px 28px' }}>
+      <div style={{ padding: '20px 32px 28px' }}>
         <div style={{ fontSize: '14px', color: '#374151', lineHeight: 1.65, fontFamily: font }}>
           {message}
         </div>
@@ -50,7 +50,7 @@ export const ConfirmDialog: React.FC<{
         padding: '0 32px 28px',
       }}>
         <button
-          onClick={onConfirm}
+          onClick={onCancel}
           style={{
             height: '36px', padding: '0 24px', borderRadius: '20px',
             border: '1px solid #D1D5DB', backgroundColor: '#F9FAFB',
@@ -60,10 +60,10 @@ export const ConfirmDialog: React.FC<{
           onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F3F4F6'; }}
           onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F9FAFB'; }}
         >
-          {confirmLabel}
+          {cancelLabel}
         </button>
         <button
-          onClick={onCancel}
+          onClick={onConfirm}
           style={{
             height: '36px', padding: '0 24px', borderRadius: '20px',
             border: 'none', backgroundColor: brand,
@@ -73,7 +73,7 @@ export const ConfirmDialog: React.FC<{
           onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.9'; }}
           onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}
         >
-          {cancelLabel}
+          {confirmLabel}
         </button>
       </div>
     </div>

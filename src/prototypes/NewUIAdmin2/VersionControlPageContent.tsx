@@ -227,13 +227,13 @@ const OrgBranchForm: React.FC<{ org: typeof VC_ORGS[number] }> = ({ org }) => {
         <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#111827', marginBottom: '6px', fontFamily: font }}>
           Branch <span style={{ color: '#EF4444' }}>*</span>
         </label>
-        <Dropdown value="Select" options={['main', 'develop', 'staging', 'production']} width={400} />
+        <Dropdown value="Select" options={['main', 'develop', 'staging', 'production']} width={311} />
       </div>
       <div>
         <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#111827', marginBottom: '6px', fontFamily: font }}>
           GUID mapping
         </label>
-        <Dropdown value="Select GUId branch" options={['guid-main', 'guid-develop', 'guid-staging']} width={400} />
+        <Dropdown value="Select GUId branch" options={['guid-main', 'guid-develop', 'guid-staging']} width={311} />
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <button
