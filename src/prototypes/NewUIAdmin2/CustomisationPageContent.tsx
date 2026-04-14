@@ -4,6 +4,7 @@ import type { AppSidebarProps, SidebarTab, SidebarCategory, ScopeToggle } from '
 import type { GlobalHeaderProps } from '../../components/GlobalHeader';
 import { systemColors, referenceColors } from '../../tokens/colors';
 import { ConfirmDialog } from './ConfirmDialog';
+import { RdModal } from '@components/RdModal';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -491,54 +492,7 @@ const AddFontLink: React.FC = () => (
   </button>
 );
 
-// ─── Modal primitives ─────────────────────────────────────────────────────────
-
-const ModalOverlay: React.FC<{ onClose: () => void; width?: number; children: React.ReactNode }> = ({ onClose, width = 700, children }) => (
-  <div
-    style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15,23,42,0.45)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-    onClick={onClose}
-  >
-    <div
-      style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', width, maxWidth: '92vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.18)' }}
-      onClick={(e) => e.stopPropagation()}
-    >
-      {children}
-    </div>
-  </div>
-);
-
-const ModalHeader: React.FC<{ title: string; divider?: boolean }> = ({ title, divider = true }) => (
-  <div style={{ flexShrink: 0 }}>
-    <div style={{ padding: '24px 28px 20px' }}>
-      <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#0F172A', fontFamily: font }}>{title}</h2>
-    </div>
-    {divider && <div style={{ height: '1px', backgroundColor: '#E5E7EB', margin: '0 28px' }} />}
-  </div>
-);
-
-const ModalBody: React.FC<{ children: React.ReactNode; scrollable?: boolean }> = ({ children, scrollable }) => (
-  <div style={{ flex: 1, overflowY: scrollable ? 'auto' : 'visible', padding: '20px 28px' }}>
-    {children}
-  </div>
-);
-
-const ModalFooter: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'flex-end', gap: '12px', padding: '16px 28px 24px', borderTop: '1px solid #F3F4F6' }}>
-    {children}
-  </div>
-);
-
-const PillButton: React.FC<{ label: string; variant: 'primary' | 'secondary'; onClick: () => void }> = ({ label, variant, onClick }) => (
-  <button onClick={onClick} style={{
-    height: '36px', padding: '0 22px', borderRadius: '20px',
-    border: variant === 'secondary' ? '1px solid #D1D5DB' : 'none',
-    backgroundColor: variant === 'primary' ? brand : '#FFFFFF',
-    color: variant === 'primary' ? '#FFFFFF' : '#374151',
-    fontSize: '13.5px', fontWeight: 500, fontFamily: font, cursor: 'pointer',
-  }}>
-    {label}
-  </button>
-);
+// ─── Modal primitives removed — use RdModal directly ─────────────────────────
 
 const FormField: React.FC<{ label: string; required?: boolean; helper?: string; placeholder?: string }> = ({ label, required, helper, placeholder }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -582,44 +536,40 @@ const CustomiseHomepageModal: React.FC<{
     Library: 'library', Trending: 'trending', Learning: 'learning', Favourites: 'favourites',
   };
   return (
-    <ModalOverlay onClose={onClose} width={380}>
-      <ModalHeader title="Customise homepage" divider={false} />
-      <ModalBody scrollable>
-        <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
-          {HOMEPAGE_ITEMS_ORDER.map((label, i) => {
-            const key = keyMap[label];
-            const enabled = toggles[key];
-            return (
-              <div
-                key={label}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '12px',
-                  padding: '14px 16px',
-                  borderBottom: i < HOMEPAGE_ITEMS_ORDER.length - 1 ? '1px solid #F3F4F6' : 'none',
-                  backgroundColor: '#FFFFFF',
-                }}
-              >
-                <DragHandle />
-                <span style={{ flex: 1, fontSize: '14px', color: enabled ? '#111827' : '#9CA3AF', fontFamily: font }}>
-                  {label}
-                </span>
-                <Toggle checked={enabled} onChange={() => onToggle(key)} />
-              </div>
-            );
-          })}
-        </div>
-      </ModalBody>
-      {/* Custom footer: Reset left, Cancel+Done right */}
-      <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 28px 24px', borderTop: '1px solid #F3F4F6' }}>
-        <button style={{ border: 'none', background: 'none', fontSize: '13.5px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>
-          Reset to default
-        </button>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <PillButton label="Cancel" variant="secondary" onClick={onClose} />
-          <PillButton label="Done" variant="primary" onClick={onClose} />
-        </div>
+    <RdModal
+      size="M1"
+      title="Customise homepage"
+      onClose={onClose}
+      tertiaryLabel="Reset to default"
+      cancelLabel="Cancel"
+      onCancel={onClose}
+      confirmLabel="Done"
+      onConfirm={onClose}
+    >
+      <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
+        {HOMEPAGE_ITEMS_ORDER.map((label, i) => {
+          const key = keyMap[label];
+          const enabled = toggles[key];
+          return (
+            <div
+              key={label}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '12px',
+                padding: '14px 16px',
+                borderBottom: i < HOMEPAGE_ITEMS_ORDER.length - 1 ? '1px solid #F3F4F6' : 'none',
+                backgroundColor: '#FFFFFF',
+              }}
+            >
+              <DragHandle />
+              <span style={{ flex: 1, fontSize: '14px', color: enabled ? '#111827' : '#9CA3AF', fontFamily: font }}>
+                {label}
+              </span>
+              <Toggle checked={enabled} onChange={() => onToggle(key)} />
+            </div>
+          );
+        })}
       </div>
-    </ModalOverlay>
+    </RdModal>
   );
 };
 
@@ -791,10 +741,17 @@ const EditHelpMenuItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
   );
 
   return (
-    <ModalOverlay onClose={onClose} width={640}>
-      <div style={{ padding: '32px 36px 28px' }}>
-        <h2 style={{ margin: '0 0 32px', fontSize: '20px', fontWeight: 700, color: '#111827', fontFamily: font }}>Edit menu item</h2>
-
+    <RdModal
+      size="M2"
+      title="Edit menu item"
+      onClose={onClose}
+      tertiaryLabel="Delete item"
+      cancelLabel="Cancel"
+      onCancel={onClose}
+      confirmLabel="Save"
+      onConfirm={onClose}
+    >
+      <div>
         {/* Status */}
         {fieldRow('Status', (
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingTop: '6px' }}>
@@ -856,19 +813,8 @@ const EditHelpMenuItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
             )}
           </div>
         ))}
-
-        {/* Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '8px' }}>
-          <PillButton label="Save" variant="primary" onClick={onClose} />
-          <PillButton label="Cancel" variant="secondary" onClick={onClose} />
-        </div>
-        <div style={{ marginTop: '20px' }}>
-          <button style={{ border: 'none', background: 'none', fontSize: '13.5px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>
-            Delete item
-          </button>
-        </div>
       </div>
-    </ModalOverlay>
+    </RdModal>
   );
 };
 

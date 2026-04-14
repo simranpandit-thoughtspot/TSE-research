@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { systemColors } from '../../tokens/colors';
 import { ConfirmDialog } from './ConfirmDialog';
+import { RdModal } from '@components/RdModal';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -200,14 +201,7 @@ const VCIllustration = () => (
   </svg>
 );
 
-// ─── ProgressBar ──────────────────────────────────────────────────────────────
-
-const ProgressBar: React.FC<{ step: number }> = ({ step }) => (
-  <div style={{ display: 'flex', gap: '4px', padding: '32px 32px 0' }}>
-    <div style={{ flex: 1, height: '3px', borderRadius: '2px', backgroundColor: brand }} />
-    <div style={{ flex: 1, height: '3px', borderRadius: '2px', backgroundColor: step >= 2 ? brand : '#E5E7EB', transition: 'background-color 0.3s ease' }} />
-  </div>
-);
+// ─── ProgressBar removed — stepper is now built into RdModal ──────────────────
 
 // ─── OrgBranchForm ────────────────────────────────────────────────────────────
 // Right-panel form in All Orgs step 2
@@ -286,178 +280,116 @@ const SetupWizardModal: React.FC<{
   };
 
   return (
-    <div style={{
-      position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)',
-      zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center',
-    }}>
-      <div style={{
-        backgroundColor: '#FFFFFF', borderRadius: '12px',
-        boxShadow: '0 24px 56px rgba(0,0,0,0.20)',
-        width: '720px', fontFamily: font, overflow: 'hidden',
-      }}>
-        {/* Header */}
-        <div style={{ padding: '24px 32px 20px', borderBottom: '1px solid #E5E7EB' }}>
-          <div style={{ fontSize: '12px', color: '#6B7280', fontWeight: 500, marginBottom: '6px', fontFamily: font }}>
-            Version control
-          </div>
-          <div style={{ fontSize: '20px', fontWeight: 700, color: '#111827', fontFamily: font }}>
-            {step === 1 ? 'Enter GitHub credentials' : 'Select a branch'}
-          </div>
-        </div>
-
-        {/* Body */}
-        <div style={{ minHeight: '300px' }}>
-          {step === 1 && (
-            <div style={{ padding: '32px 32px 0', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div>
-                <label style={labelStyle}>Repository</label>
-                <input
-                  type="text" placeholder='Ex : "Lorem Ipsum"' value={repo}
-                  onChange={(e) => setRepo(e.target.value)} style={inputStyle}
-                  onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
-                  onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
-                />
-              </div>
-              <div>
-                <label style={labelStyle}>Username</label>
-                <input
-                  type="text" placeholder="Enter Username" value={username}
-                  onChange={(e) => setUsername(e.target.value)} style={inputStyle}
-                  onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
-                  onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
-                />
-              </div>
-              <div>
-                <label style={labelStyle}>Token</label>
-                <input
-                  type="text" placeholder="Enter 12 digit token" value={token}
-                  onChange={(e) => setToken(e.target.value)} style={inputStyle}
-                  onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
-                  onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
-                />
-              </div>
+    <RdModal
+      size="M2"
+      eyebrow="Version control"
+      title={step === 1 ? 'Enter GitHub credentials' : 'Select a branch'}
+      currentStep={step}
+      totalSteps={2}
+      onClose={onClose}
+      tertiaryLabel="Cancel"
+      onTertiary={onClose}
+      cancelLabel="Back"
+      onCancel={step === 2 ? () => setStep(1) : undefined}
+      confirmLabel={step === 1 ? 'Next' : 'Enable'}
+      onConfirm={step === 1 ? () => setStep(2) : onComplete}
+    >
+      <div style={{ minHeight: '260px' }}>
+        {step === 1 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div>
+              <label style={labelStyle}>Repository</label>
+              <input type="text" placeholder='Ex : "Lorem Ipsum"' value={repo}
+                onChange={(e) => setRepo(e.target.value)} style={inputStyle}
+                onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+              />
             </div>
-          )}
+            <div>
+              <label style={labelStyle}>Username</label>
+              <input type="text" placeholder="Enter Username" value={username}
+                onChange={(e) => setUsername(e.target.value)} style={inputStyle}
+                onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>Token</label>
+              <input type="text" placeholder="Enter 12 digit token" value={token}
+                onChange={(e) => setToken(e.target.value)} style={inputStyle}
+                onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+              />
+            </div>
+          </div>
+        )}
 
-          {step === 2 && scope === 'primary-org' && (
-            <div style={{ padding: '32px 32px 0', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div>
-                <label style={labelStyle}>Branch</label>
-                <Dropdown value="Select" options={['main', 'develop', 'staging', 'production']} width={656} />
-              </div>
-              <div>
-                <label style={labelStyle}>GUID</label>
-                <Dropdown value="Select GUID branch" options={['guid-main', 'guid-develop', 'guid-staging']} width={656} />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {step === 2 && scope === 'primary-org' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div>
+              <label style={labelStyle}>Branch</label>
+              <Dropdown value="Select" options={['main', 'develop', 'staging', 'production']} width={656} />
+            </div>
+            <div>
+              <label style={labelStyle}>GUID</label>
+              <Dropdown value="Select GUID branch" options={['guid-main', 'guid-develop', 'guid-staging']} width={656} />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button
+                onClick={() => setSaveHistory(!saveHistory)}
+                role="checkbox" aria-checked={saveHistory}
+                style={{
+                  width: '16px', height: '16px', borderRadius: '3px', flexShrink: 0,
+                  border: `1.5px solid ${saveHistory ? brand : '#D1D5DB'}`,
+                  backgroundColor: saveHistory ? brand : '#FFFFFF',
+                  cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'border-color 0.15s, background-color 0.15s',
+                }}
+              >
+                {saveHistory && (
+                  <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
+                    <path d="M1 3.5l2.5 2.5L8 1" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </button>
+              <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font }}>Save version history</span>
+            </div>
+          </div>
+        )}
+
+        {step === 2 && scope === 'all-orgs' && (
+          <div style={{ display: 'flex', minHeight: '260px', margin: '0 -32px' }}>
+            {/* Left: org list */}
+            <div style={{ width: '220px', flexShrink: 0, borderRight: '1px solid #E5E7EB', overflowY: 'auto' }}>
+              {VC_ORGS.map((org) => (
                 <button
-                  onClick={() => setSaveHistory(!saveHistory)}
-                  role="checkbox" aria-checked={saveHistory}
+                  key={org.id}
+                  onClick={() => setSelectedOrgId(org.id)}
                   style={{
-                    width: '16px', height: '16px', borderRadius: '3px', flexShrink: 0,
-                    border: `1.5px solid ${saveHistory ? brand : '#D1D5DB'}`,
-                    backgroundColor: saveHistory ? brand : '#FFFFFF',
-                    cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    transition: 'border-color 0.15s, background-color 0.15s',
+                    display: 'block', width: '100%', padding: '14px 20px',
+                    border: 'none', textAlign: 'left', fontFamily: font, fontSize: '13.5px',
+                    fontWeight: org.id === selectedOrgId ? 600 : 400, color: '#111827',
+                    backgroundColor: org.id === selectedOrgId ? '#F5F8FF' : 'transparent',
+                    cursor: 'pointer',
+                    borderLeft: org.id === selectedOrgId ? `3px solid ${brand}` : '3px solid transparent',
+                    borderBottom: '1px solid #F3F4F6', transition: 'background-color 0.1s',
                   }}
+                  onMouseEnter={(e) => { if (org.id !== selectedOrgId) (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F9FAFB'; }}
+                  onMouseLeave={(e) => { if (org.id !== selectedOrgId) (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent'; }}
                 >
-                  {saveHistory && (
-                    <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-                      <path d="M1 3.5l2.5 2.5L8 1" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  )}
+                  <div>{org.name}</div>
+                  {org.isPrimary && <div style={{ fontSize: '11px', color: '#9CA3AF', marginTop: '2px' }}>Primary Org</div>}
                 </button>
-                <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font }}>Save version history</span>
-              </div>
+              ))}
             </div>
-          )}
-
-          {step === 2 && scope === 'all-orgs' && (
-            <div style={{ display: 'flex', minHeight: '300px' }}>
-              {/* Left: org list */}
-              <div style={{
-                width: '220px', flexShrink: 0, borderRight: '1px solid #E5E7EB',
-                overflowY: 'auto',
-              }}>
-                {VC_ORGS.map((org) => (
-                  <button
-                    key={org.id}
-                    onClick={() => setSelectedOrgId(org.id)}
-                    style={{
-                      display: 'block', width: '100%', padding: '14px 20px',
-                      border: 'none', textAlign: 'left', fontFamily: font, fontSize: '13.5px',
-                      fontWeight: org.id === selectedOrgId ? 600 : 400,
-                      color: '#111827',
-                      backgroundColor: org.id === selectedOrgId ? '#F5F8FF' : 'transparent',
-                      cursor: 'pointer',
-                      borderLeft: org.id === selectedOrgId ? `3px solid ${brand}` : '3px solid transparent',
-                      borderBottom: '1px solid #F3F4F6',
-                      transition: 'background-color 0.1s',
-                    }}
-                    onMouseEnter={(e) => { if (org.id !== selectedOrgId) (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F9FAFB'; }}
-                    onMouseLeave={(e) => { if (org.id !== selectedOrgId) (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent'; }}
-                  >
-                    <div>{org.name}</div>
-                    {org.isPrimary && (
-                      <div style={{ fontSize: '11px', color: '#9CA3AF', marginTop: '2px' }}>Primary Org</div>
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              {/* Right: branch form for selected org */}
-              <div style={{ flex: 1, overflowY: 'auto' }}>
-                <OrgBranchForm org={selectedOrg} />
-              </div>
+            {/* Right: branch form for selected org */}
+            <div style={{ flex: 1, overflowY: 'auto' }}>
+              <OrgBranchForm org={selectedOrg} />
             </div>
-          )}
-        </div>
-
-        {/* Progress bar: two segments */}
-        <ProgressBar step={step} />
-
-        {/* Footer */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '20px 32px 28px',
-        }}>
-          <button onClick={onClose} style={{
-            border: 'none', background: 'none', cursor: 'pointer',
-            fontFamily: font, fontSize: '13.5px', fontWeight: 500, color: brand, padding: 0,
-          }}>
-            Cancel
-          </button>
-          <div style={{ display: 'flex', gap: '12px' }}>
-            {step === 2 && (
-              <button onClick={() => setStep(1)} style={{
-                height: '36px', padding: '0 24px', borderRadius: '20px',
-                border: '1px solid #D1D5DB', backgroundColor: '#FFFFFF',
-                cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 500, color: '#374151',
-              }}>
-                Back
-              </button>
-            )}
-            {step === 1 ? (
-              <button onClick={() => setStep(2)} style={{
-                height: '36px', padding: '0 24px', borderRadius: '20px',
-                border: 'none', backgroundColor: brand,
-                cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: '#FFFFFF',
-              }}>
-                Next
-              </button>
-            ) : (
-              <button onClick={onComplete} style={{
-                height: '36px', padding: '0 24px', borderRadius: '20px',
-                border: 'none', backgroundColor: brand,
-                cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: '#FFFFFF',
-              }}>
-                Enable
-              </button>
-            )}
           </div>
-        </div>
+        )}
       </div>
-    </div>
+    </RdModal>
   );
 };
 
@@ -474,7 +406,6 @@ const EditCredentialsModal: React.FC<{ onClose: () => void }> = ({ onClose }) =>
     fontSize: '13.5px', color: '#111827', fontFamily: font,
     outline: 'none', boxSizing: 'border-box', backgroundColor: '#FFFFFF',
   };
-
   const focusStyle = (e: React.FocusEvent<HTMLInputElement>) => {
     e.currentTarget.style.borderColor = brand;
     e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`;
@@ -485,65 +416,33 @@ const EditCredentialsModal: React.FC<{ onClose: () => void }> = ({ onClose }) =>
   };
 
   return (
-    <div
-      style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15,23,42,0.45)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      onClick={onClose}
+    <RdModal
+      size="M2"
+      eyebrow="Version control"
+      title="Enter GitHub credentials"
+      currentStep={1}
+      totalSteps={2}
+      onClose={onClose}
+      tertiaryLabel="Cancel"
+      onTertiary={onClose}
+      confirmLabel="Next"
+      onConfirm={onClose}
     >
-      <div
-        style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', width: 720, maxWidth: '92vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.18)' }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div style={{ padding: '28px 32px 20px' }}>
-          <div style={{ fontSize: '12px', fontWeight: 500, color: '#6B7280', fontFamily: font, marginBottom: '6px' }}>
-            Version control
-          </div>
-          <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: '#111827', fontFamily: font }}>
-            Enter GitHub credentials
-          </h2>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div>
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Repository</label>
+          <input type="text" placeholder='Ex : "Lorem Ipsum"' value={repo} onChange={(e) => setRepo(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
         </div>
-        <div style={{ height: '1px', backgroundColor: '#E5E7EB', margin: '0 32px' }} />
-
-        {/* Body */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '28px 32px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Repository</label>
-              <input type="text" placeholder='Ex : "Lorem Ipsum"' value={repo} onChange={(e) => setRepo(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
-            </div>
-            <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Username</label>
-              <input type="text" placeholder="Enter Username" value={username} onChange={(e) => setUsername(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
-            </div>
-            <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Token</label>
-              <input type="text" placeholder="Enter 12 digit token" value={token} onChange={(e) => setToken(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
-            </div>
-          </div>
+        <div>
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Username</label>
+          <input type="text" placeholder="Enter Username" value={username} onChange={(e) => setUsername(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
         </div>
-
-        {/* Progress bar */}
-        <div style={{ height: '3px', backgroundColor: '#E5E7EB', margin: '0 32px' }}>
-          <div style={{ width: '50%', height: '100%', backgroundColor: brand, borderRadius: '2px' }} />
-        </div>
-
-        {/* Footer */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 32px 24px' }}>
-          <button
-            onClick={onClose}
-            style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '13.5px', fontWeight: 500, color: brand, fontFamily: font, padding: 0 }}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onClose}
-            style={{ height: '38px', padding: '0 28px', borderRadius: '20px', border: 'none', backgroundColor: brand, color: '#FFFFFF', fontSize: '13.5px', fontWeight: 600, fontFamily: font, cursor: 'pointer' }}
-          >
-            Next
-          </button>
+        <div>
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Token</label>
+          <input type="text" placeholder="Enter 12 digit token" value={token} onChange={(e) => setToken(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
         </div>
       </div>
-    </div>
+    </RdModal>
   );
 };
 

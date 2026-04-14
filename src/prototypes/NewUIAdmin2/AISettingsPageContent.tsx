@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { systemColors, referenceColors, rdComponentColors } from '../../tokens/colors';
 import { ConfirmDialog } from './ConfirmDialog';
+import { RdModal } from '@components/RdModal';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -444,6 +445,8 @@ const WebsearchIcon = () => (
 const AddConnectorModal: React.FC<{ onClose: () => void; onSave: () => void }> = ({ onClose, onSave }) => {
   const [authType, setAuthType] = useState('None');
   const [authOpen, setAuthOpen] = useState(false);
+  const [authMenuPos, setAuthMenuPos] = useState<{ top: number; left: number; width: number }>({ top: 0, left: 0, width: 0 });
+  const authButtonRef = useRef<HTMLButtonElement>(null);
   const authRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -456,141 +459,105 @@ const AddConnectorModal: React.FC<{ onClose: () => void; onSave: () => void }> =
 
   const authOptions = ['None', 'OAuth', 'Bearer'];
 
+  const handleAuthToggle = () => {
+    if (!authOpen && authButtonRef.current) {
+      const rect = authButtonRef.current.getBoundingClientRect();
+      setAuthMenuPos({ top: rect.bottom + 4, left: rect.left, width: rect.width });
+    }
+    setAuthOpen(!authOpen);
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%', height: '38px', padding: '0 12px',
+    border: '1px solid #D1D5DB', borderRadius: '6px',
+    fontFamily: font, fontSize: '13px', color: '#111827',
+    outline: 'none', boxSizing: 'border-box', backgroundColor: '#FFFFFF',
+  };
+
   return (
-    <div style={{
-      position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.45)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
-    }}>
-      <div style={{
-        backgroundColor: '#FFFFFF', borderRadius: '16px',
-        width: '400px', boxShadow: '0 24px 48px rgba(0,0,0,0.18)',
-        overflow: 'visible',
-      }}>
-        {/* Header */}
-        <div style={{ padding: '28px 28px 20px' }}>
-          <div style={{ fontSize: '18px', fontWeight: 700, color: '#111827', fontFamily: font }}>
-            Add custom connector
-          </div>
+    <RdModal
+      size="M1"
+      title="Add custom connector"
+      onClose={onClose}
+      cancelLabel="Cancel"
+      onCancel={onClose}
+      confirmLabel="Add"
+      onConfirm={() => { onClose(); onSave(); }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        {/* Connector display name */}
+        <div>
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '6px' }}>
+            Connector display name
+          </label>
+          <input type="text" style={inputStyle}
+            onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+          />
         </div>
 
-        {/* Body */}
-        <div style={{ padding: '0 28px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {/* Connector display name */}
-          <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '6px' }}>
-              Connector display name
-            </label>
-            <input
-              type="text"
-              style={{
-                width: '100%', height: '38px', padding: '0 12px',
-                border: '1px solid #D1D5DB', borderRadius: '6px',
-                fontFamily: font, fontSize: '13px', color: '#111827',
-                outline: 'none', boxSizing: 'border-box', backgroundColor: '#FFFFFF',
-              }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
-            />
-          </div>
+        {/* MCP URL */}
+        <div>
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '6px' }}>
+            MCP URL
+          </label>
+          <input type="text" style={inputStyle}
+            onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+          />
+        </div>
 
-          {/* MCP URL */}
-          <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '6px' }}>
-              MCP URL
-            </label>
-            <input
-              type="text"
-              style={{
-                width: '100%', height: '38px', padding: '0 12px',
-                border: '1px solid #D1D5DB', borderRadius: '6px',
-                fontFamily: font, fontSize: '13px', color: '#111827',
-                outline: 'none', boxSizing: 'border-box', backgroundColor: '#FFFFFF',
-              }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
-            />
-          </div>
-
-          {/* Authentication type */}
-          <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: authOpen ? brand : '#374151', fontFamily: font, marginBottom: '6px', transition: 'color 0.15s' }}>
-              Authentication type
-            </label>
-            <div ref={authRef} style={{ position: 'relative' }}>
-              <button
-                onClick={() => setAuthOpen(!authOpen)}
-                style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  width: '100%', height: '38px', padding: '0 12px',
-                  border: `1px solid ${authOpen ? brand : '#D1D5DB'}`, borderRadius: '6px',
-                  backgroundColor: '#FFFFFF', cursor: 'pointer', fontFamily: font,
-                  fontSize: '13px', color: '#111827', outline: 'none',
-                  boxShadow: authOpen ? `0 0 0 2px ${brand}22` : 'none',
-                  transition: 'border-color 0.15s, box-shadow 0.15s',
-                  boxSizing: 'border-box',
-                }}
-              >
-                <span>{authType}</span>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
-                  style={{ flexShrink: 0, transform: authOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.15s' }}>
-                  <path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="#9CA3AF" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-              {authOpen && (
-                <div style={{
-                  position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0,
-                  backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 100, overflow: 'hidden',
-                }}>
-                  {authOptions.map((opt) => (
-                    <button key={opt} onClick={() => { setAuthType(opt); setAuthOpen(false); }}
-                      style={{
-                        display: 'block', width: '100%', padding: '11px 16px',
-                        border: 'none', textAlign: 'left', fontFamily: font, fontSize: '13px',
-                        fontWeight: opt === authType ? 500 : 400,
-                        color: opt === authType ? brand : '#111827',
-                        backgroundColor: opt === authType ? `${brand}10` : 'transparent',
-                        cursor: 'pointer', transition: 'background-color 0.1s',
-                      }}
-                      onMouseEnter={(e) => { if (opt !== authType) (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F9FAFB'; }}
-                      onMouseLeave={(e) => { if (opt !== authType) (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent'; }}
-                    >
-                      {opt}
-                    </button>
-                  ))}
-                </div>
-              )}
+        {/* Authentication type */}
+        <div ref={authRef}>
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: authOpen ? brand : '#374151', fontFamily: font, marginBottom: '6px', transition: 'color 0.15s' }}>
+            Authentication type
+          </label>
+          <button
+            ref={authButtonRef}
+            onClick={handleAuthToggle}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              width: '100%', height: '38px', padding: '0 12px',
+              border: `1px solid ${authOpen ? brand : '#D1D5DB'}`, borderRadius: '6px',
+              backgroundColor: '#FFFFFF', cursor: 'pointer', fontFamily: font,
+              fontSize: '13px', color: '#111827', outline: 'none',
+              boxShadow: authOpen ? `0 0 0 2px ${brand}22` : 'none',
+              transition: 'border-color 0.15s, box-shadow 0.15s', boxSizing: 'border-box',
+            }}
+          >
+            <span>{authType}</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+              style={{ flexShrink: 0, transform: authOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.15s' }}>
+              <path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="#9CA3AF" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          {authOpen && (
+            <div style={{
+              position: 'fixed', top: authMenuPos.top, left: authMenuPos.left, width: authMenuPos.width,
+              backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 10100, overflow: 'hidden',
+            }}>
+              {authOptions.map((opt) => (
+                <button key={opt} onClick={() => { setAuthType(opt); setAuthOpen(false); }}
+                  style={{
+                    display: 'block', width: '100%', padding: '11px 16px',
+                    border: 'none', textAlign: 'left', fontFamily: font, fontSize: '13px',
+                    fontWeight: opt === authType ? 500 : 400,
+                    color: opt === authType ? brand : '#111827',
+                    backgroundColor: opt === authType ? `${brand}10` : 'transparent',
+                    cursor: 'pointer', transition: 'background-color 0.1s',
+                  }}
+                  onMouseEnter={(e) => { if (opt !== authType) (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F9FAFB'; }}
+                  onMouseLeave={(e) => { if (opt !== authType) (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent'; }}
+                >
+                  {opt}
+                </button>
+              ))}
             </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', padding: '28px 28px 28px' }}>
-          <button onClick={onClose} style={{
-            height: '36px', padding: '0 20px', borderRadius: '20px',
-            border: '1px solid #D1D5DB', backgroundColor: '#FFFFFF',
-            cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 500, color: '#374151',
-            transition: 'background-color 0.15s',
-          }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F9FAFB'; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#FFFFFF'; }}
-          >
-            Cancel
-          </button>
-          <button onClick={() => { onClose(); onSave(); }} style={{
-            height: '36px', padding: '0 24px', borderRadius: '20px',
-            border: 'none', backgroundColor: brand,
-            cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: '#FFFFFF',
-            transition: 'opacity 0.15s',
-          }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.88'; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}
-          >
-            Add
-          </button>
+          )}
         </div>
       </div>
-    </div>
+    </RdModal>
   );
 };
 
@@ -789,6 +756,7 @@ export const AISettingsPageContent: React.FC = () => {
   // ── Modals ──
   const [addConnectorModal, setAddConnectorModal] = useState(false);
   const [disableAIModal, setDisableAIModal] = useState(false);
+  const [llmModal, setLlmModal] = useState(false);
   const [spotterVersion, setSpotterVersion] = useState('Spotter 3');
   const [pendingSpotterVersion, setPendingSpotterVersion] = useState<string | null>(null);
   const [retentionPeriod, setRetentionPeriod] = useState('180 days');
@@ -842,6 +810,13 @@ export const AISettingsPageContent: React.FC = () => {
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', backgroundColor: '#FFFFFF' }}>
 
+      {/* ── LLM Connections modal (M4) ── */}
+      {llmModal && (
+        <RdModal size="M4" title="LLM Connections" onClose={() => setLlmModal(false)}>
+          <LLMTable />
+        </RdModal>
+      )}
+
       {/* ── Disable AI search modal ── */}
       {disableAIModal && (
         <ConfirmDialog
@@ -862,9 +837,15 @@ export const AISettingsPageContent: React.FC = () => {
       {/* ── Chat history retention modal ── */}
       {pendingRetention && (
         <ConfirmDialog
-          title="Chat history retention period"
-          message={`Are you sure you want to update the chat history retention period from <${retentionPeriod}> to <${pendingRetention}>?`}
-          confirmLabel="Save"
+          title="Update retention period?"
+          message={
+            <span>
+              This will permanently delete chat history older than{' '}
+              <strong>&lt;{pendingRetention}&gt;</strong>{' '}
+              retention period. You cannot undo this action.
+            </span>
+          }
+          confirmLabel="Update"
           cancelLabel="Cancel"
           onConfirm={() => { setRetentionPeriod(pendingRetention); setPendingRetention(null); showToast('Changes saved.'); }}
           onCancel={() => setPendingRetention(null)}
@@ -874,9 +855,16 @@ export const AISettingsPageContent: React.FC = () => {
       {/* ── Spotter version modal ── */}
       {pendingSpotterVersion && (
         <ConfirmDialog
-          title="Spotter Version"
-          message="Enabling Spotter 3 allows your ThoughtSpot Cloud instance to use more contextual data to generate higher-quality insights. Please refer to our documentation for details."
-          confirmLabel="Save"
+          title="Update Spotter version?"
+          message={
+            <span>
+              Update to Spotter 3 to use more contextual data and generate higher-quality insights.{' '}
+              <a href="#" style={{ color: brand, textDecoration: 'none', fontFamily: font }}>
+                [Learn more]
+              </a>
+            </span>
+          }
+          confirmLabel="Update"
           cancelLabel="Cancel"
           onConfirm={() => { setSpotterVersion(pendingSpotterVersion!); setPendingSpotterVersion(null); showToast('Changes saved.'); }}
           onCancel={() => setPendingSpotterVersion(null)}
@@ -941,15 +929,24 @@ export const AISettingsPageContent: React.FC = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
               {/* LLM Configuration */}
-              <CollapsibleSection
-                title="LLM Configuration"
-                subtitle={<span>Manage LLM connections for your ThoughtSpot environment. If you want connect your own model, contact <a href="#" style={{ color: brand, textDecoration: 'none' }}>ThoughtSpot support.</a></span>}
-                open={llmOpen}
-                onToggle={() => setLlmOpen(!llmOpen)}
-                showReset={false}
-              >
-                <LLMTable />
-              </CollapsibleSection>
+              <div style={{ backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '12px', padding: '18px 24px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '24px' }}>
+                  <div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>LLM Configuration</div>
+                    <div style={{ fontSize: '12.5px', color: '#9CA3AF', fontFamily: font, marginTop: '6px', lineHeight: 1.6 }}>
+                      Manage LLM connections for your ThoughtSpot environment. If you want connect your own model, contact{' '}
+                      <a href="#" style={{ color: brand, textDecoration: 'none' }}>ThoughtSpot support.</a>
+                    </div>
+                  </div>
+                  <button onClick={() => setLlmModal(true)} style={{
+                    height: '32px', padding: '0 18px', borderRadius: '999px', flexShrink: 0,
+                    border: 'none', backgroundColor: rdComponentColors['button-secondary-default'],
+                    cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 500, color: '#374151',
+                  }}>
+                    View
+                  </button>
+                </div>
+              </div>
 
               {/* Configure user experience */}
               <CollapsibleSection
@@ -1018,12 +1015,11 @@ export const AISettingsPageContent: React.FC = () => {
                 subtitle="Enable AI on data models from the data workspace."
                 action={
                   <button onClick={() => setDisableAIModal(true)} style={{
-                    height: '32px', padding: '0 14px', borderRadius: '999px',
-                    border: 'none', backgroundColor: rdComponentColors['button-secondary-default'],
-                    cursor: 'pointer', fontFamily: font, fontSize: '13px',
-                    fontWeight: 500, color: '#374151', whiteSpace: 'nowrap' as const,
+                    border: 'none', background: 'none', cursor: 'pointer',
+                    fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, padding: 0,
+                    whiteSpace: 'nowrap' as const,
                   }}>
-                    Disable AI search on all data models
+                    Disable AI on data models
                   </button>
                 }
               >
@@ -1037,8 +1033,12 @@ export const AISettingsPageContent: React.FC = () => {
                   <button style={{
                     border: 'none', background: 'none', cursor: 'pointer',
                     fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, padding: 0,
+                    display: 'flex', alignItems: 'center', gap: '5px',
                   }}>
-                    Click to enable AI
+                    Enable AI on data models
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3 11L11 3M11 3H6M11 3V8" stroke={brand} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </button>
                 </div>
               </FlatSection>
@@ -1052,14 +1052,18 @@ export const AISettingsPageContent: React.FC = () => {
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                   padding: '18px 24px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px',
                 }}>
-                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#111827', fontFamily: font }}>
+                  <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>
                     Manage user groups for AI search
                   </span>
                   <button style={{
                     border: 'none', background: 'none', cursor: 'pointer',
                     fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, padding: 0,
+                    display: 'flex', alignItems: 'center', gap: '5px',
                   }}>
                     Manage user privileges
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3 11L11 3M11 3H6M11 3V8" stroke={brand} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </button>
                 </div>
               </FlatSection>
