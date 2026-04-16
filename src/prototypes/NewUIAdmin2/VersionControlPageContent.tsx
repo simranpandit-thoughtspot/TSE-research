@@ -264,20 +264,33 @@ const SetupWizardModal: React.FC<{
   const [repo, setRepo] = useState('');
   const [username, setUsername] = useState('');
   const [token, setToken] = useState('');
+  const [credError, setCredError] = useState(false);
   const [saveHistory, setSaveHistory] = useState(true);
   const [selectedOrgId, setSelectedOrgId] = useState(VC_ORGS[0].id);
   const selectedOrg = VC_ORGS.find(o => o.id === selectedOrgId) ?? VC_ORGS[0];
 
-  const inputStyle: React.CSSProperties = {
-    width: '100%', height: '40px', padding: '0 14px',
-    border: '1px solid #D1D5DB', borderRadius: '8px',
-    fontFamily: font, fontSize: '13.5px', color: '#111827',
-    outline: 'none', backgroundColor: '#FFFFFF', boxSizing: 'border-box',
+  const handleNext = () => {
+    if (!repo.trim() || !username.trim() || !token.trim()) {
+      setCredError(true);
+      return;
+    }
+    setCredError(false);
+    setStep(2);
   };
-  const labelStyle: React.CSSProperties = {
+
+  const dismissError = () => { if (credError) setCredError(false); };
+
+  const labelStyle = (hasError: boolean): React.CSSProperties => ({
     display: 'block', fontSize: '13.5px', fontWeight: 500,
-    color: '#111827', marginBottom: '8px', fontFamily: font,
-  };
+    color: hasError ? '#EF4444' : '#111827', marginBottom: '8px', fontFamily: font,
+  });
+
+  const inputStyle = (hasError: boolean): React.CSSProperties => ({
+    width: '100%', height: '40px', padding: '0 14px',
+    border: `1px solid ${hasError ? '#EF4444' : '#D1D5DB'}`, borderRadius: '8px',
+    fontFamily: font, fontSize: '13.5px', color: '#111827',
+    outline: 'none', backgroundColor: hasError ? '#FEF2F2' : '#FFFFFF', boxSizing: 'border-box',
+  });
 
   return (
     <RdModal
@@ -292,33 +305,54 @@ const SetupWizardModal: React.FC<{
       cancelLabel="Back"
       onCancel={step === 2 ? () => setStep(1) : undefined}
       confirmLabel={step === 1 ? 'Next' : 'Enable'}
-      onConfirm={step === 1 ? () => setStep(2) : onComplete}
+      onConfirm={step === 1 ? handleNext : onComplete}
     >
       <div style={{ minHeight: '260px' }}>
         {step === 1 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+            {/* Error banner */}
+            {credError && (
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: '10px',
+                padding: '12px 16px', backgroundColor: '#FEF2F2',
+                border: '1px solid #FECACA', borderRadius: '8px',
+              }}>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+                  <circle cx="8" cy="8" r="7.25" fill="#EF4444" />
+                  <path d="M8 5v3.5M8 10.5h.01" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" />
+                </svg>
+                <span style={{ fontSize: '13.5px', color: '#B91C1C', fontFamily: font }}>
+                  These fields cannot be empty
+                </span>
+              </div>
+            )}
+
             <div>
-              <label style={labelStyle}>Repository</label>
-              <input type="text" placeholder='Ex : "Lorem Ipsum"' value={repo}
-                onChange={(e) => setRepo(e.target.value)} style={inputStyle}
-                onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+              <label style={labelStyle(credError)}>Repository</label>
+              <input type="text" placeholder="https://github.com/simranpandit-thoughtspot" value={repo}
+                onChange={(e) => { setRepo(e.target.value); dismissError(); }}
+                style={inputStyle(credError)}
+                onFocus={(e) => { if (!credError) { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; } }}
+                onBlur={(e) => { if (!credError) { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; } }}
               />
             </div>
             <div>
-              <label style={labelStyle}>Username</label>
+              <label style={labelStyle(credError)}>Username</label>
               <input type="text" placeholder="Enter Username" value={username}
-                onChange={(e) => setUsername(e.target.value)} style={inputStyle}
-                onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+                onChange={(e) => { setUsername(e.target.value); dismissError(); }}
+                style={inputStyle(credError)}
+                onFocus={(e) => { if (!credError) { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; } }}
+                onBlur={(e) => { if (!credError) { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; } }}
               />
             </div>
             <div>
-              <label style={labelStyle}>Token</label>
-              <input type="text" placeholder="Enter 12 digit token" value={token}
-                onChange={(e) => setToken(e.target.value)} style={inputStyle}
-                onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
+              <label style={labelStyle(credError)}>Token</label>
+              <input type="text" placeholder="Enter Access Token" value={token}
+                onChange={(e) => { setToken(e.target.value); dismissError(); }}
+                style={inputStyle(credError)}
+                onFocus={(e) => { if (!credError) { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; } }}
+                onBlur={(e) => { if (!credError) { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; } }}
               />
             </div>
           </div>
