@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { systemColors } from '../../tokens/colors';
+import { systemColors, rdComponentColors } from '../../tokens/colors';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -143,19 +143,19 @@ export const VariablesPageContent: React.FC = () => {
               />
             </div>
 
-            {/* Create Variable — filled brand pill */}
+            {/* Create Variable — secondary pill */}
             <button style={{
               display: 'flex', alignItems: 'center', gap: '6px',
               height: '36px', padding: '0 18px', borderRadius: '20px',
-              border: 'none', backgroundColor: brand,
-              cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: '#FFFFFF',
+              border: 'none', backgroundColor: rdComponentColors['button-secondary-default'],
+              cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: '#111827',
               transition: 'opacity 0.15s',
             }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.88'; }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.8'; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}
             >
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M6 1v10M1 6h10" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" />
+                <path d="M6 1v10M1 6h10" stroke="#111827" strokeWidth="1.6" strokeLinecap="round" />
               </svg>
               Create Variable
             </button>
