@@ -102,13 +102,14 @@ const Dropdown: React.FC<{ value: string; options: string[]; width?: number; lab
 
 const VCDotsMenu: React.FC<{
   status: string;
+  onEdit: () => void;
   onReset: () => void;
-}> = ({ status, onReset }) => {
+}> = ({ status, onEdit, onReset }) => {
   const [open, setOpen] = useState(false);
   const mapped = status === 'mapped';
   const items = mapped
     ? [
-        { label: 'Edit',  action: () => setOpen(false) },
+        { label: 'Edit',  action: () => { setOpen(false); onEdit(); } },
         { label: 'Reset', action: () => { setOpen(false); onReset(); } },
       ]
     : [
@@ -430,24 +431,30 @@ const SetupWizardModal: React.FC<{
 // ─── Edit Credentials Modal ───────────────────────────────────────────────────
 
 const EditCredentialsModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const [repo, setRepo] = useState('');
-  const [username, setUsername] = useState('');
-  const [token, setToken] = useState('');
+  const [repo, setRepo] = useState('Repository 1');
+  const [username, setUsername] = useState('Branch 1');
+  const [token, setToken] = useState('1w3d.gfs5.hgt5.234v');
+  const [credError, setCredError] = useState(false);
 
-  const inputStyle: React.CSSProperties = {
+  const handleNext = () => {
+    if (!repo.trim() || !username.trim() || !token.trim()) {
+      setCredError(true);
+      return;
+    }
+    onClose();
+  };
+
+  const labelColor = (empty: boolean) => empty && credError ? '#EF4444' : '#374151';
+  const borderColor = (empty: boolean) => empty && credError ? '#EF4444' : '#D1D5DB';
+  const bgColor = (empty: boolean) => empty && credError ? '#FEF2F2' : '#FFFFFF';
+
+  const inputStyle = (value: string): React.CSSProperties => ({
     width: '100%', height: '40px', padding: '0 14px',
-    border: '1px solid #E5E7EB', borderRadius: '6px',
+    border: `1px solid ${borderColor(!value.trim())}`, borderRadius: '6px',
     fontSize: '13.5px', color: '#111827', fontFamily: font,
-    outline: 'none', boxSizing: 'border-box', backgroundColor: '#FFFFFF',
-  };
-  const focusStyle = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = brand;
-    e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`;
-  };
-  const blurStyle = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.borderColor = '#E5E7EB';
-    e.currentTarget.style.boxShadow = 'none';
-  };
+    outline: 'none', boxSizing: 'border-box',
+    backgroundColor: bgColor(!value.trim()),
+  });
 
   return (
     <RdModal
@@ -460,20 +467,67 @@ const EditCredentialsModal: React.FC<{ onClose: () => void }> = ({ onClose }) =>
       tertiaryLabel="Cancel"
       onTertiary={onClose}
       confirmLabel="Next"
-      onConfirm={onClose}
+      onConfirm={handleNext}
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+        {/* Warning or error banner */}
+        {!credError ? (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '10px',
+            padding: '12px 16px', backgroundColor: '#FFFBEB',
+            border: '1px solid #FDE68A', borderRadius: '8px',
+          }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+              <circle cx="8" cy="8" r="7.25" fill="#F59E0B" />
+              <path d="M8 5v3.5M8 10.5h.01" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" />
+            </svg>
+            <span style={{ fontSize: '13.5px', color: '#92400E', fontFamily: font }}>
+              Updating details might lead to loss of version history
+            </span>
+          </div>
+        ) : (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '10px',
+            padding: '12px 16px', backgroundColor: '#FEF2F2',
+            border: '1px solid #FECACA', borderRadius: '8px',
+          }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+              <circle cx="8" cy="8" r="7.25" fill="#EF4444" />
+              <path d="M8 5v3.5M8 10.5h.01" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" />
+            </svg>
+            <span style={{ fontSize: '13.5px', color: '#B91C1C', fontFamily: font }}>
+              These fields cannot be empty
+            </span>
+          </div>
+        )}
+
         <div>
-          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Repository</label>
-          <input type="text" placeholder='Ex : "Lorem Ipsum"' value={repo} onChange={(e) => setRepo(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: labelColor(!repo.trim()), fontFamily: font, marginBottom: '8px' }}>Repository</label>
+          <input type="text" placeholder="https://github.com/simranpandit-thoughtspot" value={repo}
+            onChange={(e) => { setRepo(e.target.value); if (credError) setCredError(false); }}
+            style={inputStyle(repo)}
+            onFocus={(e) => { if (repo.trim()) { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; } }}
+            onBlur={(e) => { if (repo.trim()) { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; } }}
+          />
         </div>
         <div>
-          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Username</label>
-          <input type="text" placeholder="Enter Username" value={username} onChange={(e) => setUsername(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: labelColor(!username.trim()), fontFamily: font, marginBottom: '8px' }}>Username</label>
+          <input type="text" placeholder="Enter Username" value={username}
+            onChange={(e) => { setUsername(e.target.value); if (credError) setCredError(false); }}
+            style={inputStyle(username)}
+            onFocus={(e) => { if (username.trim()) { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; } }}
+            onBlur={(e) => { if (username.trim()) { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; } }}
+          />
         </div>
         <div>
-          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, marginBottom: '8px' }}>Token</label>
-          <input type="text" placeholder="Enter 12 digit token" value={token} onChange={(e) => setToken(e.target.value)} style={inputStyle} onFocus={focusStyle} onBlur={blurStyle} />
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: labelColor(!token.trim()), fontFamily: font, marginBottom: '8px' }}>Token</label>
+          <input type="text" placeholder="Enter Access Token" value={token}
+            onChange={(e) => { setToken(e.target.value); if (credError) setCredError(false); }}
+            style={inputStyle(token)}
+            onFocus={(e) => { if (token.trim()) { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; } }}
+            onBlur={(e) => { if (token.trim()) { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; } }}
+          />
         </div>
       </div>
     </RdModal>
@@ -738,7 +792,7 @@ export const VersionControlPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
                               <span style={{ fontSize: '13.5px', color: '#374151', fontFamily: font }}>{org.branch}</span>
                             </td>
                             <td style={{ padding: '18px 20px 18px 0', verticalAlign: 'middle', textAlign: 'right' }}>
-                              <VCDotsMenu status={org.status} onReset={() => setResetDialog(true)} />
+                              <VCDotsMenu status={org.status} onEdit={() => setEditCredModal(true)} onReset={() => setResetDialog(true)} />
                             </td>
                           </tr>
                         ))}
