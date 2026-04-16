@@ -246,6 +246,8 @@ export const SearchSpotIQPageContent: React.FC = () => {
         <ConfirmDialog
           title="Reset settings"
           message={`This will reset all ${resetSection} to their defaults. Are you sure?`}
+          confirmLabel="Reset"
+          cancelLabel="Cancel"
           onConfirm={() => setResetSection(null)}
           onCancel={() => setResetSection(null)}
         />

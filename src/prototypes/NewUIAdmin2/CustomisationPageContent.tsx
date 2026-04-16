@@ -905,6 +905,8 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
         <ConfirmDialog
           title="Reset customisation"
           message={`This will reset the ${resetSection} to its default. Are you sure?`}
+          confirmLabel="Reset"
+          cancelLabel="Cancel"
           onConfirm={() => setResetSection(null)}
           onCancel={() => setResetSection(null)}
         />

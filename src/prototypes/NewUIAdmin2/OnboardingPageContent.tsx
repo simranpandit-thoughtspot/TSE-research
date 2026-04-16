@@ -157,6 +157,8 @@ export const OnboardingPageContent: React.FC = () => {
         <ConfirmDialog
           title="Reset settings"
           message={`This will reset ${resetSection} to its defaults. Are you sure?`}
+          confirmLabel="Reset"
+          cancelLabel="Cancel"
           onConfirm={() => setResetSection(null)}
           onCancel={() => setResetSection(null)}
         />

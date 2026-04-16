@@ -886,6 +886,8 @@ export const AISettingsPageContent: React.FC = () => {
         <ConfirmDialog
           title="Reset settings"
           message={`This will reset all ${resetSection} to their defaults. Are you sure?`}
+          confirmLabel="Reset"
+          cancelLabel="Cancel"
           onConfirm={() => { setResetSection(null); showToast('Settings reset to defaults.'); }}
           onCancel={() => setResetSection(null)}
         />

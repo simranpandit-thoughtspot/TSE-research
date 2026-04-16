@@ -767,6 +767,8 @@ export const VersionControlPageContent: React.FC<{ scope?: 'all-orgs' | 'primary
         <ConfirmDialog
           title="Reset configuration"
           message="Version history from the GIT branches will be lost. Are you sure you wish to reset connection?"
+          confirmLabel="Reset"
+          cancelLabel="Cancel"
           onConfirm={() => setResetDialog(false)}
           onCancel={() => setResetDialog(false)}
         />
