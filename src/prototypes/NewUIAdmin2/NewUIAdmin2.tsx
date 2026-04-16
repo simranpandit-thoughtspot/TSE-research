@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { AutoResizeTextarea } from './AutoResizeTextarea';
 import { AppShell } from '../../components/AppShell';
 import type { AppSidebarProps, SidebarTab, SidebarCategory, ScopeToggle } from '../../components/AppSidebar';
 import type { GlobalHeaderProps } from '../../components/GlobalHeader';
@@ -677,16 +678,10 @@ export const NewUIAdmin2: React.FC = () => {
                   label="Downloaded file instructions"
                   description="Information in tooltip comes here"
                   control={
-                    <input
+                    <AutoResizeTextarea
                       value={downloadedFileInstructions}
-                      onChange={(e) => setDownloadedFileInstructions(e.target.value)}
+                      onChange={setDownloadedFileInstructions}
                       placeholder="Text"
-                      style={{
-                        width: '311px', height: '36px', padding: '0 12px',
-                        border: '1px solid #D1D5DB', borderRadius: '6px',
-                        fontFamily: font, fontSize: '13px', color: '#111827',
-                        outline: 'none', boxSizing: 'border-box' as const,
-                      }}
                     />
                   }
                 />
