@@ -70,7 +70,7 @@ const DotsMenu: React.FC = () => {
             backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px',
             boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 100, overflow: 'hidden', minWidth: '140px',
           }}>
-            {['Edit', 'Delete'].map((action) => (
+            {['Edit', 'Rename', 'Delete'].map((action) => (
               <button key={action} onClick={() => setOpen(false)} style={{
                 display: 'block', width: '100%', padding: '10px 16px',
                 border: 'none', textAlign: 'left', fontFamily: font, fontSize: '13px',
@@ -143,19 +143,19 @@ export const VariablesPageContent: React.FC = () => {
               />
             </div>
 
-            {/* Create Variable — outlined pill */}
+            {/* Create Variable — filled brand pill */}
             <button style={{
               display: 'flex', alignItems: 'center', gap: '6px',
               height: '36px', padding: '0 18px', borderRadius: '20px',
-              border: '1.5px solid #D1D5DB', backgroundColor: '#FFFFFF',
-              cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: '#111827',
-              transition: 'border-color 0.15s, background-color 0.15s',
+              border: 'none', backgroundColor: brand,
+              cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: '#FFFFFF',
+              transition: 'opacity 0.15s',
             }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#9CA3AF'; (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#F9FAFB'; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#D1D5DB'; (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#FFFFFF'; }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.88'; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}
             >
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M6 1v10M1 6h10" stroke="#111827" strokeWidth="1.6" strokeLinecap="round" />
+                <path d="M6 1v10M1 6h10" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" />
               </svg>
               Create Variable
             </button>
