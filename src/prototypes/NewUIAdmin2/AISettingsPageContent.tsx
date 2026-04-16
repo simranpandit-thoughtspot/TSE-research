@@ -314,35 +314,43 @@ const CollapsibleSection: React.FC<{
   showReset?: boolean;
   onReset?: () => void;
   children: React.ReactNode;
-}> = ({ title, subtitle, open, onToggle, showReset = true, onReset, children }) => (
+}> = ({ title, subtitle, open, onToggle, showReset = true, onReset, children }) => {
+  const multi = React.Children.count(children) > 1;
+  const isOpen = multi ? open : true;
+  return (
   <div style={{ backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '12px', overflow: 'hidden' }}>
-    <div style={{ padding: '16px 24px 12px', borderBottom: open ? '1px solid #E5E7EB' : 'none' }}>
+    <div style={{ padding: '16px 24px 12px', borderBottom: isOpen ? '1px solid #E5E7EB' : 'none' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <button onClick={onToggle} style={{
-          display: 'flex', alignItems: 'center', gap: '8px', flex: 1,
-          border: 'none', background: 'none', cursor: 'pointer', fontFamily: font, padding: 0, textAlign: 'left',
-        }}>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-            style={{ flexShrink: 0, transform: open ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.22s ease' }}>
-            <path d="M3 5.5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>{title}</span>
-        </button>
+        {multi ? (
+          <button onClick={onToggle} style={{
+            display: 'flex', alignItems: 'center', gap: '8px', flex: 1,
+            border: 'none', background: 'none', cursor: 'pointer', fontFamily: font, padding: 0, textAlign: 'left',
+          }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+              style={{ flexShrink: 0, transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.22s ease' }}>
+              <path d="M3 5.5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>{title}</span>
+          </button>
+        ) : (
+          <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font, flex: 1 }}>{title}</span>
+        )}
         {showReset && <ResetLink onClick={onReset} />}
       </div>
       {subtitle && (
-        <div style={{ fontSize: '12.5px', color: '#9CA3AF', fontFamily: font, marginTop: '4px', lineHeight: 1.6, paddingLeft: '22px' }}>
+        <div style={{ fontSize: '12.5px', color: '#9CA3AF', fontFamily: font, marginTop: '4px', lineHeight: 1.6, paddingLeft: multi ? '22px' : '0px' }}>
           {subtitle}
         </div>
       )}
     </div>
-    <div style={{ maxHeight: open ? '3000px' : '0px', overflow: 'hidden', transition: 'max-height 0.25s ease' }}>
+    <div style={{ maxHeight: isOpen ? '3000px' : '0px', overflow: 'hidden', transition: 'max-height 0.25s ease' }}>
       <div style={{ padding: '16px 16px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {children}
       </div>
     </div>
   </div>
-);
+  );
+};
 
 // ─── FlatSection ─────────────────────────────────────────────────────────────
 // Non-collapsible card with title + subtitle + optional right action

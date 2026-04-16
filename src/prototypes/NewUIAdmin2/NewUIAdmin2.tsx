@@ -315,7 +315,7 @@ const Card: React.FC<{
   onReset?: () => void;
   children: React.ReactNode;
 }> = ({ title, description, open, onToggle, onReset, children }) => {
-  const collapsible = onToggle !== undefined;
+  const collapsible = onToggle !== undefined && React.Children.count(children) > 1;
 
   return (
     <div

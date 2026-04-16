@@ -103,6 +103,8 @@ const CollapsibleSection: React.FC<{
   children: React.ReactNode;
 }> = ({ title, subtitle, defaultOpen = true, onReset, children }) => {
   const [open, setOpen] = useState(defaultOpen);
+  const multi = React.Children.count(children) > 1;
+  const isOpen = multi ? open : true;
   return (
     <div style={{
       backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB',
@@ -112,14 +114,16 @@ const CollapsibleSection: React.FC<{
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 20px',
-        borderBottom: open ? '1px solid #E5E7EB' : 'none',
-        cursor: 'pointer',
-      }} onClick={() => setOpen(!open)}>
+        borderBottom: isOpen ? '1px solid #E5E7EB' : 'none',
+        cursor: multi ? 'pointer' : 'default',
+      }} onClick={() => { if (multi) setOpen(!open); }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-            style={{ flexShrink: 0, transform: open ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.15s ease' }}>
-            <path d="M3 5.5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          {multi && (
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+              style={{ flexShrink: 0, transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.15s ease' }}>
+              <path d="M3 5.5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
           <div>
             <div style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>{title}</div>
             {subtitle && (
@@ -135,7 +139,7 @@ const CollapsibleSection: React.FC<{
       </div>
 
       {/* Content */}
-      {open && (
+      {isOpen && (
         <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {children}
         </div>

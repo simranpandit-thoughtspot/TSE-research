@@ -168,42 +168,53 @@ const Card: React.FC<{
   onToggle: () => void;
   rightAction?: React.ReactNode;
   children: React.ReactNode;
-}> = ({ title, description, open, onToggle, rightAction, children }) => (
+}> = ({ title, description, open, onToggle, rightAction, children }) => {
+  const multi = React.Children.count(children) > 1;
+  const isOpen = multi ? open : true;
+  return (
   <div style={{ backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '12px' }}>
-    {/* Header row: chevron + title + optional description + optional right action */}
-    <div style={{ display: 'flex', alignItems: 'flex-start', padding: '14px 24px 10px', borderBottom: open ? '1px solid #E5E7EB' : 'none' }}>
-      <button
-        onClick={onToggle}
-        style={{
-          display: 'flex', alignItems: 'center', gap: '8px', flex: 1,
-          border: 'none', background: 'none', cursor: 'pointer', fontFamily: font, textAlign: 'left', padding: 0,
-        }}
-      >
-        <Chevron open={open} />
-        <div>
-          <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>
-            {title}
-          </span>
-          {description && (
-            <div style={{ fontSize: '12px', color: '#9CA3AF', fontFamily: font, marginTop: '2px', lineHeight: 1.5 }}>
-              {description}
-            </div>
-          )}
+    {/* Header row */}
+    <div style={{ display: 'flex', alignItems: 'flex-start', padding: '14px 24px 10px', borderBottom: isOpen ? '1px solid #E5E7EB' : 'none' }}>
+      {multi ? (
+        <button
+          onClick={onToggle}
+          style={{
+            display: 'flex', alignItems: 'center', gap: '8px', flex: 1,
+            border: 'none', background: 'none', cursor: 'pointer', fontFamily: font, textAlign: 'left', padding: 0,
+          }}
+        >
+          <Chevron open={isOpen} />
+          <div>
+            <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>{title}</span>
+            {description && (
+              <div style={{ fontSize: '12px', color: '#9CA3AF', fontFamily: font, marginTop: '2px', lineHeight: 1.5 }}>{description}</div>
+            )}
+          </div>
+        </button>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+          <div>
+            <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>{title}</span>
+            {description && (
+              <div style={{ fontSize: '12px', color: '#9CA3AF', fontFamily: font, marginTop: '2px', lineHeight: 1.5 }}>{description}</div>
+            )}
+          </div>
         </div>
-      </button>
+      )}
       {rightAction && (
         <div style={{ flexShrink: 0, paddingTop: '1px' }}>{rightAction}</div>
       )}
     </div>
 
-    {/* Collapsible body */}
-    <div style={{ maxHeight: open ? '3000px' : '0px', overflow: 'hidden', transition: 'max-height 0.25s ease' }}>
+    {/* Body */}
+    <div style={{ maxHeight: isOpen ? '3000px' : '0px', overflow: 'hidden', transition: 'max-height 0.25s ease' }}>
       <div style={{ padding: '16px 16px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {children}
       </div>
     </div>
   </div>
-);
+  );
+};
 
 // ─── Setting Row ──────────────────────────────────────────────────────────────
 

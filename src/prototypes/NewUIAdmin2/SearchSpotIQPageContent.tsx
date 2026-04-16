@@ -151,37 +151,41 @@ const Section: React.FC<{
   onToggle: () => void;
   onReset?: () => void;
   children: React.ReactNode;
-}> = ({ title, subtitle, open, onToggle, onReset, children }) => (
+}> = ({ title, subtitle, open, onToggle, onReset, children }) => {
+  const multi = React.Children.count(children) > 1;
+  const isOpen = multi ? open : true;
+  return (
   <div style={{
     backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB',
     borderRadius: '12px', overflow: 'hidden',
   }}>
     {/* Header row */}
-    <div style={{ display: 'flex', alignItems: 'center', padding: '16px 24px', gap: '8px', borderBottom: open ? '1px solid #E5E7EB' : 'none' }}>
-      <button onClick={onToggle} style={{
-        display: 'flex', alignItems: 'center', gap: '8px',
-        flex: 1, border: 'none', background: 'none', cursor: 'pointer',
-        fontFamily: font, textAlign: 'left', padding: 0,
-      }}>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-          style={{ flexShrink: 0, transform: open ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.22s ease' }}>
-          <path d="M3 5.5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>
-          {title}
-        </span>
-        {subtitle && (
-          <span style={{ fontSize: '12.5px', color: '#9CA3AF', fontFamily: font, fontWeight: 400 }}>
-            {subtitle}
-          </span>
-        )}
-      </button>
+    <div style={{ display: 'flex', alignItems: 'center', padding: '16px 24px', gap: '8px', borderBottom: isOpen ? '1px solid #E5E7EB' : 'none' }}>
+      {multi ? (
+        <button onClick={onToggle} style={{
+          display: 'flex', alignItems: 'center', gap: '8px',
+          flex: 1, border: 'none', background: 'none', cursor: 'pointer',
+          fontFamily: font, textAlign: 'left', padding: 0,
+        }}>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+            style={{ flexShrink: 0, transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.22s ease' }}>
+            <path d="M3 5.5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>{title}</span>
+          {subtitle && <span style={{ fontSize: '12.5px', color: '#9CA3AF', fontFamily: font, fontWeight: 400 }}>{subtitle}</span>}
+        </button>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+          <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>{title}</span>
+          {subtitle && <span style={{ fontSize: '12.5px', color: '#9CA3AF', fontFamily: font, fontWeight: 400 }}>{subtitle}</span>}
+        </div>
+      )}
       <ResetLink onClick={onReset} />
     </div>
 
     {/* Body */}
     <div style={{
-      maxHeight: open ? '3000px' : '0px',
+      maxHeight: isOpen ? '3000px' : '0px',
       overflow: 'hidden',
       transition: 'max-height 0.25s ease',
     }}>
@@ -190,7 +194,8 @@ const Section: React.FC<{
       </div>
     </div>
   </div>
-);
+  );
+};
 
 // ─── SearchSpotIQPageContent ───────────────────────────────────────────────────
 
