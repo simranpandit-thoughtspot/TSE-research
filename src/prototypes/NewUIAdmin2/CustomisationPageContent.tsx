@@ -305,13 +305,94 @@ const ImageUploadArea: React.FC = () => {
 
 // ─── Double Dropdown Row ──────────────────────────────────────────────────────
 
+// ─── Font options ─────────────────────────────────────────────────────────────
+
+const FONT_OPTIONS: { label: string; fontFamily: string; color?: string; fontWeight?: number }[] = [
+  { label: 'Optimo Plain, helvetica Neue, Helvetica, Arial, Sans serif', fontFamily: '"Plain", -apple-system, sans-serif', color: brand },
+  { label: 'Testing font', fontFamily: 'Georgia, "Times New Roman", serif', color: '#111827' },
+  { label: 'Ashu all org 2 font', fontFamily: '"Brush Script MT", "Segoe Script", cursive', color: '#1F2937' },
+  { label: 'Primary Org style', fontFamily: 'Papyrus, fantasy', color: '#14B8A6' },
+  { label: 'Custom Font 1', fontFamily: 'Palatino, "Palatino Linotype", "Book Antiqua", serif', color: '#7C3AED' },
+  { label: 'Custom FONT 2', fontFamily: 'Impact, "Arial Black", sans-serif', color: '#111827', fontWeight: 900 },
+];
+
+const FontDropdown: React.FC<{ value: string; width?: number }> = ({ value, width = 311 }) => {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(value);
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+  const ref = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const handleOpen = () => {
+    if (!open && btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect();
+      setMenuPos({ top: rect.bottom + 4, left: rect.left });
+    }
+    setOpen(!open);
+  };
+
+  const selectedOpt = FONT_OPTIONS.find(o => o.label === selected) ?? FONT_OPTIONS[0];
+
+  return (
+    <div ref={ref} style={{ position: 'relative', flexShrink: 0 }}>
+      <button
+        ref={btnRef}
+        onClick={handleOpen}
+        style={{
+          width, height: '34px', padding: '0 10px', border: '1px solid #D1D5DB', borderRadius: '6px',
+          backgroundColor: '#FFFFFF', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px',
+        }}
+      >
+        <span style={{ fontFamily: selectedOpt.fontFamily, fontSize: '13.5px', color: selectedOpt.color ?? '#111827', fontWeight: selectedOpt.fontWeight, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {selectedOpt.label}
+        </span>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ flexShrink: 0 }}>
+          <path d="M2 4l3 3 3-3" stroke="#9CA3AF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      {open && (
+        <div style={{
+          position: 'fixed', top: menuPos.top, left: menuPos.left, zIndex: 9999,
+          backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.12)', width, maxHeight: '280px', overflowY: 'auto',
+        }}>
+          {FONT_OPTIONS.map((opt) => (
+            <button
+              key={opt.label}
+              onClick={() => { setSelected(opt.label); setOpen(false); }}
+              style={{
+                width: '100%', textAlign: 'left', padding: '10px 14px', border: 'none',
+                backgroundColor: selected === opt.label ? `${brand}10` : 'transparent',
+                cursor: 'pointer', display: 'block',
+                fontFamily: opt.fontFamily, fontSize: '15px',
+                color: opt.color ?? '#111827', fontWeight: opt.fontWeight,
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const DoubleDropdownRow: React.FC<{
   label: string;
   value1: string;
   options1: string[];
   value2: string;
   options2: string[];
-}> = ({ label, value1, options1, value2, options2 }) => (
+  fontMode?: boolean;
+}> = ({ label, value1, options1, value2, options2, fontMode }) => (
   <div style={{
     display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px',
     padding: '14px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px',
@@ -321,7 +402,7 @@ const DoubleDropdownRow: React.FC<{
     </span>
     <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
       <Dropdown value={value1} options={options1} width={160} />
-      <Dropdown value={value2} options={options2} width={311} />
+      {fontMode ? <FontDropdown value={value2} width={311} /> : <Dropdown value={value2} options={options2} width={311} />}
     </div>
   </div>
 );
@@ -494,14 +575,81 @@ const ResetLink: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
 
 // ─── Add font link ────────────────────────────────────────────────────────────
 
-const AddFontLink: React.FC = () => (
-  <button style={{ display: 'flex', alignItems: 'center', gap: '4px', border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>
+const AddFontLink: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
+  <button onClick={onClick} style={{ display: 'flex', alignItems: 'center', gap: '4px', border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>
     <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
       <path d="M6.5 2v9M2 6.5h9" stroke={brand} strokeWidth="1.5" strokeLinecap="round" />
     </svg>
     Add new font
   </button>
 );
+
+// ─── Add New Font Modal ───────────────────────────────────────────────────────
+
+const AddNewFontModal: React.FC<{ onClose: () => void; onConfirm: () => void }> = ({ onClose, onConfirm }) => {
+  const [fileName, setFileName] = useState('');
+  const fileRef = useRef<HTMLInputElement>(null);
+  const hasFile = fileName !== '';
+
+  const inputStyle: React.CSSProperties = {
+    flex: 1, height: '40px', padding: '0 12px', border: '1px solid #D1D5DB',
+    borderRadius: '8px', fontSize: '13.5px', fontFamily: font, color: hasFile ? '#111827' : '#9CA3AF',
+    outline: 'none', backgroundColor: '#F9FAFB', cursor: 'default', boxSizing: 'border-box',
+  };
+
+  return (
+    <RdModal
+      size="M1"
+      title="Add new font"
+      onClose={onClose}
+      cancelLabel="Cancel"
+      onCancel={onClose}
+      confirmLabel="Add"
+      onConfirm={onConfirm}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        {/* Upload field */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <span style={{ fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font }}>
+            Upload .otf/.ttf font file
+          </span>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <input
+              readOnly
+              value={fileName}
+              placeholder="No file chosen"
+              style={inputStyle}
+            />
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".otf,.ttf"
+              style={{ display: 'none' }}
+              onChange={(e) => { if (e.target.files?.[0]) setFileName(e.target.files[0].name); }}
+            />
+            <button
+              onClick={() => fileRef.current?.click()}
+              style={{
+                height: '40px', padding: '0 20px', border: '1px solid #D1D5DB',
+                borderRadius: '8px', backgroundColor: '#F3F4F6', fontSize: '13.5px',
+                fontWeight: 500, color: '#374151', fontFamily: font, cursor: 'pointer', flexShrink: 0,
+              }}
+            >
+              Upload
+            </button>
+          </div>
+        </div>
+
+        {/* Preview — only shown when a file is chosen */}
+        {hasFile && (
+          <span style={{ fontFamily: '"Brush Script MT", "Segoe Script", cursive', fontSize: '22px', color: '#374151', display: 'block' }}>
+            The quick brown fox jumps over the lazy dog
+          </span>
+        )}
+      </div>
+    </RdModal>
+  );
+};
 
 // ─── Modal primitives removed — use RdModal directly ─────────────────────────
 
@@ -694,6 +842,29 @@ const ColorDisplayRow: React.FC<{ label: string; color: string; hex: string }> =
   </div>
 );
 
+// ─── Email Read-only Rows ─────────────────────────────────────────────────────
+
+const EmailShownRow: React.FC<{ label: string; children?: React.ReactNode }> = ({ label, children }) => (
+  <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px' }}>
+      <span style={{ fontSize: '14px', fontWeight: 500, color: '#111827', fontFamily: font }}>{label}</span>
+      <span style={{ fontSize: '13px', color: '#9CA3AF', fontFamily: font }}>Shown</span>
+    </div>
+    {children && (
+      <div style={{ borderTop: '1px solid #F3F4F6', padding: '14px 20px 16px' }}>
+        {children}
+      </div>
+    )}
+  </div>
+);
+
+const EmailDotRow: React.FC<{ label: string }> = ({ label }) => (
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px' }}>
+    <span style={{ fontSize: '14px', fontWeight: 500, color: '#111827', fontFamily: font }}>{label}</span>
+    <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: brand, flexShrink: 0 }} />
+  </div>
+);
+
 // ─── Object Table ─────────────────────────────────────────────────────────────
 
 const ObjectTable: React.FC<{
@@ -733,18 +904,30 @@ const HelpMenuIcon: React.FC<{ type: 'document' | 'video' | 'rocket' | 'people' 
   return <svg width="20" height="20" viewBox="0 0 20 20" fill="none">{paths[type]}</svg>;
 };
 
-// ─── Edit Help Menu Item Modal ────────────────────────────────────────────────
+// ─── Help Menu Item Modal (add + edit) ───────────────────────────────────────
 
-const EditHelpMenuItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const [enabled, setEnabled] = useState(true);
-  const [label, setLabel] = useState('test2');
-  const [url, setUrl] = useState('https://champagne-master-aws.thoughtspotstaging.c');
-  const [iconFile, setIconFile] = useState<string | null>('test2.png');
-  const [showPreview, setShowPreview] = useState(true);
+type HelpIconType = 'document' | 'video' | 'rocket' | 'people' | 'info';
+
+const HelpMenuItemModal: React.FC<{
+  mode: 'add' | 'edit';
+  item?: { label: string; icon: HelpIconType; url: string };
+  onClose: () => void;
+  onSave: () => void;
+}> = ({ mode, item, onClose, onSave }) => {
+  const [label, setLabel] = useState(mode === 'edit' ? (item?.label ?? '') : '');
+  const [url, setUrl] = useState(mode === 'edit' ? (item?.url ?? '') : '');
+  const [iconFile, setIconFile] = useState(mode === 'edit' ? 'info_circle.png' : '');
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%', height: '40px', padding: '0 14px', border: '1px solid #D1D5DB',
+    borderRadius: '8px', fontSize: '13.5px', color: '#111827', fontFamily: font,
+    outline: 'none', boxSizing: 'border-box', backgroundColor: '#FFFFFF',
+  };
 
   const fieldRow = (labelText: string, content: React.ReactNode) => (
-    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '32px', marginBottom: '24px' }}>
-      <span style={{ width: '160px', flexShrink: 0, fontSize: '14px', fontWeight: 500, color: '#111827', fontFamily: font, paddingTop: '8px' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '32px', marginBottom: '20px' }}>
+      <span style={{ width: '160px', flexShrink: 0, fontSize: '14px', fontWeight: 500, color: '#111827', fontFamily: font, paddingTop: '9px' }}>
         {labelText}
       </span>
       <div style={{ flex: 1 }}>{content}</div>
@@ -754,28 +937,20 @@ const EditHelpMenuItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
   return (
     <RdModal
       size="M2"
-      title="Edit menu item"
+      title={mode === 'add' ? 'Add menu item' : 'Edit menu item'}
       onClose={onClose}
-      tertiaryLabel="Delete item"
       cancelLabel="Cancel"
       onCancel={onClose}
       confirmLabel="Save"
-      onConfirm={onClose}
+      onConfirm={onSave}
     >
       <div>
-        {/* Status */}
-        {fieldRow('Status', (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingTop: '6px' }}>
-            <Toggle checked={enabled} onChange={() => setEnabled(!enabled)} />
-            <span style={{ fontSize: '14px', color: '#374151', fontFamily: font }}>Enable</span>
-          </div>
-        ))}
-
-        {/* Menu item label */}
-        {fieldRow('Menu item label', (
+        {/* Menu item list label */}
+        {fieldRow('Menu item list label', (
           <input
             type="text" value={label} onChange={(e) => setLabel(e.target.value)}
-            style={{ width: '100%', height: '40px', padding: '0 14px', border: '1px solid #D1D5DB', borderRadius: '8px', fontSize: '13.5px', color: '#111827', fontFamily: font, outline: 'none', boxSizing: 'border-box', backgroundColor: '#FFFFFF' }}
+            placeholder="Enter list item"
+            style={inputStyle}
             onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
             onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
           />
@@ -785,7 +960,8 @@ const EditHelpMenuItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
         {fieldRow('Item URL', (
           <input
             type="text" value={url} onChange={(e) => setUrl(e.target.value)}
-            style={{ width: '100%', height: '40px', padding: '0 14px', border: '1px solid #D1D5DB', borderRadius: '8px', fontSize: '13.5px', color: '#111827', fontFamily: font, outline: 'none', boxSizing: 'border-box', backgroundColor: '#FFFFFF' }}
+            placeholder="Item URL here"
+            style={inputStyle}
             onFocus={(e) => { e.currentTarget.style.borderColor = brand; e.currentTarget.style.boxShadow = `0 0 0 2px ${brand}22`; }}
             onBlur={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.boxShadow = 'none'; }}
           />
@@ -794,34 +970,32 @@ const EditHelpMenuItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
         {/* Custom icon */}
         {fieldRow('Custom icon', (
           <div>
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', gap: '10px' }}>
               <input
-                type="text" value={iconFile ?? ''} readOnly placeholder="No file chosen"
-                style={{ flex: 1, height: '40px', padding: '0 14px', border: '1px solid #D1D5DB', borderRadius: '8px', fontSize: '13.5px', color: '#374151', fontFamily: font, outline: 'none', backgroundColor: '#F9FAFB', cursor: 'default' }}
+                type="text" value={iconFile} readOnly placeholder="upload icon image"
+                style={{ ...inputStyle, backgroundColor: '#FFFFFF', cursor: 'default', color: iconFile ? '#111827' : '#9CA3AF' }}
               />
-              <button style={{ height: '40px', padding: '0 20px', border: '1px solid #D1D5DB', borderRadius: '8px', backgroundColor: '#F3F4F6', fontSize: '13.5px', fontWeight: 500, color: '#374151', fontFamily: font, cursor: 'pointer', flexShrink: 0 }}>
+              <input ref={fileRef} type="file" accept=".png,.svg" style={{ display: 'none' }} onChange={(e) => { if (e.target.files?.[0]) setIconFile(e.target.files[0].name); }} />
+              <button onClick={() => fileRef.current?.click()} style={{ height: '40px', padding: '0 20px', border: '1px solid #D1D5DB', borderRadius: '8px', backgroundColor: '#F3F4F6', fontSize: '13.5px', fontWeight: 500, color: '#374151', fontFamily: font, cursor: 'pointer', flexShrink: 0 }}>
                 Upload
               </button>
             </div>
-            <span style={{ fontSize: '12px', color: '#9CA3AF', fontFamily: font }}>Icon should be in PNG format and less than 100 KB in size</span>
-            {showPreview && (
-              <div style={{ marginTop: '12px', position: 'relative', display: 'inline-block' }}>
-                <div style={{ width: '80px', height: '80px', border: '1.5px dashed #D1D5DB', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#F9FAFB' }}>
-                  <svg width="42" height="42" viewBox="0 0 20 20" fill="none">
-                    <rect x="3" y="1" width="11" height="15" rx="1" fill="#6B7280" />
-                    <rect x="5" y="5" width="7" height="1.5" rx="0.75" fill="#FFFFFF" />
-                    <rect x="5" y="8" width="7" height="1.5" rx="0.75" fill="#FFFFFF" />
-                    <rect x="5" y="11" width="5" height="1.5" rx="0.75" fill="#FFFFFF" />
+            {/* Icon preview */}
+            <div style={{ marginTop: '14px', display: 'flex', justifyContent: 'center' }}>
+              {mode === 'edit' && item ? (
+                <div style={{ width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <HelpMenuIcon type={item.icon} />
+                </div>
+              ) : (
+                <div style={{ width: '48px', height: '48px', border: '1.5px dashed #D1D5DB', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#F9FAFB' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="3" width="18" height="18" rx="2" stroke="#D1D5DB" strokeWidth="1.5"/>
+                    <path d="M3 16l5-5 4 4 3-3 6 6" stroke="#D1D5DB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="8.5" cy="8.5" r="1.5" fill="#D1D5DB"/>
                   </svg>
                 </div>
-                <button
-                  onClick={() => setShowPreview(false)}
-                  style={{ position: 'absolute', top: '-8px', right: '-8px', width: '20px', height: '20px', borderRadius: '50%', border: 'none', backgroundColor: '#111827', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}
-                >
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round"/></svg>
-                </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -833,11 +1007,11 @@ const EditHelpMenuItemModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
 
 
 const HELP_ITEMS: { label: string; icon: 'document' | 'video' | 'rocket' | 'people' | 'info'; url: string }[] = [
-  { label: 'Documents',       icon: 'document', url: 'https://champagne-master-aws.thoughtspotstag...' },
-  { label: 'Getting Started', icon: 'video',    url: 'https://champagne-master-aws.thoughtspotstag...' },
-  { label: "What's New",      icon: 'rocket',   url: 'https://champagne-master-aws.thoughtspotstag...' },
-  { label: 'Contact Support', icon: 'people',   url: 'https://champagne-master-aws.thoughtspotstag...' },
-  { label: 'About',           icon: 'info',     url: 'https://champagne-master-aws.thoughtspotstag...' },
+  { label: 'Documents',       icon: 'document', url: 'https://champagne-master-aws.thoughtspotstaging.cloud/#/admin' },
+  { label: 'Getting Started', icon: 'video',    url: 'https://champagne-master-aws.thoughtspotstaging.cloud/#/admin' },
+  { label: "What's New",      icon: 'rocket',   url: 'https://champagne-master-aws.thoughtspotstaging.cloud/#/admin' },
+  { label: 'Contact Support', icon: 'people',   url: 'https://champagne-master-aws.thoughtspotstaging.cloud/#/admin' },
+  { label: 'About',           icon: 'info',     url: 'https://champagne-master-aws.thoughtspotstaging.cloud/#/admin' },
 ];
 
 // ─── Color data ───────────────────────────────────────────────────────────────
@@ -876,6 +1050,8 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
   const [customiseHomepageOpen, setCustomiseHomepageOpen] = useState(true);
   const [translateOpen, setTranslateOpen] = useState(true);
   const [customBanner, setCustomBanner] = useState(false);
+  const [bannerConfigured, setBannerConfigured] = useState(false);
+  const [editAlertModal, setEditAlertModal] = useState(false);
   const [homepageItems, setHomepageItems] = useState<Record<string, boolean>>({
     announcement: true, spotter: true, watchlist: true,
     library: true, trending: true, learning: false, favourites: false,
@@ -893,12 +1069,17 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
   });
 
   // ── Help tab ──
-  const [helpMenuOpen, setHelpMenuOpen] = useState(true);
   const [helpMenuItemModal, setHelpMenuItemModal] = useState(false);
+  const [helpMenuMode, setHelpMenuMode] = useState<'add' | 'edit'>('add');
+  const [helpMenuEditItem, setHelpMenuEditItem] = useState<typeof HELP_ITEMS[0] | null>(null);
   const [helpToggles, setHelpToggles] = useState<Record<string, boolean>>({
     Documents: true, 'Getting Started': true, "What's New": true,
     'Contact Support': true, About: true,
   });
+
+  const [addFontModal, setAddFontModal] = useState(false);
+  const [settingsToastVisible, setSettingsToastVisible] = useState(false);
+  const showSettingsToast = () => { setSettingsToastVisible(true); setTimeout(() => setSettingsToastVisible(false), 2000); };
 
   const pageTabs = [
     { id: 'style', label: 'Style' },
@@ -961,11 +1142,11 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
             <Card title="Application Logo (Wide)" description="Recommended size: 230px x 45 px." open={logoWideOpen} onToggle={() => setLogoWideOpen(!logoWideOpen)} rightAction={<ResetLink onClick={() => setResetSection('wide logo')} />}>
               <ImageUploadArea />
             </Card>
-            <Card title="Chart Text Styles" open={chartTextOpen} onToggle={() => setChartTextOpen(!chartTextOpen)} rightAction={<AddFontLink />}>
-              <DoubleDropdownRow label="Select fonts" value1="X-Axis Labels" options1={['X-Axis Labels', 'Y-Axis Labels', 'Chart Title', 'Legend', 'Data Labels']} value2="Optimo Plain, helvetica..." options2={['Optimo Plain, helvetica...', 'Inter', 'Roboto', 'DM Sans', 'IBM Plex Sans']} />
+            <Card title="Chart Text Styles" open={chartTextOpen} onToggle={() => setChartTextOpen(!chartTextOpen)} rightAction={<AddFontLink onClick={() => setAddFontModal(true)} />}>
+              <DoubleDropdownRow label="Select fonts" value1="X-Axis Labels" options1={['X-Axis Labels', 'Y-Axis Labels', 'Chart Title', 'Legend', 'Data Labels']} value2={FONT_OPTIONS[0].label} options2={[]} fontMode />
             </Card>
-            <Card title="Table Text Styles" open={tableTextOpen} onToggle={() => setTableTextOpen(!tableTextOpen)} rightAction={<AddFontLink />}>
-              <DoubleDropdownRow label="Select fonts" value1="Table Value cells" options1={['Table Value cells', 'Table Header cells', 'Table Footer']} value2="Optimo Plain, helvetica..." options2={['Optimo Plain, helvetica...', 'Inter', 'Roboto', 'DM Sans', 'IBM Plex Sans']} />
+            <Card title="Table Text Styles" open={tableTextOpen} onToggle={() => setTableTextOpen(!tableTextOpen)} rightAction={<AddFontLink onClick={() => setAddFontModal(true)} />}>
+              <DoubleDropdownRow label="Select fonts" value1="Table Value cells" options1={['Table Value cells', 'Table Header cells', 'Table Footer']} value2={FONT_OPTIONS[0].label} options2={[]} fontMode />
             </Card>
             <Card title="Navigation Panel Colour" open={navColourOpen} onToggle={() => setNavColourOpen(!navColourOpen)} rightAction={<ResetLink onClick={() => setResetSection('navigation panel colour')} />}>
               <SettingRow label="Theme colour" control={<Dropdown value="Dark" options={['Dark', 'Light', 'Dual Tone']} width={311} />} />
@@ -1134,8 +1315,37 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
         {/* ── Homepage tab ── */}
         {activeTab === 'homepage' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <Card title="Manage custom alert banner" description="When enabled, the alert banner will display across all pages in all your organisations." open={bannerOpen} onToggle={() => setBannerOpen(!bannerOpen)}>
-              <SimpleRow label="Custom banner" control={<Toggle checked={customBanner} onChange={() => setCustomBanner(!customBanner)} />} />
+            <Card
+              title="Manage custom alert banner"
+              description="When enabled, the alert banner will display across all pages in all your organisations."
+              open={bannerOpen}
+              onToggle={() => setBannerOpen(!bannerOpen)}
+            >
+              <SimpleRow
+                label="Custom banner"
+                control={
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <Toggle
+                      checked={customBanner}
+                      onChange={() => {
+                        if (!customBanner) {
+                          setCustomBanner(true);
+                          setEditAlertModal(true);
+                        } else {
+                          setCustomBanner(false);
+                          setBannerConfigured(false);
+                        }
+                      }}
+                    />
+                    {bannerConfigured && (
+                      <span onClick={() => setEditAlertModal(true)} style={{ cursor: 'pointer' }}>
+                        <TextLink label="Edit" />
+                      </span>
+                    )}
+                  </div>
+                }
+              />
+
             </Card>
 
             <Card title="Customise homepage" description="Recommended size: 230px x 45 px." open={customiseHomepageOpen} onToggle={() => setCustomiseHomepageOpen(!customiseHomepageOpen)} rightAction={<span onClick={() => setCustomiseHomepageModal(true)}><TextLink label="Edit" /></span>}>
@@ -1183,130 +1393,139 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
               description="Manage the common appearance settings applied to all your customer emails"
               open={emailOpen}
               onToggle={() => setEmailOpen(!emailOpen)}
-              rightAction={
-                <div style={{ display: 'flex', gap: '16px' }}>
-                  <span onClick={() => setEmailPreview(!emailPreview)}>
-                    <TextLink label={emailPreview ? 'Back' : 'Preview'} />
-                  </span>
-                  <TextLink label="Edit" />
-                </div>
-              }
+              rightAction={<span onClick={() => {}}><TextLink label="Edit" /></span>}
             >
-              {emailPreview ? (
-                /* ── Email preview ── */
-                <div style={{ backgroundColor: '#F3F4F6', borderRadius: '8px', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '12px', color: '#9CA3AF', fontFamily: font }}>Sample email</span>
-                  <h2 style={{ margin: '0 0 16px', fontSize: '18px', fontWeight: 700, color: '#111827', fontFamily: font }}>Test email</h2>
-                  {/* Email body card */}
-                  <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden', maxHeight: '600px', overflowY: 'auto' }}>
-                    <div style={{ padding: '32px 40px', display: 'flex', flexDirection: 'column', gap: '24px', fontFamily: font }}>
-                      {/* Logo */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                        <span style={{ fontSize: '16px', fontWeight: 700, color: '#111827' }}>ThoughtSpot</span>
-                      </div>
-                      {/* Heading */}
-                      <h1 style={{ margin: 0, fontSize: '26px', fontWeight: 800, color: '#111827', lineHeight: 1.3 }}>
-                        Test Email to Validate Email White labelling
-                      </h1>
-                      {/* Callout box */}
-                      <div style={{ backgroundColor: '#F9FAFB', border: '1px solid #E5E7EB', borderRadius: '6px', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        {['You have updated "Answer" to Answer', 'You have updated "Liveboard" to Liveboard', 'You have updated "SpotIQ" to SpotIQ'].map((t, i) => (
-                          <span key={i} style={{ fontSize: '13.5px', color: '#374151' }}>{t}</span>
-                        ))}
-                      </div>
-                      {/* CTA button */}
+              {/* Logo */}
+              <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#111827', fontFamily: font }}>Logo</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                    <span style={{ fontSize: '13px', color: '#9CA3AF', fontFamily: font }}>Same as styling</span>
+                    {/* Coca-Cola logo */}
+                    <div style={{ fontFamily: '"Georgia", "Times New Roman", serif', fontStyle: 'italic', fontWeight: 900, fontSize: '22px', color: '#E61D2B', letterSpacing: '-0.5px', lineHeight: 1 }}>
+                      Coca-Cola
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Button color + Button text color + View KPI preview */}
+              <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid #F3F4F6' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#111827', fontFamily: font }}>Button color</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '16px', height: '16px', backgroundColor: '#1F2937', borderRadius: '3px', border: '1px solid #D1D5DB', flexShrink: 0 }} />
+                    <span style={{ fontSize: '13px', color: '#374151', fontFamily: font }}>#E61D2B (Default)</span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid #F3F4F6' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#111827', fontFamily: font }}>Button text color</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '16px', height: '16px', backgroundColor: '#FFFFFF', borderRadius: '3px', border: '1.5px solid #D1D5DB', flexShrink: 0 }} />
+                    <span style={{ fontSize: '13px', color: '#374151', fontFamily: font }}>#E61D2B (Default)</span>
+                  </div>
+                </div>
+                <div style={{ padding: '14px 20px' }}>
+                  <button style={{ height: '36px', padding: '0 28px', borderRadius: '20px', border: 'none', backgroundColor: '#1F2937', color: '#FFFFFF', fontSize: '13.5px', fontWeight: 600, fontFamily: font, cursor: 'default', letterSpacing: '0.01em' }}>
+                    View KPI
+                  </button>
+                </div>
+              </div>
+
+              {/* Primary content background color + KPI tile */}
+              <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid #F3F4F6' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#111827', fontFamily: font }}>Primary content background color</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '16px', height: '16px', backgroundColor: '#FFFFFF', borderRadius: '3px', border: '1.5px solid #D1D5DB', flexShrink: 0 }} />
+                    <span style={{ fontSize: '13px', color: '#374151', fontFamily: font }}>#E61D2B (Default)</span>
+                  </div>
+                </div>
+                <div style={{ padding: '14px 20px' }}>
+                  <div style={{ backgroundColor: '#DCFCE7', border: '1px solid #BBF7D0', borderRadius: '8px', padding: '16px 24px', display: 'flex', alignItems: 'stretch', gap: '24px', maxWidth: '420px' }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '10px', fontWeight: 600, color: '#166534', fontFamily: font, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px' }}>CURRENT (1/12/23)</div>
+                      <div style={{ fontSize: '44px', fontWeight: 800, color: '#14532D', fontFamily: font, lineHeight: 1 }}>88.2M</div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '10px' }}>
                       <div>
-                        <button style={{ padding: '12px 28px', backgroundColor: '#111827', color: '#FFFFFF', border: 'none', borderRadius: '24px', fontSize: '14px', fontWeight: 600, fontFamily: font, cursor: 'pointer' }}>
-                          Test CTA
-                        </button>
-                      </div>
-                      {/* Vocabulary */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        <div>
-                          <p style={{ margin: '0 0 6px', fontSize: '13.5px', fontWeight: 700, color: '#111827' }}>Sample vocabulary definitions for Answer:</p>
-                          <p style={{ margin: 0, fontSize: '13.5px', color: '#374151', lineHeight: 1.6 }}>What's an Answer? An Answer is a personalised, actionable insight created through search. You can see Answer that you and others have saved on the Answer page.</p>
-                        </div>
-                        <div>
-                          <p style={{ margin: '0 0 6px', fontSize: '13.5px', fontWeight: 700, color: '#111827' }}>Sample vocabulary definitions for Liveboard:</p>
-                          <p style={{ margin: 0, fontSize: '13.5px', color: '#374151', lineHeight: 1.6 }}>What's a Liveboard? Unlike static dashboards that show you outdated insights based on stale data, Liveboard offer a live and fully interactive view of all your cloud data so you can create personalised, actionable insights at the point of impact.</p>
+                        <div style={{ fontSize: '10px', fontWeight: 600, color: '#166534', fontFamily: font, textTransform: 'uppercase', letterSpacing: '0.06em' }}>% CHANGE</div>
+                        <div style={{ fontSize: '15px', fontWeight: 700, color: '#166534', fontFamily: font, display: 'flex', alignItems: 'center', gap: '3px' }}>
+                          20.74%
+                          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 10V3M3.5 6L6.5 3l3 3" stroke="#166534" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </div>
                       </div>
-                      {/* Mobile app nudge */}
-                      <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                          <p style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827' }}>Want data at your fingertips?</p>
-                          <p style={{ margin: 0, fontSize: '13px', color: '#6B7280', lineHeight: 1.5 }}>Scan the QR code to download the latest ThoughtSpot mobile app on your phone.</p>
-                          <div style={{ display: 'flex', gap: '10px' }}>
-                            <div style={{ backgroundColor: '#111827', color: '#fff', borderRadius: '6px', padding: '8px 14px', fontSize: '11px', fontWeight: 600, display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.2 }}>
-                              <span style={{ fontSize: '9px' }}>Download on the</span><span>App Store</span>
-                            </div>
-                            <div style={{ backgroundColor: '#111827', color: '#fff', borderRadius: '6px', padding: '8px 14px', fontSize: '11px', fontWeight: 600, display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.2 }}>
-                              <span style={{ fontSize: '9px' }}>GET IT ON</span><span>Google Play</span>
-                            </div>
-                          </div>
-                        </div>
-                        {/* QR placeholder */}
-                        <div style={{ width: '80px', height: '80px', backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="4" y="4" width="14" height="14" rx="1" stroke="#9CA3AF" strokeWidth="2"/><rect x="22" y="4" width="14" height="14" rx="1" stroke="#9CA3AF" strokeWidth="2"/><rect x="4" y="22" width="14" height="14" rx="1" stroke="#9CA3AF" strokeWidth="2"/><rect x="8" y="8" width="6" height="6" fill="#9CA3AF"/><rect x="26" y="8" width="6" height="6" fill="#9CA3AF"/><rect x="8" y="26" width="6" height="6" fill="#9CA3AF"/><rect x="22" y="22" width="4" height="4" fill="#9CA3AF"/><rect x="28" y="26" width="4" height="4" fill="#9CA3AF"/><rect x="22" y="30" width="4" height="4" fill="#9CA3AF"/></svg>
-                        </div>
-                      </div>
-                      {/* Error details */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingTop: '8px', borderTop: '1px solid #F3F4F6' }}>
-                        <div>
-                          <p style={{ margin: '0 0 4px', fontSize: '13.5px', fontWeight: 600, color: '#374151' }}>Error details</p>
-                          <p style={{ margin: 0, fontSize: '12.5px', color: '#9CA3AF' }}>Incident ID: 22187-ggh88810-dhaj211</p>
-                        </div>
-                        <p style={{ margin: 0, fontSize: '13px', color: '#374151' }}>You are receiving this notification because you have subscribed to ThoughtSpot</p>
-                        <p style={{ margin: 0, fontSize: '13px' }}>
-                          <span style={{ color: brand, cursor: 'pointer' }}>Modify alert</span>
-                          <span style={{ color: '#9CA3AF' }}> | </span>
-                          <span style={{ color: brand, cursor: 'pointer' }}>Unsubscribe</span>
-                        </p>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          <span style={{ fontSize: '13px', fontWeight: 600, color: '#374151' }}>ThoughtSpot</span>
-                          <span style={{ fontSize: '12.5px', color: '#6B7280' }}>(800) 508-7008</span>
-                          <span style={{ fontSize: '12.5px', color: '#6B7280' }}>444 Castro St, Suite 1000 Mountain View, CA 94041</span>
-                          <p style={{ margin: 0, fontSize: '12.5px' }}>
-                            <span style={{ color: brand, cursor: 'pointer' }}>Privacy policy</span>
-                            <span style={{ color: '#9CA3AF' }}> | </span>
-                            <span style={{ color: brand, cursor: 'pointer' }}>Contact support</span>
-                            <span style={{ color: '#9CA3AF' }}> | </span>
-                            <span style={{ color: brand, cursor: 'pointer' }}>Manage notification preferences</span>
-                          </p>
-                        </div>
+                      <div>
+                        <div style={{ fontSize: '10px', fontWeight: 600, color: '#166534', fontFamily: font, textTransform: 'uppercase', letterSpacing: '0.06em' }}>LAST (12/29/22)</div>
+                        <div style={{ fontSize: '15px', fontWeight: 700, color: '#166534', fontFamily: font }}>79.9M</div>
                       </div>
                     </div>
                   </div>
                 </div>
-              ) : (
-                /* ── Email settings ── */
-                <>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', padding: '14px 20px', backgroundColor: '#FFFFFF', border: '1px solid #E9EAEC', borderRadius: '8px' }}>
-                    <span style={{ fontSize: '14px', color: '#111827', fontFamily: font }}>Logo</span>
-                    <button style={{ padding: '6px 14px', border: '1px solid #D1D5DB', borderRadius: '6px', backgroundColor: '#F9FAFB', fontSize: '13px', fontWeight: 500, color: '#374151', fontFamily: font, cursor: 'pointer' }}>Same as styling</button>
+              </div>
+
+              {/* Product name */}
+              <EmailShownRow label="Product name">
+                <div style={{ display: 'inline-flex', alignItems: 'center', height: '28px', padding: '0 14px', backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '20px' }}>
+                  <span style={{ fontSize: '12.5px', color: '#6B7280', fontFamily: font }}>&lt;Product name&gt;</span>
+                </div>
+              </EmailShownRow>
+
+              {/* Phone number */}
+              <EmailShownRow label="Phone number">
+                <div style={{ display: 'inline-flex', alignItems: 'center', height: '28px', padding: '0 14px', backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '20px' }}>
+                  <span style={{ fontSize: '12.5px', color: '#6B7280', fontFamily: font }}>&lt;8795867721&gt;</span>
+                </div>
+              </EmailShownRow>
+
+              {/* Address */}
+              <EmailShownRow label="Address">
+                <div style={{ backgroundColor: '#F9FAFB', border: '1px solid #E5E7EB', borderRadius: '8px', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#374151', fontFamily: font }}>Thoughtspot</span>
+                  <span style={{ fontSize: '12.5px', color: '#6B7280', fontFamily: font }}>(800) 508-7008</span>
+                  <span style={{ fontSize: '12.5px', color: '#6B7280', fontFamily: font }}>444 Castro St, Suite 1000 Mountain View, CA 94041</span>
+                </div>
+              </EmailShownRow>
+
+              {/* Mobile app nudge */}
+              <EmailShownRow label="Mobile app nudge">
+                <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '20px', backgroundColor: '#F9FAFB' }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827', fontFamily: font, marginBottom: '6px' }}>Want data at your fingertips?</div>
+                    <div style={{ fontSize: '12.5px', color: '#6B7280', fontFamily: font, lineHeight: 1.5, marginBottom: '10px' }}>Scan the QR code to download the latest ThoughtSpot mobile app on your phone.</div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <div style={{ backgroundColor: '#111827', color: '#fff', borderRadius: '6px', padding: '6px 12px', fontSize: '10px', fontWeight: 600, display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.3, fontFamily: font }}>
+                        <span style={{ fontSize: '8px' }}>Download on the</span><span>App Store</span>
+                      </div>
+                      <div style={{ backgroundColor: '#111827', color: '#fff', borderRadius: '6px', padding: '6px 12px', fontSize: '10px', fontWeight: 600, display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.3, fontFamily: font }}>
+                        <span style={{ fontSize: '8px' }}>GET IT ON</span><span>Google Play</span>
+                      </div>
+                    </div>
                   </div>
-                  <ColorDisplayRow label="Button colour" color="#0078F8" hex="#0078F8" />
-                  <ColorDisplayRow label="Button text colour" color="#0078F8" hex="#0078F8" />
-                  <ColorDisplayRow label="Primary content background color" color="#0078F8" hex="#0078F8" />
-                  {([
-                    ['productName',    'Product name'],
-                    ['phoneNumber',    'Phone number'],
-                    ['address',        'Address'],
-                    ['mobileAppNudge', 'Mobile app nudge'],
-                    ['modifyAlert',    'Modify alert'],
-                    ['unsubscribeLink','Unsubscribe link'],
-                    ['errorMessage',   'Error message'],
-                  ] as [string, string][]).map(([key, label]) => (
-                    <SimpleRow key={key} label={label} control={<Toggle checked={emailToggles[key]} onChange={() => setEmailToggles({ ...emailToggles, [key]: !emailToggles[key] })} />} />
-                  ))}
-                  <ValueRow label="Company signature" value="444 Castro St, Suite 1000 Mountain View, CA, 94041" />
-                  <ValueRow label="Privacy policy" value="https://www.thoughtspot.com/privacy-statement" />
-                  <ValueRow label="Contact support" value="https://www.thoughtspot.com/support" />
-                  <SimpleRow label="Manage notification preferences" control={<Toggle checked={emailToggles.manageNotifications} onChange={() => setEmailToggles({ ...emailToggles, manageNotifications: !emailToggles.manageNotifications })} />} />
-                  <ValueRow label="Company website URL" value="https://www.thoughtspot.com" />
-                </>
-              )}
+                  {/* Phone illustration */}
+                  <div style={{ width: '68px', height: '90px', background: 'linear-gradient(160deg, #6366F1 0%, #8B5CF6 100%)', borderRadius: '14px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="28" height="44" viewBox="0 0 28 44" fill="none"><rect x="2" y="2" width="24" height="40" rx="5" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"/><line x1="9" y1="6" x2="19" y2="6" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" strokeLinecap="round"/><circle cx="14" cy="38" r="2" stroke="rgba(255,255,255,0.6)" strokeWidth="1.2"/><rect x="6" y="12" width="16" height="18" rx="2" fill="rgba(255,255,255,0.15)"/></svg>
+                  </div>
+                </div>
+              </EmailShownRow>
+
+              {/* Error message */}
+              <EmailShownRow label="Error message">
+                <div style={{ display: 'inline-flex', alignItems: 'center', height: '28px', padding: '0 14px', backgroundColor: '#F3F4F6', border: '1px solid #E5E7EB', borderRadius: '20px' }}>
+                  <span style={{ fontSize: '12.5px', color: '#6B7280', fontFamily: font }}>&lt;Error message&gt;</span>
+                </div>
+              </EmailShownRow>
+
+              {/* Toggle-only rows */}
+              <EmailDotRow label="Modify alert" />
+              <EmailDotRow label="Unsubscribe link" />
+
+              {/* Value rows */}
+              <ValueRow label="Company signature" value="444 Castro St, Suite 1000 Mountain View, C..." />
+              <ValueRow label="Privacy policy" value="https://www.thoughtspot.com/privacy-stat..." />
+              <ValueRow label="Contact support" value="https://www.thoughtspot.com/support" />
+              <EmailDotRow label="Manage notification preferences" />
+              <ValueRow label="Company website URL" value="https://www.thoughtspot.com" />
             </Card>
           </div>
         )}
@@ -1317,7 +1536,7 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid #E5E7EB' }}>
               <span style={{ fontSize: '14px', fontWeight: 600, color: '#111827', fontFamily: font }}>List of help menu items</span>
-              <button onClick={() => setHelpMenuItemModal(true)} style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0 }}>
+              <button onClick={() => { setHelpMenuMode('add'); setHelpMenuEditItem(null); setHelpMenuItemModal(true); }} style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, color: brand, padding: 0 }}>
                 <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><line x1="6.5" y1="1" x2="6.5" y2="12" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/><line x1="1" y1="6.5" x2="12" y2="6.5" stroke={brand} strokeWidth="1.6" strokeLinecap="round"/></svg>
                 Add menu item
               </button>
@@ -1326,19 +1545,22 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
             <div style={{ padding: '16px' }}>
               <div style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
                 {/* Header row */}
-                <div style={{ display: 'grid', gridTemplateColumns: '100px 2fr 1.5fr 3fr 80px', padding: '12px 20px', borderBottom: '1px solid #E5E7EB' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '80px 2fr 1.5fr 3fr 140px', padding: '12px 20px', borderBottom: '1px solid #E5E7EB' }}>
                   {['Status', 'Menu item label', 'Custom icon', 'Item URL', 'Action'].map((h) => (
                     <span key={h} style={{ fontSize: '12.5px', fontWeight: 400, color: '#9CA3AF', fontFamily: font }}>{h}</span>
                   ))}
                 </div>
                 {/* Rows */}
                 {HELP_ITEMS.map((item, i) => (
-                  <div key={item.label} style={{ display: 'grid', gridTemplateColumns: '100px 2fr 1.5fr 3fr 80px', padding: '16px 20px', alignItems: 'center', borderBottom: i < HELP_ITEMS.length - 1 ? '1px solid #F3F4F6' : 'none' }}>
-                    <Toggle checked={helpToggles[item.label]} onChange={() => setHelpToggles({ ...helpToggles, [item.label]: !helpToggles[item.label] })} />
+                  <div key={item.label} style={{ display: 'grid', gridTemplateColumns: '80px 2fr 1.5fr 3fr 140px', padding: '20px 20px', alignItems: 'center', borderBottom: i < HELP_ITEMS.length - 1 ? '1px solid #E5E7EB' : 'none' }}>
+                    <Toggle checked={helpToggles[item.label]} onChange={() => { setHelpToggles({ ...helpToggles, [item.label]: !helpToggles[item.label] }); showSettingsToast(); }} />
                     <span style={{ fontSize: '13.5px', color: '#111827', fontFamily: font }}>{item.label}</span>
                     <HelpMenuIcon type={item.icon} />
                     <span style={{ fontSize: '13px', color: brand, fontFamily: font, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.url}</span>
-                    <button onClick={() => setHelpMenuItemModal(true)} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Edit</button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <button onClick={() => { setHelpMenuMode('edit'); setHelpMenuEditItem(item); setHelpMenuItemModal(true); }} style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Edit</button>
+                      <button style={{ border: 'none', background: 'none', fontSize: '13px', fontWeight: 500, color: brand, fontFamily: font, cursor: 'pointer', padding: 0 }}>Delete</button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1346,7 +1568,7 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
           </div>
         )}
 
-        {helpMenuItemModal && <EditHelpMenuItemModal onClose={() => setHelpMenuItemModal(false)} />}
+        {helpMenuItemModal && <HelpMenuItemModal mode={helpMenuMode} item={helpMenuEditItem ?? undefined} onClose={() => setHelpMenuItemModal(false)} onSave={() => { setHelpMenuItemModal(false); showSettingsToast(); }} />}
 
       </div>
       </div>
@@ -1358,6 +1580,31 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
           onToggle={(key) => setHomepageItems({ ...homepageItems, [key]: !homepageItems[key] })}
           onClose={() => setCustomiseHomepageModal(false)}
         />
+      )}
+
+      {editAlertModal && (
+        <RdModal size="sm" title="Edit alert banner" onClose={() => setEditAlertModal(false)}>
+          <div style={{ padding: '16px 0' }}>
+            <p style={{ margin: 0, fontSize: 14, color: '#6B7280', fontFamily: font }}>Configure your custom alert banner message and appearance.</p>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, paddingTop: 16, borderTop: '1px solid #F3F4F6' }}>
+            <button onClick={() => setEditAlertModal(false)} style={{ padding: '8px 16px', border: '1px solid #E5E7EB', borderRadius: 8, background: '#fff', cursor: 'pointer', fontFamily: font, fontSize: 14 }}>Cancel</button>
+            <button onClick={() => { setBannerConfigured(true); setEditAlertModal(false); showSettingsToast(); }} style={{ padding: '8px 16px', border: 'none', borderRadius: 8, background: '#2770EF', color: '#fff', cursor: 'pointer', fontFamily: font, fontSize: 14, fontWeight: 600 }}>Save</button>
+          </div>
+        </RdModal>
+      )}
+
+      {addFontModal && (
+        <AddNewFontModal
+          onClose={() => setAddFontModal(false)}
+          onConfirm={() => { setAddFontModal(false); showSettingsToast(); }}
+        />
+      )}
+
+      {settingsToastVisible && (
+        <div style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', background: '#111827', color: '#fff', padding: '10px 20px', borderRadius: 8, fontSize: 14, fontFamily: font, zIndex: 9999, boxShadow: '0 4px 16px rgba(0,0,0,0.3)' }}>
+          Settings saved
+        </div>
       )}
 
       <style>{`

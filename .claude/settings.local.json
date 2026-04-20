@@ -25,7 +25,16 @@
       "mcp__figma__get_code_connect_suggestions",
       "mcp__figma__get_screenshot",
       "Bash(git stash:*)",
-      "Bash(ls src/prototypes/registry*.ts)"
+      "Bash(ls src/prototypes/registry*.ts)",
+      "Bash(curl:*)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('name', d.get\\('message', str\\(d\\)[:200]\\)\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('html_url', d.get\\('message', str\\(d\\)[:300]\\)\\)\\)\")",
+      "Bash(git -C /Users/simran.pandit/CODE/Radiantplay status)",
+      "Bash(git -C /Users/simran.pandit/CODE/Radiantplay remote -v)",
+      "Bash(gh auth *)",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(pr['html_url'], '|', pr['number'], '|', pr['title']\\) for pr in data]\")",
+      "mcp__figma__get_metadata",
+      "Bash(git pull *)"
     ]
   },
   "enableAllProjectMcpServers": true,
