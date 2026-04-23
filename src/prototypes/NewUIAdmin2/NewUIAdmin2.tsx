@@ -524,61 +524,37 @@ export const NewUIAdmin2: React.FC = () => {
         {/* ── Page header: full-width, title left + tabs inline ── */}
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0',
-            padding: '28px 40px 0',
-            borderBottom: '1px solid #E5E7EB',
+            flexShrink: 0, display: 'flex', alignItems: 'center',
+            height: '92px', padding: '0 40px',
+            borderBottom: '1px solid #E5E7EB', boxSizing: 'border-box',
           }}
         >
-          {/* Title — left aligned, full height */}
           <h1
             style={{
-              margin: '0 0 16px 0',
-              fontSize: '22px',
-              fontWeight: 700,
-              color: '#0F172A',
-              fontFamily: font,
-              letterSpacing: '-0.3px',
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
+              margin: 0, fontSize: '22px', fontWeight: 700,
+              color: '#0F172A', fontFamily: font, letterSpacing: '-0.3px',
+              whiteSpace: 'nowrap', flexShrink: 0,
             }}
           >
             Application settings
           </h1>
 
-          {/* Vertical separator */}
-          <div
-            style={{
-              width: '1px',
-              height: '24px',
-              backgroundColor: '#D1D5DB',
-              margin: '0 24px 16px',
-              flexShrink: 0,
-            }}
-          />
+          <div style={{ width: '1px', height: '24px', backgroundColor: '#D1D5DB', margin: '0 24px', flexShrink: 0 }} />
 
-          {/* Tabs — inline with title, underline on active */}
-          <div style={{ display: 'flex', alignItems: 'flex-end', flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'stretch', flex: 1, alignSelf: 'stretch' }}>
             {pageTabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 style={{
-                  padding: '0 14px 16px',
-                  border: 'none',
-                  background: 'none',
-                  cursor: 'pointer',
-                  fontFamily: font,
-                  fontSize: '13.5px',
+                  display: 'flex', alignItems: 'center',
+                  padding: '0 14px',
+                  border: 'none', background: 'none', cursor: 'pointer',
+                  fontFamily: font, fontSize: '13.5px',
                   fontWeight: activeTab === tab.id ? 600 : 400,
                   color: activeTab === tab.id ? brand : '#6B7280',
-                  borderBottom: activeTab === tab.id
-                    ? `2px solid ${brand}`
-                    : '2px solid transparent',
-                  marginBottom: '-1px',
-                  transition: 'color 0.15s',
-                  whiteSpace: 'nowrap',
+                  borderBottom: activeTab === tab.id ? `2px solid ${brand}` : '2px solid transparent',
+                  marginBottom: '-1px', transition: 'color 0.15s', whiteSpace: 'nowrap',
                 }}
               >
                 {tab.label}

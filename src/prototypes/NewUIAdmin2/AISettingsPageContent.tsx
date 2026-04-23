@@ -806,12 +806,16 @@ export const AISettingsPageContent: React.FC = () => {
   const [spotterVizOpen, setSpotterVizOpen] = useState(true);
   const [spotterVizOnLiveboard, setSpotterVizOnLiveboard] = useState(true);
 
-  // ── Spotter code tab — empty state (coming soon) ──
+  // ── Spotter Model tab ──
+  const [spotterModelOnEditor, setSpotterModelOnEditor] = useState(true);
+
+  const isSpotter3 = spotterVersion === 'Spotter 3';
 
   const pageTabs = [
     { id: 'general', label: 'General settings' },
-    { id: 'spotter3', label: 'Spotter 3' },
-    { id: 'spotter-viz', label: 'Spotter viz' },
+    { id: 'spotter', label: 'Spotter' },
+    { id: 'spotter-viz', label: 'Spotter Viz' },
+    { id: 'spotter-model', label: 'Spotter Model' },
     { id: 'spotter-code', label: 'Spotter code' },
   ];
 
@@ -904,20 +908,22 @@ export const AISettingsPageContent: React.FC = () => {
       {/* ── Sticky header ── */}
       <div style={{
         flexShrink: 0, display: 'flex', alignItems: 'center',
-        padding: '28px 40px 0', borderBottom: '1px solid #E5E7EB', backgroundColor: '#FFFFFF',
+        height: '92px', padding: '0 40px', borderBottom: '1px solid #E5E7EB',
+        backgroundColor: '#FFFFFF', boxSizing: 'border-box',
       }}>
         <h1 style={{
-          margin: '0 0 16px 0', fontSize: '22px', fontWeight: 700,
+          margin: 0, fontSize: '22px', fontWeight: 700,
           color: '#0F172A', fontFamily: font, letterSpacing: '-0.3px',
           whiteSpace: 'nowrap', flexShrink: 0,
         }}>
           AI settings
         </h1>
-        <div style={{ width: '1px', height: '24px', backgroundColor: '#D1D5DB', margin: '0 24px 16px', flexShrink: 0 }} />
-        <div style={{ display: 'flex', alignItems: 'flex-end', flex: 1 }}>
+        <div style={{ width: '1px', height: '24px', backgroundColor: '#D1D5DB', margin: '0 24px', flexShrink: 0 }} />
+        <div style={{ display: 'flex', alignItems: 'stretch', flex: 1, alignSelf: 'stretch' }}>
           {pageTabs.map((tab) => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
-              padding: '0 14px 16px', border: 'none', background: 'none',
+              display: 'flex', alignItems: 'center',
+              padding: '0 14px', border: 'none', background: 'none',
               cursor: 'pointer', fontFamily: font, fontSize: '13.5px',
               fontWeight: activeTab === tab.id ? 600 : 400,
               color: activeTab === tab.id ? brand : '#6B7280',
@@ -958,24 +964,6 @@ export const AISettingsPageContent: React.FC = () => {
                 </div>
               </div>
 
-              {/* Configure user experience */}
-              <CollapsibleSection
-                title="Configure user experience"
-                subtitle="Select optional features for Spotter"
-                open={uxOpen}
-                onToggle={() => setUxOpen(!uxOpen)}
-                onReset={() => setResetSection('user experience settings')}
-              >
-                <SettingRow
-                  label="Enable add to coaching from conversation"
-                  control={<Toggle checked={coachingFromConvo} onChange={() => setCoachingFromConvo(!coachingFromConvo)} />}
-                />
-                <SettingRow
-                  label="AI Sample Questions"
-                  control={<Toggle checked={sampleQuestions} onChange={() => setSampleQuestions(!sampleQuestions)} />}
-                />
-              </CollapsibleSection>
-
               {/* Other AI features */}
               <CollapsibleSection
                 title="Other AI features"
@@ -991,33 +979,7 @@ export const AISettingsPageContent: React.FC = () => {
                   label="AI Highlights on Liveboard"
                   control={<Toggle checked={aiHighlights} onChange={() => setAiHighlights(!aiHighlights)} />}
                 />
-                <SettingRow
-                  label="Memory from Liveboards and conversations"
-                  control={<Toggle checked={memoryFromLiveboards} onChange={() => setMemoryFromLiveboards(!memoryFromLiveboards)} />}
-                />
               </CollapsibleSection>
-
-              {/* Spotter connectors */}
-              <FlatSection
-                title="Spotter connectors"
-                subtitle="Add global third party connectors on Spotter."
-                action={
-                  <button onClick={() => setAddConnectorModal(true)} style={{
-                    height: '32px', padding: '0 14px', borderRadius: '999px',
-                    border: 'none', backgroundColor: rdComponentColors['button-secondary-default'],
-                    cursor: 'pointer', fontFamily: font, fontSize: '13px',
-                    fontWeight: 500, color: '#374151',
-                  }}>
-                    Add custom connector
-                  </button>
-                }
-              >
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                  {CONNECTORS.map((c) => (
-                    <ConnectorCard key={c.id} name={c.name} icon={c.icon} />
-                  ))}
-                </div>
-              </FlatSection>
 
               {/* Data Models */}
               <FlatSection
@@ -1081,11 +1043,11 @@ export const AISettingsPageContent: React.FC = () => {
             </div>
           )}
 
-          {/* ─────────── Spotter 3 tab ─────────── */}
-          {activeTab === 'spotter3' && (
+          {/* ─────────── Spotter tab ─────────── */}
+          {activeTab === 'spotter' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
-              {/* Spotter — version selector, no Reset */}
+              {/* Spotter version — always visible */}
               <CollapsibleSection
                 title="Spotter"
                 open={spotterSectionOpen}
@@ -1106,58 +1068,106 @@ export const AISettingsPageContent: React.FC = () => {
                 />
               </CollapsibleSection>
 
-              {/* Choose where your users can access Spotter */}
-              <CollapsibleSection
-                title="Choose where your users can access Spotter"
-                subtitle="Spotter is available on ThoughtSpot Homepage and Liveboard. Use this option to enable/disable Spotter in each surface."
-                open={spotterAccessOpen}
-                onToggle={() => setSpotterAccessOpen(!spotterAccessOpen)}
-                onReset={() => setResetSection('Spotter access settings')}
-              >
-                <SettingRow
-                  label="Spotter on homepage and left navigation"
-                  control={<Toggle checked={spotterOnHomepage} onChange={() => setSpotterOnHomepage(!spotterOnHomepage)} />}
-                />
-                <SettingRow
-                  label="Spotter on Liveboard"
-                  control={<Toggle checked={spotterOnLiveboard} onChange={() => setSpotterOnLiveboard(!spotterOnLiveboard)} />}
-                />
-              </CollapsibleSection>
+              {/* Sections below disabled when not Spotter 3 */}
+              <div style={{ opacity: isSpotter3 ? 1 : 0.45, pointerEvents: isSpotter3 ? 'auto' : 'none', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
-              {/* Spotter 3 capabilities */}
-              <CollapsibleSection
-                title="Spotter 3 capabilities"
-                subtitle="Enable optional features for Spotter 3. These capabilities will only work with Spotter 3"
-                open={spotterCapabilitiesOpen}
-                onToggle={() => setSpotterCapabilitiesOpen(!spotterCapabilitiesOpen)}
-                onReset={() => setResetSection('Spotter 3 capability settings')}
-              >
-                <SettingRow
-                  label="Auto-mode to automatically select a data model"
-                  control={<Toggle checked={autoMode} onChange={() => setAutoMode(!autoMode)} />}
-                />
-                <SettingRow
-                  label="Enable Connectors/MCP"
-                  control={<Toggle checked={enableConnectorsMCP} onChange={() => setEnableConnectorsMCP(!enableConnectorsMCP)} />}
-                />
-                <SettingRow
-                  label="Enable chat history"
-                  control={<Toggle checked={enableChatHistory} onChange={() => setEnableChatHistory(!enableChatHistory)} />}
-                />
-                <SettingRow
-                  label="Chat history retention period"
-                  description="Only applicable when chat history is enabled"
-                  control={
-                    <Dropdown
-                      value={retentionPeriod}
-                      options={['7 days', '30 days', '90 days', '180 days', '1 year']}
-                      width={311}
-                      onChange={(val) => { if (val !== retentionPeriod) setPendingRetention(val); }}
-                    />
-                  }
-                />
-              </CollapsibleSection>
+                {/* Choose where */}
+                <CollapsibleSection
+                  title="Choose where your users can access Spotter"
+                  subtitle="Spotter is available on ThoughtSpot Homepage and Liveboard. Use this option to enable/disable Spotter in each surface."
+                  open={spotterAccessOpen}
+                  onToggle={() => setSpotterAccessOpen(!spotterAccessOpen)}
+                  onReset={() => setResetSection('Spotter access settings')}
+                >
+                  <SettingRow
+                    label="Spotter on homepage and left navigation"
+                    control={<Toggle checked={spotterOnHomepage} onChange={() => setSpotterOnHomepage(!spotterOnHomepage)} />}
+                  />
+                  <SettingRow
+                    label="Spotter on Liveboard"
+                    control={<Toggle checked={spotterOnLiveboard} onChange={() => setSpotterOnLiveboard(!spotterOnLiveboard)} />}
+                  />
+                </CollapsibleSection>
 
+                {/* Spotter connectors — only shown for Spotter 3 */}
+                {isSpotter3 && (
+                  <FlatSection
+                    title="Spotter connectors"
+                    subtitle="Add global third party connectors on Spotter."
+                    action={
+                      <button onClick={() => setAddConnectorModal(true)} style={{
+                        height: '32px', padding: '0 14px', borderRadius: '999px',
+                        border: 'none', backgroundColor: rdComponentColors['button-secondary-default'],
+                        cursor: 'pointer', fontFamily: font, fontSize: '13px',
+                        fontWeight: 500, color: '#374151',
+                      }}>
+                        Add custom connector
+                      </button>
+                    }
+                  >
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                      {CONNECTORS.map((c) => (
+                        <ConnectorCard key={c.id} name={c.name} icon={c.icon} />
+                      ))}
+                    </div>
+                  </FlatSection>
+                )}
+
+                {/* Spotter 3 capabilities */}
+                <CollapsibleSection
+                  title="Spotter 3 capabilities"
+                  subtitle="Enable optional features for Spotter 3. These capabilities will only work with Spotter 3"
+                  open={spotterCapabilitiesOpen}
+                  onToggle={() => setSpotterCapabilitiesOpen(!spotterCapabilitiesOpen)}
+                  onReset={() => setResetSection('Spotter 3 capability settings')}
+                >
+                  <SettingRow
+                    label="Auto-mode to automatically select a data model"
+                    control={<Toggle checked={autoMode} onChange={() => setAutoMode(!autoMode)} />}
+                  />
+                  <SettingRow
+                    label="Enable Connectors/MCP"
+                    control={<Toggle checked={enableConnectorsMCP} onChange={() => setEnableConnectorsMCP(!enableConnectorsMCP)} />}
+                  />
+                  <SettingRow
+                    label="Enable chat history"
+                    control={<Toggle checked={enableChatHistory} onChange={() => setEnableChatHistory(!enableChatHistory)} />}
+                  />
+
+                  {/* Dashed separator with green dot */}
+                  <div style={{ display: 'flex', alignItems: 'center', margin: '4px -8px' }}>
+                    <div style={{ flex: 1, height: '1px', borderTop: '1.5px dashed #D1D5DB' }} />
+                    <div style={{ width: '10px', height: '10px', backgroundColor: '#22C55E', borderRadius: '50%', margin: '0 10px', flexShrink: 0 }} />
+                    <div style={{ flex: 1, height: '1px', borderTop: '1.5px dashed #D1D5DB' }} />
+                  </div>
+
+                  <SettingRow
+                    label="Chat history retention period"
+                    description="Only applicable when chat history is enabled"
+                    control={
+                      <Dropdown
+                        value={retentionPeriod}
+                        options={['7 days', '30 days', '90 days', '180 days', '1 year']}
+                        width={311}
+                        onChange={(val) => { if (val !== retentionPeriod) setPendingRetention(val); }}
+                      />
+                    }
+                  />
+                </CollapsibleSection>
+
+              </div>
+            </div>
+          )}
+
+          {/* ─────────── Spotter Model tab ─────────── */}
+          {activeTab === 'spotter-model' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <FlatSection title="Spotter Model">
+                <SettingRow
+                  label="Spotter Model on data model editor"
+                  control={<Toggle checked={spotterModelOnEditor} onChange={() => setSpotterModelOnEditor(!spotterModelOnEditor)} />}
+                />
+              </FlatSection>
             </div>
           )}
 

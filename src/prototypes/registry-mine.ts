@@ -12,11 +12,14 @@
 
 import React from 'react';
 import { ProjectMeta } from './registry-core';
+import EmailCustomisationThumbnail from './thumbnails/EmailCustomisation.svg';
 
 const AdminPortal2 = React.lazy(() => import('./AdminPortal2'));
 const NewUIAdmin2 = React.lazy(() => import('./NewUIAdmin2'));
 const Admin2Vision = React.lazy(() => import('./Admin2Vision'));
 const HomepageV4 = React.lazy(() => import('./HomepageV4'));
+const HomepageV5 = React.lazy(() => import('./HomepageV5'));
+const EmailCustomisation = React.lazy(() => import('./EmailCustomisation'));
 
 export const myRegistry: ProjectMeta[] = [
   {
@@ -50,6 +53,17 @@ export const myRegistry: ProjectMeta[] = [
     section: 'mine',
   },
   {
+    id: 'HomepageV5',
+    name: 'HOMEPAGE V5',
+    description: 'ThoughtSpot homepage — Spotter prompt bar, chip dropdowns, Recents with hover 3-dot, Watchlist with animated KPI dots, Add KPI modal, and SpotterViz liveboard creation flow.',
+    author: 'Simran Pandit',
+    lastModified: '2026-04-17',
+    component: HomepageV5,
+    dsComponents: 2,
+    customComponents: 9,
+    section: 'mine',
+  },
+  {
     id: 'HomepageV4',
     name: 'HOMEPAGE V4',
     description: 'ThoughtSpot homepage with animated Spotter prompt box, quick action chips, Recents, and Watchlist KPIs.',
@@ -58,6 +72,18 @@ export const myRegistry: ProjectMeta[] = [
     component: HomepageV4,
     dsComponents: 4,
     customComponents: 6,
+    section: 'mine',
+  },
+  {
+    id: 'EmailCustomisation',
+    name: 'Email customisation',
+    description: 'Iterative explorations of email customisation UX — preview modal, full-page property editor, and iteration switcher.',
+    author: 'Simran Pandit',
+    lastModified: '2026-04-17',
+    thumbnail: EmailCustomisationThumbnail,
+    component: EmailCustomisation,
+    dsComponents: 0,
+    customComponents: 4,
     section: 'mine',
   },
 ];
