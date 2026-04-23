@@ -51,6 +51,7 @@ const AdminLang = React.lazy(() => import('./AdminLang'));
 const MiniSpotters = React.lazy(() => import('./MiniSpotters'));
 const LiveboardTemplate = React.lazy(() => import('./_liveboard-template'));
 const SalesDashboard = React.lazy(() => import('./SalesDashboard'));
+const NewUIAdmin2 = React.lazy(() => import('./NewUIAdmin2'));
 
 // ── Registry ──────────────────────────────────────────────────────────────────
 
@@ -136,6 +137,17 @@ export const coreRegistry: ProjectMeta[] = [
     component: SalesDashboard,
     dsComponents: 6,
     customComponents: 3,
+    section: 'sample',
+  },
+  {
+    id: 'NewUIAdmin2',
+    name: 'Admin 2.0',
+    description: 'Admin portal — customisation, AI settings, feature management, version control, and full left-nav with org switcher.',
+    author: 'Simran Pandit',
+    lastModified: '2026-04-23',
+    component: NewUIAdmin2,
+    dsComponents: 8,
+    customComponents: 12,
     section: 'sample',
   },
 ];
