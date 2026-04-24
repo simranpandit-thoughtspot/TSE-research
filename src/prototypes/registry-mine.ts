@@ -20,8 +20,20 @@ const Admin2Vision = React.lazy(() => import('./Admin2Vision'));
 const HomepageV4 = React.lazy(() => import('./HomepageV4'));
 const HomepageV5 = React.lazy(() => import('./HomepageV5'));
 const EmailCustomisation = React.lazy(() => import('./EmailCustomisation'));
+const ImpersonationFlow = React.lazy(() => import('./ImpersonationFlow'));
 
 export const myRegistry: ProjectMeta[] = [
+  {
+    id: 'ImpersonationFlow',
+    name: 'Impersonation flow',
+    description: 'Admin impersonation (act as) flow — user profile preference toggle, access-request email, approve/decline with animated feedback states.',
+    author: 'Simran Pandit',
+    lastModified: '2026-04-24',
+    component: ImpersonationFlow,
+    dsComponents: 0,
+    customComponents: 5,
+    section: 'mine',
+  },
   {
     id: 'AdminPortal2',
     name: 'Admin Portal 2.0',
