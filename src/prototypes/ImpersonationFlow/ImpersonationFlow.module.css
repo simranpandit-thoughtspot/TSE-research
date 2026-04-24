@@ -1,0 +1,515 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: #F3F5F8;
+}
+
+/* ── Header ── */
+.header {
+  height: 56px;
+  background: #0F1729;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  flex-shrink: 0;
+  gap: 16px;
+  z-index: 100;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* ── Persona Switcher ── */
+.personaSwitcher {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 100px;
+  padding: 4px 6px 4px 12px;
+}
+
+.switcherLabel {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "Plain", -apple-system, sans-serif;
+  white-space: nowrap;
+}
+
+.switcherPills {
+  display: flex;
+  gap: 2px;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: "Plain", -apple-system, sans-serif;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pill:hover {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pillActive {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/* ── Header right items ── */
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  width: 220px;
+  cursor: pointer;
+}
+
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.notifDot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 7px;
+  height: 7px;
+  background: #EF4444;
+  border-radius: 50%;
+  border: 1.5px solid #0F1729;
+}
+
+.userChip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.avatarImg {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ── Browser tab bar (user view) ── */
+.browserTabBar {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 6px 12px 0;
+  background: #DEE1E6;
+  flex-shrink: 0;
+}
+
+.browserTab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: #C8CBD0;
+  color: #5F6368;
+  font-size: 12px;
+  font-family: "Plain", -apple-system, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+  position: relative;
+}
+
+.browserTab:hover {
+  background: #D1D4D9;
+}
+
+.browserTabActive {
+  background: #fff;
+  color: #374151;
+}
+
+.tabNotifDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #EF4444;
+  display: block;
+  flex-shrink: 0;
+}
+
+.tabBarPlus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  margin-bottom: 2px;
+  cursor: pointer;
+  color: #5F6368;
+}
+
+.tabBarPlus:hover {
+  background: #C8CBD0;
+}
+
+/* ── Content ── */
+.content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+}
+
+/* ── Admin placeholder ── */
+.adminPlaceholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adminCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 48px;
+}
+
+/* ── Notification panel ── */
+.notifsPanel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: -8px;
+  width: 380px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  border: 1px solid #E5E7EB;
+  z-index: 500;
+  overflow: hidden;
+}
+
+.notifsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.notifsTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  font-family: "Plain", -apple-system, sans-serif;
+}
+
+.markAllRead {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: #2563EB;
+  font-family: "Plain", -apple-system, sans-serif;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.notifItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #F9FAFB;
+  position: relative;
+}
+
+.notifItem:last-of-type {
+  border-bottom: none;
+}
+
+.notifAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.notifIconCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #1C2333;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: "Plain", -apple-system, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notifBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.notifText {
+  font-size: 13px;
+  color: #111827;
+  font-family: "Plain", -apple-system, sans-serif;
+  line-height: 1.4;
+  margin-bottom: 3px;
+}
+
+.notifAction {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: #2563EB;
+  font-family: "Plain", -apple-system, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 3px;
+  display: block;
+}
+
+.notifSubText {
+  font-size: 12px;
+  color: #6B7280;
+  font-family: "Plain", -apple-system, sans-serif;
+  margin-bottom: 2px;
+}
+
+.notifTime {
+  font-size: 11px;
+  color: #9CA3AF;
+  font-family: "Plain", -apple-system, sans-serif;
+}
+
+.notifUnreadDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2563EB;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.showAllNotifs {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: none;
+  border: none;
+  border-top: 1px solid #F3F4F6;
+  font-size: 13px;
+  color: #2563EB;
+  font-family: "Plain", -apple-system, sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+}
+
+.showAllNotifs:hover {
+  background: #F9FAFB;
+}
+
+/* ── Guide button in header ── */
+.guideBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: "Plain", -apple-system, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.guideBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ── Guide modal ── */
+.guideOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 41, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.guideModal {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22);
+  animation: guideIn 0.2s ease-out;
+}
+
+@keyframes guideIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.guideHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 28px 28px 0;
+}
+
+.guideEyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #6B7280;
+  font-family: "Plain", -apple-system, sans-serif;
+  margin-bottom: 4px;
+}
+
+.guideTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  font-family: "Plain", -apple-system, sans-serif;
+  margin: 0;
+}
+
+.guideClose {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #E5E7EB;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.guideClose:hover {
+  background: #F9FAFB;
+}
+
+.guideIntro {
+  font-size: 14px;
+  color: #374151;
+  font-family: "Plain", -apple-system, sans-serif;
+  line-height: 1.6;
+  margin: 14px 28px 20px;
+}
+
+.guideScenarios {
+  display: flex;
+  gap: 14px;
+  padding: 0 28px;
+}
+
+.guideFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px 24px;
+}
+
+.guideTourBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 999px;
+  background: #fff;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: "Plain", -apple-system, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.guideTourBtn:hover {
+  background: #F9FAFB;
+  border-color: #D1D5DB;
+}
+
+.guideStartBtn {
+  padding: 10px 24px;
+  background: #0F1729;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: "Plain", -apple-system, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.guideStartBtn:hover {
+  background: #1a2540;
+}

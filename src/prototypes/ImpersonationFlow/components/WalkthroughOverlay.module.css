@@ -1,0 +1,127 @@
+/* Spotlight — the box-shadow IS the dark overlay */
+.spotlight {
+  position: fixed;
+  border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.58);
+  pointer-events: none;
+  z-index: 9000;
+  outline: 2.5px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 2px;
+  transition: left 0.25s ease, top 0.25s ease, width 0.25s ease, height 0.25s ease;
+}
+
+/* Tooltip */
+.tooltip {
+  position: fixed;
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px 15px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+  z-index: 9001;
+  transition: left 0.25s ease, top 0.25s ease;
+}
+
+/* Fallback: element not in DOM */
+.fallbackOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.58);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tooltipCentered {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px 15px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+  width: 300px;
+}
+
+/* Tooltip content */
+.stepCount {
+  font-size: 11px;
+  font-weight: 600;
+  color: #9CA3AF;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  font-family: "Plain", -apple-system, sans-serif;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 7px;
+  font-family: "Plain", -apple-system, sans-serif;
+}
+
+.body {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.55;
+  margin: 0 0 16px;
+  font-family: "Plain", -apple-system, sans-serif;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.skipBtn {
+  font-size: 12px;
+  color: #9CA3AF;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "Plain", -apple-system, sans-serif;
+  padding: 0;
+}
+
+.skipBtn:hover {
+  color: #6B7280;
+}
+
+.navBtns {
+  display: flex;
+  gap: 6px;
+}
+
+.backBtn {
+  font-size: 13px;
+  color: #374151;
+  background: #F3F4F6;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: "Plain", -apple-system, sans-serif;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+
+.backBtn:hover {
+  background: #E5E7EB;
+}
+
+.nextBtn {
+  font-size: 13px;
+  color: #fff;
+  background: #0F1729;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-family: "Plain", -apple-system, sans-serif;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+
+.nextBtn:hover {
+  background: #1e2f4a;
+}

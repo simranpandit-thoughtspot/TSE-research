@@ -1,5 +1,29 @@
 # Changelog
 
+## 26.4.4a — 2026-04-24
+
+- feat: add Impersonation Flow prototype (Act as user)
+- feat: add NewUIAdmin2 (Admin 2.0) as sample prototype in registry-core
+- fix: font dropdown uses position fixed to escape overflow clipping
+- fix: re-apply AI settings spotter tab restructure and page header fixes
+- feat: Edit action in VC table opens EditCredentialsModal with pre-fill + banners
+- feat: cards with only 1 setting are non-collapsible across all config pages
+- fix: set Reset/Cancel as CTA labels on all reset confirm dialogs
+- feat: add validation error state to version control setup step 1
+- feat: add Edit, Rename, Delete workflows to Variables page
+- feat: Create Variable 2-step modal with validation, org mapping, and success toast
+- fix: use secondary button style for Create Variable CTA
+- fix: add Rename to variables dots menu, fill Create Variable CTA with brand color
+- feat: add AutoResizeTextarea component for dynamic-height instruction fields
+- feat: standardise modal system with RdModal component
+- feat: update NewUIAdmin2 AI settings and application settings
+- chore: install echarts-for-react for shared tiles charts
+- Merge remote-tracking branch 'upstream/main'
+- Merge remote-tracking branch 'origin/main' into feat/orchestrator-refactor
+- docs: consolidate changelog into single 26.4.1c release (2026-04-08)
+- Merge pull request #9 from mohammed-faris/staging
+
+
 All notable changes to Radiant Play are documented here.
 
 **Versioning:** `YY.M.Ws` — Year.Month.Week + sub-release letter (a, b, c...).
