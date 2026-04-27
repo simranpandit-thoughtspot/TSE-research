@@ -88,6 +88,7 @@ const SessionIndicator: React.FC<{ elapsed: number; onExit: () => void }> = ({ e
         onClick={() => setOpen(v => !v)}
         aria-label="Session info"
         data-walkthrough="session-indicator"
+        data-hint="session-indicator"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <rect x="1" y="3" width="14" height="10" rx="2" stroke="#fff" strokeWidth="1.3" />

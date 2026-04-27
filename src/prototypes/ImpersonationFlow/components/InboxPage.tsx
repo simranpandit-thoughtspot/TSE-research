@@ -37,11 +37,12 @@ const InboxSidebar = () => (
   </div>
 );
 
-const EmailListItem: React.FC<{ isNew?: boolean; onClick?: () => void }> = ({ isNew, onClick }) => (
+const EmailListItem: React.FC<{ isNew?: boolean; onClick?: () => void; hint?: string }> = ({ isNew, onClick, hint }) => (
   <div
     className={`${styles.emailListItem} ${isNew ? styles.emailListItemUnread : ''}`}
     onClick={onClick}
     style={{ cursor: onClick ? 'pointer' : undefined }}
+    data-hint={hint}
   >
     <div className={styles.emailAvatar}>
       <div className={styles.avatarCircle}>TS</div>
@@ -97,7 +98,7 @@ const EmailDetail: React.FC<{ onViewRequest: () => void }> = ({ onViewRequest })
           Administrator has requested permission to act as you within the system.
         </h1>
 
-        <button className={styles.viewRequestBtn} onClick={onViewRequest}>
+        <button className={styles.viewRequestBtn} data-hint="view-request-btn" onClick={onViewRequest}>
           View request
         </button>
 
@@ -182,7 +183,7 @@ const InboxPage: React.FC<Props> = ({ view, onViewEmail, onViewRequest }) => {
             <div className={styles.emailListHeader}>
               <span style={{ fontSize: 13, color: '#444', fontFamily: font }}>Primary</span>
             </div>
-            <EmailListItem isNew onClick={onViewEmail} />
+            <EmailListItem isNew onClick={onViewEmail} hint="inbox-email-row" />
             {/* Filler items */}
             {[1, 2, 3, 4].map(i => (
               <EmailListItem key={i} />

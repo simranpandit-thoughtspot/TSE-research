@@ -10,6 +10,8 @@ interface Props {
   onSessionStart?: () => void;
   onSessionEnd?: () => void;
   startSession?: boolean;
+  onSimranMenuChange?: (open: boolean) => void;
+  onRequestModalChange?: (open: boolean) => void;
 }
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
@@ -130,7 +132,7 @@ const NavItem: React.FC<{ label: string; active?: boolean }> = ({ label, active 
   <div className={`${styles.navItem} ${active ? styles.navItemActive : ''}`}>{label}</div>
 );
 
-const AdminView: React.FC<Props> = ({ impPref, onSendRequest, onSessionStart, onSessionEnd, startSession }) => {
+const AdminView: React.FC<Props> = ({ impPref, onSendRequest, onSessionStart, onSessionEnd, startSession, onSimranMenuChange, onRequestModalChange }) => {
   const [view, setView] = useState<'user-management' | 'impersonating'>('user-management');
   const [menuRow, setMenuRow] = useState<string | null>(null);
   const [userDetailsOpen, setUserDetailsOpen] = useState(false);
@@ -145,6 +147,16 @@ const AdminView: React.FC<Props> = ({ impPref, onSendRequest, onSessionStart, on
       onSessionStart?.();
     }
   }, [startSession]);
+
+  // Report Simran's menu open state to parent for hint system
+  useEffect(() => {
+    onSimranMenuChange?.(menuRow === '1');
+  }, [menuRow]);
+
+  // Report request modal open state to parent for hint system
+  useEffect(() => {
+    onRequestModalChange?.(requestModalOpen);
+  }, [requestModalOpen]);
 
   // Close 3-dot menu on outside click
   useEffect(() => {
@@ -276,6 +288,7 @@ const AdminView: React.FC<Props> = ({ impPref, onSendRequest, onSessionStart, on
                         <button
                           className={styles.dotsBtn}
                           data-walkthrough={user.isTarget ? 'simran-row-dots' : undefined}
+                          data-hint={user.isTarget ? 'simran-row-dots' : undefined}
                           onClick={() => setMenuRow(menuRow === user.id ? null : user.id)}
                         >
                           <span className={styles.dot3} />
@@ -288,6 +301,7 @@ const AdminView: React.FC<Props> = ({ impPref, onSendRequest, onSessionStart, on
                             <button className={styles.menuItem}>Export</button>
                             <button
                               className={`${styles.menuItem} ${styles.menuItemHighlight}`}
+                              data-hint="act-as-user-menu-item"
                               onClick={triggerActAs}
                             >
                               Act as user
@@ -364,7 +378,7 @@ const AdminView: React.FC<Props> = ({ impPref, onSendRequest, onSessionStart, on
             </p>
             <div className={styles.modalActions} style={{ justifyContent: 'flex-end' }}>
               <button className={styles.cancelBtn} onClick={() => setRequestModalOpen(false)}>Cancel</button>
-              <button className={styles.actionBtn} onClick={handleSendRequest}>Request access</button>
+              <button className={styles.actionBtn} data-hint="request-access-btn" onClick={handleSendRequest}>Request access</button>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import ApproveRequestPage from './components/ApproveRequestPage';
 import AdminView from './components/AdminView';
 import AdminEmailPage from './components/AdminEmailPage';
 import WalkthroughOverlay from './components/WalkthroughOverlay';
+import HintDot from './components/HintDot';
 
 export type Persona = 'user' | 'admin';
 export type ImpersonationPref = 'always-allow' | 'require-request';
@@ -108,11 +109,49 @@ const GuideModal: React.FC<{ onClose: () => void; onStartTour: () => void }> = (
   </div>
 );
 
+function getHintTarget(
+  persona: Persona,
+  userView: UserView,
+  impState: ImpersonationState,
+  isImpersonating: boolean,
+  simranMenuOpen: boolean,
+  adminRequestModalOpen: boolean,
+  showNotifs: boolean,
+  sessionCompleted: boolean,
+): string | null {
+  if (sessionCompleted) return null;
+  if (isImpersonating) return 'session-indicator';
+
+  if (persona === 'user') {
+    if (impState.requestStatus === 'none' || impState.requestStatus === 'declined') return 'switch-to-admin';
+    if (impState.requestStatus === 'pending') {
+      if (userView === 'profile') return 'user-gmail-tab';
+      if (userView === 'inbox') return 'inbox-email-row';
+      if (userView === 'email-detail') return 'view-request-btn';
+      if (userView === 'approve-request') return 'approve-btn';
+    }
+    if (impState.requestStatus === 'approved') return 'switch-to-admin';
+    return null;
+  }
+
+  if (persona === 'admin') {
+    if (impState.requestStatus === 'pending') return 'switch-to-user';
+    if (impState.requestStatus === 'approved') {
+      return showNotifs ? 'start-session-notif' : 'notif-bell';
+    }
+    if (adminRequestModalOpen) return 'request-access-btn';
+    if (simranMenuOpen) return 'act-as-user-menu-item';
+    return 'simran-row-dots';
+  }
+
+  return null;
+}
+
 export const ImpersonationFlow: React.FC = () => {
   const [persona, setPersona] = useState<Persona>('user');
   const [userView, setUserView] = useState<UserView>('profile');
   const [impState, setImpState] = useState<ImpersonationState>({
-    pref: 'always-allow',
+    pref: 'require-request',
     requestStatus: 'none',
   });
   const [isImpersonating, setIsImpersonating] = useState(false);
@@ -122,7 +161,15 @@ export const ImpersonationFlow: React.FC = () => {
   const [externalStartSession, setExternalStartSession] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
   const [walkthroughActive, setWalkthroughActive] = useState(false);
+  const [simranMenuOpen, setSimranMenuOpen] = useState(false);
+  const [adminRequestModalOpen, setAdminRequestModalOpen] = useState(false);
+  const [sessionCompleted, setSessionCompleted] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
+
+  const hintTarget = getHintTarget(
+    persona, userView, impState, isImpersonating,
+    simranMenuOpen, adminRequestModalOpen, showNotifs, sessionCompleted,
+  );
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -202,6 +249,7 @@ export const ImpersonationFlow: React.FC = () => {
           <div className={styles.switcherPills}>
             <button
               className={`${styles.pill} ${persona === 'user' ? styles.pillActive : ''}`}
+              data-hint="switch-to-user"
               onClick={() => { setPersona('user'); setUserView('profile'); }}
             >
               <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
@@ -212,6 +260,7 @@ export const ImpersonationFlow: React.FC = () => {
             </button>
             <button
               className={`${styles.pill} ${persona === 'admin' ? styles.pillActive : ''}`}
+              data-hint="switch-to-admin"
               onClick={() => setPersona('admin')}
             >
               <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
@@ -251,6 +300,7 @@ export const ImpersonationFlow: React.FC = () => {
             <button
               className={styles.iconBtn}
               aria-label="Notifications"
+              data-hint="notif-bell"
               style={{ position: 'relative' }}
               onClick={() => persona === 'admin' ? setShowNotifs(v => !v) : undefined}
             >
@@ -277,6 +327,7 @@ export const ImpersonationFlow: React.FC = () => {
                       </div>
                       <button
                         className={styles.notifAction}
+                        data-hint="start-session-notif"
                         onClick={() => { setExternalStartSession(true); setShowNotifs(false); }}
                       >
                         Start Session
@@ -375,6 +426,7 @@ export const ImpersonationFlow: React.FC = () => {
           {/* Gmail tab */}
           <button
             className={`${styles.browserTab} ${(userView === 'inbox' || userView === 'email-detail' || userView === 'approve-request') ? styles.browserTabActive : ''}`}
+            data-hint="user-gmail-tab"
             onClick={() => setUserView(impState.requestStatus !== 'none' ? 'inbox' : 'inbox')}
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
@@ -400,6 +452,10 @@ export const ImpersonationFlow: React.FC = () => {
           onClose={() => setShowGuide(false)}
           onStartTour={() => setWalkthroughActive(true)}
         />
+      )}
+
+      {hintTarget && !showGuide && !walkthroughActive && (
+        <HintDot target={hintTarget} />
       )}
 
       {walkthroughActive && (
@@ -441,7 +497,10 @@ export const ImpersonationFlow: React.FC = () => {
             onSessionEnd={() => {
               setIsImpersonating(false);
               setExternalStartSession(false);
+              setSessionCompleted(true);
             }}
+            onSimranMenuChange={setSimranMenuOpen}
+            onRequestModalChange={setAdminRequestModalOpen}
           />
         )}
       </div>

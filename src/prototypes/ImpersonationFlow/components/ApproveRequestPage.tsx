@@ -214,7 +214,7 @@ const ApproveRequestPage: React.FC<Props> = ({
               <p className={styles.subtitle}>
                 All actions performed during this session will be securely logged and attributed to the administrator for audit purposes.
               </p>
-              <button className={styles.approveBtn} onClick={handleApprove}>
+              <button className={styles.approveBtn} data-hint="approve-btn" onClick={handleApprove}>
                 Approve request
               </button>
               <button className={styles.declineLink} onClick={handleDecline}>
