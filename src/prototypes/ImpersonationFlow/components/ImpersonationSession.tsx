@@ -119,7 +119,7 @@ const ExitModal: React.FC<{ onCancel: () => void; onConfirm: () => void }> = ({ 
       <h2 className={styles.exitTitle}>Exit viewing session</h2>
       <div className={styles.exitDivider} />
       <p className={styles.exitDesc}>
-        You activity during the session has been saved and recorded. Are you sure you want to exit?
+        Your session has been logged. Are you sure you want to exit from this session?
       </p>
       <div className={styles.exitActions}>
         <button className={styles.exitCancelBtn} onClick={onCancel}>Cancel</button>
