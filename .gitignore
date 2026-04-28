@@ -44,3 +44,6 @@ BACKLOG.md
 
 # Cmdk prototype — large Figma Make export (local only)
 src/prototypes/Cmdk/
+
+# Local status dashboard (generated, not for repo)
+public/status.html

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Icon, getIconNames } from '../components/icons';
 import type { IconName, IconSize } from '../components/icons';
 import { SearchInput } from '../components/SearchInput';
+import { LastUpdated } from '../components/LastUpdated';
 import { systemColors, referenceColors } from '../tokens/colors';
 
 // Get all icon names from the registry
@@ -68,6 +69,7 @@ export const IconsShowcase: React.FC = () => {
     <div style={styles.container}>
       {/* Header */}
       <section style={styles.headerSection}>
+        <LastUpdated componentId="icongallery" />
         <h1 style={styles.pageTitle}>Icons</h1>
         <p style={styles.pageDescription}>
           A comprehensive icon library with {ALL_ICONS.length} icons in 4 size variants (XS, S, M, L). 

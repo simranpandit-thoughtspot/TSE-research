@@ -13,6 +13,7 @@ export interface VersionChange {
   type: ChangeType;
   component: string;
   description: string;
+  group?: string; // optional theme group — renders a section header in the changelog
 }
 
 export interface VersionEntry {
@@ -27,41 +28,93 @@ export interface VersionEntry {
  */
 export const versionHistory: VersionEntry[] = [
   {
+    version: '26.4.4c',
+    date: '2026-04-28',
+    type: 'minor',
+    changes: [
+      { type: 'added', group: 'Project status dashboard', component: '/project-status command', description: 'Renamed from /status-page; generates a local HTML dashboard with overview, branches, forks/upstream, and docs/plans tabs at zero LLM token cost' },
+      { type: 'added', group: 'Project status dashboard', component: 'Worktree view', description: 'Each checkout shown with branch, modified count, divergence vs main, and locked/prunable badges' },
+      { type: 'added', group: 'Project status dashboard', component: 'Branch divergence', description: 'Three columns vs main, staging, and upstream/main with last commit subject + relative age' },
+      { type: 'added', group: 'Project status dashboard', component: 'Role-aware tabs', description: 'Maintainers see the full Forks tab; designer forks see an Upstream sync tab with behind/ahead vs upstream' },
+      { type: 'added', group: 'Project status dashboard', component: 'Inline markdown viewer', description: 'Click any .md row to open its rendered content in an in-page modal (marked with raw fallback)' },
+      { type: 'added', group: 'Project status dashboard', component: 'Local-only badges', description: 'Gitignored files (BACKLOG.md, plans/, articles/) get a blue local chip' },
+      { type: 'modified', group: 'Project status dashboard', component: 'Forks sort order', description: 'Most recently pushed forks first instead of alphabetical' },
+      { type: 'added', group: 'Changelog highlights', component: 'Highlights section', description: 'Curated section at the top of the Changelog page cherry-picks major work across recent releases' },
+      { type: 'added', group: 'Changelog highlights', component: 'Visibility window', description: 'Highlights show items from the last 60 days OR the last 6 items, whichever is longer' },
+      { type: 'added', group: 'Changelog highlights', component: 'release.sh prompt', description: 'release.sh asks the maintainer for highlights interactively during release and pre-inserts them in the printed ChangelogPage draft' },
+      { type: 'added', group: 'AI orchestrator', component: 'MCP plugin overhead check', description: 'New Step 0c flags Figma MCP ~4k tokens-per-message cost once per session if no Figma signal is detected' },
+      { type: 'modified', group: 'Security', component: 'postcss', description: 'Bumped 8.5.6 to 8.5.10 in lockfile to patch XSS via unescaped style tag (GHSA-qx2v-qp2m-jg93)' },
+      { type: 'added', group: 'Documentation', component: 'Workflow explorations', description: '3-slide ASCII workflow deck and revised AI workflow diagram salvaged from local experiments' },
+    ],
+  },
+  {
+    version: '26.4.4b',
+    date: '2026-04-28',
+    type: 'minor',
+    changes: [
+      { type: 'added', group: 'Phase 1 — Primitive colors', component: 'darkGray Scale', description: '12 stops added to referenceColors — neutral foundation for Phase 6 dark mode remap' },
+      { type: 'added', group: 'Phase 1 — Primitive colors', component: 'Alpha Variants', description: 'gray-70a/60a/40a/10a, blue-10a, dark-gray-30a for overlays and translucent highlights' },
+      { type: 'modified', group: 'Phase 1 — Primitive colors', component: 'Hex Fixes', description: 'purple/70 #6847BA→#6A4ABA, purple/100 #0D0030→#0E0033, teal/70 #359FAA→#369FAA' },
+      { type: 'modified', group: 'Phase 2 — Light semantic colors', component: '6 Value Fixes', description: 'content-tertiary, border-focus, border-hover, background-overlay, background-ghost-highlight, background-base-inverse' },
+      { type: 'added', group: 'Phase 2 — Light semantic colors', component: '22 Accent Tokens', description: '9 background-accent-*, 6 content-accent-*, 7 border-* (subtle-hover + 6 accents)' },
+      { type: 'modified', group: 'Phase 3 — Typography', component: 'Letter Spacing', description: 'tight -0.01em → -0.4px (Figma absolute), new tighter -0.6px' },
+      { type: 'modified', group: 'Phase 3 — Typography', component: 'Heading Weights', description: '6 v2TextStyles entries medium → semibold (headlineLarge, pageTitle, modalTitle, sectionLabel, contentLabel, contentLabelSubhead)' },
+      { type: 'modified', group: 'Phase 3 — Typography', component: 'Body Weight', description: 'textStyles.body.large/normal light (375) → regular (400)' },
+      { type: 'added', group: 'Phase 4 — Elevation', component: 'shadowPrimitives', description: '3 semantic levels (surface/menu/modal) with light + dark variants matching Figma' },
+      { type: 'added', group: 'Phase 4 — Elevation', component: 'CSS Shadow Variables', description: '--shadow-surface, --shadow-menu, --shadow-modal added to :root and [data-theme="dark"]' },
+      { type: 'modified', group: 'Phase 4 — Elevation', component: 'Component Migration', description: 'Modal, Tooltip, Popover, Card, Menu, DatePicker, FilterModal, InputMentions, AppSidebar overlay now use semantic shadow vars' },
+      { type: 'modified', group: 'Phase 5 — Layout', component: 'Sidebar Width', description: 'AppSidebar/AppShell default 261px → 260px (Figma alignment)' },
+    ],
+  },
+  {
+    version: '26.4.4a',
+    date: '2026-04-27',
+    type: 'minor',
+    changes: [
+      { type: 'modified', group: 'Modal alignment with Figma', component: 'Modal Header', description: 'Padding restored to 20px 24px (variable height) so wizard variants grow correctly for eyebrow + title' },
+      { type: 'modified', group: 'Modal alignment with Figma', component: 'Modal Footer', description: 'Fixed at 72px with 0 24px padding; tertiary-left / primary-right CTA placement bug fixed (was double-wrapped)' },
+      { type: 'modified', group: 'Modal alignment with Figma', component: 'Wizard Stepper', description: 'Rebuilt as discrete 4px segments with 6px gap and 2px radii; also renders for splashscreen type' },
+      { type: 'removed', group: 'Modal alignment with Figma', component: 'Close Icon', description: 'X icon removed from M1/M2/M3 simple modals — only M4 keeps the "Close" text link, per Figma' },
+      { type: 'modified', group: 'Modal alignment with Figma', component: 'Splash Screen', description: 'Header no longer renders (title lives in body via ModalSplashContent)' },
+      { type: 'modified', group: 'Modal alignment with Figma', component: 'Overlay z-index', description: 'Bumped to 1000 so M4 covers the sidebar' },
+      { type: 'added', group: 'Surfaces showcase', component: 'Eyebrow Variant', description: 'New M2 eyebrow-only modal demo (no stepper)' },
+      { type: 'added', group: 'Surfaces showcase', component: 'Splash Screen Multi', description: 'New 3-step onboarding splash flow with stepper' },
+      { type: 'modified', group: 'Surfaces showcase', component: 'Wizard Footer', description: 'Back kept rendered (disabled on step 1) + primary button minWidth: spacing.I*2 for position consistency' },
+      { type: 'modified', group: 'Surfaces showcase', component: 'Button Demo Tokens', description: 'Secondary uses content-primary, primary uses content-alternate' },
+      { type: 'added', group: 'Platform tooling', component: 'LastUpdated', description: 'Shared component reads lastModified from componentRegistry; added to Surfaces, Icons, Architecture, ComponentDocPage' },
+      { type: 'modified', group: 'Platform tooling', component: 'Modal Registry Entry', description: 'Refreshed with current Figma node ID and 2026-04-27 sync date' },
+    ],
+  },
+  {
     version: '26.4.1c',
     date: '2026-04-08',
     type: 'major',
     changes: [
-      // Fork architecture
-      { type: 'added', component: 'Registry Split', description: 'registry-core.ts (upstream) + registry-mine.ts (designer) + thin merger — eliminates merge conflicts for all designer forks' },
-      { type: 'modified', component: 'Fork Workflow', description: 'sync-upstream, check-upstream, new-prototype, prototype-structure, FORK-WORKFLOW updated for 3-file registry' },
-      // AI orchestrator
-      { type: 'added', component: 'Orchestrator Tier System', description: 'Intent-based classification (Tier 0–3) with concern-matching — 81% context reduction' },
-      { type: 'added', component: 'Pre-Implementation Gate', description: '4 checks before code: component exists, CSS anti-patterns, icon name, forbidden words' },
-      { type: 'added', component: 'Iteration Loop Detection', description: 'Suggests batching after 3+ sequential single-property changes' },
-      // Liveboard system
-      { type: 'added', component: 'Canvas 3-Tier Split', description: 'liveboard-canvas.md (568 lines) → core (242), edit (238), advanced (100) with prerequisite chains' },
-      { type: 'added', component: 'Liveboard Requirements Gate', description: '4-question pre-build gate (mode, interactions, tile types, data)' },
-      { type: 'added', component: 'Shared Tiles', description: '_shared/tiles/ with AnswerTile, ChartRenderer, and 12 chart types' },
-      { type: 'added', component: 'SalesDashboard', description: 'Liveboard prototype with view/edit modes and SpotterViz panel' },
-      // Platform and tooling
-      { type: 'added', component: 'Platform Version', description: 'platformVersion.ts as single source of truth — version badge on homepage, playground, and DS sidebar' },
-      { type: 'added', component: 'Component Source Badge', description: 'Figma / Scaligent / Custom badge on every component doc page' },
-      { type: 'added', component: 'Release Tooling', description: 'scripts/release.sh, pre-push hook, install-maintainer-hooks.sh' },
-      { type: 'added', component: 'Claude Code Skills', description: '6 auto-activating skills with globs (component-inventory, content-guidelines, token-usage, layout-patterns, widget-patterns, modal-patterns)' },
-      // UI and performance
-      { type: 'modified', component: 'Homepage', description: 'Space blue title, subtle card icons, shortened descriptions, footer easter egg' },
-      { type: 'modified', component: 'ECharts Bundle', description: 'Lazy-loaded via React.lazy — 1.18 MB chunk deferred until first chart render' },
-      { type: 'modified', component: 'CLAUDE.md', description: 'Trimmed 36% (210 → 135 lines) — guidelines moved to on-demand skills' },
-      { type: 'modified', component: 'Documentation', description: 'README, SETUP-GUIDE, Onepager, prototyping-guide refreshed with current counts' },
-      // Bug fixes and security
-      { type: 'modified', component: 'TypeScript', description: 'All 6 errors resolved — icon name, TileMode import, NoteTileProps, unused variables' },
-      { type: 'modified', component: 'Avatar', description: 'Light background tokens swapped for saturated content tokens (contrast fix)' },
-      { type: 'modified', component: 'Vite', description: '7.3.2 — high severity vulnerability patched' },
-      { type: 'modified', component: 'ConfirmDialog', description: 'Non-Radiant gradient override removed' },
-      // Cleanup
-      { type: 'removed', component: 'Cmdk Prototype', description: 'Gitignored (11 MB Figma Make export) — reduces designer fork size' },
-      { type: 'removed', component: 'Orphaned Prototypes', description: 'Deleted Homepage_example, ImpersonationV2, Liveboard, ModalPatterns' },
-      { type: 'removed', component: 'liveboard-canvas.md', description: 'Replaced by 3-tier canvas files (core + edit + advanced)' },
+      { type: 'added', group: 'Fork architecture', component: 'Registry Split', description: 'registry-core.ts (upstream) + registry-mine.ts (designer) + thin merger — eliminates merge conflicts for all designer forks' },
+      { type: 'modified', group: 'Fork architecture', component: 'Fork Workflow', description: 'sync-upstream, check-upstream, new-prototype, prototype-structure, FORK-WORKFLOW updated for 3-file registry' },
+      { type: 'added', group: 'AI orchestrator', component: 'Orchestrator Tier System', description: 'Intent-based classification (Tier 0–3) with concern-matching — 81% context reduction' },
+      { type: 'added', group: 'AI orchestrator', component: 'Pre-Implementation Gate', description: '4 checks before code: component exists, CSS anti-patterns, icon name, forbidden words' },
+      { type: 'added', group: 'AI orchestrator', component: 'Iteration Loop Detection', description: 'Suggests batching after 3+ sequential single-property changes' },
+      { type: 'added', group: 'AI orchestrator', component: 'Claude Code Skills', description: '6 auto-activating skills with globs (component-inventory, content-guidelines, token-usage, layout-patterns, widget-patterns, modal-patterns)' },
+      { type: 'added', group: 'Liveboard system', component: 'Canvas 3-Tier Split', description: 'liveboard-canvas.md (568 lines) → core (242), edit (238), advanced (100) with prerequisite chains' },
+      { type: 'added', group: 'Liveboard system', component: 'Liveboard Requirements Gate', description: '4-question pre-build gate (mode, interactions, tile types, data)' },
+      { type: 'added', group: 'Liveboard system', component: 'Shared Tiles', description: '_shared/tiles/ with AnswerTile, ChartRenderer, and 12 chart types' },
+      { type: 'added', group: 'Liveboard system', component: 'SalesDashboard', description: 'Liveboard prototype with view/edit modes and SpotterViz panel' },
+      { type: 'added', group: 'Platform tooling', component: 'Deployment Password Gate', description: 'Edge middleware password-gates Vercel deployments — opt-in per designer via SITE_PASSWORD env var in their Vercel dashboard' },
+      { type: 'added', group: 'Platform tooling', component: 'Platform Version', description: 'platformVersion.ts as single source of truth — version badge on homepage, playground, and DS sidebar' },
+      { type: 'added', group: 'Platform tooling', component: 'Component Source Badge', description: 'Figma / Scaligent / Custom badge on every component doc page' },
+      { type: 'added', group: 'Platform tooling', component: 'Release Tooling', description: 'scripts/release.sh, pre-push hook, install-maintainer-hooks.sh' },
+      { type: 'modified', group: 'UI and performance', component: 'Homepage', description: 'Space blue title, subtle card icons, shortened descriptions, footer easter egg' },
+      { type: 'modified', group: 'UI and performance', component: 'ECharts Bundle', description: 'Lazy-loaded via React.lazy — 1.18 MB chunk deferred until first chart render' },
+      { type: 'modified', group: 'UI and performance', component: 'CLAUDE.md', description: 'Trimmed 36% (210 → 135 lines) — guidelines moved to on-demand skills' },
+      { type: 'modified', group: 'UI and performance', component: 'Documentation', description: 'README, SETUP-GUIDE, Onepager, prototyping-guide refreshed with current counts' },
+      { type: 'modified', group: 'Bug fixes and security', component: 'TypeScript', description: 'All 6 errors resolved — icon name, TileMode import, NoteTileProps, unused variables' },
+      { type: 'modified', group: 'Bug fixes and security', component: 'Avatar', description: 'Light background tokens swapped for saturated content tokens (contrast fix)' },
+      { type: 'modified', group: 'Bug fixes and security', component: 'Vite', description: '7.3.2 — high severity vulnerability patched' },
+      { type: 'modified', group: 'Bug fixes and security', component: 'ConfirmDialog', description: 'Non-Radiant gradient override removed' },
+      { type: 'removed', group: 'Cleanup', component: 'Cmdk Prototype', description: 'Gitignored (11 MB Figma Make export) — reduces designer fork size' },
+      { type: 'removed', group: 'Cleanup', component: 'Orphaned Prototypes', description: 'Deleted Homepage_example, ImpersonationV2, Liveboard, ModalPatterns' },
+      { type: 'removed', group: 'Cleanup', component: 'liveboard-canvas.md', description: 'Replaced by 3-tier canvas files (core + edit + advanced)' },
     ],
   },
   {

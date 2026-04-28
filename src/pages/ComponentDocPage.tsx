@@ -70,6 +70,7 @@ import { FacetSortBar } from '../components/FacetSortBar';
 import { LiveboardHeader } from '../components/LiveboardHeader';
 import { systemColors, referenceColors } from '../tokens/colors';
 import { getComponent, getSourceLabel, ComponentSource } from '../data/componentRegistry';
+import { LastUpdated } from '../components/LastUpdated';
 
 interface PropDefinition {
   name: string;
@@ -2593,6 +2594,7 @@ export const ComponentDocPage: React.FC<ComponentDocPageProps> = ({ componentId 
           <span style={styles.breadcrumbSeparator}>/</span>
           <span style={styles.breadcrumbCurrent}>{doc.name}</span>
         </div>
+        <LastUpdated componentId={componentId} />
         <div style={styles.titleRow}>
           <h1 style={styles.title}>{doc.name}</h1>
           <span style={getSourceBadgeStyle(meta?.source ?? 'custom')}>

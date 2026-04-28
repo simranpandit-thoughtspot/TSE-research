@@ -31,6 +31,16 @@ If a topic switch is detected → proactively say:
 
 Do not wait to be asked. Do not load any rule files until after the designer decides.
 
+## Step 0c: MCP plugin overhead check
+
+MCP plugins add a fixed overhead to every message in the session, whether they are used or not. The Figma MCP plugin alone adds **~4,000 tokens per message** — on a 20-message session that is ~80,000 tokens of overhead before any rule file gets loaded.
+
+If the current session is not doing Figma work and the Figma plugin is enabled, suggest disabling it:
+
+> *"Heads up — Figma MCP is on and adding ~4k tokens per message. If we are not pulling from Figma this session, you can disable it via `/config` or by setting `"figma@claude-plugins-official": false` in `~/.claude/settings.json`. Re-enable when starting a Figma session."*
+
+Do not nag once per session — say it once if the signal is clear (no Figma URL or screenshot in the last few exchanges) and let the designer decide.
+
 ---
 
 ## Step 1: Classify by intent
@@ -49,7 +59,7 @@ Single value, prop, or label. CLAUDE.md + component summary are sufficient. No a
 ### Tier 1 — Moderate change
 Adding or modifying a feature within an existing prototype.
 
-**Signals:** New section, panel, or interaction · replacing a component · adding a modal/dialog/confirmation · adding a table/filter/search · layout structure change · rewriting multiple UI strings
+**Signals:** New section, panel, or interaction · replacing a component · adding a modal/dialog/confirmation · adding a table/filter/search · layout structure change · rewriting multiple UI strings · copy review or UX writing task (even with no code changes)
 
 **Action:** Load **ALL** rule files matching the task's concerns below. Matching 3+ rows is expected for compound tasks.
 
@@ -126,7 +136,7 @@ Valid sizes: `xs` · `s` · `m` · `l` — no `xl`, no numeric values.
 Always pass `iconPosition="leading"` or `"trailing"` when using the `icon` prop on Button.
 
 **4. Any UI text?**
-Check CLAUDE.md forbidden words before writing labels, buttons, or titles.
+Load `content-guidelines.md` before writing OR reviewing any labels, buttons, titles, body copy, or error messages. Do not rely on CLAUDE.md alone — the full rules are in the guidelines file.
 
 ---
 

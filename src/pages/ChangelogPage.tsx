@@ -8,11 +8,120 @@ interface ChangelogEntry {
   type: 'major' | 'minor' | 'patch';
   changes: {
     category: 'added' | 'changed' | 'fixed' | 'removed';
+    label?: string; // overrides the default badge text (e.g. theme group names)
     items: string[];
   }[];
 }
 
+// Curated highlights — cherry-picked across releases. Newest first.
+// Visibility rule: items from the last 60 days, OR the most recent 6 items
+// if fewer than 6 fall inside that window.
+interface Highlight {
+  title: string;
+  description: string;
+  version: string; // links back to the corresponding CHANGELOG entry
+  date: string; // ISO date for the time-based window
+}
+
+const HIGHLIGHTS: Highlight[] = [
+  {
+    title: 'Project status dashboard',
+    description: 'A local HTML dashboard with overview, branches, forks/upstream, worktrees, and docs/plans tabs. Run /project-status; zero LLM token cost.',
+    version: '26.4.4c',
+    date: '2026-04-28',
+  },
+  {
+    title: 'Modal redesign — Figma alignment',
+    description: 'Header padding restored, footer fixed at 72px with corrected CTA placement, wizard stepper rebuilt as discrete segments, RdModal absorbed into Modal.',
+    version: '26.4.4c',
+    date: '2026-04-27',
+  },
+  {
+    title: 'Token system — Figma 3.0 alignment',
+    description: 'Phases 1–5 of 8 shipped: primitive colors, light semantic colors, typography, shadows, layout. Dark mode (Phase 6) is next.',
+    version: '26.4.4c',
+    date: '2026-04-28',
+  },
+  {
+    title: 'Changelog highlights',
+    description: 'Curated highlights at the top of this page surface major work across recent releases — like the section you are reading.',
+    version: '26.4.4c',
+    date: '2026-04-28',
+  },
+];
+
 const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '26.4.4c',
+    date: '2026-04-28',
+    title: 'Token system Figma alignment, Modal alignment, Project status dashboard',
+    type: 'minor',
+    changes: [
+      {
+        category: 'added',
+        label: 'Token system — Figma 3.0 alignment (Phases 1–5 of 8)',
+        items: [
+          'Phase 1 — Primitive colors: darkGray scale (12 stops), alpha variants, hex fixes for purple and teal',
+          'Phase 2 — Light semantic colors: 6 value fixes + 22 new accent tokens (background-accent, content-accent, border)',
+          'Phase 3 — Typography: letter-spacing aligned to Figma absolutes, 6 v2TextStyles bumped medium → semibold, body weight light → regular',
+          'Phase 4 — Elevation: shadowPrimitives with 3 semantic levels (surface, menu, modal) and light/dark variants; component CSS migrated to semantic vars',
+          'Phase 5 — Layout: AppSidebar/AppShell default width 261px → 260px',
+        ],
+      },
+      {
+        category: 'changed',
+        label: 'Modal alignment with Figma',
+        items: [
+          'Modal header padding restored to 20px 24px (variable height) so wizard variants grow correctly',
+          'Modal footer fixed at 72px with corrected tertiary-left / primary-right CTA placement',
+          'Wizard stepper rebuilt as discrete 4px segments with 6px gap and 2px radii; renders for splashscreen too',
+          'Close icon removed from M1/M2/M3 simple modals — only M4 keeps the Close text link, per Figma',
+          'New M2 eyebrow-only modal demo (no stepper)',
+          'Splash screen: header no longer renders (title moved to body)',
+          'Overlay z-index bumped to 1000 so M4 covers the sidebar',
+          'RdModal absorbed into Modal — single modal component going forward',
+        ],
+      },
+      {
+        category: 'added',
+        label: 'Project status dashboard (/project-status)',
+        items: [
+          'Local HTML dashboard with overview, branches, forks/upstream, and docs/plans tabs at zero LLM token cost',
+          'Worktree view — each checkout shown with branch, modified count, divergence vs main, locked/prunable badges',
+          'Branch divergence in three columns: vs main, vs staging, vs upstream/main, with last commit subject + relative age',
+          'Role-aware tabs — maintainers see all designer forks; designer forks see upstream sync state',
+          'Inline markdown viewer — click any .md row to open its rendered content in an in-page modal',
+          'Local-only badges — gitignored files (BACKLOG.md, plans/, articles/) tagged with a blue local chip',
+          'Forks sorted by last push descending (most recent first)',
+        ],
+      },
+      {
+        category: 'added',
+        label: 'Changelog highlights',
+        items: [
+          'Curated Highlights section at the top of the Changelog page surfaces major work across recent releases',
+          'Visibility rule: last 60 days OR last 6 items, whichever is longer',
+          'release.sh now prompts the maintainer for highlights interactively during release',
+        ],
+      },
+      {
+        category: 'changed',
+        label: 'AI orchestrator',
+        items: [
+          'New Step 0c — flags Figma MCP\'s ~4k tokens-per-message cost once per session when no Figma signal is detected',
+          'Tier 1 signals expanded to include copy review and UX writing tasks (even with no code changes)',
+          'UI text rule strengthened — load content-guidelines.md before writing or reviewing labels, buttons, titles, body copy, or error messages',
+        ],
+      },
+      {
+        category: 'fixed',
+        label: 'Security',
+        items: [
+          'postcss bumped 8.5.6 → 8.5.10 in lockfile (GHSA-qx2v-qp2m-jg93 — XSS via unescaped </style> in CSS stringify output)',
+        ],
+      },
+    ],
+  },
   {
     version: '26.4.1c',
     date: '2026-04-08',
@@ -21,35 +130,56 @@ const CHANGELOG: ChangelogEntry[] = [
     changes: [
       {
         category: 'added',
+        label: 'Fork architecture',
         items: [
           'Registry split — registry-core.ts (upstream) + registry-mine.ts (designer) + thin merger eliminates merge conflicts for all designer forks',
+          'Skills and docs updated — sync-upstream, check-upstream, new-prototype, prototype-structure, FORK-WORKFLOW all reference new 3-file registry',
+        ],
+      },
+      {
+        category: 'added',
+        label: 'AI orchestrator',
+        items: [
           'Orchestrator tier system — intent-based classification (Tier 0–3) with 81% context reduction for median tasks',
           'Pre-implementation gate — 4 checks before code (component exists, CSS anti-patterns, icon name, forbidden words)',
           'Iteration loop detection — suggests batching after 3+ sequential changes',
+          '6 Claude Code skills — auto-activating with globs (component-inventory, content-guidelines, token-usage, layout-patterns, widget-patterns, modal-patterns)',
+          'UserPromptSubmit hooks — Liveboard intent detection + post-compact convention recovery',
+          'CLAUDE.md trimmed 36% (210 → 135 lines) — guidelines moved to on-demand skills',
+        ],
+      },
+      {
+        category: 'added',
+        label: 'Liveboard system',
+        items: [
           'Liveboard canvas 3-tier split — core (242), edit (238), advanced (100) with prerequisite chains',
           'Liveboard requirements gate — 4-question pre-build gate (mode, interactions, tile types, data)',
           'Shared tiles system — _shared/tiles/ with AnswerTile, ChartRenderer, and 12 chart types',
           'SalesDashboard prototype — Liveboard with view/edit modes and SpotterViz panel',
-          'Platform version system — platformVersion.ts as single source of truth; version badge on 3 surfaces',
+        ],
+      },
+      {
+        category: 'added',
+        label: 'Platform tooling',
+        items: [
+          'Platform version system — platformVersion.ts as single source of truth; version badge on homepage, playground, and DS sidebar',
           'Component source badges — Figma / Scaligent / Custom on every component doc page',
           'Release tooling — scripts/release.sh, pre-push hook, install-maintainer-hooks.sh',
-          '6 Claude Code skills — auto-activating with globs (component-inventory, content-guidelines, token-usage, layout-patterns, widget-patterns, modal-patterns)',
-          'UserPromptSubmit hooks — Liveboard intent detection + post-compact convention recovery',
         ],
       },
       {
         category: 'changed',
+        label: 'UI and performance',
         items: [
-          'Skills and docs updated for registry split — sync-upstream, check-upstream, new-prototype, prototype-structure, FORK-WORKFLOW',
           'Homepage — space blue title, subtle card icons, shortened descriptions, footer easter egg',
           'ECharts lazy-loaded — 1.18 MB chunk deferred from startup to first chart render',
-          'CLAUDE.md trimmed 36% (210 → 135 lines) — guidelines moved to on-demand skills',
           'All DS pages centred with maxWidth 1200px in RadiantLayout',
           'Documentation refreshed — README, SETUP-GUIDE, Onepager, prototyping-guide',
         ],
       },
       {
         category: 'fixed',
+        label: 'Bug fixes and security',
         items: [
           '0 TypeScript errors — icon name, TileMode import, NoteTileProps, unused variables resolved',
           'Avatar contrast — light background tokens swapped for saturated content tokens',
@@ -60,6 +190,7 @@ const CHANGELOG: ChangelogEntry[] = [
       },
       {
         category: 'removed',
+        label: 'Cleanup',
         items: [
           'Cmdk prototype gitignored — 11 MB Figma Make export removed from designer forks',
           'Orphaned prototypes deleted — Homepage_example, ImpersonationV2, Liveboard, ModalPatterns',
@@ -343,6 +474,15 @@ const typeColors = {
   patch: systemColors.light['content-tertiary'],
 };
 
+// Visible highlights: items from the last 60 days, OR the most recent 6 if
+// fewer than 6 fall in that window.
+const SIXTY_DAYS_MS = 60 * 24 * 60 * 60 * 1000;
+const visibleHighlights = (() => {
+  const now = Date.now();
+  const recent = HIGHLIGHTS.filter((h) => now - new Date(h.date).getTime() <= SIXTY_DAYS_MS);
+  return recent.length >= 6 ? recent : HIGHLIGHTS.slice(0, Math.max(6, recent.length));
+})();
+
 export const ChangelogPage: React.FC = () => {
   return (
     <div style={styles.container}>
@@ -353,6 +493,24 @@ export const ChangelogPage: React.FC = () => {
           A detailed log of all changes, updates, and improvements to the Radiant Design System.
         </p>
       </div>
+
+      {/* Curated highlights — cherry-picked across recent releases */}
+      {visibleHighlights.length > 0 && (
+        <div style={styles.hero}>
+          <div style={styles.heroLabel}>Highlights</div>
+          <ul style={styles.heroList}>
+            {visibleHighlights.map((h, i) => (
+              <li key={i} style={styles.heroItem}>
+                <div style={styles.heroItemHead}>
+                  <span style={styles.heroTitle}>{h.title}</span>
+                  <span style={styles.heroVersion}>v{h.version}</span>
+                </div>
+                <p style={styles.heroDescription}>{h.description}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Timeline */}
       <div style={styles.timeline}>
@@ -381,11 +539,15 @@ export const ChangelogPage: React.FC = () => {
                   <span
                     style={{
                       ...styles.categoryBadge,
-                      backgroundColor: categoryColors[change.category].bg,
-                      color: categoryColors[change.category].text,
+                      backgroundColor: change.label
+                        ? systemColors.light['background-subtle']
+                        : categoryColors[change.category].bg,
+                      color: change.label
+                        ? systemColors.light['content-secondary']
+                        : categoryColors[change.category].text,
                     }}
                   >
-                    {categoryColors[change.category].label}
+                    {change.label ?? categoryColors[change.category].label}
                   </span>
                   <ul style={styles.changesList}>
                     {change.items.map((item, itemIndex) => (
@@ -505,6 +667,71 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '14px',
     color: referenceColors.gray['70'],
     lineHeight: '22px',
+  },
+  hero: {
+    backgroundColor: systemColors.light['background-subtle'],
+    border: `1px solid ${systemColors.light['background-subtle']}`,
+    borderRadius: '12px',
+    padding: '24px 28px',
+    marginBottom: '40px',
+  },
+  heroLabel: {
+    fontFamily: '"SF Mono", Monaco, monospace',
+    fontSize: '11px',
+    fontWeight: 700,
+    letterSpacing: '0.16em',
+    textTransform: 'uppercase',
+    color: systemColors.light['content-brand'],
+    marginBottom: '16px',
+  },
+  heroList: {
+    margin: 0,
+    padding: 0,
+    listStyle: 'none',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+    gap: '16px',
+  },
+  heroItem: {
+    backgroundColor: systemColors.light['background-base'],
+    border: `1px solid ${systemColors.light['background-subtle']}`,
+    borderRadius: '8px',
+    padding: '14px 16px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+  },
+  heroItemHead: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '12px',
+  },
+  heroTitle: {
+    fontFamily: '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    fontSize: '15px',
+    fontWeight: 600,
+    color: systemColors.light['content-primary'],
+    lineHeight: '20px',
+  },
+  heroVersion: {
+    flexShrink: 0,
+    padding: '2px 8px',
+    borderRadius: '4px',
+    fontFamily: '"SF Mono", Monaco, monospace',
+    fontSize: '11px',
+    fontWeight: 600,
+    letterSpacing: '0.04em',
+    backgroundColor: systemColors.light['background-subtle'],
+    color: systemColors.light['content-secondary'],
+  },
+  heroDescription: {
+    margin: 0,
+    fontFamily: '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    fontSize: '13px',
+    fontWeight: 400,
+    color: systemColors.light['content-secondary'],
+    lineHeight: '19px',
   },
   connector: {
     position: 'absolute',

@@ -13,6 +13,7 @@ import { SurfacesShowcase } from './pages/SurfacesShowcase';
 import { VersionHistoryPage } from './pages/VersionHistoryPage';
 import { ColorSystemPage } from './pages/ColorSystemPage';
 import { TypographyPage } from './pages/TypographyPage';
+import RdModalDemo from './pages/RdModalDemo';
 // import { RoadmapPage } from './pages/RoadmapPage';
 
 import { systemColors } from './tokens/colors';
@@ -635,6 +636,9 @@ const App: React.FC = () => {
       {/* Redirect icongallery to icons page */}
       <Route path="/radiant/components/icongallery" element={<Navigate to="/radiant/icons" replace />} />
       
+      {/* Dev demos */}
+      <Route path="/dev/rdmodal" element={<RdModalDemo />} />
+
       {/* Playground Section - No sidebar */}
       <Route path="/playground" element={<Navigate to="/" replace />} />
       <Route path="/playground/:projectName" element={<PlaygroundProject />} />

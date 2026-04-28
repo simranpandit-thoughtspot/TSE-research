@@ -1,5 +1,30 @@
 # Changelog
 
+## 26.4.4c — 2026-04-28
+
+- feat(changelog): Highlights section at the top — curated picks across recent releases (60-day window, min 6 items)
+- feat(release): release.sh prompts for highlights interactively during release
+- docs(orchestration): add MCP plugin overhead check (B1 from workflow plan)
+- feat(status): sort forks by last push descending
+- feat(status): add worktrees + branch divergence vs main/staging/upstream
+- feat(status): merge plans/rules/docs into one tab, drop Open work
+- feat(status): role-aware dashboard — designer forks see upstream-sync tab
+- feat(status): rename to /project-status, add inline md viewer + local badges
+- chore(deps): bump postcss to 8.5.10 in lockfile (fixes XSS advisory)
+- chore: salvage workflow explorations + orchestration tightening
+- Merge branch 'feat/token-system-figma-alignment' into staging
+- feat(tokens): Phases 4 & 5 — shadows + layout aligned with Figma 3.0
+- feat(tokens): Phase 3 — typography aligned with Figma 3.0 + changelog
+- feat(tokens): Phase 2 — light mode semantic colors aligned with Figma 3.0
+- feat(tokens): Phase 1 — primitive colors aligned with Figma 3.0
+- Merge branch 'review/rd-modal-component' into staging
+- docs: add 26.4.4a changelog for Modal Figma alignment
+- feat: align Modal with Figma spec and absorb RdModal learnings
+- Merge branch 'pr-10-rd-modal' into staging
+- feat: add RdModal shared modal component
+- fix: add process type declaration to middleware to resolve TS2580 errors
+- chore: extend password gate cookie lifetime to 14 days
+
 ## 26.4.4a — 2026-04-24
 
 - feat: add Impersonation Flow prototype (Act as user)
@@ -18,16 +43,84 @@
 - feat: standardise modal system with RdModal component
 - feat: update NewUIAdmin2 AI settings and application settings
 - chore: install echarts-for-react for shared tiles charts
-- Merge remote-tracking branch 'upstream/main'
-- Merge remote-tracking branch 'origin/main' into feat/orchestrator-refactor
-- docs: consolidate changelog into single 26.4.1c release (2026-04-08)
-- Merge pull request #9 from mohammed-faris/staging
 
 
 All notable changes to Radiant Play are documented here.
 
 **Versioning:** `YY.M.Ws` — Year.Month.Week + sub-release letter (a, b, c...).
 Example: `26.4.1b` = 2026, April, week 1, second release that week.
+
+---
+
+## [26.4.4b] - 2026-04-28
+
+### Token system Figma alignment (Phases 1–5 of 8, dark mode out of scope)
+
+#### Phase 4 — Elevation / Shadows
+
+- New `shadowPrimitives` with 3 semantic levels matched to Figma: `surface` (Card, Tooltip, Nav), `menu` (Dropdown, Popover, Sidebar overlay), `modal` (Modal, Dialog)
+- Light mode uses colored ink tints (`#192331`); dark mode uses pure black for cool dark base
+- New CSS variables `--shadow-surface`, `--shadow-menu`, `--shadow-modal` with light/dark theme variants
+- Component CSS migrated from legacy `--shadow-xs/sm/md/lg/xl/2xl` (kept as aliases) to semantic vars: Modal, Tooltip, Popover, Card, Menu, DatePicker, FilterModal, InputMentions, AppSidebar overlay
+- Modal hardcoded RGBA box-shadow replaced with `var(--shadow-modal)` (token-only compliance)
+
+#### Phase 5 — Layout constants
+
+- `AppSidebar.tsx` and `AppShell.tsx` default sidebar width `261px → 260px` (Figma rounding alignment)
+- Header height stays `60px`, content max width `1280px` — `CLAUDE.md` and `.cursor/rules/layout-patterns.md` already reflect these (no doc updates needed)
+
+### Token system Figma alignment (Phases 1–3 of 8)
+
+Plan: `plans/2026-04-07-token-system-implementation.md`
+
+#### Phase 1 — Primitive colors
+
+- **darkGray scale** (12 stops) added to `referenceColors` — neutral foundation for Phase 6 dark mode remap
+- **Alpha variants** added: `gray-70a/60a/40a/10a`, `blue-10a`, `dark-gray-30a`
+- **Hex fixes** to match Figma: `purple/70` `#6847BA → #6A4ABA`, `purple/100` `#0D0030 → #0E0033`, `teal/70` `#359FAA → #369FAA`
+- New primitives exposed in `tokens.css` as `--rd-ref-color-dark-gray-*` and `--rd-ref-color-*a`
+
+#### Phase 2 — Light mode semantic colors
+
+- **6 value fixes**: `content-tertiary`, `border-focus`, `border-hover`, `background-overlay`, `background-ghost-highlight`, `background-base-inverse`
+- **22 new tokens**: 9 background-accent-*, 6 content-accent-*, 7 border-* (subtle-hover + 6 accents), `background-on-base`, `background-active`
+- Same keys added to dark object as placeholders (Phase 6 will remap properly)
+- Phase 2.5 (deprecate 25 extra RP tokens) deferred — list not enumerated
+
+#### Phase 3 — Typography
+
+- `letterSpacing.tight`: `-0.01em → -0.4px` (Figma absolute)
+- `letterSpacing.tighter`: new (`-0.6px`)
+- 6 v2TextStyles weights `medium → semibold`: headlineLarge, pageTitle, modalTitle, sectionLabel, contentLabel, contentLabelSubhead
+- pageTitle/modalTitle: `letterSpacing.normal → tight`
+- footnote/caption/overline: `letterSpacing → tighter`
+- `textStyles.body.large/normal`: `light (375) → regular (400)`
+
+---
+
+## [26.4.4a] - 2026-04-27
+
+### Modal alignment with Figma (absorbed RdModal PR)
+
+- **Header**: padding restored to `20px 24px` (variable height) so wizard variants grow correctly for eyebrow + title
+- **Footer**: fixed at 72px height with `0 24px` padding; CTA placement bug fixed (tertiary-left / primary-right now sit at correct edges — was double-wrapped)
+- **Wizard stepper**: rebuilt as discrete 4px segments with 6px gap and 2px radii; also renders for `splashscreen` type to enable onboarding flows
+- **Close button**: removed X icon from M1/M2/M3 simple modals — only M4 keeps the "Close" text link, per Figma
+- **Splash screen**: header no longer renders (title lives in body via `ModalSplashContent`)
+- **Overlay z-index**: bumped to 1000 so M4 covers the sidebar
+
+### Surfaces showcase additions
+
+- New M2 eyebrow-only variant (no stepper)
+- New M2 splash-screen-multi (3-step onboarding flow with stepper)
+- Wizard footer keeps Back rendered (disabled on step 1) + primary button uses `minWidth: spacing.I*2` so position stays consistent across steps
+- Spec card updated to Figma values; secondary/primary demo swatches use `content-primary` / `content-alternate` tokens
+
+### LastUpdated component
+
+- New shared component reads `lastModified` from `componentRegistry` (or accepts a manual date)
+- Added at top of Surfaces, Icons, Architecture, and ComponentDocPage
+- Modal registry entry refreshed with current Figma node ID and `2026-04-27` sync date
 
 ---
 
@@ -58,6 +151,7 @@ Example: `26.4.1b` = 2026, April, week 1, second release that week.
 
 ### Platform and tooling
 
+- **Deployment password gate**: Edge middleware password-gates Vercel deployments — opt-in per designer via `SITE_PASSWORD` env var in their Vercel dashboard
 - **CalVer versioning**: `platformVersion.ts` as single source of truth; version badge on homepage, playground, and DS sidebar
 - **Component source badges**: Figma / Scaligent / Custom badge on every component doc page
 - **Release tooling**: `scripts/release.sh`, pre-push hook, `install-maintainer-hooks.sh`

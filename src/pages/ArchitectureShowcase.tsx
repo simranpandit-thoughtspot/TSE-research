@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { systemColors, referenceColors } from '../tokens/colors';
+import { LastUpdated } from '../components/LastUpdated';
 
 type ActiveLayer = 'reference' | 'system' | 'component' | null;
 
@@ -10,6 +11,7 @@ export const ArchitectureShowcase: React.FC = () => {
     <div style={styles.container}>
       {/* Header */}
       <section style={styles.headerSection}>
+        <LastUpdated date="2026-04-27" />
         <h2 style={styles.pageTitle}>Token Architecture</h2>
         <p style={styles.pageDescription}>
           The Radiant Design System uses a 3-tier token architecture that provides flexibility, 
