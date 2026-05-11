@@ -211,7 +211,11 @@ export const config = {
 
 export default async function middleware(request: Request): Promise<Response | undefined> {
   const vercelEnv = process.env.VERCEL_ENV;
-  const isDeployed = vercelEnv === 'production' || vercelEnv === 'preview';
+  const gitRef = process.env.VERCEL_GIT_COMMIT_REF || '';
+  // Staging branch is public; production + other preview branches stay gated.
+  const isDeployed =
+    vercelEnv === 'production' ||
+    (vercelEnv === 'preview' && gitRef !== 'staging');
   const sitePassword = process.env.SITE_PASSWORD || '';
   const url = new URL(request.url);
 
