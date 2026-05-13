@@ -1,5 +1,23 @@
 # Changelog
 
+## 26.5.2a — 2026-05-13
+
+- feat: SpotterHome prototype — global header, side nav, Spotter hero with prompt box, Recents + Watchlist cards
+- Merge remote-tracking branch 'upstream/main'
+- feat(changelog): polish Highlights section + reorganize toolbar
+- fix(changelog): wire Highlights into VersionHistoryPage (the actual rendered page)
+- refactor(changelog): rework highlights into a top-of-page curated section
+- fix: update exit session modal copy
+- feat: add pulsing red hint dots guiding users through impersonation flow
+- feat: merge Impersonation Flow prototype into main
+- feat: add Impersonation Flow prototype (Act as user)
+- feat: add NewUIAdmin2 (Admin 2.0) as sample prototype in registry-core
+- fix: font dropdown uses position fixed to escape overflow clipping
+- feat: Edit action in VC table opens EditCredentialsModal with pre-fill + banners
+- feat: add validation error state to version control setup step 1
+- feat: add Edit, Rename, Delete workflows to Variables page
+- feat: Create Variable 2-step modal with validation, org mapping, and success toast
+
 ## 26.4.4c — 2026-04-28
 
 - feat(changelog): Highlights section at the top — curated picks across recent releases (60-day window, min 6 items)

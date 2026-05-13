@@ -14,6 +14,8 @@ import React from 'react';
 import { ProjectMeta } from './registry-core';
 import EmailCustomisationThumbnail from './thumbnails/EmailCustomisation.svg';
 
+const SpotterHome = React.lazy(() => import('./SpotterHome'));
+const MobileWidgets = React.lazy(() => import('./MobileWidgets'));
 const AdminPortal2 = React.lazy(() => import('./AdminPortal2'));
 const NewUIAdmin2 = React.lazy(() => import('./NewUIAdmin2'));
 const Admin2Vision = React.lazy(() => import('./Admin2Vision'));
@@ -21,8 +23,42 @@ const HomepageV4 = React.lazy(() => import('./HomepageV4'));
 const HomepageV5 = React.lazy(() => import('./HomepageV5'));
 const EmailCustomisation = React.lazy(() => import('./EmailCustomisation'));
 const ImpersonationFlow = React.lazy(() => import('./ImpersonationFlow'));
+const RBAC = React.lazy(() => import('./RBAC'));
 
 export const myRegistry: ProjectMeta[] = [
+  {
+    id: 'SpotterHome',
+    name: 'Spotter Home',
+    description: 'Spotter AI analyst home page — centered hero with gradient-border search bar, datasource chip, Recents panel, and Watchlist KPIs.',
+    author: 'Simran Pandit',
+    lastModified: '2026-05-13',
+    component: SpotterHome,
+    dsComponents: 0,
+    customComponents: 4,
+    section: 'mine',
+  },
+  {
+    id: 'MobileWidgets',
+    name: 'KPI Widget Explorer — iOS & Android',
+    description: 'ThoughtSpot KPI watchlist widget prototype with iOS WidgetKit and Android App Widget guidelines. Side-by-side platform comparison, 3 KPI types, 3 layout iterations, light/dark/tinted themes, all standard widget sizes.',
+    author: 'Simran Pandit',
+    lastModified: '2026-05-06',
+    component: MobileWidgets,
+    dsComponents: 0,
+    customComponents: 8,
+    section: 'mine',
+  },
+  {
+    id: 'RBAC',
+    name: 'RBAC — Privilege Transparency',
+    description: 'Admin portal user management with granular privilege visibility — groups table, users table, user detail card with Groups/Privileges tabs, and group detail card with privilege breakdown.',
+    author: 'Simran Pandit',
+    lastModified: '2026-04-29',
+    component: RBAC,
+    dsComponents: 4,
+    customComponents: 5,
+    section: 'mine',
+  },
   {
     id: 'ImpersonationFlow',
     name: 'Impersonation flow',

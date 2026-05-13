@@ -1,0 +1,1355 @@
+/* ─── Design tokens (from Figma) ─────────────────────────────────────────── */
+/* --bg-base:        #ffffff                                                  */
+/* --bg-on-base:     #f6f8fa                                                  */
+/* --border-subtle:  #eaedf2                                                  */
+/* --content-primary:   #1d232f                                               */
+/* --content-secondary: #777e8b                                               */
+/* --content-brand:     #2770ef                                               */
+/* --bg-ghost-hi:    rgba(113, 161, 244, 0.12)                                */
+/* --btn-secondary:  #eaedf2                                                  */
+
+/* ─── Page ────────────────────────────────────────────────────────────────── */
+
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  overflow: hidden;
+  font-family: "Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ─── Global Header (60px) ───────────────────────────────────────────────── */
+
+.header {
+  height: 60px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  background: #f6f8fa;
+  border-bottom: 1px solid #eaedf2;
+  padding: 0 24px;
+  gap: 12px;
+  z-index: 10;
+}
+
+.headerLogo {
+  width: 213px; /* aligns with sidebar width (261) minus header padding (24) and gap (24) */
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.headerToolbar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Search bar — 216px pill */
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 216px;
+  height: 32px;
+  padding: 0 12px;
+  background: #eaedf2;
+  border-radius: 140px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.searchText {
+  font-size: 14px;
+  font-weight: 300;
+  color: #777e8b;
+  white-space: nowrap;
+}
+
+/* Utility buttons (help, bell) — 32px circle */
+.utilBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+  transition: background 0.15s;
+}
+.utilBtn:hover { background: #eaedf2; }
+
+.bellBtn { position: relative; }
+.notifDot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e22b3d;
+  border: 1.5px solid #f6f8fa;
+  pointer-events: none;
+}
+
+/* Org switcher — split pill */
+.orgSwitcher {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.orgName {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 6px 6px 6px 18px;
+  background: #eaedf2;
+  border-radius: 20px 2px 2px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1d232f;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.orgName:hover { background: #dde0e6; }
+
+.avatarBtn {
+  width: 32px;
+  height: 32px;
+  padding: 2px;
+  background: #eaedf2;
+  border-radius: 2px 20px 20px 2px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.avatarBtn:hover { background: #dde0e6; }
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: block;
+  object-fit: cover;
+}
+
+/* ─── Body row ───────────────────────────────────────────────────────────── */
+
+.body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ─── Side Nav (261px) ──────────────────────────────────────────────────── */
+
+.sideNav {
+  width: 261px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f6f8fa;
+  border-right: 1px solid #eaedf2;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Icon tab strip — 4 × 65.25px = 261px */
+.iconTabs {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.iconTab {
+  flex: 1;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-right: 1px solid #eaedf2;
+  border-bottom: 1px solid #eaedf2;
+  background: #ffffff;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.12s;
+}
+.iconTab:last-child { border-right: none; }
+.iconTab:hover { background: #f0f2f5; }
+
+/* Active tab blends into sidebar — no bottom border, same bg */
+.iconTabActive {
+  background: #f6f8fa;
+  border-bottom-color: transparent;
+}
+.iconTabActive:hover { background: #f6f8fa; }
+
+/* Nav menu */
+.navMenu {
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+  flex: 1;
+  gap: 20px;
+}
+
+/* "Insights" section header */
+.navTopHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px 0 24px;
+  flex-shrink: 0;
+}
+
+.navTopTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1d232f;
+  letter-spacing: -0.072px;
+  line-height: 24px;
+}
+
+.navPlusBtn {
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  color: #1d232f;
+}
+
+/* Nav sections */
+.navSection {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section label (LIBRARY, ANALYSIS & ALERTS, FAVOURITES) */
+.navLabel {
+  padding: 6px 24px;
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  color: #777e8b;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  line-height: 20px;
+}
+
+/* Nav item */
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 32px;
+  padding: 0 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 375;
+  color: #1d232f;
+  text-align: left;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background 0.12s;
+  position: relative;
+  box-sizing: border-box;
+}
+.navItem:hover { background: rgba(113, 161, 244, 0.08); }
+
+.navItemActive {
+  background: rgba(113, 161, 244, 0.12);
+  color: #2770ef;
+  font-weight: 500;
+}
+.navItemActive:hover { background: rgba(113, 161, 244, 0.12); }
+
+/* Favourites items use less left padding (dot + icon take the space) */
+.navItemFav {
+  padding: 0 9px;
+}
+
+.favLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.favDotEmpty {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+}
+
+.favDotActive {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2770ef;
+  flex-shrink: 0;
+}
+
+/* Divider */
+.navDivider {
+  border: none;
+  border-top: 1px solid #eaedf2;
+  margin: 0 14px;
+  flex-shrink: 0;
+}
+
+/* Show more */
+.showMore {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 24px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 375;
+  color: #1d232f;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+.showMore:hover { color: #2770ef; }
+
+/* ─── Content area (1179 × 813px at 1440 viewport) ───────────────────────── */
+
+.contentArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f6f8fa;
+  min-width: 0;
+}
+
+/* Spotter div — 40% of content height */
+.spotterDiv {
+  flex: 40;
+  min-height: 0;
+  position: relative;
+}
+
+/* Watchlist div — 60% of content height */
+.watchlistDiv {
+  flex: 60;
+  min-height: 0;
+  position: relative;
+}
+
+/* ─── Spotter section ────────────────────────────────────────────────────── */
+
+.spotterFrame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Background gradient SVG — centred, anchored near the bottom behind prompt */
+.spotterBg {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 980px;
+  height: 280px;
+  pointer-events: none;
+}
+
+/* Centred content column */
+.spotterInner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 664px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Welcome message group */
+.spotterWelcome {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.spotterTitleRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ── Dog-chat-avatar ──────────────────────────────────────────────────────── */
+
+.dogAvatar {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+/* Shared image utilities */
+.dogLayerImg {
+  position: absolute;
+  display: block;
+  inset: 0;
+  max-width: none;
+  width: 100%;
+  height: 100%;
+}
+
+.dogLayerImgFill {
+  display: block;
+  max-width: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* Layer 1 — background/colour fill */
+.dogLayer1 {
+  position: absolute;
+  top: 112.74px;
+  right: 110.12px;
+  bottom: -111.39px;
+  left: -108.77px;
+  mask-mode: alpha;
+  mask-composite: intersect;
+  mask-repeat: no-repeat;
+  mask-position: 117.273px -113.142px;
+  mask-size: 36px 36px;
+  -webkit-mask-mode: alpha;
+  -webkit-mask-composite: destination-in;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: 117.273px -113.142px;
+  -webkit-mask-size: 36px 36px;
+}
+
+/* Layer 2 — dog body */
+.dogLayer2 {
+  position: absolute;
+  top: 8.04px;
+  right: -5.13px;
+  bottom: -50.48px;
+  left: -64.74px;
+  mask-mode: alpha;
+  mask-composite: intersect;
+  mask-repeat: no-repeat;
+  mask-position: 73.248px -8.438px;
+  mask-size: 36px 36px;
+  -webkit-mask-mode: alpha;
+  -webkit-mask-composite: destination-in;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: 73.248px -8.438px;
+  -webkit-mask-size: 36px 36px;
+}
+
+.dogLayer2Inner {
+  position: absolute;
+  top: -0.2px;
+  right: -0.15px;
+  bottom: -0.56px;
+  left: -0.11px;
+}
+
+/* Layer 3 — detail/shading */
+.dogLayer3 {
+  position: absolute;
+  top: 120.56px;
+  right: 112.76px;
+  bottom: -111.06px;
+  left: -110.31px;
+  mask-mode: alpha;
+  mask-composite: intersect;
+  mask-repeat: no-repeat;
+  mask-position: 118.82px -120.955px;
+  mask-size: 36px 36px;
+  -webkit-mask-mode: alpha;
+  -webkit-mask-composite: destination-in;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: 118.82px -120.955px;
+  -webkit-mask-size: 36px 36px;
+}
+
+.dogLayer3Inner {
+  position: absolute;
+  top: -0.59px;
+  right: -0.46px;
+  bottom: -0.19px;
+  left: 0;
+}
+
+/* Layer 4 — outline */
+.dogLayer4 {
+  position: absolute;
+  top: -0.4px;
+  right: -8.51px;
+  bottom: 0.4px;
+  left: 8.51px;
+  mask-mode: alpha;
+  mask-composite: intersect;
+  mask-repeat: no-repeat;
+  mask-position: 0px 0px;
+  mask-size: 36px 36px;
+  -webkit-mask-mode: alpha;
+  -webkit-mask-composite: destination-in;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: 0px 0px;
+  -webkit-mask-size: 36px 36px;
+}
+
+/* ── Title & subtitle ─────────────────────────────────────────────────────── */
+
+.spotterTitle {
+  font-size: 32px;
+  font-weight: 600;
+  color: #1d232f;
+  letter-spacing: -0.128px;
+  line-height: 40px;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.spotterSubtitle {
+  font-size: 16px;
+  font-weight: 375;
+  color: #777e8b;
+  letter-spacing: -0.064px;
+  line-height: 24px;
+  text-align: center;
+  white-space: nowrap;
+  margin: 0;
+}
+
+/* ── Prompt box ───────────────────────────────────────────────────────────── */
+
+.promptBox {
+  width: 744px;
+  background: #ffffff;
+  border: 1px solid #b526ec;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 0 2px rgba(25, 35, 49, 0.1), 0 2px 2px rgba(25, 35, 49, 0.04);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.promptInputRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.promptPlaceholder {
+  flex: 1;
+  min-width: 1px;
+  font-size: 16px;
+  font-weight: 375;
+  color: #777e8b;
+  letter-spacing: -0.064px;
+  line-height: 24px;
+  margin: 0;
+}
+
+.promptToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.promptLeftActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.promptRightActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ── ModeToggle ───────────────────────────────────────────────────────────── */
+
+.modeToggle {
+  position: relative;
+  width: 60px;
+  height: 32px;
+  overflow: clip;
+  flex-shrink: 0;
+}
+
+.modeToggleBg {
+  position: absolute;
+  inset: 0;
+  background: #eaedf2;
+  border-radius: 17px;
+}
+
+.modeToggleActive {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 28px;
+  height: 28px;
+  background: #ffffff;
+  border-radius: 17px;
+  box-shadow: 0 2px 4px rgba(25, 35, 49, 0.04);
+}
+
+.modeToggleBtn {
+  position: absolute;
+  overflow: clip;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+/* Left button: x=35px to 53px (right: 7px, left: 35px), y=7px to 25px */
+.modeToggleBtnLeft {
+  top: 7px;
+  right: 7px;
+  bottom: 7px;
+  left: 35px;
+}
+
+/* Right button: x=7px to 25px (right: 35px, left: 7px), y=7px to 25px */
+.modeToggleBtnRight {
+  top: 7px;
+  right: 35px;
+  bottom: 7px;
+  left: 7px;
+}
+
+/* Centre helper for left button content */
+.modeToggleBtnCentre {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 19.753px;
+  height: 19.753px;
+}
+
+.modeToggleIcoWrap1 {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 19.753px;
+  height: 19.753px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modeToggleRotNeg45 {
+  transform: rotate(-45deg);
+  flex-shrink: 0;
+}
+
+.modeToggleEllWrap1 {
+  position: relative;
+  width: 9.704px;
+  height: 18.232px;
+}
+
+.modeToggleEllInset {
+  position: absolute;
+  top: -5.48%;
+  right: -10.31%;
+  bottom: -5.48%;
+  left: -10.31%;
+}
+
+.modeToggleIcoWrap2 {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 22.355px;
+  height: 22.355px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modeToggleRot45 {
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+.modeToggleEllWrap2 {
+  position: relative;
+  width: 10.982px;
+  height: 20.633px;
+}
+
+.modeToggleEllSmall {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 3.484px;
+  height: 3.484px;
+}
+
+.modeToggleExploreInset {
+  position: absolute;
+  top: 0;
+  right: 6.03%;
+  bottom: 6.03%;
+  left: 0;
+}
+
+/* ── Toolbar divider ──────────────────────────────────────────────────────── */
+
+.toolbarDivider {
+  width: 1px;
+  height: 32px;
+  background: #eaedf2;
+  flex-shrink: 0;
+}
+
+/* ── GTMRevOps split button ───────────────────────────────────────────────── */
+
+.splitBtn {
+  display: flex;
+  gap: 2px;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.splitBtnLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 8px 6px 16px;
+  height: 32px;
+  background: #eaedf2;
+  border-radius: 18px 1px 1px 18px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 375;
+  color: #1d232f;
+  white-space: nowrap;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: background 0.15s;
+}
+.splitBtnLeft:hover { background: #dde0e6; }
+
+.splitBtnRight {
+  position: relative;
+  width: 36px;
+  height: 32px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.splitBtnRightBg {
+  position: absolute;
+  inset: 0;
+  background: #eaedf2;
+  border-radius: 1px 16px 16px 1px;
+  transition: background 0.15s;
+}
+.splitBtnRight:hover .splitBtnRightBg { background: #dde0e6; }
+
+.splitBtnChevron {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  width: 16px;
+  height: 16px;
+}
+
+.splitBtnChevronPath {
+  position: absolute;
+  top: 34.96%;
+  right: 18.29%;
+  bottom: 25.48%;
+  left: 18.29%;
+}
+
+/* ── Ghost + button ───────────────────────────────────────────────────────── */
+
+.ghostPlusBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.ghostPlusBtn:hover { background: #eaedf2; }
+
+/* ── Controls & Send buttons ──────────────────────────────────────────────── */
+
+.controlsBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 100px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.controlsBtn:hover { background: #eaedf2; }
+
+.controlsIcon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.sendBtn {
+  width: 32px;
+  height: 32px;
+  background: #2770ef;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.sendBtn:hover { background: #1f5dd4; }
+
+.sendBtnIcon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.sendBtnIconPath {
+  position: absolute;
+  top: 5.56%;
+  right: 18.33%;
+  bottom: 5.56%;
+  left: 18.25%;
+}
+
+/* ─── Watchlist section ──────────────────────────────────────────────────── */
+
+.watchlistFrame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.watchlistRow {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 24px;
+}
+
+/* ── Shared card shell ────────────────────────────────────────────────────── */
+
+.recentsCard,
+.watchlistCard {
+  height: 385px;
+  background: #ffffff;
+  border: 1px solid #eaedf2;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.recentsCard  { width: 265px; }
+.watchlistCard { width: 458px; }
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  height: 36px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.cardHeaderLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1d232f;
+  line-height: 20px;
+  font-feature-settings: 'case' 1, 'cpsp' 1;
+}
+
+.cardDivider {
+  border: none;
+  border-top: 1px solid #eaedf2;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* ── Decorative scrollbars ────────────────────────────────────────────────── */
+
+.recentsScrollbar {
+  position: absolute;
+  right: -1px;
+  top: 59px;
+  width: 8px;
+  height: 316px;
+  background: #eaedf2;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.watchlistScrollbar {
+  position: absolute;
+  left: 448px;
+  top: 59px;
+  width: 8px;
+  height: 318px;
+  background: #eaedf2;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.scrollbarThumb {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 8px;
+  height: 72px;
+  background: #c0c6cf;
+  border-radius: 6px;
+}
+
+/* ── Recents list ─────────────────────────────────────────────────────────── */
+
+.recentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.recentsItem {
+  display: flex;
+  align-items: center;
+  height: 54px;
+  padding: 8px 16px;
+  gap: 12px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/* ── Recents icons ────────────────────────────────────────────────────────── */
+
+.recentsIconWrap {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.recentIconBox {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.aiIconClip {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+}
+
+.aiStarTopLeft {
+  position: absolute;
+  top: 5.78%;
+  right: 5.79%;
+  bottom: 62.06%;
+  left: 62.06%;
+}
+.aiStarTopLeftInner {
+  position: absolute;
+  inset: 2.48%;
+}
+
+.aiStarBotRight {
+  position: absolute;
+  top: 19.18%;
+  right: 19.19%;
+  bottom: 5.79%;
+  left: 5.79%;
+}
+.aiStarBotRightInner {
+  position: absolute;
+  inset: 6.76%;
+}
+
+.liveboardItemIcon {
+  position: absolute;
+  left: 4.07px;
+  top: 4px;
+  width: 16.272px;
+  height: 16px;
+}
+
+.pieMainIcon {
+  position: absolute;
+  left: 3.94px;
+  top: 4.96px;
+  width: 15.006px;
+  height: 15.037px;
+}
+
+.pieBadgeIcon {
+  position: absolute;
+  left: 12.36px;
+  top: 4px;
+  width: 8.103px;
+  height: 7.978px;
+}
+
+.wlFill {
+  display: block;
+  max-width: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Recents text ─────────────────────────────────────────────────────────── */
+
+.recentsText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.recentsName {
+  font-size: 14px;
+  font-weight: 375;
+  color: #1d232f;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.recentsTime {
+  font-size: 12px;
+  font-weight: 400;
+  color: #777e8b;
+  line-height: 18px;
+  letter-spacing: -0.072px;
+  white-space: nowrap;
+  margin: 0;
+}
+
+/* ── Watchlist header ─────────────────────────────────────────────────────── */
+
+.addKpiBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 375;
+  color: #2770ef;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+.addKpiBtn:hover { color: #1f5dd4; }
+
+/* ── KPI list ─────────────────────────────────────────────────────────────── */
+
+.kpiList {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.kpiItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 15px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.kpiItemLeft {
+  width: 185px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.kpiTitle {
+  font-size: 14px;
+  font-weight: 375;
+  color: #1d232f;
+  line-height: 20px;
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.kpiTitleStatic {
+  font-size: 14px;
+  font-weight: 375;
+  color: #1d232f;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.kpiPeriod {
+  font-size: 12px;
+  font-weight: 400;
+  color: #777e8b;
+  line-height: 18px;
+  letter-spacing: -0.072px;
+  margin: 0;
+}
+
+.kpiItemRight {
+  width: 203px;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.kpiValueDelta {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 115px;
+  padding-left: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.kpiValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d232f;
+  line-height: 24px;
+  letter-spacing: -0.064px;
+  white-space: nowrap;
+  font-feature-settings: 'cpsp' 1, 'case' 1;
+  margin: 0;
+}
+
+.kpiDeltaRow {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Delta arrow — 12×12px */
+.deltaArrowBox {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+.deltaArrowInner {
+  position: absolute;
+  inset: 0;
+}
+.deltaArrowPath {
+  position: absolute;
+  top: 5.56%;
+  right: 18.33%;
+  bottom: 5.56%;
+  left: 18.25%;
+}
+
+.deltaUp {
+  font-size: 12px;
+  font-weight: 400;
+  color: #06bf7f;
+  line-height: 18px;
+  letter-spacing: -0.072px;
+  white-space: nowrap;
+}
+.deltaDown {
+  font-size: 12px;
+  font-weight: 400;
+  color: #e22b3d;
+  line-height: 18px;
+  letter-spacing: -0.072px;
+  white-space: nowrap;
+}
+.deltaNeutral {
+  font-size: 12px;
+  font-weight: 400;
+  color: #777e8b;
+  line-height: 18px;
+  letter-spacing: -0.072px;
+  white-space: nowrap;
+}
+
+/* ── Sparkline row ────────────────────────────────────────────────────────── */
+
+.kpiItemSparkline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 15px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.kpiSparklineRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sparklineWrap {
+  position: relative;
+  width: 79px;
+  height: 26px;
+  overflow: clip;
+  flex-shrink: 0;
+}
+
+.sparklineImg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 79px;
+  height: 22px;
+  display: block;
+}
+
+.sparklineBaseline {
+  position: absolute;
+  top: 53.31%;
+  left: 0;
+  right: 0;
+  bottom: 46.69%;
+}
+
+.sparklineBaselineInner {
+  position: absolute;
+  top: -1px;
+  inset: -1px 0 0 0;
+}
+
+.sparklineStats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sparklinePill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 4px;
+  height: 24px;
+  width: 53px;
+  background: #ffebec;
+  border-radius: 4px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.sparklinePillText {
+  font-size: 12px;
+  font-weight: 400;
+  color: #e22b3d;
+  line-height: 18px;
+  letter-spacing: -0.072px;
+}
