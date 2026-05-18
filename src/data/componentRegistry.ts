@@ -5,6 +5,7 @@
  * Tracks Figma sync status, component states, and source information.
  */
 import { iconRegistry } from '../components/icons/registry';
+import { generateCSSVariables, generateThemeVariables } from '../tokens/css-variables';
 
 export type ComponentSource = 'figma' | 'scaligent' | 'custom';
 export type ComponentStatus = 'stable' | 'beta' | 'new' | 'deprecated';
@@ -176,6 +177,19 @@ export const componentRegistry: ComponentMeta[] = [
     source: 'figma',
     status: 'stable',
     variants: 2,
+    author: 'Design Team',
+    category: 'Feedback',
+  },
+  {
+    id: 'rdmodal',
+    name: 'RdModal',
+    description: 'Standardised modal — M1/M2/M3/M4 sizes, simple or eyebrow variant with optional stepper, optional footer with secondary/primary actions',
+    states: ['open', 'closed'],
+    path: '/radiant/components/rdmodal',
+    lastModified: '2026-04-15',
+    source: 'figma',
+    status: 'stable',
+    variants: 4,
     author: 'Design Team',
     category: 'Feedback',
   },
@@ -1167,7 +1181,9 @@ export const getIconCount = (): number => {
  * Get token count label
  */
 export const getTokenCountLabel = (): string => {
-  return '290+';
+  const base = Object.keys(generateCSSVariables()).length;
+  const theme = Object.keys(generateThemeVariables('light')).length;
+  return String(base + theme);
 };
 
 /**
