@@ -133,3 +133,47 @@ To add a new block kind:
 When you change a Spotter DS component, that change ripples to every
 consumer. When you change a prototype-local component (like
 `ChatCanvas`), only the Spotter prototype is affected.
+
+---
+
+## Planned components (not yet in code)
+
+Components that need to exist for Spotter prototypes but aren't built yet. Figma-first workflow: spec in Figma → add a Code Connect mapping → implement.
+
+Statuses: `design` (Figma in progress) → `figma-ready` (Figma done, code not started) → `in-progress` (code being written) → `built` (move out of this section into the inventory above).
+
+### AnswerCard
+- **Status:** design (Figma spec exists)
+- **Purpose:** The answer view that renders inside a chat thread when Spotter responds with a viz-backed answer. VizBlock is the current stand-in.
+- **Figma:** node `122:15399` (`Card / Answer`) in the AI Design System & Style Guidelines file
+- **Spec doc:** `docs/2026-05-07-spotter-answer-card.md`
+- **Will live at:** `src/spotter/answer/AnswerCard.tsx`
+
+### Source picker
+- **Status:** design pending
+- **Purpose:** Pick which SpotterModel (data source) to query in the current session. Surfaces from the prompt area or model picker.
+- **Will live at:** `src/spotter/chat/SourcePicker.tsx` (tentative)
+
+### Model picker (full)
+- **Status:** design pending
+- **Purpose:** Richer model-selection UI than the current inline picker — recently used, search, model metadata. The current `SpotterPrompt` has a minimal dropdown.
+- **Will live at:** `src/spotter/chat/ModelPicker.tsx` (tentative)
+
+### Spotter topbar variants
+- **Status:** design pending
+- **Purpose:** Topbar treatments for different surface contexts — with / without breadcrumbs, with model-context chip, embedded mode.
+- **Note:** Standalone today uses Radiant `GlobalHeader` (light). These variants might wrap or replace it.
+
+### Spotter Viz components
+- **Status:** design pending
+- **Purpose:** Components for the Spotter Viz embedded mode (visualization agent for instant dashboards).
+- **Likely includes:** viz preview card, refine controls, "commit to Liveboard" affordance, chart-type switcher.
+- **See:** `spotter-agentic-chat-ia.md` → Spotter Viz section for open IA questions
+
+### Spotter Code components
+- **Status:** design pending
+- **Purpose:** Components for the Spotter Code embedded mode (developer-facing code agent).
+- **Likely includes:** file tree, code editor wrapper, diff preview, agent-proposed-edit approval row.
+- **See:** `spotter-agentic-chat-ia.md` → Spotter Code section for open IA questions
+
+> Adding a new planned component: include status, purpose, Figma reference if any, intended path, and any open questions. When it moves to `built`, cut it from this section and add it to the inventory at the top of this file.
