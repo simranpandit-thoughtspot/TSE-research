@@ -37,21 +37,21 @@ export interface ProjectMeta {
 
 import AdminGroupsThumbnail from './thumbnails/AdminGroups.svg';
 import SpotterMemoryThumbnail from './thumbnails/SpotterMemory.svg';
-import SpotterModelThumbnail from './thumbnails/SpotterModel.svg';
 import AdminLangThumbnail from './thumbnails/AdminLang.svg';
 import MiniSpottersThumbnail from './thumbnails/MiniSpotters.svg';
 import LiveboardTemplateThumbnail from './thumbnails/LiveboardTemplate.svg';
+import DataModelEditorThumbnail from './thumbnails/DataModelEditor.svg';
+import SpotterThumbnail from './thumbnails/Spotter.svg';
 
 // ── Components (lazy-loaded) ──────────────────────────────────────────────────
 
 const SpotterMemory = React.lazy(() => import('./SpotterMemory'));
 const AdminGroups = React.lazy(() => import('./AdminGroups'));
-const SpotterModelProto = React.lazy(() => import('./SpotterModel'));
 const AdminLang = React.lazy(() => import('./AdminLang'));
 const MiniSpotters = React.lazy(() => import('./MiniSpotters'));
 const LiveboardTemplate = React.lazy(() => import('./_liveboard-template'));
-const SalesDashboard = React.lazy(() => import('./SalesDashboard'));
-const NewUIAdmin2 = React.lazy(() => import('./NewUIAdmin2'));
+const DataModelEditorSample = React.lazy(() => import('./DataModelEditor'));
+const Spotter = React.lazy(() => import('./Spotter'));
 
 // ── Registry ──────────────────────────────────────────────────────────────────
 
@@ -78,18 +78,6 @@ export const coreRegistry: ProjectMeta[] = [
     component: AdminGroups,
     dsComponents: 9,
     customComponents: 10,
-    section: 'sample',
-  },
-  {
-    id: 'SpotterModel',
-    name: 'Spotter Model',
-    description: 'SpotterModel agent edit flow — onboarding, table/join recommendations, columns editing, and impact-aware delete.',
-    author: 'Design Team',
-    lastModified: '2026-03-03',
-    thumbnail: SpotterModelThumbnail,
-    component: SpotterModelProto,
-    dsComponents: 5,
-    customComponents: 14,
     section: 'sample',
   },
   {
@@ -129,25 +117,28 @@ export const coreRegistry: ProjectMeta[] = [
     section: 'sample',
   },
   {
-    id: 'SalesDashboard',
-    name: 'Sales Dashboard',
-    description: 'Liveboard prototype — view and edit modes with SpotterViz.',
+    id: 'DataModelEditor',
+    name: 'Data model editor',
+    description: 'Build and refine a SpotterModel schema with AI-assisted table, join, column, and formula suggestions.',
     author: 'Design Team',
-    lastModified: '2026-04-03',
-    component: SalesDashboard,
-    dsComponents: 6,
-    customComponents: 3,
+    lastModified: '2026-04-30',
+    thumbnail: DataModelEditorThumbnail,
+    component: DataModelEditorSample,
+    dsComponents: 10,
+    customComponents: 13,
     section: 'sample',
   },
   {
-    id: 'NewUIAdmin2',
-    name: 'Admin 2.0',
-    description: 'Admin portal — customisation, AI settings, feature management, version control, and full left-nav with org switcher.',
-    author: 'Simran Pandit',
-    lastModified: '2026-04-23',
-    component: NewUIAdmin2,
-    dsComponents: 8,
-    customComponents: 12,
+    id: 'Spotter',
+    name: 'Spotter',
+    description:
+      'Agentic chat shell with reasoning steps, viz blocks, and follow-ups — the in-thread Spotter answer experience powered by the Spotter DS.',
+    author: 'Design Team',
+    lastModified: '2026-05-08',
+    thumbnail: SpotterThumbnail,
+    component: Spotter,
+    dsComponents: 14,
+    customComponents: 1,
     section: 'sample',
   },
 ];

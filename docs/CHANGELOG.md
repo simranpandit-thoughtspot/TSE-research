@@ -1,22 +1,151 @@
 # Changelog
 
-## 26.5.2a — 2026-05-13
+## 26.5.3b — 2026-05-18
 
-- feat: SpotterHome prototype — global header, side nav, Spotter hero with prompt box, Recents + Watchlist cards
-- Merge remote-tracking branch 'upstream/main'
-- feat(changelog): polish Highlights section + reorganize toolbar
-- fix(changelog): wire Highlights into VersionHistoryPage (the actual rendered page)
-- refactor(changelog): rework highlights into a top-of-page curated section
-- fix: update exit session modal copy
-- feat: add pulsing red hint dots guiding users through impersonation flow
-- feat: merge Impersonation Flow prototype into main
-- feat: add Impersonation Flow prototype (Act as user)
-- feat: add NewUIAdmin2 (Admin 2.0) as sample prototype in registry-core
-- fix: font dropdown uses position fixed to escape overflow clipping
-- feat: Edit action in VC table opens EditCredentialsModal with pre-fill + banners
-- feat: add validation error state to version control setup step 1
-- feat: add Edit, Rename, Delete workflows to Variables page
-- feat: Create Variable 2-step modal with validation, org mapping, and success toast
+### Highlights
+
+- **`/sync-upstream` rewrite** — preview-first, feature-branch safe. Stashes WIP with `--include-untracked`, lands upstream on `main` before forwarding into your branch, never silently abandons your work.
+
+### Fixed
+- `/sync-upstream`: now refuses to merge `upstream/main` directly into a feature branch. Always lands on `main` first, then merges `main` forward into the feature branch. Stash uses `--include-untracked` so new files are no longer lost during sync.
+- middleware: staging branch publicly accessible, other preview branches stay gated.
+- vercel: `X-Frame-Options: SAMEORIGIN` so same-origin iframes inside prototypes load correctly.
+
+### Changed
+- `/check-upstream` consolidated into `/sync-upstream` — preview is now phase one of a single command with a yes/no gate before anything destructive runs.
+- Maintainer branch model split documented in CLAUDE.md: `personal` and `personal/*` are origin-only (galaxy-bound branches are `main`, `staging`, and shared `feat/*` / `fix/*` / `chore/*`). Pre-push hook enforces the rule.
+
+## 26.5.3a — 2026-05-08
+
+### Changed
+- registry-core: Spotter moved to the bottom of the array so it appears first in the gallery (gallery reverses array order to show newest-by-date first)
+
+## 26.5.3 — 2026-05-08
+
+### Highlights
+
+- **Spotter prototype** — in-thread agentic chat with reasoning, viz blocks, and follow-ups
+- **Spotter design system (in progress)** — chat / page / runtime layered on Radiant
+
+### Added
+- feat(spotter): two-layer DS scaffold — `@spotter/*` peer to `@components/*` for Spotter-domain blocks built on Radiant primitives. Subdomains: chat, page, answer, viz, runtime, plus `tokens.ts` and `icons.tsx`
+- feat(spotter): Spotter prototype registered in `registry-core.ts` as a sample. Wraps `SpotterChatProvider`, switches between welcome and chat-active canvas, light-mode `GlobalHeader`, collapsible 64↔260 left panel with smooth animation
+- feat(spotter): chat extraction end-to-end — `SpotterChatProvider`, `useReducer`, `AbortController`, async-iterable `askSpotter()` service with canned + live modes, four canned fixtures with rich reasoning
+- feat(spotter): six block renderers — TextBlock, VizBlock (real ECharts via `_shared/tiles/chartPalette` — line / bar / pie / table with axes, gridlines, tooltips, value labels, legend; iframe / data / placeholder slot priority; Pin / Save / Download / Edit + Add to coaching footer; M4 fullscreen expand modal portaled to body), SourcesBlock, FollowUpsBlock (clickable chips that call `send`), RefineBlock (clickable options), ErrorBlock
+- feat(spotter): `ChatThread`, `MessageRow`, `UserBubble` (single-row), `AgentMessage` with feedback row, `TypingIndicator` (spinner + "Analysing…"), `ReasoningBlock` (collapsed-by-default "Show work ⌄" trigger, gray done dots, embedded `ToolcallCard` with "Show details", "Worked for X seconds" footer)
+- feat(spotter): purple → blue gradient border on `SpotterPrompt:focus-within`
+- feat(spotter): custom icons — `PanelToggleIcon` (sidebar layout glyph from Figma), `ChartSearchIcon` + `OrbitsIcon` (prompt mode toggle), `BellIcon`, `ThoughtSpotMark`. All other glyphs use Radiant icons (151-icon registry)
+- feat(icons): sync 147 icons from Radiant 3.0 Figma + light-mode GlobalHeader (carried forward from `26.5.2`)
+- docs(spotter): four planning docs — DS plan, prototype shell, AnswerCard spec, chat extraction. Plus `docs/2026-05-07-spotter-viz-block-behaviour.md` (slot model + customization guide)
+- docs(spotter): three `.cursor/rules/` files — `spotter-components.md`, `spotter-logic.md`, `spotter-response-style.md` — auto-attach when working in `src/spotter/**` or `src/prototypes/Spotter*/**`. Spotter Requirements Gate added to `_orchestration.md`. CLAUDE.md addendum points to the Spotter docs
+- spotter(tokens): `spotterGlow` (radial brand glow) + `spotterChartBg` (chart-token aliases) + `spotterLayout.chatMaxWidth` (880)
+
+### Changed
+- spotter(chat): streaming animation polish — step dot color transitions, block fade-up entry, steps container collapse via `max-height + opacity` (no remount), toolcall body slide-open, ReasoningBlock fades in only when reasoning starts, "Worked for X seconds" fade-in
+- spotter(panel): full-width selected state on items, full-width line breaks between sections (per Figma)
+- spotter(reasoning): brand-blue trigger when expanded, gray done dots, ToolcallCard collapsed by default with brand-blue "Show details ⌄" link
+- spotter(prototype): sentence-case fixes — "Deal Accelerator" → "Deal accelerator", "Fall and Winter" → "fall and winter"
+
+### Fixed
+- spotter(chat): streaming keyframes (blockIn, reasoningIn, stepIn, workedForIn) end with `transform: none` instead of `translateY(0)` — translate(0) creates a containing block per CSS spec, which had trapped Modal's `position: fixed` to the chat canvas
+
+## 26.5.2e — 2026-05-08
+
+### Changed
+- spotter(prototype): sentence-case fixes — "Deal Accelerator" → "Deal accelerator", "Fall and Winter" → "fall and winter" (flagged by /radiant-check)
+
+### Added
+- spotter(tokens): `spotterLayout.chatMaxWidth` (880) — documented constant for the shared chat thread + prompt max-width
+
+## 26.5.2d — 2026-05-08
+
+### Changed
+- spotter(viz): VizBlock now uses real ECharts (echarts-for-react) instead of an SVG sketch. Pulls from the shared chart palette (`_shared/tiles/chartPalette`) so colors, fonts, and axis styling match the rest of the project's charts. Supports `line` / `bar` / `pie` / `table` from the schema with axis labels, gridlines, tooltips, value labels on bars, and a top legend for multi-series
+- spotter(viz): M4 expand modal — portaled to `document.body` to escape any ancestor containing block, full-width override (`max-width: none`), proper layout with chart title + view toggle + tokens + chart + "Showing X of X data points" footer
+
+### Fixed
+- spotter(chat): streaming keyframes (blockIn, reasoningIn, stepIn, workedForIn) end with `transform: none` instead of `translateY(0)` — translate(0) still creates a containing block per CSS spec, which had trapped Modal's `position: fixed` to the chat canvas
+
+## 26.5.2c — 2026-05-08
+
+### Changed
+- spotter(chat): streaming animation polish — six fixes to make the live agent message feel smooth instead of poppy
+  - Step dot color transitions smoothly between gray / brand / gray as `reasoning_step` chunks fire
+  - New blocks (viz, followups, sources) fade up on entry instead of popping
+  - Steps container collapses via `max-height + opacity` (no unmount), so the auto-collapse 600ms after done animates instead of jumping
+  - Toolcall body slides open via `max-height + opacity` instead of conditional render
+  - `ReasoningBlock` only renders once reasoning is set — cleaner crossfade from TypingIndicator
+  - "Worked for X seconds" fades up with a 120ms delay instead of popping
+- spotter(chat): ReasoningBlock keeps steps + toolcall bodies mounted across collapse cycles so re-open is instant and collapse is animated
+
+## 26.5.2b — 2026-05-07
+
+### Added
+- feat(spotter): chat extraction end-to-end — SpotterChatProvider + useReducer + AbortController, ChatThread, MessageRow, UserBubble (single-row), AgentMessage with feedback row, TypingIndicator (spinner + "Analysing…"), ReasoningBlock with rich steps (descriptions + embedded ToolcallCard, "Worked for X seconds")
+- feat(spotter): streaming runtime — AnswerChunk protocol, askSpotter() async generator (canned + live shell), 4 fixtures with naive keyword routing (viz default)
+- feat(spotter): six block renderers — TextBlock, VizBlock (slot model with iframe / data / placeholder, canonical footer, chart/table toggle, expand modal), SourcesBlock, FollowUpsBlock (clickable chips), RefineBlock, ErrorBlock
+- feat(spotter): smooth 64↔260 panel animation via SpotterLeftSide wrapper
+- feat(spotter): purple→blue gradient border on SpotterPrompt :focus-within
+- feat(spotter): custom PanelToggle icon (Figma path), ChartSearch + Orbits glyphs for prompt mode toggle
+- feat(prototype): Spotter prototype now wraps in SpotterChatProvider; welcome ↔ chat-active transition with sticky prompt and disclaimer
+- docs(spotter): VizBlock behaviour doc; three .cursor/rules files (components, logic, response-style) with auto-attach globs; Spotter Requirements Gate in _orchestration.md; CLAUDE.md two-layer DS section
+
+### Changed
+- spotter(panel): full-width selected state on items, full-width line breaks between sections (per Figma)
+- spotter(reasoning): brand-blue trigger when expanded, gray done dots, ToolcallCard collapsed by default with "Show details" link
+- spotter(viz): schema discriminated union with `source: iframe | data | placeholder` + optional `tableData`
+
+## 26.5.2a — 2026-05-07
+
+### Added
+- feat(spotter): `@spotter/*` peer to `@components/*` — two-layer DS scaffold for Spotter-domain building blocks layered on Radiant
+- feat(spotter): chat primitives — QuickAction, QuickActionRow, SpotterPrompt (controlled, auto-resize, mode toggle, model picker, blue submit)
+- feat(spotter): page primitives — SpotterShell, SpotterLeftSide, SpotterRail/Item, SpotterPanel/Section/Item/Action, SpotterWelcome
+- feat(spotter): smooth 64↔260 width animation between collapsed rail and expanded panel
+- feat(spotter): spotter tokens (radial glow + chart-bg aliases) and spotter icons (PanelToggle, Bell, ThoughtSpotMark, ChartSearch, Orbits) — only glyphs missing from Radiant registry
+- feat(prototype): Spotter prototype — first DS consumer with light-mode GlobalHeader and welcome canvas
+- docs(spotter): four plan docs covering the two-layer DS, prototype shell, AnswerCard spec, and chat extraction approach
+
+## 26.5.2 — 2026-05-07
+
+### Added
+- docs(muze): `docs/muze-charts-setup.md` — opt-in guide for adding Muze charts (auth, install, chart-shape cheatsheet, resize-aware mounting). Default install stays friction-free for designers who don't use Muze
+
+### Changed
+- refactor(LiveboardHeader): unify dark surfaces and tokenize raw hex values
+- fix(radiant-pages): bump content-tertiary to content-secondary for readability
+- chore(components): remove duplicate exports of LoadingIndicator, Popover, Select from components/index.ts
+
+### Removed
+- chore(pages): delete 5 unrouted page components (ComponentStatusPage, DataDashboardDemo, GuidelinesPage, SettingsPanelDemo, SpotterDashboard) — ~2,400 lines of dead code never wired into App.tsx
+
+## 26.5.1 — 2026-05-05
+
+### Removed
+- chore(prototypes): SalesDashboard prototype removed from the registry — reference patterns continue to live in `_liveboard-template`
+- chore(prototypes): SpotterModel standalone prototype removed — patterns now covered by DataModelEditor + the shared `_agentic` module
+- revert(prototype): PR #14 (StylingPanel + shared tile density/override system) reverted on staging due to integration issues; will be re-introduced in a follow-up PR
+
+## 26.5.0 — 2026-04-30
+
+### Added
+- feat(prototype): Data Model Editor — interactive canvas-based prototype with table cards, draggable column tree, and join connectors
+- feat(prototype): SpotterModel agent panel — AI-powered chat interface with table, join, column, and formula suggestions backed by Anthropic
+- feat(prototypes): shared `_agentic` module — AgentPanel, SuggestionCard, ReasoningBlock, ConfidenceBadge, JoinDiagram, NextActionChips, ToolcallCard, TypingIndicator, UserBubble, VersionCard, AgentResponseBlock
+- feat(prototypes): shared `_datamodel` module — TableCanvas, ColumnTree, JoinConnector, TableCard
+- feat(infra): `/api/chat` proxy for the Anthropic API (Vercel function + Vite dev middleware)
+- feat(ds): OverlayLoading variant + label props (backwards-compatible)
+- feat(tooling): `/switch-model` command — switch the Claude model used by AI-capable prototypes between Haiku, Sonnet, and Opus
+- docs(rules): three new orchestrator rule files — `data-model-editor-ia.md`, `data-model-editor-components.md`, `data-model-editor-interactions.md`
+- docs(orchestrator): "AI agent panel (any prototype)" fallback row so non-DME prototypes can adopt `_agentic`
+
+### Changed
+- chore(orchestrator): split the single DME concern row into three sub-rows (IA / components / interactions) so the right rule file loads per task
+- chore(tooling): `new-prototype` command updated for DME-style scaffolding
+- chore(tooling): status.sh untracked-files badge
+
+### Fixed
+- fix(infra): vite middleware now reads `ANTHROPIC_API_KEY` via `loadEnv` — `process.env` was empty in dev and the AI panel errored
 
 ## 26.4.4c — 2026-04-28
 
@@ -42,25 +171,6 @@
 - feat: add RdModal shared modal component
 - fix: add process type declaration to middleware to resolve TS2580 errors
 - chore: extend password gate cookie lifetime to 14 days
-
-## 26.4.4a — 2026-04-24
-
-- feat: add Impersonation Flow prototype (Act as user)
-- feat: add NewUIAdmin2 (Admin 2.0) as sample prototype in registry-core
-- fix: font dropdown uses position fixed to escape overflow clipping
-- fix: re-apply AI settings spotter tab restructure and page header fixes
-- feat: Edit action in VC table opens EditCredentialsModal with pre-fill + banners
-- feat: cards with only 1 setting are non-collapsible across all config pages
-- fix: set Reset/Cancel as CTA labels on all reset confirm dialogs
-- feat: add validation error state to version control setup step 1
-- feat: add Edit, Rename, Delete workflows to Variables page
-- feat: Create Variable 2-step modal with validation, org mapping, and success toast
-- fix: use secondary button style for Create Variable CTA
-- fix: add Rename to variables dots menu, fill Create Variable CTA with brand color
-- feat: add AutoResizeTextarea component for dynamic-height instruction fields
-- feat: standardise modal system with RdModal component
-- feat: update NewUIAdmin2 AI settings and application settings
-- chore: install echarts-for-react for shared tiles charts
 
 
 All notable changes to Radiant Play are documented here.

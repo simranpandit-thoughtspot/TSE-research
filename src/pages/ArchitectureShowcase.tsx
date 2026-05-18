@@ -646,7 +646,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '6px',
     marginLeft: '40px',
     fontSize: '12px',
-    color: systemColors.light['content-tertiary'],
+    color: systemColors.light['content-secondary'],
   },
   fileIcon: {
     fontSize: '14px',
@@ -663,7 +663,7 @@ const styles: Record<string, React.CSSProperties> = {
   arrowLabel: {
     fontFamily: '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     fontSize: '11px',
-    color: systemColors.light['content-tertiary'],
+    color: systemColors.light['content-secondary'],
     marginTop: '-8px',
   },
 
@@ -839,7 +839,7 @@ const styles: Record<string, React.CSSProperties> = {
   consumptionTag: {
     fontSize: '11px',
     fontWeight: 500,
-    color: systemColors.light['content-tertiary'],
+    color: systemColors.light['content-secondary'],
     padding: '2px 8px',
     borderRadius: '4px',
     backgroundColor: systemColors.light['background-subtle'],
@@ -863,7 +863,7 @@ const styles: Record<string, React.CSSProperties> = {
   consumptionUsageLabel: {
     fontSize: '11px',
     fontWeight: 600,
-    color: systemColors.light['content-tertiary'],
+    color: systemColors.light['content-secondary'],
     textTransform: 'uppercase' as const,
     letterSpacing: '0.5px',
   },
@@ -916,7 +916,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginLeft: '8px',
   },
   treeDesc: {
-    color: systemColors.light['content-tertiary'],
+    color: systemColors.light['content-secondary'],
     fontSize: '11px',
     marginLeft: '8px',
   },

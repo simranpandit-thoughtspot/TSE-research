@@ -14,11 +14,23 @@
 
 ## Git & Deployment
 
-**If `galaxy` remote exists** (main maintainer setup): push to BOTH `origin` and `galaxy` after every commit. Verify remote URLs are current before pushing.
+**Designer fork** (only `origin` exists): push to `origin` only. Do not attempt to add or push to `galaxy`.
 
-**If only `origin` exists** (designer fork): push to `origin` only. Do not attempt to add or push to `galaxy`.
+**Main maintainer setup** (both `origin` and `galaxy` exist): the branch determines which remotes to push to.
 
-Run `git remote -v` to determine which applies before pushing. Default deploy target is **staging**, not main — do not push to main unless explicitly asked.
+| Branch | Purpose | Push to |
+|---|---|---|
+| `main` | Shared library + samples (what other designers sync from) | origin + galaxy |
+| `staging` | Shared preview / QA | origin + galaxy |
+| `personal` | Maintainer's personal prototypes (in `registry-mine.ts`) | **origin only — never galaxy** |
+| `personal/<name>` | Feature branch for a specific personal exploration | **origin only — never galaxy** |
+| `feat/*`, `fix/*`, `chore/*` | Shared work branches | origin + galaxy |
+
+`personal` and `personal/*` are origin-only. A pre-push hook enforces this — pushing them to galaxy will be refused. Do not bypass the hook with `--no-verify` unless the user explicitly says to.
+
+**The maintainer's daily working branch is `personal`.** New personal prototypes are built on `personal/<name>` branches off `personal`, merged back to `personal`, and the feature branch is deleted after merge. Personal prototypes live in `registry-mine.ts`. To promote a personal prototype to the shared library: switch to `main`, move the entry from `registry-mine.ts` to `registry-core.ts`, commit, and push to both remotes.
+
+Run `git remote -v` to confirm which remotes exist. Default deploy target is **staging**, not main — do not push to main unless explicitly asked.
 
 **Before pushing to main**: always ask whether to run `bash scripts/release.sh` first. This updates the platform version and changelog. If the user confirms they've already run it or wants to skip, proceed with the push.
 
@@ -43,6 +55,17 @@ npm run new-prototype  # Scaffold a new prototype
 | `@/*` | `src/*` |
 | `@tokens/*` | `src/tokens/*` |
 | `@components/*` | `src/components/*` |
+| `@spotter/*` | `src/spotter/*` |
+
+## Two-layer DS — Radiant + Spotter
+
+`@components/*` is the **Radiant DS** — product-agnostic primitives. `@spotter/*` is the **Spotter DS** — agentic-domain blocks (chat, answers, viz, page shell) built on top of Radiant. Same conventions apply (tokens only, sentence case, layout primitives) but Spotter components encode AI-flavoured patterns.
+
+When working on Spotter surfaces, the orchestrator auto-loads `.cursor/rules/spotter-components.md`, `spotter-logic.md`, and `spotter-response-style.md`. Plans live at:
+- `docs/2026-05-07-spotter-prototype-shell.md` — shell + welcome
+- `docs/2026-05-07-spotter-chat-extraction.md` — chat extraction + state machine
+- `docs/2026-05-07-spotter-viz-block-behaviour.md` — VizBlock slot model
+- `docs/2026-05-07-spotter-answer-card.md` — AnswerCard spec (VizBlock is the current stand-in)
 
 ## Project Structure
 
@@ -120,18 +143,22 @@ Apply the 5 conventions above + verify `npm run build` passes before finishing a
 
 ### Branching Model
 
-| Branch | Purpose | Deploys to |
-|--------|---------|------------|
-| `main` | Production | radiantplay.vercel.app |
-| `staging` | Preview / QA | staging-radiantplay.vercel.app |
-| `feat/*`, `fix/*`, `chore/*` | Work branches | — |
+| Branch | Purpose | Deploys to | Pushed to |
+|--------|---------|------------|-----------|
+| `main` | Production (shared library) | radiantplay.vercel.app | origin + galaxy |
+| `staging` | Shared preview / QA | staging-radiantplay.vercel.app | origin + galaxy |
+| `personal` | Maintainer's daily working branch — personal prototypes in `registry-mine.ts` | Per-branch Vercel preview | **origin only** |
+| `personal/<name>` | Feature branch off `personal` for a specific personal exploration | Per-branch Vercel preview | **origin only** |
+| `feat/*`, `fix/*`, `chore/*` | Shared work branches | — | origin + galaxy |
+
+The `personal` and `personal/*` branches are enforced as origin-only by a pre-push hook (`scripts/hooks/pre-push`). Pushing them to galaxy is refused. To "promote" a personal prototype to the shared library, switch to `main`, move the entry from `registry-mine.ts` to `registry-core.ts`, commit, and push to both remotes.
 
 ### Remotes
 
 **Designer forks** have one remote:
 - `origin` — the designer's own fork (GitHub or galaxy)
 
-**Main maintainer** has two remotes that must stay in sync:
+**Main maintainer** has two remotes that must stay in sync (on shared branches):
 - `origin` — GitHub (`https://github.com/faris-ts/radiantplay.git`)
 - `galaxy` — ThoughtSpot (HTTPS: `https://galaxy.corp.thoughtspot.com/mohammed-faris/radiantplay.git` or SSH: `git@galaxy.corp.thoughtspot.com:mohammed-faris/radiantplay.git`)
 

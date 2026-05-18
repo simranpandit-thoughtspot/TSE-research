@@ -14,6 +14,24 @@ export interface Highlight {
 
 export const HIGHLIGHTS: Highlight[] = [
   {
+    title: 'Add Muze charts on demand',
+    description: 'New opt-in guide for adding Muze (private packagecloud library) to a prototype. Includes auth setup, install steps, chart-shape cheatsheet (single column, dual, trellis, stacked), and resize-aware tile mounting. Default install stays friction-free for designers who don\'t use Muze.',
+    version: '26.5.2',
+    date: '2026-05-07',
+  },
+  {
+    title: 'Data model context + sample prototype',
+    description: 'New Data Model Editor prototype with retail schema preset, draggable table cards, column tree, and join connectors. Shared _datamodel module ready to drop into other prototypes.',
+    version: '26.5.0',
+    date: '2026-04-30',
+  },
+  {
+    title: 'SpotterModel interface',
+    description: 'AI agent panel with table, join, column, and formula suggestions, confidence badges, reasoning blocks, and version-history restore. Backed by a /api/chat proxy and a /switch-model command for Haiku / Sonnet / Opus.',
+    version: '26.5.0',
+    date: '2026-04-30',
+  },
+  {
     title: 'Project status dashboard',
     description: 'A local HTML dashboard with overview, branches, forks/upstream, worktrees, and docs/plans tabs. Run /project-status; zero LLM token cost.',
     version: '26.4.4c',

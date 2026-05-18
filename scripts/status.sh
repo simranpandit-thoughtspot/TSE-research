@@ -321,6 +321,8 @@ render_row() {
   badge=""
   if git check-ignore -q "$p" 2>/dev/null; then
     badge=" <span class='badge local' title='Gitignored — exists only on this machine'>local</span>"
+  elif [ -n "$(git ls-files --others --exclude-standard "$p" 2>/dev/null)" ]; then
+    badge=" <span class='badge local' title='Untracked — not yet committed to git'>local</span>"
   fi
   id=$(echo "$p" | sed 's/[^a-zA-Z0-9]/_/g')
 
