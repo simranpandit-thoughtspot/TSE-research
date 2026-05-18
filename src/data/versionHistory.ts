@@ -28,6 +28,17 @@ export interface VersionEntry {
  */
 export const versionHistory: VersionEntry[] = [
   {
+    version: '26.5.3b',
+    date: '2026-05-18',
+    type: 'patch',
+    changes: [
+      { type: 'modified', group: 'Tooling', component: '/sync-upstream', description: 'Rewrite — preview-first, feature-branch safe. Lands upstream on main before forwarding into your branch. Stash uses --include-untracked so new files are no longer lost. /check-upstream consolidated into /sync-upstream as phase one' },
+      { type: 'modified', group: 'Infrastructure', component: 'middleware', description: 'Staging branch is publicly accessible; other preview branches stay gated' },
+      { type: 'modified', group: 'Infrastructure', component: 'Vercel headers', description: 'X-Frame-Options SAMEORIGIN so same-origin iframes inside prototypes load correctly' },
+      { type: 'modified', group: 'Maintainer workflow', component: 'Branch model', description: 'CLAUDE.md split: personal + personal/* are origin-only, galaxy-bound branches are main, staging, and shared feat/fix/chore. Pre-push hook enforces the rule' },
+    ],
+  },
+  {
     version: '26.5.3a',
     date: '2026-05-08',
     type: 'patch',

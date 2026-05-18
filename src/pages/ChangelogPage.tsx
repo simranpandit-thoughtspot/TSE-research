@@ -25,6 +25,12 @@ interface Highlight {
 
 const HIGHLIGHTS: Highlight[] = [
   {
+    title: '/sync-upstream — feature-branch safe',
+    description: 'Preview-first, with a yes/no gate before anything destructive runs. Stash includes untracked files, so new prototypes you have not committed are no longer lost. Lands on main first, then merges forward into your branch.',
+    version: '26.5.3b',
+    date: '2026-05-18',
+  },
+  {
     title: 'Spotter prototype',
     description: 'In-thread agentic chat with reasoning trace, viz blocks (real ECharts), sources, follow-ups, and refine. Welcome → chat-active transition, sticky prompt with gradient focus border, M4 fullscreen expand on charts.',
     version: '26.5.3',
@@ -63,6 +69,40 @@ const HIGHLIGHTS: Highlight[] = [
 ];
 
 const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '26.5.3b',
+    date: '2026-05-18',
+    title: '/sync-upstream rewrite + infrastructure fixes',
+    type: 'patch',
+    changes: [
+      {
+        category: 'fixed',
+        label: '/sync-upstream — feature-branch safe',
+        items: [
+          'No longer merges upstream/main directly into a feature branch. Always lands on main first, then merges main forward into your branch.',
+          'Stash now uses --include-untracked, so new files you have created are no longer lost during sync.',
+          'Preview is built in — phase one shows what is coming and asks before anything destructive runs. /check-upstream was removed.',
+          'Pre-flight refuses to run on broken git state (mid-merge, mid-rebase, detached HEAD, leftover sync stash).',
+        ],
+      },
+      {
+        category: 'fixed',
+        label: 'Deploy infrastructure',
+        items: [
+          'Middleware: staging branch is publicly accessible; other preview branches stay gated.',
+          'Vercel: X-Frame-Options SAMEORIGIN so same-origin iframes inside prototypes load correctly.',
+        ],
+      },
+      {
+        category: 'changed',
+        label: 'Maintainer branch model',
+        items: [
+          'CLAUDE.md split: personal and personal/* are origin-only; galaxy-bound branches are main, staging, and shared feat/fix/chore.',
+          'Pre-push hook in scripts/hooks/pre-push refuses to push personal* to galaxy.',
+        ],
+      },
+    ],
+  },
   {
     version: '26.5.3',
     date: '2026-05-08',

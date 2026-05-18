@@ -1,5 +1,20 @@
 # Changelog
 
+## 26.5.3b — 2026-05-18
+
+### Highlights
+
+- **`/sync-upstream` rewrite** — preview-first, feature-branch safe. Stashes WIP with `--include-untracked`, lands upstream on `main` before forwarding into your branch, never silently abandons your work.
+
+### Fixed
+- `/sync-upstream`: now refuses to merge `upstream/main` directly into a feature branch. Always lands on `main` first, then merges `main` forward into the feature branch. Stash uses `--include-untracked` so new files are no longer lost during sync.
+- middleware: staging branch publicly accessible, other preview branches stay gated.
+- vercel: `X-Frame-Options: SAMEORIGIN` so same-origin iframes inside prototypes load correctly.
+
+### Changed
+- `/check-upstream` consolidated into `/sync-upstream` — preview is now phase one of a single command with a yes/no gate before anything destructive runs.
+- Maintainer branch model split documented in CLAUDE.md: `personal` and `personal/*` are origin-only (galaxy-bound branches are `main`, `staging`, and shared `feat/*` / `fix/*` / `chore/*`). Pre-push hook enforces the rule.
+
 ## 26.5.3a — 2026-05-08
 
 ### Changed
