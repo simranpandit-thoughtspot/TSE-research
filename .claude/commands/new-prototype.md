@@ -419,5 +419,5 @@ What's next:
   • Describe your UI or paste a Figma screenshot — Claude will build it using Radiant components
   • To switch the AI model used in this prototype: /switch-model
   • To check design system compliance: /radiant-check
-  • To check for upstream updates: /check-upstream
+  • To pull in upstream updates: /sync-upstream (shows a preview first, then asks before merging)
 ```
