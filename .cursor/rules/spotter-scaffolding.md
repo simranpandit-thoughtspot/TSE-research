@@ -69,16 +69,20 @@ const MyPrototypeInner: React.FC = () => {
 ## Standalone Spotter scaffold
 
 ```tsx
+import React, { useState } from 'react';
 import { GlobalHeader } from '@components/GlobalHeader';
 import {
   SpotterShell,
   SpotterLeftSide,
   SpotterRail,
-  SpotterPanel,
+  SpotterRailItem,
   SpotterLeftToggle,
   SpotterWelcome,
+  type SpotterLeftMode,
 } from '@spotter/page';
 import { SpotterChatProvider, useSpotterChat } from '@spotter/chat';
+import { MyPrototypeCanvas } from './components/MyPrototypeCanvas';
+import { dataModels } from './data/mockData';
 
 export const MyPrototype: React.FC = () => (
   <SpotterChatProvider mode="canned">
@@ -87,26 +91,88 @@ export const MyPrototype: React.FC = () => (
 );
 
 const MyPrototypeInner: React.FC = () => {
+  const [leftMode, setLeftMode] = useState<SpotterLeftMode>('rail');
+  const [promptValue, setPromptValue] = useState('');
+  const [dataModelId, setDataModelId] = useState(dataModels[0].id);
+
   const { state, send, clear } = useSpotterChat();
   const isEmpty = state.messages.length === 0;
+  const activeModel = dataModels.find((m) => m.id === dataModelId) ?? dataModels[0];
+
+  const handleSubmit = (value: string): void => {
+    send(value);
+    setPromptValue('');
+  };
+
+  // Props for SpotterPrompt — passed into SpotterWelcome (for the welcome
+  // state) or into your canvas (for the chat-active state).
+  const promptProps = {
+    value: promptValue,
+    onChange: setPromptValue,
+    onSubmit: handleSubmit,
+    dataModelLabel: activeModel.name,
+    onDataModelClick: () => {
+      const next = dataModels[(dataModels.indexOf(activeModel) + 1) % dataModels.length];
+      setDataModelId(next.id);
+    },
+  };
 
   return (
     <>
       <GlobalHeader theme="light" />
       <SpotterShell>
         <SpotterLeftSide mode={leftMode}>
-          {/* SpotterRail or SpotterPanel based on mode */}
+          <SpotterRail
+            top={
+              <>
+                <SpotterLeftToggle
+                  mode={leftMode}
+                  onClick={() => setLeftMode((m) => (m === 'rail' ? 'panel' : 'rail'))}
+                />
+                <SpotterRailItem icon="plus" label="New chat" onClick={clear} />
+              </>
+            }
+          />
         </SpotterLeftSide>
-        <Canvas>
-          {isEmpty ? <WelcomeState /> : <ChatActive />}
-        </Canvas>
+
+        {isEmpty ? (
+          <SpotterWelcome
+            promptProps={promptProps}
+            quickActionProps={{
+              actions: [
+                { id: 'quick-search', label: 'Show me total sales by month' },
+                { id: 'know-data', label: 'What can I ask about this data?' },
+              ],
+              onAction: (id) => {
+                // optional: map id → prompt text, then send()
+              },
+            }}
+            // optional override: greeting={<CustomGreeting />} — single
+            // ReactNode, NOT separate title/subtitle props.
+          />
+        ) : (
+          <MyPrototypeCanvas
+            messages={state.messages}
+            promptProps={promptProps}
+          />
+        )}
       </SpotterShell>
     </>
   );
 };
 ```
 
-Use `src/prototypes/Spotter/index.tsx` as the canonical reference.
+### `SpotterWelcome` prop surface
+
+| Prop | Type | Notes |
+|---|---|---|
+| `greeting` | `React.ReactNode` (optional) | **Single node.** Defaults to "Lets make sense of your data together." with the accent phrase highlighted. No separate `title`/`subtitle` — if you want multi-line, pass a ReactNode that contains both. |
+| `promptProps` | `SpotterPromptProps` (optional) | Renders the default `SpotterPrompt` with these props. Use `prompt={<...>}` if you need to swap the prompt entirely. |
+| `quickActionProps` | `QuickActionRowProps` (optional) | Renders the default `QuickActionRow`. Use `quickActions={<...>}` to swap. |
+| `prompt`, `quickActions` | `React.ReactNode` (optional) | Override slots — bypass the default child components. |
+| `className` | `string` (optional) | Extra class on the welcome section. |
+
+Use `src/prototypes/Spotter/index.tsx` as the canonical reference for a fully-wired example.
 
 ---
 
@@ -158,6 +224,8 @@ const MyPrototype = React.lazy(() => import('./MyPrototype'));
 **Personal (origin-only, your fork):**
 
 Add to `src/prototypes/registry-mine.ts` with `section: 'mine'`. Per CLAUDE.md — never add personal prototypes to `registry-core.ts`.
+
+> **Maintainer note — if you're on `main` or `staging`:** `registry-mine.ts` must stay empty on those branches (designer forks own that file). Switch to your `personal` branch to register a personal prototype there. Use `registry-core.ts` on `main` only when you're explicitly promoting a prototype to the shared library. See CLAUDE.md → "Git & Deployment" for the full branch model.
 
 ---
 
