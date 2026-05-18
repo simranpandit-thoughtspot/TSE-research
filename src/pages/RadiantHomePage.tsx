@@ -1,6 +1,7 @@
 import React from 'react';
 import { systemColors, referenceColors } from '../tokens/colors';
 import { getComponentCount, getIconCount, getTokenCountLabel } from '../data/componentRegistry';
+import { PLATFORM_VERSION } from '../data/platformVersion';
 
 interface ComponentCardProps {
   name: string;
@@ -141,7 +142,7 @@ export const RadiantHomePage: React.FC<RadiantHomePageProps> = ({ onNavigate }) 
         <div style={styles.heroContent}>
           <div style={styles.heroBadge}>
             <span style={styles.heroBadgeIcon}>✨</span>
-            <span>Design System 26.4.1b</span>
+            <span>Design system {PLATFORM_VERSION}</span>
           </div>
           <h1 style={styles.heroTitle}>Radiant</h1>
           <p style={styles.heroSubtitle}>

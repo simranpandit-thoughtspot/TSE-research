@@ -18,6 +18,7 @@ import RdModalDemo from './pages/RdModalDemo';
 
 import { systemColors } from './tokens/colors';
 import { getCurrentVersion } from './data/versionHistory';
+import { getIconCount } from './data/componentRegistry';
 
 // Navigation icons
 const HomeIcon = () => (
@@ -317,7 +318,7 @@ const RadiantLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     { id: 'radiant', label: 'Home', icon: <HomeIcon />, type: 'item' },
     { id: 'colours', label: 'Colours', icon: <ColorIcon />, type: 'item' },
     { id: 'typography-page', label: 'Typography', icon: <ArchitectureIcon />, type: 'item' },
-    { id: 'icons', label: 'Icons', icon: <IconsIcon />, type: 'item', badge: '46' },
+    { id: 'icons', label: 'Icons', icon: <IconsIcon />, type: 'item', badge: String(getIconCount()) },
     { id: 'surfaces', label: 'Surfaces', icon: <SurfacesIcon />, type: 'item' },
     { id: 'registry', label: 'Component Registry', icon: <TableIcon />, type: 'item' },
     { id: 'changelog', label: 'Changelog', icon: <ChangelogIcon />, type: 'item' },
