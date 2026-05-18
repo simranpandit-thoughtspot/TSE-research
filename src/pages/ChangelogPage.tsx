@@ -146,7 +146,7 @@ const CHANGELOG: ChangelogEntry[] = [
         category: 'synced',
         label: 'Radiant 3.0 icon sync + light GlobalHeader',
         items: [
-          'Icon registry expanded ~55 → 151 icons sourced from Figma',
+          'Icon registry expanded 53 → 148 unique icons (151 entries with 3 backward-compat aliases: settings → cog, search → magnifying-glass, refresh → sync)',
           'GlobalHeader gained a light theme variant — used as the Spotter prototype header',
         ],
       },

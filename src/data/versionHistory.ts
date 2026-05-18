@@ -58,7 +58,7 @@ export const versionHistory: VersionEntry[] = [
       { type: 'added', group: 'Spotter DS', component: 'Page shell + chat layout', description: 'SpotterShell, SpotterLeftSide (smooth 64↔260 animation), SpotterRail/Item, SpotterPanel/Section/Item/Action, SpotterWelcome. ChatThread, MessageRow, UserBubble, AgentMessage with feedback row, TypingIndicator, ReasoningBlock with embedded ToolcallCard and "Worked for X seconds" footer' },
       { type: 'added', group: 'Spotter DS', component: 'Prompt + icons', description: 'SpotterPrompt with purple→blue gradient on :focus-within. Custom PanelToggle, ChartSearch, Orbits, Bell, ThoughtSpotMark glyphs (Radiant icons used for everything else)' },
       { type: 'added', group: 'Documentation', component: 'Spotter rules + plans', description: 'Three .cursor/rules files (spotter-components, spotter-logic, spotter-response-style) auto-attach on Spotter files. Spotter Requirements Gate in _orchestration.md. CLAUDE.md addendum. Four plan docs covering DS, prototype shell, answer card, chat extraction, plus VizBlock behaviour guide' },
-      { type: 'synced', group: 'Design system', component: '147 icons + light GlobalHeader', description: 'Radiant 3.0 Figma icon sync (registry expanded ~55 → 151) and the new light-mode GlobalHeader theme used by the Spotter prototype' },
+      { type: 'synced', group: 'Design system', component: '147 icons + light GlobalHeader', description: 'Radiant 3.0 Figma icon sync — 96 new icons added, 51 existing icons updated, 1 retired (Refresh → Sync with refresh alias). Registry went from 53 → 148 unique icons (151 entries with 3 backward-compat aliases). Light-mode GlobalHeader theme used by the Spotter prototype' },
     ],
   },
   {
