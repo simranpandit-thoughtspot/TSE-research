@@ -127,7 +127,7 @@ export const VizBlock: React.FC<VizBlockProps> = ({
               onClick={handleExpand}
               aria-label="Expand"
             >
-              <Icon name="fullscreen" size="s" />
+              <Icon name="expand" size="s" />
             </button>
           </div>
         </div>
