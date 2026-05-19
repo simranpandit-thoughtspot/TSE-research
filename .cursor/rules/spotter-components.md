@@ -149,15 +149,48 @@ Statuses: `design` (Figma in progress) → `figma-ready` (Figma done, code not s
 - **Spec doc:** `docs/2026-05-07-spotter-answer-card.md`
 - **Will live at:** `src/spotter/answer/AnswerCard.tsx`
 
-### Source picker
-- **Status:** design pending
-- **Purpose:** Pick which SpotterModel (data source) to query in the current session. Surfaces from the prompt area or model picker.
-- **Will live at:** `src/spotter/chat/SourcePicker.tsx` (tentative)
-
 ### Model picker (full)
 - **Status:** design pending
-- **Purpose:** Richer model-selection UI than the current inline picker — recently used, search, model metadata. The current `SpotterPrompt` has a minimal dropdown.
+- **Purpose:** Richer data-model selection than the prompt's inline picker — recently used, search, model metadata. The current `SpotterPrompt` has a minimal dropdown. Consolidates the previously-listed "Source picker" (data sources and data models are the same concept here).
 - **Will live at:** `src/spotter/chat/ModelPicker.tsx` (tentative)
+
+### AnalystCard
+- **Status:** design pending
+- **Purpose:** Row item shown in the left-pane **Analysts** section (avatar + name + hover affordance for the row menu). Also reused inside `AnalystListPage` as the row primitive.
+- **Note:** Analyst ≠ data model. An analyst is a custom AI agent; a data model is a data source.
+- **Will live at:** `src/spotter/page/AnalystCard.tsx` (tentative)
+
+### AnalystRowMenu
+- **Status:** design pending
+- **Purpose:** Hover menu that appears on each analyst row in the left panel.
+- **Items:** Edit (only shown when the user has edit privilege on the analyst), Share, Make a copy, Delete.
+- **Will live at:** `src/spotter/page/AnalystRowMenu.tsx` (tentative)
+
+### AnalystLandingPage
+- **Status:** design pending
+- **Purpose:** Right-pane state when the user clicks an analyst in the left panel. Shows the analyst's about info, recent activity, recent chats with this analyst, and an action to start a new chat against it.
+- **Will live at:** `src/spotter/page/AnalystLandingPage.tsx` (tentative)
+
+### AnalystListPage
+- **Status:** design pending
+- **Purpose:** Right-pane state when the user clicks "View all >" in the Analysts section. Full list of analysts with search / filter / sort.
+- **Will live at:** `src/spotter/page/AnalystListPage.tsx` (tentative)
+
+### ChatRowMenu
+- **Status:** design pending
+- **Purpose:** Hover menu that appears on each chat row in the left panel.
+- **Items:** Rename, Favorite / Star, Share, Delete.
+- **Will live at:** `src/spotter/page/ChatRowMenu.tsx` (tentative)
+
+### SettingsMenu
+- **Status:** design pending
+- **Purpose:** Popover menu opened from the Settings button at the bottom of the left panel. Hosts 6 items in 4 dividered groups: Spotter instructions (modal) · Usage monitoring + Admin settings (new tab) · Manage memory sources (new tab) + Personal memory (inline toggle) · Spotter best practices (modal).
+- **Will live at:** `src/spotter/page/SettingsMenu.tsx` (tentative)
+
+### PersonalMemoryToggle
+- **Status:** design pending
+- **Purpose:** Inline toggle row inside `SettingsMenu` — no navigation, just on / off in place. Reads + writes a user preference.
+- **Will live at:** `src/spotter/page/PersonalMemoryToggle.tsx` (tentative)
 
 ### Spotter topbar variants
 - **Status:** design pending

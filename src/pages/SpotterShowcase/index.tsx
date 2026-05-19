@@ -7,8 +7,25 @@ import {
   SpotterPrompt,
   QuickAction,
   QuickActionRow,
+  SpotterChatProvider,
 } from '@spotter/chat';
-import type { ChatMessage } from '@spotter/runtime';
+import {
+  TextBlock,
+  VizBlock,
+  SourcesBlock,
+  FollowUpsBlock,
+  RefineBlock,
+  ErrorBlock,
+} from '@spotter/chat/blocks';
+import type {
+  ChatMessage,
+  TextBlockData,
+  VizBlockData,
+  SourcesBlockData,
+  FollowUpsBlockData,
+  RefineBlockData,
+  ErrorBlockData,
+} from '@spotter/runtime';
 import { PreviewCard } from './PreviewCard';
 import styles from './SpotterShowcase.module.css';
 
@@ -115,6 +132,139 @@ const reasoningStreaming = {
   isDone: false,
 };
 
+// ── Mock block data ────────────────────────────────────────────────────────
+
+const textBlockShort: TextBlockData = {
+  kind: 'text',
+  id: 'tb-short',
+  text: 'Total sales were $4.2M in Q4, up 12% year over year.',
+};
+
+const textBlockLong: TextBlockData = {
+  kind: 'text',
+  id: 'tb-long',
+  text: 'Total sales were $4.2M in Q4, up 12% year over year. February led the quarter with $1.7M, driven by enterprise renewals and a strong push from the EMEA region. The dip in early March was offset by a recovery in the second half, mostly from existing accounts expanding their seat count. Compared to the same period last year, customer count grew 8% while average deal size grew 4%.',
+};
+
+const vizLine: VizBlockData = {
+  kind: 'viz',
+  id: 'viz-line',
+  title: 'Sales by month',
+  tokens: [
+    { id: 't1', label: 'Sales', kind: 'measure' },
+    { id: 't2', label: 'Month', kind: 'keyword' },
+  ],
+  source: {
+    type: 'data',
+    chartKind: 'line',
+    data: {
+      xAxis: { categories: ['Jan', 'Feb', 'Mar'] },
+      series: [{ id: 's1', label: 'Sales', data: [1.2, 1.7, 1.3] }],
+    },
+  },
+};
+
+const vizBar: VizBlockData = {
+  kind: 'viz',
+  id: 'viz-bar',
+  title: 'Sales by region',
+  tokens: [
+    { id: 't1', label: 'Sales', kind: 'measure' },
+    { id: 't2', label: 'Region', kind: 'keyword' },
+  ],
+  source: {
+    type: 'data',
+    chartKind: 'bar',
+    data: {
+      xAxis: { categories: ['NA', 'EMEA', 'APAC', 'LATAM'] },
+      series: [{ id: 's1', label: 'Sales', data: [2.1, 1.4, 0.6, 0.1] }],
+    },
+  },
+};
+
+const vizPie: VizBlockData = {
+  kind: 'viz',
+  id: 'viz-pie',
+  title: 'Revenue mix',
+  tokens: [
+    { id: 't1', label: 'Revenue', kind: 'measure' },
+    { id: 't2', label: 'Product', kind: 'keyword' },
+  ],
+  source: {
+    type: 'data',
+    chartKind: 'pie',
+    data: {
+      xAxis: { categories: ['Core', 'Plus', 'Enterprise', 'Add-ons'] },
+      series: [{ id: 's1', label: 'Revenue', data: [1.4, 1.0, 1.6, 0.2] }],
+    },
+  },
+};
+
+const vizTable: VizBlockData = {
+  kind: 'viz',
+  id: 'viz-table',
+  title: 'Top accounts',
+  tokens: [
+    { id: 't1', label: 'Account', kind: 'keyword' },
+    { id: 't2', label: 'Sales', kind: 'measure' },
+  ],
+  source: {
+    type: 'data',
+    chartKind: 'table',
+    data: {
+      xAxis: { categories: ['Acme', 'Globex', 'Initech', 'Umbrella'] },
+      series: [{ id: 's1', label: 'Sales', data: [820, 610, 480, 320] }],
+    },
+  },
+};
+
+const vizEmpty: VizBlockData = {
+  kind: 'viz',
+  id: 'viz-empty',
+  title: 'Sales — no data',
+  tokens: [{ id: 't1', label: 'Sales', kind: 'measure' }],
+  source: {
+    type: 'placeholder',
+    message: 'No data matched this question. Try a different date range.',
+  },
+};
+
+const sourcesData: SourcesBlockData = {
+  kind: 'sources',
+  id: 'src-1',
+  items: [
+    { id: 'src-orders', label: 'Orders' },
+    { id: 'src-items', label: 'OrderItems' },
+    { id: 'src-cust', label: 'Customers' },
+  ],
+};
+
+const followupsData: FollowUpsBlockData = {
+  kind: 'followups',
+  id: 'fu-1',
+  suggestions: [
+    'Break this down by region',
+    'Compare to the same quarter last year',
+    'Show only enterprise accounts',
+  ],
+};
+
+const refineData: RefineBlockData = {
+  kind: 'refine',
+  id: 'rf-1',
+  questions: [
+    'Do you mean fiscal Q4 or calendar Q4?',
+    'Should I include refunds?',
+    'Group by month or by week?',
+  ],
+};
+
+const errorData: ErrorBlockData = {
+  kind: 'error',
+  id: 'err-1',
+  message: 'I could not connect to the data model. Check the connection and try again.',
+};
+
 // ── Interactive prompt previews ────────────────────────────────────────────
 
 const PromptEmpty: React.FC = () => {
@@ -157,6 +307,14 @@ const PromptDisabled: React.FC = () => (
 // ── Page ───────────────────────────────────────────────────────────────────
 
 export const SpotterShowcase: React.FC = () => {
+  return (
+    <SpotterChatProvider mode="canned">
+      <SpotterShowcaseInner />
+    </SpotterChatProvider>
+  );
+};
+
+const SpotterShowcaseInner: React.FC = () => {
   return (
     <div className={styles.page}>
       <header className={styles.pageHeader}>
@@ -349,15 +507,108 @@ export const SpotterShowcase: React.FC = () => {
         />
       </section>
 
-      {/* ─── Phase 2+ stubs ─────────────────────────────────────────────── */}
+      {/* ─── Blocks section ─────────────────────────────────────────────── */}
       <section id="blocks" className={styles.section}>
         <header className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>Blocks</h2>
-          <p className={styles.sectionLead}>Block renderers (text, viz, sources, follow-ups, refine, error). Lands in Phase 2.</p>
+          <p className={styles.sectionLead}>
+            Block renderers — one per <code>AnswerBlock.kind</code>. Imported from <code>@spotter/chat/blocks</code>.
+            Wired into <code>AgentResponseBlock</code> via a switch on <code>kind</code>.
+          </p>
         </header>
-        <div className={styles.phasePlaceholder}>
-          Coming in Phase 2 — see <code>docs/spotter-roadmap.md</code> for status.
-        </div>
+
+        <PreviewCard
+          name="TextBlock"
+          path="@spotter/chat/blocks"
+          description="Renders a plain text paragraph inside an agent response. The simplest block kind."
+          variants={[
+            {
+              label: 'Short',
+              node: <TextBlock block={textBlockShort} />,
+            },
+            {
+              label: 'Long',
+              description: 'Wraps across multiple lines; respects max-width for readability.',
+              node: <TextBlock block={textBlockLong} />,
+            },
+          ]}
+        />
+
+        <PreviewCard
+          name="VizBlock"
+          path="@spotter/chat/blocks"
+          description="Chart renderer. Slot priority: external React node (passed in) > iframe URL > inline data (renders an SVG sketch) > placeholder. Token chips above the chart describe measures, keywords, filters."
+          variants={[
+            { label: 'Line', node: <VizBlock block={vizLine} /> },
+            { label: 'Bar', node: <VizBlock block={vizBar} /> },
+            { label: 'Pie', node: <VizBlock block={vizPie} /> },
+            { label: 'Table', node: <VizBlock block={vizTable} /> },
+            {
+              label: 'Empty / placeholder',
+              description: 'When the answer has no data — the placeholder message renders inside the slot.',
+              node: <VizBlock block={vizEmpty} />,
+            },
+          ]}
+        />
+
+        <PreviewCard
+          name="SourcesBlock"
+          path="@spotter/chat/blocks"
+          description="Lists the data sources the agent used to compose the answer (tables, columns, datasets)."
+          variants={[
+            {
+              label: 'Default',
+              node: <SourcesBlock block={sourcesData} />,
+            },
+          ]}
+        />
+
+        <PreviewCard
+          name="FollowUpsBlock"
+          path="@spotter/chat/blocks"
+          description="Suggested follow-up questions. Each is a clickable chip that calls `send` on the chat provider."
+          variants={[
+            {
+              label: 'Default',
+              description: 'Three suggested follow-ups.',
+              node: <FollowUpsBlock block={followupsData} />,
+            },
+          ]}
+        />
+
+        <PreviewCard
+          name="RefineBlock"
+          path="@spotter/chat/blocks"
+          description="Clarifying questions the agent asks before fully answering. Each is clickable and calls `send` with the selected refinement."
+          variants={[
+            {
+              label: 'Default',
+              description: 'Three clarifying questions.',
+              node: <RefineBlock block={refineData} />,
+            },
+          ]}
+        />
+
+        <PreviewCard
+          name="ErrorBlock"
+          path="@spotter/chat/blocks"
+          description="Renders an agent-side error. Used when the runtime emits an error chunk, when the data model is unreachable, or when the model returns an error message."
+          variants={[
+            {
+              label: 'Default',
+              node: <ErrorBlock block={errorData} />,
+            },
+          ]}
+        />
+
+        <PreviewCard
+          name="AnswerCard"
+          path="@spotter/answer (planned)"
+          description="The answer view that renders inside a chat thread when Spotter responds with a viz-backed answer. The current VizBlock renderer is the stand-in."
+          variants={[]}
+          planned
+          plannedHint="Figma spec exists at docs/2026-05-07-spotter-answer-card.md (node 122:15399). Will live at src/spotter/answer/AnswerCard.tsx."
+        />
       </section>
 
       <section id="shell" className={styles.section}>

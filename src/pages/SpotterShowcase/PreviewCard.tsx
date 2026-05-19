@@ -50,7 +50,9 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({
                   <span className={styles.variantDescription}>{variant.description}</span>
                 )}
               </div>
-              <div className={styles.variantStage}>{variant.node}</div>
+              <div className={styles.variantStage}>
+                <div className={styles.stageInner}>{variant.node}</div>
+              </div>
             </section>
           ))}
         </div>

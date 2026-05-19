@@ -132,19 +132,23 @@ answer (the most common case for the prototype).
 
 ## Reasoning rendering rules
 
-- Default state: `<ReasoningBlock>` is **collapsed** (renders only the
-  "Show work ⌄" trigger).
-- **Auto-expands** while `stage === 'thinking' || 'streaming'`.
-- **Auto-collapses** 600ms after `reasoning.isDone === true`.
-- User toggle (clicking the trigger) overrides the auto behaviour for
-  the rest of the message lifetime.
-- Trigger color is brand-blue when expanded, secondary when collapsed.
-- Step dot color: pending = `border-default`, current = `content-brand`
-  (pulsing), done = `content-tertiary` (gray).
-- ToolcallCard inside a step is **collapsed by default** with a
-  brand-blue "Show details ⌄" link.
-- After all steps, "Worked for X seconds" appears (when
-  `reasoning.durationSeconds` is set).
+`<ReasoningBlock>` has three visual states tied to the message lifecycle:
+
+| Lifecycle | Visual state | What renders |
+|---|---|---|
+| `stage === 'thinking' \|\| 'streaming'` | **Semi-collapsed** | Single row showing the **current step** label (status: `'current'`) upfront. Clicking expands the trace to show all steps completed so far + the current one. The pending steps remain hidden until they activate. |
+| `stage === 'done'`, immediately after | **Auto-expanded → collapsing** | Full trace visible briefly, then auto-collapses 600ms after `reasoning.isDone === true`. |
+| `stage === 'done'`, settled | **Collapsed** | A single **"Thought for X seconds"** trigger (uses `reasoning.durationSeconds`). Clicking re-expands the full trace. |
+
+Override rule: a user click on the trigger overrides the auto behaviour for the rest of that message's lifetime.
+
+**Visual tokens:**
+- Trigger colour is brand-blue when expanded, secondary when collapsed
+- Step dot colour: pending = `border-default`, current = `content-brand` (pulsing), done = `content-tertiary` (gray)
+- `ToolcallCard` inside a step is **collapsed by default** with a brand-blue "Show details ⌄" link
+- "Worked for X seconds" footer appears at the end of the trace when `reasoning.durationSeconds` is set (and matches the final "Thought for X seconds" trigger label)
+
+**Why the semi-collapsed state during streaming:** showing all pending steps upfront commits to a structure that may shift as the agent discovers new steps. Showing only the current step keeps the surface honest and reduces visual jitter as new steps activate.
 
 ## Feedback row
 

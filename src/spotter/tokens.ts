@@ -41,13 +41,21 @@ export type SpotterChartTokenKind = keyof typeof spotterChartBg;
 /**
  * Layout constants shared across Spotter chat surfaces. These are
  * exposed as plain numbers so consumers can use them in inline styles,
- * CSS modules (via `--spotter-chat-max-width`), or computations.
+ * CSS modules (via `--spotter-chat-max-width` / `--spotter-text-max-width`),
+ * or computations.
  */
 export const spotterLayout = {
   /**
-   * Max width of the chat thread + the prompt area. Keeps the prompt
-   * vertically aligned with the thread on wide canvases.
+   * Max width of the right-pane content container — wraps the chat
+   * thread and the sticky prompt. Matches the 2026-05-19 IA spec.
    */
-  chatMaxWidth: 880,
+  chatMaxWidth: 936,
+
+  /**
+   * Max width of the text content inside the container. Narrower than
+   * the container so paragraphs stay readable while charts / tables can
+   * fill the full 936px when needed.
+   */
+  textMaxWidth: 844,
 } as const;
 
