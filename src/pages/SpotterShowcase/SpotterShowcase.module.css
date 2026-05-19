@@ -1,0 +1,88 @@
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: var(--spacing-h) var(--spacing-f);
+  background: var(--rd-sys-color-background-base);
+  color: var(--rd-sys-color-content-primary);
+}
+
+.pageHeader {
+  margin-bottom: var(--spacing-i);
+}
+
+.pageTitle {
+  margin: 0 0 var(--spacing-c);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--rd-sys-color-content-primary);
+}
+
+.pageSubtitle {
+  margin: 0 0 var(--spacing-f);
+  color: var(--rd-sys-color-content-secondary);
+  font-size: var(--font-size-l);
+  line-height: var(--line-height-relaxed);
+  max-width: 760px;
+}
+
+.toc {
+  display: flex;
+  gap: var(--spacing-d);
+  flex-wrap: wrap;
+  padding: var(--spacing-c) 0;
+  border-top: 1px solid var(--rd-sys-color-border-divider);
+  border-bottom: 1px solid var(--rd-sys-color-border-divider);
+}
+
+.toc a {
+  color: var(--rd-sys-color-content-brand);
+  text-decoration: none;
+  font-size: var(--font-size-s);
+  font-weight: var(--font-weight-medium);
+}
+
+.toc a:hover {
+  text-decoration: underline;
+}
+
+.section {
+  margin-bottom: var(--spacing-j);
+  scroll-margin-top: var(--spacing-h);
+}
+
+.sectionHeader {
+  margin-bottom: var(--spacing-f);
+  padding-bottom: var(--spacing-c);
+  border-bottom: 2px solid var(--rd-sys-color-border-divider);
+}
+
+.sectionTitle {
+  margin: 0 0 var(--spacing-b);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--rd-sys-color-content-primary);
+}
+
+.sectionLead {
+  margin: 0;
+  color: var(--rd-sys-color-content-secondary);
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-relaxed);
+}
+
+.phasePlaceholder {
+  padding: var(--spacing-h);
+  background: var(--rd-sys-color-background-sunken);
+  border: 1px dashed var(--rd-sys-color-border-default);
+  border-radius: var(--radius-md);
+  color: var(--rd-sys-color-content-tertiary);
+  font-style: italic;
+  text-align: center;
+}
+
+.phasePlaceholder code {
+  font-family: var(--font-family-mono);
+  background: var(--rd-sys-color-background-base);
+  padding: 2px var(--spacing-b);
+  border-radius: var(--radius-sm);
+}

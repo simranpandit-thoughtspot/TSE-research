@@ -1,0 +1,106 @@
+.card {
+  background: var(--rd-sys-color-background-base);
+  border: 1px solid var(--rd-sys-color-border-divider);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-f);
+  margin-bottom: var(--spacing-f);
+  scroll-margin-top: var(--spacing-h);
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-c);
+  margin-bottom: var(--spacing-b);
+  flex-wrap: wrap;
+}
+
+.name {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--rd-sys-color-content-primary);
+}
+
+.path {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-s);
+  color: var(--rd-sys-color-content-secondary);
+  background: var(--rd-sys-color-background-subtle);
+  padding: 2px var(--spacing-b);
+  border-radius: var(--radius-sm);
+}
+
+.plannedBadge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--rd-sys-color-content-warning);
+  background: var(--rd-sys-color-background-warning);
+  padding: 2px var(--spacing-b);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.description {
+  margin: 0 0 var(--spacing-e);
+  color: var(--rd-sys-color-content-secondary);
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-relaxed);
+}
+
+.variants {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-e);
+}
+
+.variant {
+  border: 1px solid var(--rd-sys-color-border-default);
+  border-radius: var(--radius-sm);
+  background: var(--rd-sys-color-background-sunken);
+}
+
+.variantHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--spacing-c) var(--spacing-d);
+  border-bottom: 1px solid var(--rd-sys-color-border-divider);
+  background: var(--rd-sys-color-background-base);
+}
+
+.variantLabel {
+  font-size: var(--font-size-s);
+  font-weight: var(--font-weight-semibold);
+  color: var(--rd-sys-color-content-primary);
+}
+
+.variantDescription {
+  font-size: var(--font-size-xs);
+  color: var(--rd-sys-color-content-tertiary);
+}
+
+.variantStage {
+  padding: var(--spacing-f);
+  background: var(--rd-sys-color-background-base);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 80px;
+}
+
+.plannedSlot {
+  border: 1px dashed var(--rd-sys-color-border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-f);
+  background: var(--rd-sys-color-background-sunken);
+  text-align: center;
+}
+
+.plannedText {
+  margin: 0;
+  color: var(--rd-sys-color-content-tertiary);
+  font-size: var(--font-size-s);
+  font-style: italic;
+}

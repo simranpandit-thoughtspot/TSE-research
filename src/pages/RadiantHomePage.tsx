@@ -299,6 +299,15 @@ export const RadiantHomePage: React.FC<RadiantHomePageProps> = ({ onNavigate }) 
             </p>
           </div>
         </div>
+        <div style={styles.quickLinkCard} onClick={() => onNavigate('spotter-showcase')}>
+          <div style={styles.quickLinkIcon}>💬</div>
+          <div style={styles.quickLinkContent}>
+            <h3 style={styles.quickLinkTitle}>Spotter showcase</h3>
+            <p style={styles.quickLinkDescription}>
+              Every Spotter component in one place — chat surface, blocks, page shell, icons, tokens.
+            </p>
+          </div>
+        </div>
       </section>
     </div>
   );

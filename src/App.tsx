@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-
 import { Sidebar, NavItem } from './components/Sidebar';
 import { HomePage } from './pages/HomePage';
 import { RadiantHomePage } from './pages/RadiantHomePage';
+import { SpotterShowcase } from './pages/SpotterShowcase';
 import { ComponentDocPage } from './pages/ComponentDocPage';
 import { ComponentRegistryPage } from './pages/ComponentRegistryPage';
 import { PlaygroundGallery } from './pages/PlaygroundGallery';
@@ -101,6 +102,7 @@ const ROUTES = {
   surfaces: '/radiant/surfaces',
   registry: '/radiant/registry',
   changelog: '/radiant/changelog',
+  'spotter-showcase': '/spotter',
   // Widgets
   liveboardheader: '/radiant/components/liveboardheader',
   globalheader: '/radiant/components/globalheader',
@@ -224,6 +226,7 @@ const RadiantLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       'surfaces': '/radiant/surfaces',
       'registry': '/radiant/registry',
       'changelog': '/radiant/changelog',
+      'spotter-showcase': '/spotter',
       // 'roadmap': '/radiant/roadmap',
       // Widgets
       'liveboardheader': '/radiant/components/liveboardheader',
@@ -322,6 +325,7 @@ const RadiantLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     { id: 'surfaces', label: 'Surfaces', icon: <SurfacesIcon />, type: 'item' },
     { id: 'registry', label: 'Component Registry', icon: <TableIcon />, type: 'item' },
     { id: 'changelog', label: 'Changelog', icon: <ChangelogIcon />, type: 'item' },
+    { id: 'spotter-showcase', label: 'Spotter', icon: <ComponentIcon />, type: 'item', badge: 'New' },
     // { id: 'roadmap', label: 'Roadmap', icon: <RoadmapIcon />, type: 'item', badge: 'New' },
     { id: 'divider0', label: '', type: 'divider' },
     { id: 'widgets-section', label: 'Widgets', type: 'section' },
@@ -532,6 +536,7 @@ const App: React.FC = () => {
       <Route path="/radiant/surfaces" element={<RadiantLayout><SurfacesShowcase /></RadiantLayout>} />
       <Route path="/radiant/registry" element={<RadiantLayout><ComponentRegistryPage /></RadiantLayout>} />
       <Route path="/radiant/changelog" element={<RadiantLayout><VersionHistoryPage /></RadiantLayout>} />
+      <Route path="/spotter" element={<RadiantLayout><SpotterShowcase /></RadiantLayout>} />
       {/* <Route path="/radiant/roadmap" element={<RadiantLayout><RoadmapPage /></RadiantLayout>} /> */}
       <Route path="/radiant/architecture" element={<RadiantLayout><ArchitectureShowcase /></RadiantLayout>} />
       {/* Legacy redirect for old colors route */}
