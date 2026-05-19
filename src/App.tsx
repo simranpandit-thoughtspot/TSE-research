@@ -102,7 +102,7 @@ const ROUTES = {
   surfaces: '/radiant/surfaces',
   registry: '/radiant/registry',
   changelog: '/radiant/changelog',
-  'spotter-showcase': '/spotter',
+  'spotter-showcase': '/radiant/spotter',
   // Widgets
   liveboardheader: '/radiant/components/liveboardheader',
   globalheader: '/radiant/components/globalheader',
@@ -226,7 +226,7 @@ const RadiantLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       'surfaces': '/radiant/surfaces',
       'registry': '/radiant/registry',
       'changelog': '/radiant/changelog',
-      'spotter-showcase': '/spotter',
+      'spotter-showcase': '/radiant/spotter',
       // 'roadmap': '/radiant/roadmap',
       // Widgets
       'liveboardheader': '/radiant/components/liveboardheader',
@@ -536,7 +536,7 @@ const App: React.FC = () => {
       <Route path="/radiant/surfaces" element={<RadiantLayout><SurfacesShowcase /></RadiantLayout>} />
       <Route path="/radiant/registry" element={<RadiantLayout><ComponentRegistryPage /></RadiantLayout>} />
       <Route path="/radiant/changelog" element={<RadiantLayout><VersionHistoryPage /></RadiantLayout>} />
-      <Route path="/spotter" element={<RadiantLayout><SpotterShowcase /></RadiantLayout>} />
+      <Route path="/radiant/spotter" element={<RadiantLayout><SpotterShowcase /></RadiantLayout>} />
       {/* <Route path="/radiant/roadmap" element={<RadiantLayout><RoadmapPage /></RadiantLayout>} /> */}
       <Route path="/radiant/architecture" element={<RadiantLayout><ArchitectureShowcase /></RadiantLayout>} />
       {/* Legacy redirect for old colors route */}

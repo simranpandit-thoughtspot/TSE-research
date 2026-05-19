@@ -42,7 +42,7 @@ There are **four Spotter surface modes**:
 A single library-level reference page that previews every Spotter component in one place. Today the only way to see Spotter components is to open the Spotter prototype and chat through them — many block renderers, prompt states, and shell variants stay hidden unless you hit the exact fixture that triggers them. The showcase fixes that.
 
 **Decisions (locked):**
-- Route: **`/spotter`** (new top-level area, peer to `/radiant`)
+- Route: **`/radiant/spotter`** (sits under the Radiant section sidebar, consistent with the other `/radiant/*` pages)
 - Page: **single long vertical scroll** with `<h2>` section headings and `<h3>` per component (not tabs — volume is fine in one page)
 - Variants: each variant renders as its own labeled sub-card stacked vertically under the component header
 - Style: static previews only, no live prop playground
