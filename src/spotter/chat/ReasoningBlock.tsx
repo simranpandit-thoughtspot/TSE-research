@@ -110,11 +110,16 @@ export const ReasoningBlock: React.FC<ReasoningBlockProps> = ({
       </button>
       {/*
         Peek body — current step description with a left guideline.
-        Shown only while streaming + collapsed (the semi-collapsed peek
-        state). Click bubbles up through the parent button.
+        Stays mounted while we have a current step description so the
+        transition to the done state can ease out (opacity + max-height)
+        instead of unmounting instantly. data-visible drives the CSS.
       */}
-      {showSemiCollapsedPeek && currentStep.description && (
-        <p className={styles.peekDescription}>
+      {currentStep?.description && (
+        <p
+          className={styles.peekDescription}
+          data-visible={showSemiCollapsedPeek}
+          aria-hidden={!showSemiCollapsedPeek}
+        >
           {currentStep.description}
         </p>
       )}
