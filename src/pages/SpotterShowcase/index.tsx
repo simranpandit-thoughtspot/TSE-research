@@ -17,6 +17,14 @@ import {
   RefineBlock,
   ErrorBlock,
 } from '@spotter/chat/blocks';
+import {
+  PanelToggleIcon,
+  BellIcon,
+  ThoughtSpotMark,
+  ChartSearchIcon,
+  OrbitsIcon,
+} from '@spotter/icons';
+import { spotterGlow, spotterChartBg, spotterLayout } from '@spotter/tokens';
 import type {
   ChatMessage,
   TextBlockData,
@@ -53,7 +61,7 @@ const agentStreamingMessage: ChatMessage = {
   },
   content: {
     blocks: [
-      { kind: 'text', text: 'Looking at your sales data for the last quarter…' },
+      { kind: 'text', id: 'demo-streaming-text', text: 'Looking at your sales data for the last quarter…' },
     ],
   },
   createdAt: Date.now() - 30_000,
@@ -76,6 +84,7 @@ const agentDoneMessage: ChatMessage = {
     blocks: [
       {
         kind: 'text',
+        id: 'demo-done-text',
         text: 'Here are your total sales by month for the last quarter. February had the strongest performance, driven by enterprise renewals.',
       },
     ],
@@ -164,71 +173,6 @@ const vizLine: VizBlockData = {
   },
 };
 
-const vizBar: VizBlockData = {
-  kind: 'viz',
-  id: 'viz-bar',
-  title: 'Sales by region',
-  tokens: [
-    { id: 't1', label: 'Sales', kind: 'measure' },
-    { id: 't2', label: 'Region', kind: 'keyword' },
-  ],
-  source: {
-    type: 'data',
-    chartKind: 'bar',
-    data: {
-      xAxis: { categories: ['NA', 'EMEA', 'APAC', 'LATAM'] },
-      series: [{ id: 's1', label: 'Sales', data: [2.1, 1.4, 0.6, 0.1] }],
-    },
-  },
-};
-
-const vizPie: VizBlockData = {
-  kind: 'viz',
-  id: 'viz-pie',
-  title: 'Revenue mix',
-  tokens: [
-    { id: 't1', label: 'Revenue', kind: 'measure' },
-    { id: 't2', label: 'Product', kind: 'keyword' },
-  ],
-  source: {
-    type: 'data',
-    chartKind: 'pie',
-    data: {
-      xAxis: { categories: ['Core', 'Plus', 'Enterprise', 'Add-ons'] },
-      series: [{ id: 's1', label: 'Revenue', data: [1.4, 1.0, 1.6, 0.2] }],
-    },
-  },
-};
-
-const vizTable: VizBlockData = {
-  kind: 'viz',
-  id: 'viz-table',
-  title: 'Top accounts',
-  tokens: [
-    { id: 't1', label: 'Account', kind: 'keyword' },
-    { id: 't2', label: 'Sales', kind: 'measure' },
-  ],
-  source: {
-    type: 'data',
-    chartKind: 'table',
-    data: {
-      xAxis: { categories: ['Acme', 'Globex', 'Initech', 'Umbrella'] },
-      series: [{ id: 's1', label: 'Sales', data: [820, 610, 480, 320] }],
-    },
-  },
-};
-
-const vizEmpty: VizBlockData = {
-  kind: 'viz',
-  id: 'viz-empty',
-  title: 'Sales — no data',
-  tokens: [{ id: 't1', label: 'Sales', kind: 'measure' }],
-  source: {
-    type: 'placeholder',
-    message: 'No data matched this question. Try a different date range.',
-  },
-};
-
 const sourcesData: SourcesBlockData = {
   kind: 'sources',
   id: 'src-1',
@@ -302,6 +246,81 @@ const PromptDisabled: React.FC = () => (
     onDataModelClick={() => undefined}
     disabled
   />
+);
+
+// ── Icons preview helpers ─────────────────────────────────────────────────
+
+const ICON_SIZES = ['xs', 's', 'm', 'l', 'xl'] as const;
+
+const IconSizeRow: React.FC<{ glyph: React.ReactNode; importName: string }> = ({ glyph, importName }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', width: '100%' }}>
+    <code style={{ fontFamily: 'var(--font-family-mono)', fontSize: 13, color: 'var(--rd-sys-color-content-secondary)', minWidth: 160 }}>
+      {importName}
+    </code>
+    {ICON_SIZES.map((size) => (
+      <div key={size} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 28, color: 'var(--rd-sys-color-content-primary)' }}>
+          {React.cloneElement(glyph as React.ReactElement, { size })}
+        </div>
+        <span style={{ fontSize: 11, color: 'var(--rd-sys-color-content-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{size}</span>
+      </div>
+    ))}
+  </div>
+);
+
+// ── Tokens preview helpers ────────────────────────────────────────────────
+
+const GlowSwatch: React.FC = () => (
+  <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div
+      style={{
+        height: 120,
+        borderRadius: 8,
+        border: '1px solid var(--rd-sys-color-background-subtle)',
+        background: `radial-gradient(circle at center, ${spotterGlow.from} 0%, ${spotterGlow.to} 70%)`,
+      }}
+    />
+    <div style={{ fontSize: 12, fontFamily: 'var(--font-family-mono)', color: 'var(--rd-sys-color-content-secondary)' }}>
+      from: {spotterGlow.from} · to: {spotterGlow.to}
+    </div>
+  </div>
+);
+
+const ChartBgSwatches: React.FC = () => (
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, width: '100%' }}>
+    {(Object.entries(spotterChartBg) as Array<[keyof typeof spotterChartBg, string]>).map(([key, color]) => (
+      <div key={key} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ height: 64, background: color, borderRadius: 8, border: '1px solid var(--rd-sys-color-background-subtle)' }} />
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--rd-sys-color-content-primary)' }}>{key}</div>
+        <code style={{ fontSize: 11, fontFamily: 'var(--font-family-mono)', color: 'var(--rd-sys-color-content-secondary)' }}>{color}</code>
+      </div>
+    ))}
+  </div>
+);
+
+const LayoutSwatch: React.FC = () => (
+  <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--rd-sys-color-content-primary)' }}>chatMaxWidth</span>
+        <code style={{ fontSize: 12, fontFamily: 'var(--font-family-mono)', color: 'var(--rd-sys-color-content-secondary)' }}>{spotterLayout.chatMaxWidth}px</code>
+      </div>
+      <div style={{ height: 8, background: 'var(--rd-sys-color-content-brand)', borderRadius: 4, width: '100%' }} />
+      <div style={{ fontSize: 12, color: 'var(--rd-sys-color-content-tertiary)' }}>
+        Right-pane content container — wraps the chat thread and sticky prompt.
+      </div>
+    </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--rd-sys-color-content-primary)' }}>textMaxWidth</span>
+        <code style={{ fontSize: 12, fontFamily: 'var(--font-family-mono)', color: 'var(--rd-sys-color-content-secondary)' }}>{spotterLayout.textMaxWidth}px</code>
+      </div>
+      <div style={{ height: 8, background: 'var(--rd-sys-color-content-brand)', borderRadius: 4, width: `${(spotterLayout.textMaxWidth / spotterLayout.chatMaxWidth) * 100}%` }} />
+      <div style={{ fontSize: 12, color: 'var(--rd-sys-color-content-tertiary)' }}>
+        Text content inside the container — narrower for readability.
+      </div>
+    </div>
+  </div>
 );
 
 // ── Page ───────────────────────────────────────────────────────────────────
@@ -537,16 +556,12 @@ const SpotterShowcaseInner: React.FC = () => {
         <PreviewCard
           name="VizBlock"
           path="@spotter/chat/blocks"
-          description="Chart renderer. Slot priority: external React node (passed in) > iframe URL > inline data (renders an SVG sketch) > placeholder. Token chips above the chart describe measures, keywords, filters."
+          description="Chart renderer. Slot priority: external React node (passed in) > iframe URL > inline data (renders an SVG sketch) > placeholder. Token chips above the chart describe measures, keywords, filters. Supports line / bar / pie / table chart kinds plus an empty placeholder state."
           variants={[
-            { label: 'Line', node: <VizBlock block={vizLine} /> },
-            { label: 'Bar', node: <VizBlock block={vizBar} /> },
-            { label: 'Pie', node: <VizBlock block={vizPie} /> },
-            { label: 'Table', node: <VizBlock block={vizTable} /> },
             {
-              label: 'Empty / placeholder',
-              description: 'When the answer has no data — the placeholder message renders inside the slot.',
-              node: <VizBlock block={vizEmpty} />,
+              label: 'Default',
+              description: 'Line chart from inline data — the most common viz answer.',
+              node: <VizBlock block={vizLine} />,
             },
           ]}
         />
@@ -614,31 +629,107 @@ const SpotterShowcaseInner: React.FC = () => {
       <section id="shell" className={styles.section}>
         <header className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>Page shell</h2>
-          <p className={styles.sectionLead}>SpotterShell, SpotterLeftSide, SpotterRail, SpotterPanel, SpotterWelcome. Lands in Phase 3.</p>
+          <p className={styles.sectionLead}>
+            Full-page shell primitives — <code>SpotterShell</code>, <code>SpotterLeftSide</code>, <code>SpotterRail</code>, <code>SpotterPanel</code>, <code>SpotterWelcome</code>, <code>SpotterLeftToggle</code> — live on their own page since they are a sibling to the other shell widgets (GlobalHeader, AppShell).
+          </p>
+          <p className={styles.sectionLead} style={{ marginTop: 12 }}>
+            <a href="/radiant/components/spottershell" style={{ color: 'var(--rd-sys-color-content-brand)', fontWeight: 500 }}>
+              Go to SpotterShell →
+            </a>
+          </p>
         </header>
-        <div className={styles.phasePlaceholder}>
-          Coming in Phase 3 — see <code>docs/spotter-roadmap.md</code> for status.
-        </div>
       </section>
 
       <section id="icons" className={styles.section}>
         <header className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>Spotter icons</h2>
-          <p className={styles.sectionLead}>Glyphs missing from the Radiant registry — PanelToggle, Bell, ThoughtSpotMark, ChartSearch, Orbits. Lands in Phase 4.</p>
+          <p className={styles.sectionLead}>
+            Glyphs that the Radiant registry does not yet ship. Imported from <code>@spotter/icons</code>.
+            All match Radiant's <code>BaseIconProps</code> API so consumers pass <code>size="m"</code> exactly like <code>&lt;Icon name="..." /&gt;</code>.
+            The full Radiant icon catalog lives at <a href="/radiant/icons">/radiant/icons</a>.
+          </p>
         </header>
-        <div className={styles.phasePlaceholder}>
-          Coming in Phase 4 — see <code>docs/spotter-roadmap.md</code> for status.
-        </div>
+
+        <PreviewCard
+          name="PanelToggleIcon"
+          path="@spotter/icons"
+          description="Rounded rectangle with a vertical divider creating a small left compartment and a larger right compartment. Sourced from the Spotter Left Panel Figma file (node 3529:24539)."
+          variants={[
+            { label: 'All sizes', node: <IconSizeRow glyph={<PanelToggleIcon />} importName="PanelToggleIcon" /> },
+          ]}
+        />
+
+        <PreviewCard
+          name="BellIcon"
+          path="@spotter/icons"
+          description="Notifications glyph. Lives here because the standalone Spotter prototype's header uses it, and Radiant does not yet ship this variant."
+          variants={[
+            { label: 'All sizes', node: <IconSizeRow glyph={<BellIcon />} importName="BellIcon" /> },
+          ]}
+        />
+
+        <PreviewCard
+          name="ThoughtSpotMark"
+          path="@spotter/icons"
+          description="The ThoughtSpot brand mark. Slightly different prop signature than the others — accepts a colorful prop. Used in the Spotter prototype's avatar slot and welcome state."
+          variants={[
+            { label: 'All sizes', node: <IconSizeRow glyph={<ThoughtSpotMark />} importName="ThoughtSpotMark" /> },
+          ]}
+        />
+
+        <PreviewCard
+          name="ChartSearchIcon"
+          path="@spotter/icons"
+          description="Used in the SpotterPrompt mode toggle to indicate the 'ask' mode (data-search). Pairs visually with OrbitsIcon."
+          variants={[
+            { label: 'All sizes', node: <IconSizeRow glyph={<ChartSearchIcon />} importName="ChartSearchIcon" /> },
+          ]}
+        />
+
+        <PreviewCard
+          name="OrbitsIcon"
+          path="@spotter/icons"
+          description="Used in the SpotterPrompt mode toggle to indicate the 'explore' mode. Pairs visually with ChartSearchIcon."
+          variants={[
+            { label: 'All sizes', node: <IconSizeRow glyph={<OrbitsIcon />} importName="OrbitsIcon" /> },
+          ]}
+        />
       </section>
 
       <section id="tokens" className={styles.section}>
         <header className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>Spotter tokens</h2>
-          <p className={styles.sectionLead}>Local tokens — spotterGlow, spotterChartBg, spotterLayout. Lands in Phase 4.</p>
+          <p className={styles.sectionLead}>
+            Local tokens that live in <code>@spotter/tokens</code>. Only defined here when no Radiant equivalent covers the need — prefer importing from <code>@tokens/colors</code> directly when possible.
+          </p>
         </header>
-        <div className={styles.phasePlaceholder}>
-          Coming in Phase 4 — see <code>docs/spotter-roadmap.md</code> for status.
-        </div>
+
+        <PreviewCard
+          name="spotterGlow"
+          path="@spotter/tokens"
+          description="Soft radial glow behind the welcome prompt. Derived from the brand colour at low alpha. Radiant's system tokens are opaque, so this lives in Spotter."
+          variants={[
+            { label: 'Radial gradient', node: <GlowSwatch /> },
+          ]}
+        />
+
+        <PreviewCard
+          name="spotterChartBg"
+          path="@spotter/tokens"
+          description="Chart-token backgrounds used by answer-card tokens (measure / keyword / filter). Aliases over Radiant system tokens — Spotter components reference these names instead of reaching into the system palette directly."
+          variants={[
+            { label: 'Three roles', node: <ChartBgSwatches /> },
+          ]}
+        />
+
+        <PreviewCard
+          name="spotterLayout"
+          path="@spotter/tokens"
+          description="Layout constants shared across Spotter chat surfaces. Exposed as plain numbers so consumers can use them inline or via CSS variables (--spotter-chat-max-width, --spotter-text-max-width)."
+          variants={[
+            { label: 'Widths', node: <LayoutSwatch /> },
+          ]}
+        />
       </section>
     </div>
   );
