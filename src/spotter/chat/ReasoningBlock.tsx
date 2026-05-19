@@ -15,12 +15,27 @@ export interface ReasoningBlockProps {
 }
 
 /**
- * Reasoning panel — collapsed "Show work ⌄" trigger by default.
- * Auto-expands while the agent is thinking or streaming, then auto-collapses
- * once the message is done. Click toggles manual expansion.
+ * Reasoning panel — has four visual states tied to the message lifecycle:
+ *
+ *   1. Streaming + semi-collapsed (default while streaming)
+ *      Shows ONLY the current step (label + description) as a peek.
+ *      Clicking expands the full trace up to the current step.
+ *
+ *   2. Streaming + expanded (user clicked)
+ *      Full trace of every step streamed so far. Pending steps stay
+ *      hidden until they activate.
+ *
+ *   3. Done + collapsed (default after streaming, with 600ms delay)
+ *      Single "Thought for X seconds" trigger that re-expands the trace.
+ *
+ *   4. Done + expanded (user clicked, or briefly before auto-collapse)
+ *      Full trace + duration footer.
+ *
+ * A user click on the trigger overrides the auto behaviour for the
+ * remainder of this message's lifetime.
  *
  * When expanded, each step renders:
- *   - colored dot (gray pending, brand-blue pulsing current, success-green done)
+ *   - colored dot (gray pending, brand-blue pulsing current, gray done)
  *   - bold title
  *   - optional description body
  *   - optional embedded ToolcallCard with input / output
@@ -31,16 +46,21 @@ export const ReasoningBlock: React.FC<ReasoningBlockProps> = ({
   stage,
 }) => {
   const isActive = stage === 'thinking' || stage === 'streaming';
-  const [expanded, setExpanded] = useState(isActive);
+  const [expanded, setExpanded] = useState(false);
   const [userToggled, setUserToggled] = useState(false);
 
   useEffect(() => {
+    // Auto-expand briefly when reasoning settles, then collapse 600ms later.
+    // A prior user click locks the panel in its chosen state.
     if (userToggled) return;
-    if (isActive) {
+    if (stage === 'done' && reasoning?.isDone) {
       setExpanded(true);
-    } else if (stage === 'done' && reasoning?.isDone) {
       const t = setTimeout(() => setExpanded(false), 600);
       return () => clearTimeout(t);
+    }
+    // While streaming we stay in the semi-collapsed peek state.
+    if (isActive) {
+      setExpanded(false);
     }
   }, [stage, reasoning?.isDone, isActive, userToggled]);
 
@@ -49,28 +69,69 @@ export const ReasoningBlock: React.FC<ReasoningBlockProps> = ({
     setExpanded((prev) => !prev);
   };
 
-  // Don't render until reasoning is actually set — avoids the "Show work"
-  // trigger appearing during the typing-only phase. TypingIndicator covers
+  // Don't render until reasoning is actually set — avoids the trigger
+  // appearing during the typing-only phase. TypingIndicator covers
   // that phase in AgentMessage.
   if (!reasoning) return null;
 
   const stepCount = reasoning.steps.length;
+  // The "current" step during streaming is the last item in the array
+  // (it gets pushed to 'current' by the reducer and stays last until the
+  // next reasoning_step chunk arrives). When the array is empty we have
+  // nothing to peek at yet.
+  const currentStep: ReasoningStep | undefined =
+    stepCount > 0 ? reasoning.steps[stepCount - 1] : undefined;
+  const isDoneSettled = stage === 'done' && reasoning.isDone;
+  const showSemiCollapsedPeek = isActive && !expanded && currentStep !== undefined;
   const showSteps = expanded && stepCount > 0;
 
   return (
     <div className={styles.reasoning}>
-      <button
-        type="button"
-        className={styles.trigger}
-        data-expanded={expanded}
-        onClick={handleToggle}
-        aria-expanded={expanded}
-      >
-        <span>Show work</span>
-        <span className={styles.chevron} data-expanded={expanded}>
-          <Icon name="chevron-down" size="s" />
-        </span>
-      </button>
+      {showSemiCollapsedPeek ? (
+        <button
+          type="button"
+          className={styles.peek}
+          onClick={handleToggle}
+          aria-expanded={expanded}
+          aria-label="Expand reasoning trace"
+        >
+          <span className={styles.peekDotColumn}>
+            <span
+              className={styles.dot}
+              data-status={currentStep.status}
+              aria-hidden="true"
+            />
+          </span>
+          <span className={styles.peekBody}>
+            <span className={styles.peekTitle}>{currentStep.label}</span>
+            {currentStep.description && (
+              <span className={styles.peekDescription}>
+                {currentStep.description}
+              </span>
+            )}
+          </span>
+          <span className={styles.peekChevron} aria-hidden="true">
+            <Icon name="chevron-down" size="s" />
+          </span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          className={styles.trigger}
+          data-expanded={expanded}
+          onClick={handleToggle}
+          aria-expanded={expanded}
+        >
+          <span>
+            {isDoneSettled && reasoning.durationSeconds !== undefined
+              ? `Thought for ${reasoning.durationSeconds} seconds`
+              : 'Show work'}
+          </span>
+          <span className={styles.chevron} data-expanded={expanded}>
+            <Icon name="chevron-down" size="s" />
+          </span>
+        </button>
+      )}
       {/*
         Steps container stays MOUNTED. Visibility flips via `data-expanded`
         so the height/opacity transition can animate collapse/expand smoothly.
@@ -96,7 +157,7 @@ export const ReasoningBlock: React.FC<ReasoningBlockProps> = ({
               />
             </div>
             <p className={styles.workedForBody}>
-              Worked for {reasoning.durationSeconds} seconds
+              Thought for {reasoning.durationSeconds} seconds
             </p>
           </div>
         )}

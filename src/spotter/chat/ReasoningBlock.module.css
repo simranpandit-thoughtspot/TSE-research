@@ -58,6 +58,82 @@
   transform: rotate(180deg);
 }
 
+/*
+ * Semi-collapsed "peek" row — shown while the agent is streaming and
+ * the panel is collapsed. Surfaces only the current step (label +
+ * optional description) so the user gets a live progress hint without
+ * committing to the full trace structure.
+ */
+.peek {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  align-items: start;
+  gap: var(--spacing-2, 8px);
+  width: 100%;
+  padding: var(--spacing-2, 8px) var(--spacing-3, 12px);
+  background-color: var(--rd-sys-color-background-base);
+  border: 1px solid var(--rd-sys-color-border-divider);
+  border-radius: var(--radius-md, 6px);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-family-primary);
+  color: var(--rd-sys-color-content-primary);
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+  animation: reasoningIn 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.peek:hover {
+  background-color: var(--rd-sys-color-background-sunken);
+  border-color: var(--rd-sys-color-border-default);
+}
+
+.peek:focus-visible {
+  outline: 2px solid var(--rd-sys-color-border-focus);
+  outline-offset: 2px;
+}
+
+.peekDotColumn {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.peekBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1, 4px);
+  min-width: 0;
+}
+
+.peekTitle {
+  color: var(--rd-sys-color-content-primary);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-semibold, 600);
+  line-height: var(--line-height-md, 20px);
+}
+
+.peekDescription {
+  color: var(--rd-sys-color-content-secondary);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-light, 375);
+  line-height: var(--line-height-md, 20px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.peekChevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rd-sys-color-content-secondary);
+  margin-top: var(--spacing-1, 4px);
+}
+
 .steps {
   display: flex;
   flex-direction: column;
