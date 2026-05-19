@@ -30,3 +30,9 @@ export type { SpotterPanelItemProps } from './SpotterPanelItem';
 
 export { SpotterWelcome } from './SpotterWelcome';
 export type { SpotterWelcomeProps } from './SpotterWelcome';
+
+export { SettingsMenu } from './SettingsMenu';
+export type { SettingsMenuProps } from './SettingsMenu';
+
+export { PersonalMemoryToggle } from './PersonalMemoryToggle';
+export type { PersonalMemoryToggleProps } from './PersonalMemoryToggle';
