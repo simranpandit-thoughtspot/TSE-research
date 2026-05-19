@@ -100,7 +100,14 @@ export const SpotterPrompt = forwardRef<HTMLDivElement, SpotterPromptProps>(
                 aria-label="Ask"
                 aria-pressed={mode === 'ask'}
               >
-                <ChartSearchIcon size="m" />
+                {/*
+                  ChartSearch renders at "l" (18px) while Orbits stays
+                  at "m" (16px). ChartSearch's SVG has sparser visual
+                  mass (4 small shapes vs Orbits' 2 bold ellipses), so
+                  at equal pixel sizes it reads smaller. The 2px bump
+                  compensates so they look equally weighted in the pill.
+                */}
+                <ChartSearchIcon size="l" />
               </button>
               <button
                 type="button"
