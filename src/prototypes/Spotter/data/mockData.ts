@@ -1,13 +1,14 @@
 /**
  * Mock data for the Spotter prototype shell.
  *
- * Realistic-sounding entries for the left panel: custom Spotters, recent
- * chats, and the data model picker. No real chat thread / answers yet.
+ * Realistic-sounding entries for the left panel: analysts (custom AI agents),
+ * recent chats, and the data model picker. No real chat thread / answers yet.
  */
 
-export interface CustomSpotter {
+export interface Analyst {
   id: string;
   name: string;
+  canEdit: boolean;
 }
 
 export interface ChatEntry {
@@ -20,9 +21,9 @@ export interface DataModel {
   name: string;
 }
 
-export const customSpotters: CustomSpotter[] = [
-  { id: 'customer-prep', name: 'Customer prep' },
-  { id: 'deal-accelerator', name: 'Deal accelerator' },
+export const analysts: Analyst[] = [
+  { id: 'customer-prep', name: 'Customer prep', canEdit: true },
+  { id: 'deal-accelerator', name: 'Deal accelerator', canEdit: false },
 ];
 
 export const chats: ChatEntry[] = [

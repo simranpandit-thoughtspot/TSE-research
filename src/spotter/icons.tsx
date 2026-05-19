@@ -86,37 +86,16 @@ export const BellIcon: React.FC<BaseIconProps> = ({
 BellIcon.displayName = 'BellIcon';
 
 /**
- * ThoughtSpot brand mark. Brand asset (not a UI icon) — accepts `pixelSize`
- * for direct sizing in the header logo slot. Defaults to 22px.
+ * ThoughtSpot brand mark.
+ *
+ * @deprecated Import `BrandMark` from `@components/BrandMark` instead.
+ * Kept as an alias for backwards compatibility — the Radiant DS now owns
+ * the single source of truth for the brand mark since it's a product-
+ * agnostic asset used across many surfaces (GlobalHeader, LiveboardHeader,
+ * Spotter showcase, etc.).
  */
-export interface ThoughtSpotMarkProps extends Omit<BaseIconProps, 'size'> {
-  /** Direct pixel size for the brand mark. Defaults to 22. */
-  pixelSize?: number;
-}
-
-export const ThoughtSpotMark: React.FC<ThoughtSpotMarkProps> = ({
-  pixelSize = 22,
-  color = 'currentColor',
-  className,
-  'aria-label': ariaLabel,
-  'aria-hidden': ariaHidden,
-}) => (
-  <svg
-    width={pixelSize}
-    height={pixelSize}
-    viewBox="0 0 24 24"
-    fill={color}
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-    aria-label={ariaLabel}
-    aria-hidden={ariaHidden}
-    role={ariaLabel ? 'img' : undefined}
-  >
-    <path d="M21.0234 18.0469C22.6674 18.0469 24.0008 19.3795 24.001 21.0234C24.001 22.6675 22.6675 24.001 21.0234 24.001C19.3795 24.0008 18.0469 22.6674 18.0469 21.0234C18.047 19.3796 19.3796 18.047 21.0234 18.0469ZM23.8135 7.44141H15.627V23.8125H14.1387V7.44141H12.6514V23.8125H11.1631V7.44141H9.6748V23.8125H8.18652V7.44141H0V5.95312H23.8135V7.44141ZM23.8135 4.46484H0V2.97656H23.8135V4.46484ZM23.8135 1.48828H0V0H23.8135V1.48828Z" />
-  </svg>
-);
-
-ThoughtSpotMark.displayName = 'ThoughtSpotMark';
+export { BrandMark as ThoughtSpotMark } from '@components/BrandMark';
+export type { BrandMarkProps as ThoughtSpotMarkProps } from '@components/BrandMark';
 
 /**
  * Chart-with-search glyph — used as the "Ask" mode in the Spotter prompt

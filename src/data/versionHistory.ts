@@ -28,6 +28,25 @@ export interface VersionEntry {
  */
 export const versionHistory: VersionEntry[] = [
   {
+    version: '26.5.3d',
+    date: '2026-05-19',
+    type: 'patch',
+    changes: [
+      { type: 'added', group: 'Radiant brand', component: 'BrandMark component', description: 'New @components/BrandMark — canonical Radiant 3.0 TS monogram (4-path geometric mark). Single source of truth. Props: pixelSize, color (defaults to currentColor), className, aria props. Replaces inline SVG copies that lived in GlobalHeader, LiveboardHeader, EditToolbar, and spotter/icons.tsx' },
+      { type: 'modified', group: 'Radiant brand', component: 'TS logo refresh', description: 'GlobalHeader, LiveboardHeader (PrimaryNav), and EditToolbar all swapped from the older single-path wordmark to the new 4-path monogram via <BrandMark />. ThoughtSpotMark in @spotter/icons is now a deprecated alias for BrandMark' },
+      { type: 'added', group: 'Spotter DS', component: 'SettingsMenu + PersonalMemoryToggle', description: '@spotter/page popover Settings menu opened from a Radiant Popover trigger. 6 items in 4 dividered groups: Spotter instructions (modal) · Usage monitoring + Admin settings (external) · Manage memory sources (external) + Personal memory (inline toggle) · Spotter best practices (modal)' },
+      { type: 'added', group: 'Spotter DS', component: 'ChatRowMenu + AnalystRowMenu', description: 'Hover-triggered row menus built on Radiant ActionMenu. ChatRow: Rename / Favorite / Share / Delete. AnalystRow: Edit (privilege-gated) / Share / Make a copy / Delete. Shared RowMenuAffordance helper for the fade-on-hover kebab pattern' },
+      { type: 'modified', group: 'Spotter DS', component: 'ReasoningBlock', description: 'Unified brand-blue header (current step while streaming, "Thought for X seconds" once settled). Flat layout — no card chrome around peek or expanded steps. Code-block-styled tool I/O (monospace, background-subtle, generous padding). Peek description fades out instead of unmounting instantly' },
+      { type: 'modified', group: 'Spotter DS', component: 'SpotterShell width tokens', description: 'spotterLayout.chatMaxWidth (936) and textMaxWidth (844) now actually flow through ChatThread, SpotterPrompt, ChatCanvas, and SpotterWelcome via --spotter-chat-max-width / --spotter-text-max-width CSS vars injected at the shell root. Tokens were bumped in 26.5.3c but CSS still hardcoded the old 880/760' },
+      { type: 'modified', group: 'Spotter DS', component: 'AgentMessage avatar centering', description: 'Avatar now centers vertically with the first body line via a -6px margin (compensates for the 32px avatar vs 20px text-line center offset)' },
+      { type: 'modified', group: 'Spotter DS', component: 'SpotterPrompt mode toggle', description: 'ChartSearch at size="m" (16px), Orbits at size="l" (18px) per design spec' },
+      { type: 'modified', group: 'Spotter DS', component: 'ChatCanvas single stream', description: 'Dropped border-top + opaque background + top padding from .promptArea — chat thread now flows into the sticky prompt as one continuous stream, no visible separator' },
+      { type: 'modified', group: 'Spotter prototype', component: 'Left panel restructure', description: '"Custom spotters" → "Analysts" (matches IA — analyst = custom AI agent, separate from data model). Dropped the "Spotter (Default)" row. "View library" → "View all >". Settings button at the bottom opens SettingsMenu. Chat + analyst rows wrapped in hover menus. mockData.ts: customSpotters → analysts with canEdit flag' },
+      { type: 'modified', group: 'Spotter runtime', component: 'Toolcall icons', description: 'cannedResponses now use semantic Radiant glyphs (database, ai, search) instead of the generic spotter sparkle — toolcall icons describe the tool type, not the vendor' },
+      { type: 'modified', group: 'Documentation', component: 'spotter-roadmap.md', description: 'Stage B Phase 1 marked done with itemized completion list. Phase 2 (right-pane state machine + AnalystLandingPage + AnalystListPage + showcase previews) listed as pending with effort estimates' },
+    ],
+  },
+  {
     version: '26.5.3c',
     date: '2026-05-19',
     type: 'patch',

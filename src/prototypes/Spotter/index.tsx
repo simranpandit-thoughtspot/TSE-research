@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { GlobalHeader } from '@components/GlobalHeader';
+import { Modal } from '@components/Modal';
 import {
   SpotterShell,
   SpotterLeftSide,
@@ -11,17 +12,22 @@ import {
   SpotterPanelItem,
   SpotterLeftToggle,
   SpotterWelcome,
+  SettingsMenu,
+  ChatRowMenu,
+  AnalystRowMenu,
   type SpotterLeftMode,
 } from '@spotter/page';
 import { SpotterChatProvider, useSpotterChat } from '@spotter/chat';
 import { ChatCanvas } from './components/ChatCanvas';
 import {
   chats,
-  customSpotters,
+  analysts,
   dataModels,
 } from './data/mockData';
 
 const USER_AVATAR_URL = 'https://i.pravatar.cc/64?img=47';
+
+type ModalKey = 'instructions' | 'best-practices' | null;
 
 /**
  * Spotter prototype. Wraps the chat provider so any subtree using
@@ -35,12 +41,17 @@ export const Spotter: React.FC = () => {
   );
 };
 
+const noop = (): void => {};
+
 const SpotterInner: React.FC = () => {
   const [mode, setMode] = useState<SpotterLeftMode>('panel');
-  const [selectedSpotter, setSelectedSpotter] = useState<string>('default');
+  const [selectedAnalyst, setSelectedAnalyst] = useState<string | null>(null);
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
   const [promptValue, setPromptValue] = useState('');
   const [dataModelId, setDataModelId] = useState(dataModels[0].id);
+  const [personalMemoryEnabled, setPersonalMemoryEnabled] = useState(true);
+  const [openModal, setOpenModal] = useState<ModalKey>(null);
+  const [favoriteChats, setFavoriteChats] = useState<Set<string>>(new Set());
 
   const { state, send, clear } = useSpotterChat();
   const isEmpty = state.messages.length === 0;
@@ -55,7 +66,6 @@ const SpotterInner: React.FC = () => {
   };
 
   const handleQuickAction = (id: string): void => {
-    // Quick actions are stubs for now — translate them to a prompt.
     const promptByAction: Record<string, string> = {
       'quick-search': 'Show me total sales by month',
       'deep-analysis': 'Analyze sales for the upcoming fall and winter season',
@@ -69,7 +79,16 @@ const SpotterInner: React.FC = () => {
     clear();
     setPromptValue('');
     setSelectedChat(null);
-    setSelectedSpotter('default');
+    setSelectedAnalyst(null);
+  };
+
+  const handleToggleFavorite = (chatId: string): void => {
+    setFavoriteChats((prev) => {
+      const next = new Set(prev);
+      if (next.has(chatId)) next.delete(chatId);
+      else next.add(chatId);
+      return next;
+    });
   };
 
   const activeDataModel = dataModels.find((m) => m.id === dataModelId) ?? dataModels[0];
@@ -93,8 +112,22 @@ const SpotterInner: React.FC = () => {
           <SpotterRailItem icon="plus" label="New chat" onClick={handleNewChat} />
         </>
       }
-      bottom={<SpotterRailItem icon="book-closed" label="Library" />}
+      bottom={<SpotterRailItem icon="settings" label="Settings" />}
     />
+  );
+
+  const settingsButton = (
+    <SettingsMenu
+      onSpotterInstructions={() => setOpenModal('instructions')}
+      onSpotterBestPractices={() => setOpenModal('best-practices')}
+      usageMonitoringHref="https://thoughtspot.com/usage"
+      adminSettingsHref="https://thoughtspot.com/admin"
+      manageMemoryHref="https://thoughtspot.com/memory"
+      personalMemoryEnabled={personalMemoryEnabled}
+      onPersonalMemoryChange={setPersonalMemoryEnabled}
+    >
+      <SpotterPanelAction label="Settings" icon="settings" />
+    </SettingsMenu>
   );
 
   const panelContent = (
@@ -107,84 +140,118 @@ const SpotterInner: React.FC = () => {
           onClick={handleNewChat}
         />
       }
-      footer={<SpotterPanelAction label="Settings" icon="settings" />}
+      footer={settingsButton}
     >
-      <SpotterPanelSection>
-        <SpotterPanelItem
-          label="Spotter (Default)"
-          selected={selectedSpotter === 'default'}
-          onClick={() => setSelectedSpotter('default')}
-        />
-      </SpotterPanelSection>
-
-      <SpotterPanelSection label="Custom spotters">
-        {customSpotters.map((spotter) => (
-          <SpotterPanelItem
-            key={spotter.id}
-            label={spotter.name}
-            selected={selectedSpotter === spotter.id}
-            onClick={() => setSelectedSpotter(spotter.id)}
-          />
+      <SpotterPanelSection label="Analysts">
+        {analysts.slice(0, 2).map((analyst) => (
+          <AnalystRowMenu
+            key={analyst.id}
+            canEdit={analyst.canEdit}
+            onEdit={noop}
+            onShare={noop}
+            onMakeCopy={noop}
+            onDelete={noop}
+          >
+            <SpotterPanelItem
+              label={analyst.name}
+              selected={selectedAnalyst === analyst.id}
+              onClick={() => setSelectedAnalyst(analyst.id)}
+            />
+          </AnalystRowMenu>
         ))}
         <SpotterPanelItem
-          label="View library"
+          label="View all"
           trailingIcon="chevron-right"
-          selected={selectedSpotter === 'library'}
-          onClick={() => setSelectedSpotter('library')}
+          selected={selectedAnalyst === 'list'}
+          onClick={() => setSelectedAnalyst('list')}
         />
       </SpotterPanelSection>
 
       <SpotterPanelSection label="Chats">
         {chats.map((chat) => (
-          <SpotterPanelItem
+          <ChatRowMenu
             key={chat.id}
-            label={chat.title}
-            selected={selectedChat === chat.id}
-            onClick={() => setSelectedChat(chat.id)}
-          />
+            isFavorite={favoriteChats.has(chat.id)}
+            onRename={noop}
+            onToggleFavorite={() => handleToggleFavorite(chat.id)}
+            onShare={noop}
+            onDelete={noop}
+          >
+            <SpotterPanelItem
+              label={chat.title}
+              selected={selectedChat === chat.id}
+              onClick={() => setSelectedChat(chat.id)}
+            />
+          </ChatRowMenu>
         ))}
       </SpotterPanelSection>
     </SpotterPanel>
   );
 
   return (
-    <SpotterShell
-      header={
-        <GlobalHeader
-          theme="light"
-          showHamburger
-          onHamburgerClick={toggleMode}
-          searchPlaceholder="Search in your library"
-          showKeyboardHint={false}
-          notificationCount={1}
-          userName="Alex"
-          userAvatar={USER_AVATAR_URL}
-        />
-      }
-      leftSide={
-        <SpotterLeftSide
-          mode={mode}
-          onToggle={toggleMode}
-          rail={railContent}
-          panel={panelContent}
-        />
-      }
-    >
-      {isEmpty ? (
-        <SpotterWelcome
-          promptProps={promptProps}
-          quickActionProps={{ onAction: handleQuickAction }}
-        />
-      ) : (
-        <ChatCanvas
-          messages={state.messages}
-          promptProps={promptProps}
-          userAvatarUrl={USER_AVATAR_URL}
-          userInitial="A"
-          agentAvatarIcon="ai"
-        />
-      )}
-    </SpotterShell>
+    <>
+      <SpotterShell
+        header={
+          <GlobalHeader
+            theme="light"
+            showHamburger
+            onHamburgerClick={toggleMode}
+            searchPlaceholder="Search in your library"
+            showKeyboardHint={false}
+            notificationCount={1}
+            userName="Alex"
+            userAvatar={USER_AVATAR_URL}
+          />
+        }
+        leftSide={
+          <SpotterLeftSide
+            mode={mode}
+            onToggle={toggleMode}
+            rail={railContent}
+            panel={panelContent}
+          />
+        }
+      >
+        {isEmpty ? (
+          <SpotterWelcome
+            promptProps={promptProps}
+            quickActionProps={{ onAction: handleQuickAction }}
+          />
+        ) : (
+          <ChatCanvas
+            messages={state.messages}
+            promptProps={promptProps}
+            userAvatarUrl={USER_AVATAR_URL}
+            userInitial="A"
+            agentAvatarIcon="ai"
+          />
+        )}
+      </SpotterShell>
+
+      <Modal
+        isOpen={openModal === 'instructions'}
+        onClose={() => setOpenModal(null)}
+        title="Spotter instructions"
+        size="M2"
+      >
+        <p>
+          Configure how Spotter responds to your questions. Add custom instructions
+          that apply across all chats — tone, format preferences, domains to favor.
+        </p>
+      </Modal>
+
+      <Modal
+        isOpen={openModal === 'best-practices'}
+        onClose={() => setOpenModal(null)}
+        title="Spotter best practices"
+        size="M2"
+      >
+        <p>
+          Tips for getting the most out of Spotter — how to phrase questions,
+          when to use refine, and how to verify answers against your sources.
+        </p>
+      </Modal>
+    </>
   );
 };
 

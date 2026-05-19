@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@components/Button';
 import { Icon } from '@components/icons';
+import { BrandMark } from '@components/BrandMark';
 import { colors, typography, layout } from './styles';
 
 interface EditToolbarProps {
@@ -20,9 +21,7 @@ const SpotterIcon: React.FC = () => (
 export const EditToolbar: React.FC<EditToolbarProps> = ({ onSave, onCancel, onToggleSpotter, spotterOpen }) => (
   <div style={s.toolbar}>
     <div style={s.left}>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ color: colors.textOnDark }}>
-        <path d="M21.0234 18.0469C22.6674 18.0469 24.0008 19.3795 24.001 21.0234C24.001 22.6675 22.6675 24.001 21.0234 24.001C19.3795 24.0008 18.0469 22.6674 18.0469 21.0234C18.047 19.3796 19.3796 18.047 21.0234 18.0469ZM23.8135 7.44141H15.627V23.8125H14.1387V7.44141H12.6514V23.8125H11.1631V7.44141H9.6748V23.8125H8.18652V7.44141H0V5.95312H23.8135V7.44141ZM23.8135 4.46484H0V2.97656H23.8135V4.46484ZM23.8135 1.48828H0V0H23.8135V1.48828Z" fill="currentColor" />
-      </svg>
+      <BrandMark pixelSize={24} color={colors.textOnDark} aria-hidden />
     </div>
 
     <div style={s.center}>
