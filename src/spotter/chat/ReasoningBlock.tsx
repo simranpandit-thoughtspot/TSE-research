@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from '@components/icons';
-import { ThoughtSpotMark } from '../icons';
+import type { IconName } from '@components/icons';
 import type {
   MessageStage,
   ReasoningStep,
@@ -203,7 +203,7 @@ const ToolcallCard: React.FC<{ toolcall: ReasoningToolCall }> = ({ toolcall }) =
         aria-expanded={open}
       >
         <span className={styles.toolcallIcon} aria-hidden="true">
-          <ThoughtSpotMark size="s" />
+          <Icon name={(toolcall.icon as IconName) ?? 'search'} size="s" />
         </span>
         <span className={styles.toolcallTitle}>{toolcall.title}</span>
         {hasBody && (
