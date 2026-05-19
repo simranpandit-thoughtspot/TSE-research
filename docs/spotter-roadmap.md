@@ -1,6 +1,6 @@
 # Spotter roadmap
 
-Last updated: 2026-05-18.
+Last updated: 2026-05-19.
 
 This is the **resume-here tracker** for all Spotter work across modes. If you open one Spotter doc, open this one. It absorbs the high-level status and points to deeper references.
 
@@ -32,6 +32,56 @@ There are **four Spotter surface modes**:
 | Spotter Viz (embedded) | **Planned** — design pending | n/a |
 | Spotter Code (embedded) | **Planned** — design pending | n/a |
 | Spotter in Liveboard (future, separate from Viz) | **Documented only** — coming soon | n/a |
+
+---
+
+## Active initiatives
+
+### Spotter showcase page (new)
+
+A single library-level reference page that previews every Spotter component in one place. Today the only way to see Spotter components is to open the Spotter prototype and chat through them — many block renderers, prompt states, and shell variants stay hidden unless you hit the exact fixture that triggers them. The showcase fixes that.
+
+**Decisions (locked):**
+- Route: **`/spotter`** (new top-level area, peer to `/radiant`)
+- Page: **single long vertical scroll** with `<h2>` section headings and `<h3>` per component (not tabs — volume is fine in one page)
+- Variants: each variant renders as its own labeled sub-card stacked vertically under the component header
+- Style: static previews only, no live prop playground
+- Entry points: tile on the `/radiant` home page **and** a sidebar entry inside the Radiant layout
+- Scope: built components first, planned components shown as ghosted placeholders
+- Includes one token bump: `spotterLayout.chatMaxWidth` 880px → **936px** (matches the IA spec from 2026-05-19)
+
+**Phases:**
+
+#### Phase 1 — Skeleton + Chat section
+- Create `src/pages/SpotterShowcase/` folder
+- `index.tsx` — page shell with title, table of contents (anchor links), section structure
+- `PreviewCard.tsx` — shared wrapper (name, path, description, variant slots)
+- Implement Chat section: `UserBubble`, `AgentMessage` (streaming / done / done-with-feedback), `TypingIndicator`, `ReasoningBlock` (collapsed / expanded / streaming), `SpotterPrompt` (empty / filled / focused / disabled), `QuickAction`, `QuickActionRow`
+- Ghosted placeholders for Source picker, Model picker
+- Add `/spotter` route in `src/App.tsx`
+- Add tile on `/radiant` home page (`RadiantHomePage.tsx`)
+- Add sidebar entry in Radiant layout
+- Status: ⏳ ready to start
+
+#### Phase 2 — Blocks section
+- Append Blocks section to the page
+- Components: `TextBlock` (short / long), `VizBlock` (line / bar / pie / table / empty), `SourcesBlock`, `FollowUpsBlock`, `RefineBlock`, `ErrorBlock`
+- Ghosted placeholder for `AnswerCard` linking to its spec doc
+- Status: ⏳ planned
+
+#### Phase 3 — Page shell section
+- Append Shell section
+- Components: `SpotterShell`, `SpotterLeftSide` (rail mode / panel mode), `SpotterRail` + `SpotterRailItem`, `SpotterPanel` + `SpotterPanelSection` + `SpotterPanelItem` + `SpotterPanelAction`, `SpotterWelcome` (default greeting / custom greeting), `SpotterLeftToggle`
+- Ghosted placeholder for topbar variants
+- Status: ⏳ planned
+
+#### Phase 4 — Icons, Tokens, and the layout token bump
+- Append Icons section: 5 Spotter-local icons (`PanelToggle`, `Bell`, `ThoughtSpotMark`, `ChartSearch`, `Orbits`) at sizes XS / S / M / L / XL
+- Append Tokens section: visual swatches for `spotterGlow`, `spotterChartBg` (3 swatches), `spotterLayout.chatMaxWidth`
+- Bump `spotterLayout.chatMaxWidth` 880 → 936 in `src/spotter/tokens.ts`
+- Status: ⏳ planned
+
+**Each phase ships its own commit on staging**, so progress is visible and reversible if anything misbehaves. Phase 1 lays the skeleton; phases 2–4 append sections without restructuring.
 
 ---
 
