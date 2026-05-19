@@ -18,14 +18,19 @@
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-2, 8px);
-  padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px);
-  background-color: var(--rd-sys-color-background-base);
-  border-top: 1px solid var(--rd-sys-color-border-divider);
+  /*
+   * No top padding — the chat thread should flow directly into the prompt
+   * with no visible gap, matching the real Spotter product's single-stream
+   * appearance. Sides + bottom keep breathing room for the prompt and
+   * disclaimer.
+   */
+  padding: 0 var(--spacing-4, 16px) var(--spacing-3, 12px);
+  background: transparent;
 }
 
 .promptWrapper {
   width: 100%;
-  max-width: 880px;
+  max-width: var(--spotter-chat-max-width, 936px);
 }
 
 .disclaimer {

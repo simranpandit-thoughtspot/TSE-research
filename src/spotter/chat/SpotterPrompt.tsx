@@ -100,7 +100,7 @@ export const SpotterPrompt = forwardRef<HTMLDivElement, SpotterPromptProps>(
                 aria-label="Ask"
                 aria-pressed={mode === 'ask'}
               >
-                <ChartSearchIcon size="s" />
+                <ChartSearchIcon size="m" />
               </button>
               <button
                 type="button"
@@ -110,7 +110,7 @@ export const SpotterPrompt = forwardRef<HTMLDivElement, SpotterPromptProps>(
                 aria-label="Analyze"
                 aria-pressed={mode === 'analyze'}
               >
-                <OrbitsIcon size="s" />
+                <OrbitsIcon size="l" />
               </button>
             </div>
             <span className={styles.divider} aria-hidden="true" />

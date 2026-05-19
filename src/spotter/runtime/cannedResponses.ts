@@ -33,7 +33,7 @@ const VIZ_STEPS: RichStep[] = [
       'Located 3 candidate tables: orders, products, calendar. Picked the orders → products → calendar join chain based on column overlap.',
     toolcall: {
       id: 'tc-search',
-      icon: 'spotter',
+      icon: 'database',
       title: 'Data model search',
       input: 'measures: ["sales"], dimensions: ["item type", "month"]',
       output: 'orders.amount → products.item_type → calendar.month_label (3 joins resolved)',
@@ -63,7 +63,7 @@ const REFINE_STEPS: RichStep[] = [
       'Identified 3 likely directions and want to confirm before running anything that could mislead.',
     toolcall: {
       id: 'tc-disambig',
-      icon: 'spotter',
+      icon: 'ai',
       title: 'Intent classifier',
       input: '"analyze sales for upcoming Fall and Winter"',
       output: '3 candidates: breakdown, forecast trend, both. Confidence is even — ask user.',
@@ -78,7 +78,7 @@ const SOURCES_STEPS: RichStep[] = [
     description: 'Cross-referenced the answer against active liveboards and worksheets.',
     toolcall: {
       id: 'tc-sources',
-      icon: 'spotter',
+      icon: 'search',
       title: 'Source lookup',
       input: 'topic: "customer churn", recency: 90 days',
       output: '3 sources matched: Customer churn dashboard, Account health by segment, Renewals pipeline.',
