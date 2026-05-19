@@ -95,24 +95,17 @@ export const ReasoningBlock: React.FC<ReasoningBlockProps> = ({
           aria-expanded={expanded}
           aria-label="Expand reasoning trace"
         >
-          <span className={styles.peekDotColumn}>
-            <span
-              className={styles.dot}
-              data-status={currentStep.status}
-              aria-hidden="true"
-            />
-          </span>
-          <span className={styles.peekBody}>
+          <span className={styles.peekTitleRow}>
             <span className={styles.peekTitle}>{currentStep.label}</span>
-            {currentStep.description && (
-              <span className={styles.peekDescription}>
-                {currentStep.description}
-              </span>
-            )}
+            <span className={styles.peekChevron} aria-hidden="true">
+              <Icon name="chevron-down" size="s" />
+            </span>
           </span>
-          <span className={styles.peekChevron} aria-hidden="true">
-            <Icon name="chevron-down" size="s" />
-          </span>
+          {currentStep.description && (
+            <span className={styles.peekDescription}>
+              {currentStep.description}
+            </span>
+          )}
         </button>
       ) : (
         <button
