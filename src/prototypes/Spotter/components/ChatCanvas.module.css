@@ -25,7 +25,7 @@
 
 .promptWrapper {
   width: 100%;
-  max-width: 880px;
+  max-width: var(--spotter-chat-max-width, 936px);
 }
 
 .disclaimer {
