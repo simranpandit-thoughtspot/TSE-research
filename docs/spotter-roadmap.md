@@ -1,6 +1,6 @@
 # Spotter roadmap
 
-Last updated: 2026-05-19 (showcase Phases 1 → 4 done · IA rewrite Stage A done · SpotterShell split into its own doc page · fullscreen previews + tabs added).
+Last updated: 2026-05-19 (Stage B partial — Phase 1 components shipped via parallel agents · prototype integration done · visual fidelity passes to match real product · TS brand mark consolidated to `@components/BrandMark`. Phase 2 — right-pane state machine + Analyst pages — still pending).
 
 This is the **resume-here tracker** for all Spotter work across modes. If you open one Spotter doc, open this one. It absorbs the high-level status and points to deeper references.
 
@@ -131,13 +131,41 @@ Detailed information architecture rewrite for the **standalone** Spotter page. T
 - Status: ✅ shipped in `a6392ac` on staging (2026-05-19)
 
 #### Stage B — Prototype updates to match IA
-- `src/prototypes/Spotter/index.tsx` — switch to new layout (widths, sections, settings button)
-- Add Analysts section in `SpotterPanel` (2 recent + "View all >") with hover menu
-- Add hover menu on chat items (Rename / Favorite / Share / Delete)
-- Add Settings button + menu at the bottom of the left panel
-- Wire up the right-pane state machine: chat thread / analyst landing / analyst list
-- May require new `@spotter/page` primitives for Settings menu shell — decide during Stage B based on reusability
-- Status: ⏳ next up — biggest unbuilt item
+
+Status: 🟡 **partial — Phase 1 done, Phase 2 pending**. Shipped on branch `feat/spotter-ia-stage-b` (2026-05-19). Work was fanned out across 3 parallel worktree agents for the isolated components, then integrated serially.
+
+**Phase 1 — done ✅** (`feat/spotter-ia-stage-b` head)
+
+New Spotter DS components (built by parallel agents, then merged):
+- ✅ `SettingsMenu` + `PersonalMemoryToggle` (`@spotter/page`) — popover with 6 items / 4 dividered groups; inline toggle for Personal memory
+- ✅ `ChatRowMenu` (`@spotter/page`) — hover menu on chat rows (Rename / Favorite / Share / Delete)
+- ✅ `AnalystRowMenu` (`@spotter/page`) — hover menu on analyst rows (Edit privilege-gated / Share / Make a copy / Delete)
+- ✅ `RowMenuAffordance` (internal helper in `@spotter/page`) — shared kebab-on-hover pattern
+- ✅ `ReasoningBlock` updated — single brand-blue header (current step while streaming, "Thought for X seconds" when done); semi-collapsed peek; flat layout (no card chrome); code blocks for Input/Output
+
+Prototype integration:
+- ✅ `src/prototypes/Spotter/index.tsx` — left panel reordered, "Custom spotters" → "Analysts", new mockData with `canEdit` flag
+- ✅ SettingsMenu wired with modal stubs for Spotter instructions / Spotter best practices
+- ✅ Row hover menus wired with stubbed handlers (Rename / Favorite toggle real, others no-op)
+- ✅ Width tokens (936 / 844) flowing through CSS via `--spotter-chat-max-width` / `--spotter-text-max-width` CSS vars injected at SpotterShell root
+
+Visual fidelity passes (post-integration, to match real product):
+- ✅ Avatar vertically centered with first body line (negative margin compensation)
+- ✅ Mode toggle icon sizes (ChartSearch 16, Orbits 18 — per design spec)
+- ✅ Welcome screen prompt narrower (uses `textMaxWidth = 844` instead of full 936)
+- ✅ Single content stream — no border between chat thread and sticky prompt
+- ✅ Peek description fades in/out instead of unmounting instantly
+- ✅ Toolcall icons are semantic (database / ai / search), not branded
+- ✅ TS brand mark updated to Radiant 3.0 monogram + consolidated to `@components/BrandMark` (single source of truth — was duplicated in GlobalHeader, LiveboardHeader, EditToolbar, Spotter icons)
+
+**Phase 2 — pending ⏳**
+
+- ⏳ **Right-pane state machine** in `src/prototypes/Spotter/index.tsx` — swap the binary `isEmpty ? Welcome : ChatCanvas` for a `useState<RightPaneState>('chat' | 'analyst-landing' | 'analyst-list')`. Foundation for #2 and #3.
+- ⏳ **`AnalystLandingPage`** (`@spotter/page`) — right-pane state when an analyst row is clicked. About / recent activity / recent chats with this analyst / "Start new chat" action. (Phase 2 — Agent C in the fan-out plan.)
+- ⏳ **`AnalystListPage`** (`@spotter/page`) — right-pane state when "View all >" is clicked. Full list of analysts with search / filter / sort. (Phase 2 — Agent D.)
+- ⏳ Showcase previews on `/radiant/spotter` for SettingsMenu, ChatRowMenu, AnalystRowMenu (deferred — components testable in the actual prototype today).
+
+Estimated remaining effort: state machine ~1hr, each analyst page ~2–3hrs (can run in parallel), showcase previews ~30–60min.
 
 ---
 
@@ -149,13 +177,20 @@ Detailed information architecture rewrite for the **standalone** Spotter page. T
 - ✅ Chat thread, streaming, blocks (text, viz, sources, follow-ups, refine, error)
 - ✅ Welcome state v1 (blank)
 
-**In flight (IA rewrite — 2026-05-19):**
-- ⏳ Left panel structure (title, collapse, +new, Analysts, Chats, Settings)
-- ⏳ Right-pane states (chat / analyst landing / analyst list / settings modals)
-- ⏳ Settings menu (6 items, 4 groups, mixed modal / new tab / toggle)
-- ⏳ Hover menus on chats (Rename / Favorite / Share / Delete)
-- ⏳ Hover menus on analysts (Edit privilege-gated / Share / Make a copy / Delete)
-- ⏳ Width bumps — `spotterLayout.chatMaxWidth` 880 → 936, new `textMaxWidth = 844`
+**Done in Stage B Phase 1 (2026-05-19, `feat/spotter-ia-stage-b`):**
+- ✅ Left panel structure (Analysts + Chats sections, Settings at bottom)
+- ✅ Settings menu (popover with 6 items, 4 dividered groups, inline Personal memory toggle, modal stubs)
+- ✅ Hover menus on chats (Rename / Favorite / Share / Delete)
+- ✅ Hover menus on analysts (Edit privilege-gated / Share / Make a copy / Delete)
+- ✅ Width tokens (936 / 844) — wired through CSS via `--spotter-chat-max-width` / `--spotter-text-max-width`
+- ✅ ReasoningBlock semi-collapsed-while-streaming behaviour + flat layout
+- ✅ TS brand mark refresh + consolidation (`@components/BrandMark` is the new single source of truth)
+
+**Still pending in Phase 2:**
+- ⏳ Right-pane state machine (chat / analyst landing / analyst list / settings modals)
+- ⏳ AnalystLandingPage component
+- ⏳ AnalystListPage component
+- ⏳ Showcase previews for the new components on `/radiant/spotter`
 
 **Welcome variants (design backlog):**
 - ⏳ Welcome state — returning user (design pending — Figma reference needed)
