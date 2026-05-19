@@ -28,6 +28,24 @@ export interface VersionEntry {
  */
 export const versionHistory: VersionEntry[] = [
   {
+    version: '26.5.3c',
+    date: '2026-05-19',
+    type: 'patch',
+    changes: [
+      { type: 'added', group: 'Spotter DS', component: 'Spotter DS showcase page', description: 'New /radiant/spotter page with 4 sections — Chat (UserBubble, AgentMessage, TypingIndicator, ReasoningBlock, SpotterPrompt, QuickAction, QuickActionRow), Blocks (Text, Viz, Sources, FollowUps, Refine, Error + AnswerCard placeholder), Icons (5 Spotter glyphs at XS-XL), Tokens (spotterGlow, spotterChartBg, spotterLayout swatches). Ghosted placeholders for all planned components' },
+      { type: 'added', group: 'Spotter DS', component: 'SpotterShell doc page', description: 'New /radiant/components/spottershell — peer to GlobalHeader / AppShell doc pages. Breadcrumb + title + previews for SpotterShell, SpotterLeftSide (rail+panel internals merged), SpotterWelcome (default + custom greeting via tabs), SpotterLeftToggle. SpotterShell preview uses real GlobalHeader theme="light"' },
+      { type: 'added', group: 'Spotter DS', component: 'Fullscreen previews', description: '/preview/spottershell and /preview/appshell render the shells at full viewport with no Radiant chrome. Linked from each doc page via "View fullscreen ↗"' },
+      { type: 'added', group: 'Documentation', component: 'Spotter cursor rules', description: 'Four new rules — spotter-ia.md (standalone IA: left panel structure, right-pane states, Settings menu, hover menus, exact widths), spotter-agentic-chat-ia.md (embedded Code/Viz/Model), spotter-scaffolding.md, plus Planned-components section in spotter-components.md. Spotter Requirements Gate in _orchestration.md upgraded to Q&A by mode' },
+      { type: 'added', group: 'Documentation', component: 'docs/spotter-roadmap.md', description: 'Resume-here tracker for all Spotter work — status per mode, active scope, planned components, open questions, linked docs' },
+      { type: 'modified', group: 'Sidebar', component: 'Radiant nav', description: '"Spotter" renamed to "Spotter DS"; new "SpotterShell" entry under Widgets; "New" badges removed from LiveboardHeader / GlobalHeader / AppSidebar / AppShell' },
+      { type: 'modified', group: 'Tokens', component: 'spotterLayout', description: 'chatMaxWidth 880 → 936 (matches 2026-05-19 IA spec). New textMaxWidth = 844 for text content inside the chat container' },
+      { type: 'modified', group: 'Icons', component: 'VizBlock expand button', description: 'Now uses the diagonal expand glyph (matches Figma node 852:7344) instead of the horizontal fullscreen icon. Affects every viz answer rendered in Spotter responses' },
+      { type: 'modified', group: 'Spotter logic', component: 'ReasoningBlock streaming', description: 'Three-state model documented — semi-collapsed during streaming (current step upfront, expand to see prior steps), expanded then auto-collapsing on done, settled "Thought for X seconds" trigger after 600ms' },
+      { type: 'modified', group: 'Showcase styling', component: 'Visual conventions', description: 'Spotter doc pages aligned to ComponentDocPage spec — 1000px container, 36px Plain 700 title, 20px Plain 600 section title, 32px card padding, 12px radius. No own background — inherits the sunken layout bg like other Radiant pages' },
+      { type: 'modified', group: 'Components', component: 'PreviewCard', description: 'Showcase wrapper gained useTabs (Radiant Tabs for multi-variant cards, matches GlobalHeader doc-page pattern) and fullSizeHref ("View fullscreen ↗" link) props' },
+    ],
+  },
+  {
     version: '26.5.3b',
     date: '2026-05-18',
     type: 'patch',

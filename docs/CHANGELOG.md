@@ -1,5 +1,39 @@
 # Changelog
 
+## 26.5.3c — 2026-05-19
+
+### Highlights
+
+- **Spotter design system gets its own doc surface** — new `/radiant/spotter` showcase covering chat primitives, block renderers, icons, and tokens; new `/radiant/components/spottershell` peer to the GlobalHeader / AppShell docs.
+- **Fullscreen previews** for SpotterShell and AppShell — `/preview/spottershell` and `/preview/appshell` render the shells at full viewport without Radiant chrome.
+
+### Added
+- `/radiant/spotter` Spotter DS showcase page — 4 sections (Chat, Blocks, Icons, Tokens) with static previews for every shipped Spotter component plus ghosted placeholders for planned ones (AnswerCard, Source/Model picker, Analyst components, ChatRowMenu, SettingsMenu, PersonalMemoryToggle).
+- `/radiant/components/spottershell` — dedicated SpotterShell doc page mirroring the GlobalHeader / AppShell pattern. SpotterLeftSide preview rolls SpotterRail + SpotterPanel into one card since they're internal compositions of the same component. SpotterShell preview uses real `GlobalHeader theme="light"` (matches AppShell composition).
+- "View fullscreen ↗" link on SpotterShell and AppShell doc pages — opens `/preview/spottershell` and `/preview/appshell` in a new tab. Both render at 100vh × 100vw with no Radiant chrome.
+- `PreviewCard` gained `useTabs` (Radiant Tabs for multi-variant cards) and `fullSizeHref` (fullscreen link) primitives.
+- 4 new Spotter cursor rules: `spotter-ia.md` (standalone IA — left panel, right-pane states, Settings menu, hover menus, widths), `spotter-agentic-chat-ia.md` (embedded Code/Viz/Model surfaces), `spotter-scaffolding.md` (how to create a new Spotter prototype), plus a Planned-components section in `spotter-components.md`.
+- `docs/spotter-roadmap.md` resume-here tracker with status per mode and per phase.
+
+### Fixed
+- VizBlock expand button now uses the diagonal `expand` icon (matches Figma `RzKUZMdJsNVdoVhkYmXvlI` node `852:7344`) instead of the horizontal `fullscreen` icon. Affects every viz answer rendered in Spotter responses.
+- Home page hero now reads `PLATFORM_VERSION` instead of the hardcoded `26.4.1b`.
+- Sidebar Icons badge reads `getIconCount()` (151) instead of the hardcoded `46`.
+- Design Tokens stat computes from `generateCSSVariables` + theme generators (373) instead of the hardcoded `290+`.
+- Component count includes RdModal (76 total).
+- `26.5.3` icon-sync numbers corrected: 53 → 148 unique icons (151 registry entries with 3 backward-compat aliases — settings → cog, search → magnifying-glass, refresh → sync).
+- TextBlock mock data in the showcase now includes `block.id` (was missing — caused React "missing key prop" warnings in AgentMessage previews).
+- Spotter DS page CSS aligned to ComponentDocPage conventions (1000px container, 36px title, 20px section title, 32px card padding, 12px radius) and no longer renders its own white background — picks up the sunken layout bg like other Radiant pages.
+
+### Changed
+- Sidebar: top-level "Spotter" renamed to **"Spotter DS"**; new **"SpotterShell"** entry under Widgets; "New" badges removed from LiveboardHeader / GlobalHeader / AppSidebar / AppShell.
+- `spotterLayout` tokens — `chatMaxWidth` 880 → **936** (matches 2026-05-19 IA spec); new `textMaxWidth = 844` for text content inside the chat container.
+- `ReasoningBlock` streaming behaviour tightened in `spotter-logic.md`: explicit three-state model (semi-collapsed during streaming → expanded then collapsing → settled "Thought for X seconds").
+- Spotter Requirements Gate in `_orchestration.md` upgraded from "load 3 rules" to a Q&A flow with tiered loading by surface mode (Standalone / Spotter Model / Viz / Code).
+- `spotter-scaffolding.md` example replaced placeholder `<Canvas>` / `<WelcomeState />` with copy-pasteable JSX using real component names. Added a `SpotterWelcome` prop-surface table noting `greeting` is a single ReactNode (no title/subtitle split). Added a maintainer note: on `main`/`staging`, `registry-mine.ts` stays empty.
+- 3 historical Spotter plans moved to `docs/archive/` (ds-plan, prototype-shell, chat-extraction). Active spec docs (answer-card, viz-block-behaviour) stay flat at `docs/`.
+- VizBlock showcase entry reduced from 5 chart-kind variants to a single Default line-chart preview; supported kinds mentioned in the description instead.
+
 ## 26.5.3b — 2026-05-18
 
 ### Highlights

@@ -252,7 +252,9 @@ const PromptDisabled: React.FC = () => (
 
 const ICON_SIZES = ['xs', 's', 'm', 'l', 'xl'] as const;
 
-const IconSizeRow: React.FC<{ glyph: React.ReactNode; importName: string }> = ({ glyph, importName }) => (
+type SpotterIconSize = typeof ICON_SIZES[number];
+
+const IconSizeRow: React.FC<{ glyph: React.ReactElement<{ size?: SpotterIconSize }>; importName: string }> = ({ glyph, importName }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', width: '100%' }}>
     <code style={{ fontFamily: 'var(--font-family-mono)', fontSize: 13, color: 'var(--rd-sys-color-content-secondary)', minWidth: 160 }}>
       {importName}
@@ -260,7 +262,7 @@ const IconSizeRow: React.FC<{ glyph: React.ReactNode; importName: string }> = ({
     {ICON_SIZES.map((size) => (
       <div key={size} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 28, color: 'var(--rd-sys-color-content-primary)' }}>
-          {React.cloneElement(glyph as React.ReactElement, { size })}
+          {React.cloneElement(glyph, { size })}
         </div>
         <span style={{ fontSize: 11, color: 'var(--rd-sys-color-content-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{size}</span>
       </div>

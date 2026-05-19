@@ -25,6 +25,12 @@ interface Highlight {
 
 const HIGHLIGHTS: Highlight[] = [
   {
+    title: 'Spotter design system gets its own doc surface',
+    description: 'New /radiant/spotter showcase with Chat, Blocks, Icons, and Tokens sections, plus a dedicated SpotterShell doc page peer to GlobalHeader / AppShell. Fullscreen previews land too for both SpotterShell and AppShell.',
+    version: '26.5.3c',
+    date: '2026-05-19',
+  },
+  {
     title: '/sync-upstream — feature-branch safe',
     description: 'Preview-first, with a yes/no gate before anything destructive runs. Stash includes untracked files, so new prototypes you have not committed are no longer lost. Lands on main first, then merges forward into your branch.',
     version: '26.5.3b',
@@ -69,6 +75,57 @@ const HIGHLIGHTS: Highlight[] = [
 ];
 
 const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '26.5.3c',
+    date: '2026-05-19',
+    title: 'Spotter DS showcase + SpotterShell doc page',
+    type: 'patch',
+    changes: [
+      {
+        category: 'added',
+        label: 'Spotter design system doc surfaces',
+        items: [
+          '/radiant/spotter — Spotter DS showcase with 4 sections (Chat, Blocks, Icons, Tokens). Every shipped Spotter component has a static preview; planned components (AnswerCard, Source/Model picker, Analyst components, ChatRowMenu, SettingsMenu, PersonalMemoryToggle) appear as ghosted placeholders.',
+          '/radiant/components/spottershell — dedicated SpotterShell doc page peer to GlobalHeader / AppShell. SpotterLeftSide preview rolls rail + panel into one card (they are internal compositions of the same component, not separate things). SpotterShell preview uses real GlobalHeader theme="light", matching the AppShell composition pattern.',
+          'Fullscreen previews — /preview/spottershell and /preview/appshell render the shells at 100vh × 100vw with no Radiant chrome. Linked from each doc page via "View fullscreen ↗".',
+          'PreviewCard primitives — useTabs (Radiant Tabs for multi-variant cards, matches GlobalHeader doc-page pattern) and fullSizeHref (fullscreen link).',
+        ],
+      },
+      {
+        category: 'added',
+        label: 'Spotter cursor rules + tracker',
+        items: [
+          'spotter-ia.md — standalone IA: page layout with exact 260/936/844 widths, full left-panel structure (Analysts + Chats + Settings), right-pane states (chat / analyst landing / analyst list), 6-item Settings menu with mixed modal / new-tab / toggle behaviours, hover menus on chats and analysts.',
+          'spotter-agentic-chat-ia.md — shared embedded canvas+chat IA for Spotter Model / Viz / Code surfaces.',
+          'spotter-scaffolding.md — how to create a new Spotter prototype, file layout, provider wiring, registry rules, pre-flight checklist.',
+          'docs/spotter-roadmap.md — resume-here tracker with status per Spotter mode and per phase.',
+        ],
+      },
+      {
+        category: 'fixed',
+        label: 'Icons, copy, and stats accuracy',
+        items: [
+          'VizBlock expand button now uses the diagonal expand glyph (matches Figma node 852:7344) instead of the horizontal fullscreen icon. Affects every viz answer rendered in Spotter responses.',
+          'Home page hero reads PLATFORM_VERSION instead of the hardcoded 26.4.1b.',
+          'Sidebar Icons badge reads getIconCount() (151) instead of the hardcoded 46.',
+          'Design Tokens stat computes from generateCSSVariables + theme generators (373) instead of the hardcoded 290+.',
+          'Component count now includes RdModal (76 total).',
+          'Showcase pages render on the sunken layout bg (no own white background card-in-a-card) and match ComponentDocPage typography + spacing.',
+        ],
+      },
+      {
+        category: 'changed',
+        label: 'Sidebar + tokens + conventions',
+        items: [
+          'Sidebar: "Spotter" → "Spotter DS"; new "SpotterShell" entry under Widgets; "New" badges removed from LiveboardHeader / GlobalHeader / AppSidebar / AppShell.',
+          'spotterLayout tokens — chatMaxWidth 880 → 936; new textMaxWidth = 844.',
+          'ReasoningBlock streaming behaviour documented as a three-state model (semi-collapsed during, expanded → collapsing on done, settled "Thought for X seconds" trigger).',
+          'Spotter Requirements Gate in _orchestration.md upgraded to a mode-based Q&A flow with tiered rule loading.',
+          '3 historical Spotter plans moved to docs/archive/.',
+        ],
+      },
+    ],
+  },
   {
     version: '26.5.3b',
     date: '2026-05-18',
