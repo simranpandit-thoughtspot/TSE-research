@@ -1,6 +1,6 @@
 # Spotter roadmap
 
-Last updated: 2026-05-19 (Standalone Spotter IA rewrite initiative added; showcase Phase 1 + Phase 2 marked done; CSS aligned to ComponentDocPage conventions).
+Last updated: 2026-05-19 (showcase Phases 1 → 4 done · IA rewrite Stage A done · SpotterShell split into its own doc page · fullscreen previews + tabs added).
 
 This is the **resume-here tracker** for all Spotter work across modes. If you open one Spotter doc, open this one. It absorbs the high-level status and points to deeper references.
 
@@ -65,23 +65,29 @@ A single library-level reference page that previews every Spotter component in o
 
 #### Phase 2 — Blocks section ✅
 - Appended Blocks section to the page
-- Components: `TextBlock` (short / long), `VizBlock` (line / bar / pie / table / empty), `SourcesBlock`, `FollowUpsBlock`, `RefineBlock`, `ErrorBlock`
+- Components: `TextBlock` (short / long), `VizBlock` (line/bar/pie/table/empty supported; previewed as Default with line chart), `SourcesBlock`, `FollowUpsBlock`, `RefineBlock`, `ErrorBlock`
 - Ghosted placeholder for `AnswerCard` linking to its spec doc
 - Visual style aligned to `ComponentDocPage.tsx` conventions (1000px container, 36px title, 20px section title, 32px card padding, 12px radius)
-- Showcase root now wrapped in `SpotterChatProvider mode="canned"` so blocks that call `useSpotterChat()` (RefineBlock, FollowUpsBlock) render correctly
+- Showcase root wrapped in `SpotterChatProvider mode="canned"` so blocks that call `useSpotterChat()` (RefineBlock, FollowUpsBlock) render correctly
+- Block ids added to mock data (TextBlock mocks were missing `id`, causing React key warnings)
 - Status: ✅ shipped (2026-05-19)
 
-#### Phase 3 — Page shell section
-- Append Shell section
-- Components: `SpotterShell`, `SpotterLeftSide` (rail mode / panel mode), `SpotterRail` + `SpotterRailItem`, `SpotterPanel` + `SpotterPanelSection` + `SpotterPanelItem` + `SpotterPanelAction`, `SpotterWelcome` (default greeting / custom greeting), `SpotterLeftToggle`
-- Ghosted placeholder for topbar variants
-- Status: ⏳ planned
+#### Phase 3 — Page shell section ✅ → moved to its own page
+- Appended Shell section initially with: `SpotterShell`, `SpotterLeftSide`, `SpotterRail` + `SpotterRailItem`, `SpotterPanel` + sections + items + action, `SpotterWelcome`, `SpotterLeftToggle`, ghosted topbar
+- **2026-05-19 follow-up:** moved page-shell content out of the Spotter DS showcase into its own dedicated doc page at **`/radiant/components/spottershell`** — peer to `/radiant/components/globalheader` / `/appshell` etc.
+- The Spotter DS showcase's `#shell` section is now a single "Go to SpotterShell →" reference link
+- Sidebar updated: top-level "Spotter" entry renamed to **"Spotter DS"**; new **"SpotterShell"** entry added under Widgets; "New" badges removed from LiveboardHeader / GlobalHeader / AppSidebar / AppShell since they've been around a while
+- SpotterShell preview now uses real `GlobalHeader theme="light"` (matches AppShell pattern of header + left side + canvas)
+- `PreviewCard` gained a `useTabs` prop (Radiant Tabs for multi-variant cards, matching GlobalHeader doc-page pattern) and a `fullSizeHref` prop ("View fullscreen ↗" link)
+- New fullscreen routes (no Radiant chrome): **`/preview/spottershell`** and **`/preview/appshell`**
+- SpotterRail + SpotterPanel cards merged into the single `SpotterLeftSide` card (they're internal compositions of one component, not separate things)
+- Status: ✅ shipped (2026-05-19)
 
-#### Phase 4 — Icons, Tokens
-- Append Icons section: 5 Spotter-local icons (`PanelToggle`, `Bell`, `ThoughtSpotMark`, `ChartSearch`, `Orbits`) at sizes XS / S / M / L / XL
-- Append Tokens section: visual swatches for `spotterGlow`, `spotterChartBg` (3 swatches), `spotterLayout.chatMaxWidth`, `spotterLayout.textMaxWidth`
-- Token values themselves are bumped in the **Standalone Spotter IA rewrite** initiative (Stage A), not here — this phase only visualises them
-- Status: ⏳ planned
+#### Phase 4 — Icons, Tokens ✅
+- Icons section appended: 5 Spotter-local icons (`PanelToggle`, `Bell`, `ThoughtSpotMark`, `ChartSearch`, `Orbits`) rendered at sizes XS / S / M / L / XL per row
+- Tokens section appended: visual swatches for `spotterGlow` (radial gradient), `spotterChartBg` (3 role-based swatches), `spotterLayout` (chatMaxWidth + textMaxWidth shown as proportional bars)
+- Token values themselves were already bumped in the Standalone IA rewrite (Stage A) — Phase 4 reads them via imports so the swatches always reflect current values
+- Status: ✅ shipped (2026-05-19)
 
 **Each phase ships its own commit on staging**, so progress is visible and reversible if anything misbehaves. Phase 1 lays the skeleton; phases 2–4 append sections without restructuring.
 
@@ -117,12 +123,12 @@ Detailed information architecture rewrite for the **standalone** Spotter page. T
 
 **Stages:**
 
-#### Stage A — Docs + tokens (Stage A first, B follows after review)
+#### Stage A — Docs + tokens ✅
 - `.cursor/rules/spotter-ia.md` — major expansion: page layout with exact widths, left panel (Analysts / Chats / Settings), right-pane states, hover menus, settings menu mapping
-- `.cursor/rules/spotter-components.md` — add 7 new planned components (see Planned components summary below)
-- `.cursor/rules/spotter-logic.md` — tighten ReasoningBlock semi-collapsed-while-streaming behavior
-- `src/spotter/tokens.ts` — bump `spotterLayout.chatMaxWidth` 880 → 936; add `spotterLayout.textMaxWidth = 844`
-- Status: ⏳ ready to start
+- `.cursor/rules/spotter-components.md` — added 7 new planned components (AnalystCard, AnalystRowMenu, AnalystLandingPage, AnalystListPage, ChatRowMenu, SettingsMenu, PersonalMemoryToggle); consolidated overlapping Source/Model picker entries
+- `.cursor/rules/spotter-logic.md` — tightened ReasoningBlock semi-collapsed-while-streaming behavior
+- `src/spotter/tokens.ts` — bumped `spotterLayout.chatMaxWidth` 880 → 936; added `spotterLayout.textMaxWidth = 844`
+- Status: ✅ shipped in `a6392ac` on staging (2026-05-19)
 
 #### Stage B — Prototype updates to match IA
 - `src/prototypes/Spotter/index.tsx` — switch to new layout (widths, sections, settings button)
@@ -131,7 +137,7 @@ Detailed information architecture rewrite for the **standalone** Spotter page. T
 - Add Settings button + menu at the bottom of the left panel
 - Wire up the right-pane state machine: chat thread / analyst landing / analyst list
 - May require new `@spotter/page` primitives for Settings menu shell — decide during Stage B based on reusability
-- Status: ⏳ blocked on Stage A
+- Status: ⏳ next up — biggest unbuilt item
 
 ---
 
