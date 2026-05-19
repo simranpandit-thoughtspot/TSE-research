@@ -87,43 +87,36 @@ export const ReasoningBlock: React.FC<ReasoningBlockProps> = ({
 
   return (
     <div className={styles.reasoning}>
-      {showSemiCollapsedPeek ? (
-        <button
-          type="button"
-          className={styles.peek}
-          onClick={handleToggle}
-          aria-expanded={expanded}
-          aria-label="Expand reasoning trace"
-        >
-          <span className={styles.peekTitleRow}>
-            <span className={styles.peekTitle}>{currentStep.label}</span>
-            <span className={styles.peekChevron} aria-hidden="true">
-              <Icon name="chevron-down" size="s" />
-            </span>
-          </span>
-          {currentStep.description && (
-            <span className={styles.peekDescription}>
-              {currentStep.description}
-            </span>
-          )}
-        </button>
-      ) : (
-        <button
-          type="button"
-          className={styles.trigger}
-          data-expanded={expanded}
-          onClick={handleToggle}
-          aria-expanded={expanded}
-        >
-          <span>
-            {isDoneSettled && reasoning.durationSeconds !== undefined
-              ? `Thought for ${reasoning.durationSeconds} seconds`
-              : 'Show work'}
-          </span>
-          <span className={styles.chevron} data-expanded={expanded}>
-            <Icon name="chevron-down" size="s" />
-          </span>
-        </button>
+      {/*
+        Unified brand-blue header. Text varies by state — current step
+        label while streaming, "Thought for X seconds" once settled.
+        Chevron flips based on expanded.
+      */}
+      <button
+        type="button"
+        className={styles.header}
+        onClick={handleToggle}
+        aria-expanded={expanded}
+        aria-label={expanded ? 'Collapse reasoning trace' : 'Expand reasoning trace'}
+      >
+        <span className={styles.headerTitle}>
+          {isDoneSettled && reasoning.durationSeconds !== undefined
+            ? `Thought for ${reasoning.durationSeconds} seconds`
+            : currentStep?.label ?? 'Show work'}
+        </span>
+        <span className={styles.headerChevron} data-expanded={expanded} aria-hidden="true">
+          <Icon name="chevron-down" size="s" />
+        </span>
+      </button>
+      {/*
+        Peek body — current step description with a left guideline.
+        Shown only while streaming + collapsed (the semi-collapsed peek
+        state). Click bubbles up through the parent button.
+      */}
+      {showSemiCollapsedPeek && currentStep.description && (
+        <p className={styles.peekDescription}>
+          {currentStep.description}
+        </p>
       )}
       {/*
         Steps container stays MOUNTED. Visibility flips via `data-expanded`
@@ -185,6 +178,11 @@ const StepRow: React.FC<StepRowProps> = ({ step, isLast, animationDelay }) => {
   );
 };
 
+const looksLikeJson = (s: string): boolean => {
+  const trimmed = s.trimStart();
+  return trimmed.startsWith('{') || trimmed.startsWith('[');
+};
+
 // ---------- ToolcallCard ----------
 
 const ToolcallCard: React.FC<{ toolcall: ReasoningToolCall }> = ({ toolcall }) => {
@@ -216,14 +214,19 @@ const ToolcallCard: React.FC<{ toolcall: ReasoningToolCall }> = ({ toolcall }) =
         <div className={styles.toolcallBody} data-open={open}>
           {toolcall.input !== undefined && (
             <div className={styles.toolcallSection}>
-              <span className={styles.toolcallLabel}>Input</span>
-              <p className={styles.toolcallValue}>{toolcall.input}</p>
+              <span className={styles.toolcallLabel}>Input:</span>
+              <pre className={styles.toolcallValue}>{toolcall.input}</pre>
             </div>
           )}
           {toolcall.output !== undefined && (
             <div className={styles.toolcallSection}>
-              <span className={styles.toolcallLabel}>Output</span>
-              <p className={styles.toolcallValue}>{toolcall.output}</p>
+              <span className={styles.toolcallLabel}>Output:</span>
+              <pre className={styles.toolcallValue}>
+                {looksLikeJson(toolcall.output) && (
+                  <span className={styles.toolcallValueLang}>JSON</span>
+                )}
+                {toolcall.output}
+              </pre>
             </div>
           )}
         </div>

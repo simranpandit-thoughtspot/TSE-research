@@ -36,7 +36,7 @@
   align-items: center;
   gap: var(--spacing-6, 24px);
   width: 100%;
-  max-width: var(--spotter-chat-max-width, 936px);
+  max-width: var(--spotter-text-max-width, 844px);
 }
 
 .greeting {
