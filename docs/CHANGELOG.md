@@ -1,5 +1,41 @@
 # Changelog
 
+## 26.5.3d — 2026-05-19
+
+### Highlights
+
+- **ThoughtSpot brand mark refresh** — new Radiant 3.0 monogram (4-path geometric mark with bars + "T" hook + dot) replaces the older wordmark across `GlobalHeader`, `LiveboardHeader`, `EditToolbar`, and the Spotter showcase.
+- **Spotter Standalone IA — Stage B Phase 1** — Analysts section in the left panel (replaces "Custom spotters"), Settings popover at the bottom (6 items in 4 dividered groups, inline Personal memory toggle), hover row menus on both chats and analysts.
+- **Spotter chat surface polish** — flat reasoning layout matching the real product (no card chrome), code-block-styled tool I/O, single content stream (no separator between chat thread and prompt), eased peek-description transitions.
+- **`@components/BrandMark`** — new single source of truth for the TS brand mark; the SVG paths were previously duplicated in 4 files.
+
+### Added
+- `src/components/BrandMark/BrandMark.tsx` — canonical TS brand mark. Props: `pixelSize`, `color` (defaults to `currentColor`), `className`, aria props. Renders the 4-path Radiant 3.0 monogram at viewBox `0 0 47.4216 48`.
+- `src/spotter/page/SettingsMenu.tsx` + `PersonalMemoryToggle.tsx` — popover Settings menu opened from a trigger (uses Radiant `Popover` with `children` as the trigger). 6 items in 4 dividered groups: Spotter instructions (modal) · Usage monitoring + Admin settings (external) · Manage memory sources (external) + Personal memory (inline toggle) · Spotter best practices (modal).
+- `src/spotter/page/ChatRowMenu.tsx` + `AnalystRowMenu.tsx` — hover-triggered row menus. ChatRow: Rename / Favorite / Share / Delete. AnalystRow: Edit (privilege-gated) / Share / Make a copy / Delete. Built on Radiant `ActionMenu` for keyboard + click-outside.
+- `src/spotter/page/RowMenuAffordance.tsx` — internal helper for the shared hover-affordance pattern (kebab fades in on row hover / focus-within / menu-open).
+
+### Fixed
+- `ReasoningBlock` peek (streaming + semi-collapsed): brand-blue inline title with chevron + description below with a thin left guideline. Was a bordered card with dot column. Now matches the real product.
+- `ReasoningBlock` expanded view: dropped the card border around the steps list — steps now flow as a plain dot column.
+- `ReasoningBlock` header: unified into a single brand-blue button. Text shows the current step label while streaming, "Thought for X seconds" once settled. Chevron rotates on expand.
+- `ReasoningBlock` toolcall I/O: Input/Output values render as proper code blocks — monospace, `background-subtle`, rounded, generous padding. Labels changed from UPPERCASE letterspaced to sentence-case "Input:" / "Output:". JSON output gets a language hint.
+- `ReasoningBlock` peek description: fades out (opacity + max-height + guideline) instead of unmounting instantly when streaming ends.
+- `AgentMessage`: avatar centers vertically with the first body line (negative margin compensates for the 32px avatar vs 20px text-line center offset).
+- `SpotterPrompt` mode toggle: ChartSearch at `size="m"` (16px), Orbits at `size="l"` (18px) — per design spec.
+- `ChatCanvas` `.promptArea`: dropped `border-top` and opaque background; dropped top padding. Chat thread now flows into the sticky prompt as one continuous stream.
+- `SpotterWelcome` content width: uses `--spotter-text-max-width` (844) instead of inheriting the wider chat-active 936.
+- Width tokens (`chatMaxWidth = 936`, `textMaxWidth = 844`) now actually flow through `ChatThread`, `SpotterPrompt`, `ChatCanvas` `promptWrapper`, and `SpotterWelcome` via `--spotter-chat-max-width` / `--spotter-text-max-width` CSS vars injected at the `SpotterShell` root.
+- Toolcall icons in `cannedResponses` now use semantic Radiant glyphs (`database`, `ai`, `search`) instead of the generic `spotter` sparkle.
+- TS brand mark SVG updated to Radiant 3.0 — was the older wordmark with a single composite path; now four geometric paths.
+
+### Changed
+- `GlobalHeader`, `LiveboardHeader`, `EditToolbar` all now import `<BrandMark />` from `@components/BrandMark` instead of inlining their own SVG.
+- `@spotter/icons` `ThoughtSpotMark` is now a deprecated alias for `BrandMark` (kept for backwards compatibility with the Spotter showcase).
+- `src/prototypes/Spotter/index.tsx` — left panel reordered. "Custom spotters" section renamed to **Analysts** (matches the IA spec — analyst = custom AI agent, separate from data model). Dropped the "Spotter (Default)" row. "View library" → "View all >". Settings button at the bottom now opens `SettingsMenu`. Chat and analyst rows wrapped in their respective hover menus.
+- `src/prototypes/Spotter/data/mockData.ts` — `customSpotters` → `analysts` with a `canEdit` flag per row.
+- `docs/spotter-roadmap.md` — Stage B Phase 1 marked done, Phase 2 (right-pane state machine + Analyst pages) listed as pending.
+
 ## 26.5.3c — 2026-05-19
 
 ### Highlights
