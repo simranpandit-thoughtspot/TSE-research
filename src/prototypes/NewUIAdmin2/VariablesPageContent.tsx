@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { systemColors, rdComponentColors } from '../../tokens/colors';
-import { RdModal } from '@components/RdModal';
+import { Modal, ModalFooter } from '@components/Modal';
+import { Button } from '@components/Button';
 import { Toast } from '@components/Toast';
 import { ConfirmDialog } from './ConfirmDialog';
 
@@ -415,23 +416,66 @@ export const VariablesPageContent: React.FC = () => {
 
       {/* ── Create Variable modal — Step 1 ── */}
       {createOpen && createStep === 1 && (
-        <RdModal size="M2" eyebrow="Create Variable" title="Add variable details" currentStep={1} totalSteps={2} onClose={closeCreate} tertiaryLabel="Cancel" onTertiary={closeCreate} confirmLabel="Next" onConfirm={handleCreateNext}>
+        <Modal
+          isOpen
+          size="M2"
+          type="wizard"
+          eyebrow="Create Variable"
+          title="Add variable details"
+          currentStep={1}
+          totalSteps={2}
+          onClose={closeCreate}
+          footer={
+            <ModalFooter
+              tertiaryAction={<Button variant="tertiary" onClick={closeCreate}>Cancel</Button>}
+              primaryAction={<Button variant="primary" onClick={handleCreateNext}>Next</Button>}
+            />
+          }
+        >
           {createStep1Content}
-        </RdModal>
+        </Modal>
       )}
 
       {/* ── Create Variable modal — Step 2 ── */}
       {createOpen && createStep === 2 && (
-        <RdModal size="M2" eyebrow="Create Variable" title="Assign values" currentStep={2} totalSteps={2} onClose={closeCreate} tertiaryLabel="Cancel" onTertiary={closeCreate} cancelLabel="Back" onCancel={() => setCreateStep(1)} confirmLabel="Save" onConfirm={handleCreateSave}>
+        <Modal
+          isOpen
+          size="M2"
+          type="wizard"
+          eyebrow="Create Variable"
+          title="Assign values"
+          currentStep={2}
+          totalSteps={2}
+          onClose={closeCreate}
+          footer={
+            <ModalFooter
+              tertiaryAction={<Button variant="tertiary" onClick={closeCreate}>Cancel</Button>}
+              secondaryAction={<Button variant="secondary" onClick={() => setCreateStep(1)}>Back</Button>}
+              primaryAction={<Button variant="primary" onClick={handleCreateSave}>Save</Button>}
+            />
+          }
+        >
           <OrgMappingForm rows={createRows} error={createOrgError} onUpdate={updateCreateRow} onRemove={(id) => setCreateRows(p => p.filter(r => r.id !== id))} onAdd={() => setCreateRows(p => [...p, { id: rowIdCounter++, org: '', value: '' }])} onDismissError={() => setCreateOrgError('')} />
-        </RdModal>
+        </Modal>
       )}
 
       {/* ── Edit Variable modal ── */}
       {editVar && (
-        <RdModal size="M2" eyebrow="Edit Variable" title="Assign values" onClose={closeEdit} tertiaryLabel="Cancel" onTertiary={closeEdit} confirmLabel="Save" onConfirm={handleEditSave}>
+        <Modal
+          isOpen
+          size="M2"
+          eyebrow="Edit Variable"
+          title="Assign values"
+          onClose={closeEdit}
+          footer={
+            <ModalFooter
+              tertiaryAction={<Button variant="tertiary" onClick={closeEdit}>Cancel</Button>}
+              primaryAction={<Button variant="primary" onClick={handleEditSave}>Save</Button>}
+            />
+          }
+        >
           <OrgMappingForm rows={editRows} error={editOrgError} onUpdate={updateEditRow} onRemove={(id) => setEditRows(p => p.filter(r => r.id !== id))} onAdd={() => setEditRows(p => [...p, { id: rowIdCounter++, org: '', value: '' }])} onDismissError={() => setEditOrgError('')} />
-        </RdModal>
+        </Modal>
       )}
 
       {/* ── Delete confirm ── */}
@@ -448,7 +492,18 @@ export const VariablesPageContent: React.FC = () => {
 
       {/* ── Rename modal ── */}
       {renameVar && (
-        <RdModal size="M1" title="Rename Variable" onClose={closeRename} cancelLabel="Cancel" onCancel={closeRename} confirmLabel="Save" onConfirm={handleRenameSave}>
+        <Modal
+          isOpen
+          size="M1"
+          title="Rename Variable"
+          onClose={closeRename}
+          footer={
+            <ModalFooter
+              secondaryAction={<Button variant="secondary" onClick={closeRename}>Cancel</Button>}
+              primaryAction={<Button variant="primary" onClick={handleRenameSave}>Save</Button>}
+            />
+          }
+        >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <p style={{ margin: 0, fontSize: '13.5px', color: '#374151', fontFamily: font }}>
               Enter a new name for the variable.
@@ -470,7 +525,7 @@ export const VariablesPageContent: React.FC = () => {
               />
             </div>
           </div>
-        </RdModal>
+        </Modal>
       )}
 
       {/* ── Sticky header ── */}

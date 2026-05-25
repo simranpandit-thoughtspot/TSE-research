@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { systemColors } from '../../tokens/colors';
 import { ConfirmDialog } from './ConfirmDialog';
-import { RdModal } from '@components/RdModal';
+import { Modal, ModalFooter } from '@components/Modal';
+import { Button } from '@components/Button';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -294,19 +295,22 @@ const SetupWizardModal: React.FC<{
   });
 
   return (
-    <RdModal
+    <Modal
+      isOpen
       size="M2"
+      type="wizard"
       eyebrow="Version control"
       title={step === 1 ? 'Enter GitHub credentials' : 'Select a branch'}
       currentStep={step}
       totalSteps={2}
       onClose={onClose}
-      tertiaryLabel="Cancel"
-      onTertiary={onClose}
-      cancelLabel="Back"
-      onCancel={step === 2 ? () => setStep(1) : undefined}
-      confirmLabel={step === 1 ? 'Next' : 'Enable'}
-      onConfirm={step === 1 ? handleNext : onComplete}
+      footer={
+        <ModalFooter
+          tertiaryAction={<Button variant="tertiary" onClick={onClose}>Cancel</Button>}
+          secondaryAction={step === 2 ? <Button variant="secondary" onClick={() => setStep(1)}>Back</Button> : undefined}
+          primaryAction={<Button variant="primary" onClick={step === 1 ? handleNext : onComplete}>{step === 1 ? 'Next' : 'Enable'}</Button>}
+        />
+      }
     >
       <div style={{ minHeight: '260px' }}>
         {step === 1 && (
@@ -424,7 +428,7 @@ const SetupWizardModal: React.FC<{
           </div>
         )}
       </div>
-    </RdModal>
+    </Modal>
   );
 };
 
@@ -457,17 +461,21 @@ const EditCredentialsModal: React.FC<{ onClose: () => void }> = ({ onClose }) =>
   });
 
   return (
-    <RdModal
+    <Modal
+      isOpen
       size="M2"
+      type="wizard"
       eyebrow="Version control"
       title="Enter GitHub credentials"
       currentStep={1}
       totalSteps={2}
       onClose={onClose}
-      tertiaryLabel="Cancel"
-      onTertiary={onClose}
-      confirmLabel="Next"
-      onConfirm={handleNext}
+      footer={
+        <ModalFooter
+          tertiaryAction={<Button variant="tertiary" onClick={onClose}>Cancel</Button>}
+          primaryAction={<Button variant="primary" onClick={handleNext}>Next</Button>}
+        />
+      }
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
@@ -530,7 +538,7 @@ const EditCredentialsModal: React.FC<{ onClose: () => void }> = ({ onClose }) =>
           />
         </div>
       </div>
-    </RdModal>
+    </Modal>
   );
 };
 

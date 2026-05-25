@@ -4,7 +4,8 @@ import type { AppSidebarProps, SidebarTab, SidebarCategory, ScopeToggle } from '
 import type { GlobalHeaderProps } from '../../components/GlobalHeader';
 import { systemColors, referenceColors } from '../../tokens/colors';
 import { ConfirmDialog } from './ConfirmDialog';
-import { RdModal } from '@components/RdModal';
+import { Modal, ModalFooter } from '@components/Modal';
+import { Button } from '@components/Button';
 
 const font = '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 const brand = systemColors.light['content-brand'];
@@ -598,14 +599,17 @@ const AddNewFontModal: React.FC<{ onClose: () => void; onConfirm: () => void }> 
   };
 
   return (
-    <RdModal
+    <Modal
+      isOpen
       size="M1"
       title="Add new font"
       onClose={onClose}
-      cancelLabel="Cancel"
-      onCancel={onClose}
-      confirmLabel="Add"
-      onConfirm={onConfirm}
+      footer={
+        <ModalFooter
+          secondaryAction={<Button variant="secondary" onClick={onClose}>Cancel</Button>}
+          primaryAction={<Button variant="primary" onClick={onConfirm}>Add</Button>}
+        />
+      }
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {/* Upload field */}
@@ -647,7 +651,7 @@ const AddNewFontModal: React.FC<{ onClose: () => void; onConfirm: () => void }> 
           </span>
         )}
       </div>
-    </RdModal>
+    </Modal>
   );
 };
 
@@ -695,15 +699,18 @@ const CustomiseHomepageModal: React.FC<{
     Library: 'library', Trending: 'trending', Learning: 'learning', Favourites: 'favourites',
   };
   return (
-    <RdModal
+    <Modal
+      isOpen
       size="M1"
       title="Customise homepage"
       onClose={onClose}
-      tertiaryLabel="Reset to default"
-      cancelLabel="Cancel"
-      onCancel={onClose}
-      confirmLabel="Done"
-      onConfirm={onClose}
+      footer={
+        <ModalFooter
+          tertiaryAction={<Button variant="tertiary">Reset to default</Button>}
+          secondaryAction={<Button variant="secondary" onClick={onClose}>Cancel</Button>}
+          primaryAction={<Button variant="primary" onClick={onClose}>Done</Button>}
+        />
+      }
     >
       <div style={{ border: '1px solid #E5E7EB', borderRadius: '8px', overflow: 'hidden' }}>
         {HOMEPAGE_ITEMS_ORDER.map((label, i) => {
@@ -728,7 +735,7 @@ const CustomiseHomepageModal: React.FC<{
           );
         })}
       </div>
-    </RdModal>
+    </Modal>
   );
 };
 
@@ -935,14 +942,17 @@ const HelpMenuItemModal: React.FC<{
   );
 
   return (
-    <RdModal
+    <Modal
+      isOpen
       size="M2"
       title={mode === 'add' ? 'Add menu item' : 'Edit menu item'}
       onClose={onClose}
-      cancelLabel="Cancel"
-      onCancel={onClose}
-      confirmLabel="Save"
-      onConfirm={onSave}
+      footer={
+        <ModalFooter
+          secondaryAction={<Button variant="secondary" onClick={onClose}>Cancel</Button>}
+          primaryAction={<Button variant="primary" onClick={onSave}>Save</Button>}
+        />
+      }
     >
       <div>
         {/* Menu item list label */}
@@ -999,7 +1009,7 @@ const HelpMenuItemModal: React.FC<{
           </div>
         ))}
       </div>
-    </RdModal>
+    </Modal>
   );
 };
 
@@ -1583,15 +1593,22 @@ export const CustomisationPageContent: React.FC<{ scope?: 'all-orgs' | 'primary-
       )}
 
       {editAlertModal && (
-        <RdModal size="sm" title="Edit alert banner" onClose={() => setEditAlertModal(false)}>
+        <Modal
+          isOpen
+          size="M1"
+          title="Edit alert banner"
+          onClose={() => setEditAlertModal(false)}
+          footer={
+            <ModalFooter
+              secondaryAction={<Button variant="secondary" onClick={() => setEditAlertModal(false)}>Cancel</Button>}
+              primaryAction={<Button variant="primary" onClick={() => { setBannerConfigured(true); setEditAlertModal(false); showSettingsToast(); }}>Save</Button>}
+            />
+          }
+        >
           <div style={{ padding: '16px 0' }}>
             <p style={{ margin: 0, fontSize: 14, color: '#6B7280', fontFamily: font }}>Configure your custom alert banner message and appearance.</p>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, paddingTop: 16, borderTop: '1px solid #F3F4F6' }}>
-            <button onClick={() => setEditAlertModal(false)} style={{ padding: '8px 16px', border: '1px solid #E5E7EB', borderRadius: 8, background: '#fff', cursor: 'pointer', fontFamily: font, fontSize: 14 }}>Cancel</button>
-            <button onClick={() => { setBannerConfigured(true); setEditAlertModal(false); showSettingsToast(); }} style={{ padding: '8px 16px', border: 'none', borderRadius: 8, background: '#2770EF', color: '#fff', cursor: 'pointer', fontFamily: font, fontSize: 14, fontWeight: 600 }}>Save</button>
-          </div>
-        </RdModal>
+        </Modal>
       )}
 
       {addFontModal && (

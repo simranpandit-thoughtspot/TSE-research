@@ -1,5 +1,6 @@
 import React from 'react';
-import { RdModal } from '@components/RdModal';
+import { Modal, ModalFooter } from '@components/Modal';
+import { Button } from '@components/Button';
 
 // ─── ConfirmDialog ─────────────────────────────────────────────────────────────
 // Simple yes/no confirmation modal built on top of RdModal.
@@ -20,14 +21,17 @@ export const ConfirmDialog: React.FC<{
   confirmLabel = 'Yes',
   cancelLabel = 'No',
 }) => (
-  <RdModal
+  <Modal
+    isOpen
     size="M1"
     title={title}
     onClose={onCancel}
-    cancelLabel={cancelLabel}
-    onCancel={onCancel}
-    confirmLabel={confirmLabel}
-    onConfirm={onConfirm}
+    footer={
+      <ModalFooter
+        secondaryAction={<Button variant="secondary" onClick={onCancel}>{cancelLabel}</Button>}
+        primaryAction={<Button variant="primary" onClick={onConfirm}>{confirmLabel}</Button>}
+      />
+    }
   >
     <div style={{
       fontSize: '14px', color: '#374151', lineHeight: 1.65,
@@ -35,7 +39,7 @@ export const ConfirmDialog: React.FC<{
     }}>
       {message}
     </div>
-  </RdModal>
+  </Modal>
 );
 
 export default ConfirmDialog;
