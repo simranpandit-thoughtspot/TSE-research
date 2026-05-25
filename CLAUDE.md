@@ -61,11 +61,29 @@ npm run new-prototype  # Scaffold a new prototype
 
 `@components/*` is the **Radiant DS** — product-agnostic primitives. `@spotter/*` is the **Spotter DS** — agentic-domain blocks (chat, answers, viz, page shell) built on top of Radiant. Same conventions apply (tokens only, sentence case, layout primitives) but Spotter components encode AI-flavoured patterns.
 
-When working on Spotter surfaces, the orchestrator auto-loads `.cursor/rules/spotter-components.md`, `spotter-logic.md`, and `spotter-response-style.md`. Plans live at:
-- `docs/2026-05-07-spotter-prototype-shell.md` — shell + welcome
-- `docs/2026-05-07-spotter-chat-extraction.md` — chat extraction + state machine
-- `docs/2026-05-07-spotter-viz-block-behaviour.md` — VizBlock slot model
-- `docs/2026-05-07-spotter-answer-card.md` — AnswerCard spec (VizBlock is the current stand-in)
+When working on Spotter surfaces, the orchestrator auto-loads the Spotter cursor rules. For a new Spotter prototype the orchestrator runs a Requirements Gate first (mode / welcome state / data). See `.cursor/rules/_orchestration.md` → Spotter Requirements Gate.
+
+**Spotter modes:**
+- **Standalone Spotter** — full-page agentic chat (`src/prototypes/Spotter/`)
+- **Spotter Model (embedded)** — canvas + chat for data-model editing (`DataModelEditor`)
+- **Spotter Viz (embedded)** — canvas + chat for dashboard generation (planned)
+- **Spotter Code (embedded)** — canvas + chat for code generation in an IDE-like surface (planned)
+
+**Resume-here tracker:** `docs/spotter-roadmap.md` — status per mode, active scope, planned components.
+
+**Active spec docs** (top of `docs/`):
+- `docs/2026-05-07-spotter-answer-card.md` — AnswerCard spec (unbuilt; VizBlock is the current stand-in)
+- `docs/2026-05-07-spotter-viz-block-behaviour.md` — VizBlock slot model and behaviour
+
+**Archived plans** (work is done — under `docs/archive/`): `spotter-ds-plan`, `spotter-prototype-shell`, `spotter-chat-extraction`.
+
+## Docs and planning conventions
+
+- **Topical folders in `docs/`:** Topics with **3+ related docs** earn their own subfolder (e.g. `collaboration/`, `testing/`, `archive/`). Topics with 1–2 docs stay flat at `docs/`.
+- **Date prefixes (`YYYY-MM-DD-*.md`)** apply to active planning / spec docs and capture the date of the **last meaningful update** — rename to today's date on every substantive edit so the filename reflects current state.
+- **Roadmap / status docs** (like `spotter-roadmap.md`) carry a `Last updated:` line at the top instead of a date in the filename. Bump it on every meaningful edit.
+- **Historical plans** (work done, content frozen) move to `docs/archive/` and keep their original date prefix.
+- **Plan docs are gitignored by default** (per `.gitignore` pattern `docs/*plan*.md`) — historical plans get tracked once moved to archive.
 
 ## Project Structure
 

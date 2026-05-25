@@ -133,3 +133,80 @@ To add a new block kind:
 When you change a Spotter DS component, that change ripples to every
 consumer. When you change a prototype-local component (like
 `ChatCanvas`), only the Spotter prototype is affected.
+
+---
+
+## Planned components (not yet in code)
+
+Components that need to exist for Spotter prototypes but aren't built yet. Figma-first workflow: spec in Figma → add a Code Connect mapping → implement.
+
+Statuses: `design` (Figma in progress) → `figma-ready` (Figma done, code not started) → `in-progress` (code being written) → `built` (move out of this section into the inventory above).
+
+### AnswerCard
+- **Status:** design (Figma spec exists)
+- **Purpose:** The answer view that renders inside a chat thread when Spotter responds with a viz-backed answer. VizBlock is the current stand-in.
+- **Figma:** node `122:15399` (`Card / Answer`) in the AI Design System & Style Guidelines file
+- **Spec doc:** `docs/2026-05-07-spotter-answer-card.md`
+- **Will live at:** `src/spotter/answer/AnswerCard.tsx`
+
+### Model picker (full)
+- **Status:** design pending
+- **Purpose:** Richer data-model selection than the prompt's inline picker — recently used, search, model metadata. The current `SpotterPrompt` has a minimal dropdown. Consolidates the previously-listed "Source picker" (data sources and data models are the same concept here).
+- **Will live at:** `src/spotter/chat/ModelPicker.tsx` (tentative)
+
+### AnalystCard
+- **Status:** design pending
+- **Purpose:** Row item shown in the left-pane **Analysts** section (avatar + name + hover affordance for the row menu). Also reused inside `AnalystListPage` as the row primitive.
+- **Note:** Analyst ≠ data model. An analyst is a custom AI agent; a data model is a data source.
+- **Will live at:** `src/spotter/page/AnalystCard.tsx` (tentative)
+
+### AnalystRowMenu
+- **Status:** design pending
+- **Purpose:** Hover menu that appears on each analyst row in the left panel.
+- **Items:** Edit (only shown when the user has edit privilege on the analyst), Share, Make a copy, Delete.
+- **Will live at:** `src/spotter/page/AnalystRowMenu.tsx` (tentative)
+
+### AnalystLandingPage
+- **Status:** design pending
+- **Purpose:** Right-pane state when the user clicks an analyst in the left panel. Shows the analyst's about info, recent activity, recent chats with this analyst, and an action to start a new chat against it.
+- **Will live at:** `src/spotter/page/AnalystLandingPage.tsx` (tentative)
+
+### AnalystListPage
+- **Status:** design pending
+- **Purpose:** Right-pane state when the user clicks "View all >" in the Analysts section. Full list of analysts with search / filter / sort.
+- **Will live at:** `src/spotter/page/AnalystListPage.tsx` (tentative)
+
+### ChatRowMenu
+- **Status:** design pending
+- **Purpose:** Hover menu that appears on each chat row in the left panel.
+- **Items:** Rename, Favorite / Star, Share, Delete.
+- **Will live at:** `src/spotter/page/ChatRowMenu.tsx` (tentative)
+
+### SettingsMenu
+- **Status:** design pending
+- **Purpose:** Popover menu opened from the Settings button at the bottom of the left panel. Hosts 6 items in 4 dividered groups: Spotter instructions (modal) · Usage monitoring + Admin settings (new tab) · Manage memory sources (new tab) + Personal memory (inline toggle) · Spotter best practices (modal).
+- **Will live at:** `src/spotter/page/SettingsMenu.tsx` (tentative)
+
+### PersonalMemoryToggle
+- **Status:** design pending
+- **Purpose:** Inline toggle row inside `SettingsMenu` — no navigation, just on / off in place. Reads + writes a user preference.
+- **Will live at:** `src/spotter/page/PersonalMemoryToggle.tsx` (tentative)
+
+### Spotter topbar variants
+- **Status:** design pending
+- **Purpose:** Topbar treatments for different surface contexts — with / without breadcrumbs, with model-context chip, embedded mode.
+- **Note:** Standalone today uses Radiant `GlobalHeader` (light). These variants might wrap or replace it.
+
+### Spotter Viz components
+- **Status:** design pending
+- **Purpose:** Components for the Spotter Viz embedded mode (visualization agent for instant dashboards).
+- **Likely includes:** viz preview card, refine controls, "commit to Liveboard" affordance, chart-type switcher.
+- **See:** `spotter-agentic-chat-ia.md` → Spotter Viz section for open IA questions
+
+### Spotter Code components
+- **Status:** design pending
+- **Purpose:** Components for the Spotter Code embedded mode (developer-facing code agent).
+- **Likely includes:** file tree, code editor wrapper, diff preview, agent-proposed-edit approval row.
+- **See:** `spotter-agentic-chat-ia.md` → Spotter Code section for open IA questions
+
+> Adding a new planned component: include status, purpose, Figma reference if any, intended path, and any open questions. When it moves to `built`, cut it from this section and add it to the inventory at the top of this file.

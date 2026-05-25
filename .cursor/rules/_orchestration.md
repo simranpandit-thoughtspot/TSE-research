@@ -205,24 +205,38 @@ Based on answers, load:
 
 ### Spotter Requirements Gate
 
-When the task is **Spotter chat / agent UI work** OR **a new Spotter-flavoured prototype** (Tier 1 or Tier 2), load these rule files together:
+When the task is **a new Spotter-flavoured prototype** (Tier 2), BEFORE loading any Spotter rule files, ask the user:
 
-- `spotter-components.md` — DS inventory + when-to-use
-- `spotter-logic.md` — chat state machine, streaming chunk protocol, reducer behaviour
-- `spotter-response-style.md` — voice + block composition rules
+1. **Which Spotter mode?**
+   - **Standalone** — Full-page agentic chat (canonical Spotter, like `src/prototypes/Spotter/`)
+   - **Spotter Model (embedded)** — Canvas + chat for data-model editing (like `DataModelEditor`)
+   - **Spotter Viz (embedded)** — Canvas + chat for visualization / dashboard generation
+   - **Spotter Code (embedded)** — Canvas + chat for code generation in an IDE-like surface
+2. **Welcome state** — `blank` (first prompt hero, current default), `returning` (recent chats list), `topical` (model-aware), `guided` (starter questions), or `embedded` (no welcome — drop into chat)?
+3. **Data** — Mock fixtures from `cannedResponses.ts` (default), or a custom canned dataset?
 
-Globs auto-attach when the active file is in `src/spotter/**` or
-`src/prototypes/Spotter*/**`, but if the task description mentions
-"Spotter", "chat thread", "agent message", "viz block", or "answer
-card" without an open file, load all three explicitly.
+Based on answers, load:
 
-Spotter sits **on top of** the Radiant DS. So Tier 3 design-system
-work that touches Spotter components also needs the Radiant rules
-(`design-system.md`, `token-usage.md`) on top of the Spotter ones.
+| Mode | Files to load |
+|---|---|
+| Any Spotter work | `spotter-components.md` + `spotter-logic.md` + `spotter-response-style.md` + `spotter-scaffolding.md` |
+| Standalone | also `spotter-ia.md` |
+| Embedded (Model / Viz / Code) | also `spotter-agentic-chat-ia.md` |
+| Embedded Model specifically | also `data-model-editor-ia.md` + `data-model-editor-components.md` |
+| Embedded Viz | also `liveboard-ia.md` (host surface) |
+| Embedded Code | none extra (IDE conventions are TBD) |
 
-The Spotter answer card spec lives at
-`docs/2026-05-07-spotter-answer-card.md` (not yet built — VizBlock
-is the current stand-in renderer for `kind: 'viz'`).
+Globs auto-attach the inventory / logic / style rules when the active file is in `src/spotter/**` or `src/prototypes/Spotter*/**`. The IA / scaffolding rules need to be loaded explicitly per the table above.
+
+Spotter sits **on top of** the Radiant DS. Tier 3 design-system work that touches Spotter components also needs the Radiant rules (`design-system.md`, `token-usage.md`).
+
+**Skip the gate** for Tier 0/1 tasks (minor tweaks or edits to existing Spotter prototypes). Only gate Tier 2 new builds.
+
+**Reference docs:**
+- `docs/spotter-roadmap.md` — resume-here tracker, status per mode, open work
+- `docs/2026-05-07-spotter-answer-card.md` — AnswerCard spec (unbuilt; VizBlock is the current stand-in)
+- `docs/2026-05-07-spotter-viz-block-behaviour.md` — VizBlock slot model and behaviour
+- `docs/archive/2026-05-07-spotter-ds-plan.md`, `*-prototype-shell.md`, `*-chat-extraction.md` — historical scaffolding plans, work is done
 
 ---
 

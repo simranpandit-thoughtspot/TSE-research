@@ -1,5 +1,75 @@
 # Changelog
 
+## 26.5.3d — 2026-05-19
+
+### Highlights
+
+- **ThoughtSpot brand mark refresh** — new Radiant 3.0 monogram (4-path geometric mark with bars + "T" hook + dot) replaces the older wordmark across `GlobalHeader`, `LiveboardHeader`, `EditToolbar`, and the Spotter showcase.
+- **Spotter Standalone IA — Stage B Phase 1** — Analysts section in the left panel (replaces "Custom spotters"), Settings popover at the bottom (6 items in 4 dividered groups, inline Personal memory toggle), hover row menus on both chats and analysts.
+- **Spotter chat surface polish** — flat reasoning layout matching the real product (no card chrome), code-block-styled tool I/O, single content stream (no separator between chat thread and prompt), eased peek-description transitions.
+- **`@components/BrandMark`** — new single source of truth for the TS brand mark; the SVG paths were previously duplicated in 4 files.
+
+### Added
+- `src/components/BrandMark/BrandMark.tsx` — canonical TS brand mark. Props: `pixelSize`, `color` (defaults to `currentColor`), `className`, aria props. Renders the 4-path Radiant 3.0 monogram at viewBox `0 0 47.4216 48`.
+- `src/spotter/page/SettingsMenu.tsx` + `PersonalMemoryToggle.tsx` — popover Settings menu opened from a trigger (uses Radiant `Popover` with `children` as the trigger). 6 items in 4 dividered groups: Spotter instructions (modal) · Usage monitoring + Admin settings (external) · Manage memory sources (external) + Personal memory (inline toggle) · Spotter best practices (modal).
+- `src/spotter/page/ChatRowMenu.tsx` + `AnalystRowMenu.tsx` — hover-triggered row menus. ChatRow: Rename / Favorite / Share / Delete. AnalystRow: Edit (privilege-gated) / Share / Make a copy / Delete. Built on Radiant `ActionMenu` for keyboard + click-outside.
+- `src/spotter/page/RowMenuAffordance.tsx` — internal helper for the shared hover-affordance pattern (kebab fades in on row hover / focus-within / menu-open).
+
+### Fixed
+- `ReasoningBlock` peek (streaming + semi-collapsed): brand-blue inline title with chevron + description below with a thin left guideline. Was a bordered card with dot column. Now matches the real product.
+- `ReasoningBlock` expanded view: dropped the card border around the steps list — steps now flow as a plain dot column.
+- `ReasoningBlock` header: unified into a single brand-blue button. Text shows the current step label while streaming, "Thought for X seconds" once settled. Chevron rotates on expand.
+- `ReasoningBlock` toolcall I/O: Input/Output values render as proper code blocks — monospace, `background-subtle`, rounded, generous padding. Labels changed from UPPERCASE letterspaced to sentence-case "Input:" / "Output:". JSON output gets a language hint.
+- `ReasoningBlock` peek description: fades out (opacity + max-height + guideline) instead of unmounting instantly when streaming ends.
+- `AgentMessage`: avatar centers vertically with the first body line (negative margin compensates for the 32px avatar vs 20px text-line center offset).
+- `SpotterPrompt` mode toggle: ChartSearch at `size="m"` (16px), Orbits at `size="l"` (18px) — per design spec.
+- `ChatCanvas` `.promptArea`: dropped `border-top` and opaque background; dropped top padding. Chat thread now flows into the sticky prompt as one continuous stream.
+- `SpotterWelcome` content width: uses `--spotter-text-max-width` (844) instead of inheriting the wider chat-active 936.
+- Width tokens (`chatMaxWidth = 936`, `textMaxWidth = 844`) now actually flow through `ChatThread`, `SpotterPrompt`, `ChatCanvas` `promptWrapper`, and `SpotterWelcome` via `--spotter-chat-max-width` / `--spotter-text-max-width` CSS vars injected at the `SpotterShell` root.
+- Toolcall icons in `cannedResponses` now use semantic Radiant glyphs (`database`, `ai`, `search`) instead of the generic `spotter` sparkle.
+- TS brand mark SVG updated to Radiant 3.0 — was the older wordmark with a single composite path; now four geometric paths.
+
+### Changed
+- `GlobalHeader`, `LiveboardHeader`, `EditToolbar` all now import `<BrandMark />` from `@components/BrandMark` instead of inlining their own SVG.
+- `@spotter/icons` `ThoughtSpotMark` is now a deprecated alias for `BrandMark` (kept for backwards compatibility with the Spotter showcase).
+- `src/prototypes/Spotter/index.tsx` — left panel reordered. "Custom spotters" section renamed to **Analysts** (matches the IA spec — analyst = custom AI agent, separate from data model). Dropped the "Spotter (Default)" row. "View library" → "View all >". Settings button at the bottom now opens `SettingsMenu`. Chat and analyst rows wrapped in their respective hover menus.
+- `src/prototypes/Spotter/data/mockData.ts` — `customSpotters` → `analysts` with a `canEdit` flag per row.
+- `docs/spotter-roadmap.md` — Stage B Phase 1 marked done, Phase 2 (right-pane state machine + Analyst pages) listed as pending.
+
+## 26.5.3c — 2026-05-19
+
+### Highlights
+
+- **Spotter design system gets its own doc surface** — new `/radiant/spotter` showcase covering chat primitives, block renderers, icons, and tokens; new `/radiant/components/spottershell` peer to the GlobalHeader / AppShell docs.
+- **Fullscreen previews** for SpotterShell and AppShell — `/preview/spottershell` and `/preview/appshell` render the shells at full viewport without Radiant chrome.
+
+### Added
+- `/radiant/spotter` Spotter DS showcase page — 4 sections (Chat, Blocks, Icons, Tokens) with static previews for every shipped Spotter component plus ghosted placeholders for planned ones (AnswerCard, Source/Model picker, Analyst components, ChatRowMenu, SettingsMenu, PersonalMemoryToggle).
+- `/radiant/components/spottershell` — dedicated SpotterShell doc page mirroring the GlobalHeader / AppShell pattern. SpotterLeftSide preview rolls SpotterRail + SpotterPanel into one card since they're internal compositions of the same component. SpotterShell preview uses real `GlobalHeader theme="light"` (matches AppShell composition).
+- "View fullscreen ↗" link on SpotterShell and AppShell doc pages — opens `/preview/spottershell` and `/preview/appshell` in a new tab. Both render at 100vh × 100vw with no Radiant chrome.
+- `PreviewCard` gained `useTabs` (Radiant Tabs for multi-variant cards) and `fullSizeHref` (fullscreen link) primitives.
+- 4 new Spotter cursor rules: `spotter-ia.md` (standalone IA — left panel, right-pane states, Settings menu, hover menus, widths), `spotter-agentic-chat-ia.md` (embedded Code/Viz/Model surfaces), `spotter-scaffolding.md` (how to create a new Spotter prototype), plus a Planned-components section in `spotter-components.md`.
+- `docs/spotter-roadmap.md` resume-here tracker with status per mode and per phase.
+
+### Fixed
+- VizBlock expand button now uses the diagonal `expand` icon (matches Figma `RzKUZMdJsNVdoVhkYmXvlI` node `852:7344`) instead of the horizontal `fullscreen` icon. Affects every viz answer rendered in Spotter responses.
+- Home page hero now reads `PLATFORM_VERSION` instead of the hardcoded `26.4.1b`.
+- Sidebar Icons badge reads `getIconCount()` (151) instead of the hardcoded `46`.
+- Design Tokens stat computes from `generateCSSVariables` + theme generators (373) instead of the hardcoded `290+`.
+- Component count includes RdModal (76 total).
+- `26.5.3` icon-sync numbers corrected: 53 → 148 unique icons (151 registry entries with 3 backward-compat aliases — settings → cog, search → magnifying-glass, refresh → sync).
+- TextBlock mock data in the showcase now includes `block.id` (was missing — caused React "missing key prop" warnings in AgentMessage previews).
+- Spotter DS page CSS aligned to ComponentDocPage conventions (1000px container, 36px title, 20px section title, 32px card padding, 12px radius) and no longer renders its own white background — picks up the sunken layout bg like other Radiant pages.
+
+### Changed
+- Sidebar: top-level "Spotter" renamed to **"Spotter DS"**; new **"SpotterShell"** entry under Widgets; "New" badges removed from LiveboardHeader / GlobalHeader / AppSidebar / AppShell.
+- `spotterLayout` tokens — `chatMaxWidth` 880 → **936** (matches 2026-05-19 IA spec); new `textMaxWidth = 844` for text content inside the chat container.
+- `ReasoningBlock` streaming behaviour tightened in `spotter-logic.md`: explicit three-state model (semi-collapsed during streaming → expanded then collapsing → settled "Thought for X seconds").
+- Spotter Requirements Gate in `_orchestration.md` upgraded from "load 3 rules" to a Q&A flow with tiered loading by surface mode (Standalone / Spotter Model / Viz / Code).
+- `spotter-scaffolding.md` example replaced placeholder `<Canvas>` / `<WelcomeState />` with copy-pasteable JSX using real component names. Added a `SpotterWelcome` prop-surface table noting `greeting` is a single ReactNode (no title/subtitle split). Added a maintainer note: on `main`/`staging`, `registry-mine.ts` stays empty.
+- 3 historical Spotter plans moved to `docs/archive/` (ds-plan, prototype-shell, chat-extraction). Active spec docs (answer-card, viz-block-behaviour) stay flat at `docs/`.
+- VizBlock showcase entry reduced from 5 chart-kind variants to a single Default line-chart preview; supported kinds mentioned in the description instead.
+
 ## 26.5.3b — 2026-05-18
 
 ### Highlights

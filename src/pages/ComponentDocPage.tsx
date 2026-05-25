@@ -2025,6 +2025,21 @@ export const ComponentDocPage: React.FC<ComponentDocPageProps> = ({ componentId 
       case 'appshell':
         return (
           <div style={styles.exampleContent}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <a
+                href="/preview/appshell"
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  color: systemColors.light['content-brand'],
+                  textDecoration: 'none',
+                  fontSize: 13,
+                  fontWeight: 500,
+                }}
+              >
+                View fullscreen ↗
+              </a>
+            </div>
             <div style={{ height: '500px', borderRadius: '8px', overflow: 'hidden', border: `1px solid ${referenceColors.gray['20']}`, position: 'relative' }}>
               <AppShell
                 headerProps={{
