@@ -1,0 +1,702 @@
+/* ═══════════════════════════════════════════════════════════════
+   iPhone 14/15 Pro — Natural Titanium — 340×700px
+   Screen: 308×668px (16px bezel all around)
+   Grid content: 284px wide (12px margins, 4×68px cols + 3×4px gaps)
+   ══════════════════════════════════════════════════════════════ */
+
+.iphone {
+  position: relative;
+  width: 340px;
+  height: 700px;
+  /*
+   * iPhone 14 Pro — Natural Titanium
+   * Layer 1: edge specular (bright slivers on left/right edges of the rail)
+   * Layer 2: base titanium gradient — light arrives from top-left at ~160°
+   */
+  background:
+    linear-gradient(to right,
+      rgba(255,255,255,0.50) 0px,
+      rgba(255,255,255,0.18) 5px,
+      transparent 14px,
+      transparent calc(100% - 14px),
+      rgba(255,255,255,0.12) calc(100% - 5px),
+      rgba(255,255,255,0.32) 100%
+    ),
+    linear-gradient(160deg,
+      #F0F0F4 0%,
+      #DCDCE0 8%,
+      #C6C6CA 18%,
+      #ACACB0 34%,
+      #A6A6AA 48%,
+      #B4B4B8 60%,
+      #C8C8CC 70%,
+      #DCDCE0 80%,
+      #EAEAEE 90%,
+      #E4E4E8 100%
+    );
+  border-radius: 54px;
+  box-shadow:
+    /* bright chamfer edge */
+    0 0 0 0.5px rgba(255,255,255,0.62),
+    /* outer dark rim */
+    0 0 0 2px rgba(0,0,0,0.30),
+    /* glass-to-frame top highlight */
+    inset 0 1px 0 rgba(255,255,255,0.68),
+    /* bottom ambient shadow */
+    inset 0 -1px 0 rgba(0,0,0,0.20),
+    /* side ambient occlusion */
+    inset 4px 0 10px rgba(0,0,0,0.07),
+    inset -4px 0 10px rgba(0,0,0,0.07),
+    /* drop shadow — multi-layer for realism */
+    0 2px 4px rgba(0,0,0,0.16),
+    0 8px 20px rgba(0,0,0,0.20),
+    0 22px 55px rgba(0,0,0,0.22),
+    0 48px 90px rgba(0,0,0,0.16);
+  flex-shrink: 0;
+}
+
+/* Specular stripe across the top edge of the frame */
+.iphone::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 62px;
+  right: 62px;
+  height: 1.5px;
+  background: rgba(255,255,255,0.72);
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.iphoneScreen {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  border-radius: 42px;
+  overflow: hidden;
+  background: #000;
+  /* glass depth — inner shadow + subtle top glint */
+  box-shadow:
+    inset 0 0 0 0.5px rgba(0,0,0,0.35),
+    inset 0 1px 4px rgba(0,0,0,0.55);
+}
+
+/* Glass surface reflection — thin bright gradient at very top of display */
+.iphoneScreen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 38%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.055) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 50;
+  border-radius: 42px 42px 0 0;
+}
+
+/* Wallpaper — rendered as <img object-fit: cover> */
+.iosWallpaper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* ── Dynamic Island ────────────────────────────────────────────── */
+.dynamicIsland {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 102px;
+  height: 30px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 25;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 2px rgba(0,0,0,0.8);
+}
+
+/* ── Status bar ────────────────────────────────────────────────── */
+.iosStatus {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  padding: 16px 26px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 15;
+}
+
+.statusTime {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  letter-spacing: -0.3px;
+}
+
+.statusRight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── App icon row (legacy — kept for Android) ─────────────────── */
+.iconRowAbs {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  align-items: flex-start;
+  z-index: 5;
+}
+
+/* ── App icon — absolute PNG grid (iOS) ───────────────────────── */
+.absIconWrap {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 68px;
+  z-index: 5;
+}
+
+.appIconImg {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: block;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.32),
+    0 1px 2px rgba(0,0,0,0.18);
+}
+
+/* Dock icons — slightly larger, no label */
+.dockIconImg {
+  width: 68px;
+  height: 68px;
+  border-radius: 17px;
+  display: block;
+  box-shadow:
+    0 2px 10px rgba(0,0,0,0.38),
+    0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ── App icon — legacy SVG version (kept for Android) ────────── */
+.appIconWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 61px;
+  flex-shrink: 0;
+}
+
+.appIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(0,0,0,0.12),
+    0 2px 8px rgba(0,0,0,0.28);
+}
+
+.iconLabel {
+  font-size: 9.5px;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.7), 0 1px 8px rgba(0,0,0,0.4);
+  line-height: 1.2;
+  width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Widget overlay ───────────────────────────────────────────── */
+.widgetOverlay {
+  position: absolute;
+  z-index: 10;
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.4));
+}
+
+.widgetAppLabel {
+  position: absolute;
+  z-index: 11;
+  font-size: 9px;
+  color: rgba(255,255,255,0.88);
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Search bar ───────────────────────────────────────────────── */
+.searchBar {
+  position: absolute;
+  bottom: 114px;
+  left: 16px;
+  right: 16px;
+  height: 34px;
+  background: rgba(255,255,255,0.20);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 17px;
+  border: 0.5px solid rgba(255,255,255,0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  z-index: 10;
+}
+
+.searchText {
+  font-size: 14px;
+  color: rgba(255,255,255,0.72);
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* ── Page dots ────────────────────────────────────────────────── */
+.pageDots {
+  position: absolute;
+  bottom: 160px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  z-index: 5;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+}
+
+.dotActive {
+  background: rgba(255,255,255,0.9);
+}
+
+/* ── iOS Dock ─────────────────────────────────────────────────── */
+.iosDock {
+  position: absolute;
+  bottom: 22px;
+  left: 16px;
+  right: 16px;
+  height: 84px;
+  border-radius: 26px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 0.5px solid rgba(255,255,255,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 0 8px;
+  z-index: 15;
+}
+
+/* ── Home indicator ───────────────────────────────────────────── */
+.homeIndicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 136px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.45);
+  z-index: 20;
+}
+
+/* ── Side buttons (340×700 body) ──────────────────────────────── */
+.btn {
+  position: absolute;
+  border-radius: 2px;
+}
+
+.btnMute {
+  left: -4px;
+  top: 124px;
+  width: 4px;
+  height: 36px;
+  border-radius: 2px 0 0 2px;
+  background: linear-gradient(to right, #B8B8BC 0%, #C8C8CC 40%, #D8D8DC 70%, #C4C4C8 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2), -1px 0 3px rgba(0,0,0,0.18);
+}
+
+.btnVolUp {
+  left: -4px;
+  top: 178px;
+  width: 4px;
+  height: 66px;
+  border-radius: 2px 0 0 2px;
+  background: linear-gradient(to right, #B8B8BC 0%, #C8C8CC 40%, #D8D8DC 70%, #C4C4C8 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2), -1px 0 3px rgba(0,0,0,0.18);
+}
+
+.btnVolDown {
+  left: -4px;
+  top: 258px;
+  width: 4px;
+  height: 66px;
+  border-radius: 2px 0 0 2px;
+  background: linear-gradient(to right, #B8B8BC 0%, #C8C8CC 40%, #D8D8DC 70%, #C4C4C8 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2), -1px 0 3px rgba(0,0,0,0.18);
+}
+
+.btnPower {
+  right: -4px;
+  top: 184px;
+  width: 4px;
+  height: 86px;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(to left, #B8B8BC 0%, #C8C8CC 40%, #D8D8DC 70%, #C4C4C8 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2), 1px 0 3px rgba(0,0,0,0.18);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Pixel 9 Pro — Obsidian — 340×720px
+   Screen: 320×700px (10px bezels all around)
+   Content dimensions match Figma reference exactly (320×700)
+   ══════════════════════════════════════════════════════════════ */
+
+.pixel {
+  position: relative;
+  width: 340px;
+  height: 720px;
+  /* Obsidian: near-black with subtle directional sheen */
+  background:
+    linear-gradient(to right,
+      rgba(255,255,255,0.10) 0px,
+      rgba(255,255,255,0.04) 4px,
+      transparent 12px,
+      transparent calc(100% - 12px),
+      rgba(255,255,255,0.04) calc(100% - 4px),
+      rgba(255,255,255,0.08) 100%
+    ),
+    linear-gradient(160deg,
+      #2E2E32 0%,
+      #1E1E22 10%,
+      #131315 25%,
+      #0D0D0F 45%,
+      #111113 60%,
+      #1A1A1E 78%,
+      #262628 90%,
+      #1E1E22 100%
+    );
+  border-radius: 46px;
+  box-shadow:
+    0 0 0 0.5px rgba(255,255,255,0.10),
+    0 0 0 2px rgba(0,0,0,0.82),
+    inset 0 1px 0 rgba(255,255,255,0.07),
+    inset 0 -1px 0 rgba(0,0,0,0.50),
+    inset 3px 0 8px rgba(0,0,0,0.10),
+    inset -3px 0 8px rgba(0,0,0,0.10),
+    0 2px 4px rgba(0,0,0,0.40),
+    0 8px 20px rgba(0,0,0,0.55),
+    0 24px 60px rgba(0,0,0,0.65),
+    0 50px 100px rgba(0,0,0,0.55);
+  flex-shrink: 0;
+}
+
+/* Specular highlight across top edge */
+.pixel::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 62px;
+  right: 62px;
+  height: 1px;
+  background: rgba(255,255,255,0.14);
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.pixelScreen {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border-radius: 38px;
+  overflow: hidden;
+  background: #000;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(0,0,0,0.50),
+    inset 0 1px 4px rgba(0,0,0,0.60);
+}
+
+/* Glass reflection at top of screen */
+.pixelScreen::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 30%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.04) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 50;
+  border-radius: 38px 38px 0 0;
+}
+
+/* Wallpaper — <img> with object-fit: cover */
+.androidWallpaper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* ── Android status bar ───────────────────────────────────────── */
+.androidStatus {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  padding: 10px 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 15;
+}
+
+/* Punch-hole camera — centered in status bar */
+.punchHole {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #000;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+  z-index: 30;
+}
+
+.androidStatus .statusTime {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  font-family: 'Google Sans', Roboto, system-ui, sans-serif;
+}
+
+.androidStatus .statusRight {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: rgba(255,255,255,0.9);
+}
+
+/* ── Date + weather ────────────────────────────────────────────── */
+.androidDateArea {
+  position: absolute;
+  top: 74px;
+  left: 27px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.androidWeatherImg {
+  width: 78px;
+  height: auto;
+  display: block;
+}
+
+.androidDate {
+  font-size: 22px;
+  font-weight: 600;
+  color: white;
+  font-family: 'Google Sans Display', 'Google Sans', Roboto, system-ui, sans-serif;
+  letter-spacing: -0.3px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+}
+
+/* ── App icon cell ─────────────────────────────────────────────── */
+.absAndroidIconWrap {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 46px;
+  z-index: 5;
+}
+
+.androidIconCircle {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.androidIconBgLight { background: #C6D5DF; }
+.androidIconBgDark  { background: #3C3C3E; }
+.androidIconBgNone  { background: transparent; }
+
+.androidIconOverlay {
+  position: absolute;
+  display: block;
+}
+
+.androidIconLabel {
+  font-size: 12px;
+  font-weight: 400;
+  color: white;
+  text-align: center;
+  font-family: 'Google Sans', Roboto, system-ui, sans-serif;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+/* ── Google search bar ─────────────────────────────────────────── */
+.androidSearchBar {
+  position: absolute;
+  top: 634px;
+  left: 16px;
+  width: 288px;
+  height: 48px;
+  background: #C6D5DF;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px 0 16px;
+  z-index: 10;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+
+.androidSearchGoogle {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
+}
+
+.androidSearchRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.androidSearchIcon {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
+}
+
+/* ── Navigation indicator ──────────────────────────────────────── */
+.androidNavBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.navLine {
+  width: 66px;
+  height: 2px;
+  border-radius: 1.5px;
+  background: white;
+}
+
+/* ── Pixel 9 Pro buttons — right side only ─────────────────────── */
+/* Power button: top-right, above volume */
+.pixelPower {
+  right: -4px;
+  top: 185px;
+  width: 4px;
+  height: 68px;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(to left, #2A2A2E 0%, #3A3A3E 50%, #2E2E32 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.3), 1px 0 3px rgba(0,0,0,0.25);
+}
+
+/* Volume up */
+.pixelVolUp {
+  right: -4px;
+  top: 268px;
+  width: 4px;
+  height: 58px;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(to left, #2A2A2E 0%, #3A3A3E 50%, #2E2E32 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.3), 1px 0 3px rgba(0,0,0,0.25);
+}
+
+/* Volume down */
+.pixelVolDown {
+  right: -4px;
+  top: 336px;
+  width: 4px;
+  height: 58px;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(to left, #2A2A2E 0%, #3A3A3E 50%, #2E2E32 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.3), 1px 0 3px rgba(0,0,0,0.25);
+}
+
+/* ── Frame labels ─────────────────────────────────────────────── */
+.frameLabel {
+  position: absolute;
+  bottom: -36px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.frameLabel span:first-child {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--rd-sys-color-content-primary, #1C1C1E);
+}
+
+.frameSub {
+  font-size: 10px;
+  color: var(--rd-sys-color-content-secondary, #6C6C70);
+}

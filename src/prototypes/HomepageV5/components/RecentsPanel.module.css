@@ -1,0 +1,101 @@
+.panel {
+  width: 264px;
+  flex-shrink: 0;
+  background: var(--rd-sys-color-background-base);
+  border: 1px solid var(--rd-sys-color-border-divider);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  padding: 16px 20px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--rd-sys-color-content-primary);
+  border-bottom: 1px solid var(--rd-sys-color-border-divider);
+  flex-shrink: 0;
+}
+
+.list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  border: none;
+  border-bottom: 1px solid var(--rd-sys-color-border-divider);
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  position: relative;
+  transition: background 0.12s;
+}
+.item:last-child { border-bottom: none; }
+.item:hover {
+  background: var(--rd-sys-color-background-ghost-highlight);
+}
+
+.itemIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--rd-sys-color-background-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--rd-sys-color-content-secondary);
+}
+.item:hover .itemIcon {
+  background: #dde8fc;
+  color: var(--rd-sys-color-content-brand);
+}
+
+.itemInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-sys-color-content-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+.item:hover .itemName {
+  color: var(--rd-sys-color-content-brand);
+}
+
+.itemTime {
+  font-size: 12px;
+  color: var(--rd-sys-color-content-tertiary);
+}
+
+.dots {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  opacity: 0;
+  color: var(--rd-sys-color-content-secondary);
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.item:hover .dots {
+  opacity: 1;
+}
+.dots:hover {
+  background: var(--rd-sys-color-background-subtle);
+}

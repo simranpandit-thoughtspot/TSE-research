@@ -1,0 +1,117 @@
+.shell {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: "Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--rd-sys-color-background-base);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.main {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--rd-sys-color-background-sunken);
+  /* subtle radial glow at the top center */
+  background-image: radial-gradient(ellipse 70% 340px at 50% 0px, rgba(39, 112, 239, 0.08) 0%, transparent 100%);
+}
+
+/* ─── Hero Section — 40% of content area ───────────────────── */
+.heroSection {
+  /* flex: 40 distributes 40% of total flex space to this section */
+  flex: 40 1 0px;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* 56px top gap from header, content starts here */
+  padding: 56px 24px 0;
+  overflow: visible; /* chip dropdown must not be clipped */
+}
+
+.heroTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--rd-sys-color-content-primary);
+  margin: 0 0 20px;
+  text-align: center;
+  letter-spacing: -0.3px;
+}
+
+.heroAccent {
+  color: var(--rd-sys-color-content-brand);
+}
+
+/* ─── Quick Action Chips ───────────────────────────────────── */
+.chipsRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: center;
+  width: 745px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  border-radius: 24px;
+  background: var(--rd-sys-color-background-base);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-sys-color-content-secondary);
+  transition: all 0.15s;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.chip:hover {
+  background: var(--rd-sys-color-background-ghost-highlight);
+  border-color: var(--rd-sys-color-border-brand);
+  color: var(--rd-sys-color-content-brand);
+}
+.chipActive {
+  background: var(--rd-sys-color-background-ghost-highlight);
+  border-color: var(--rd-sys-color-border-brand);
+  color: var(--rd-sys-color-content-brand);
+}
+
+.newBadge {
+  background: #1D232F;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Panels Section — 60% of content area ─────────────────── */
+.panelsSection {
+  /* flex: 60 distributes 60% of total flex space to this section */
+  flex: 60 1 0px;
+  min-height: 300px;
+  display: flex;
+  gap: 24px;
+  /* 264 + 24 + 457 = 745px — aligns flush with SpotterBar */
+  width: 745px;
+  align-self: center;
+  /* 24px from top of this section to panel cards */
+  padding-top: 24px;
+  /* bottom breathing room scales with screen */
+  padding-bottom: 24px;
+  align-items: flex-start;
+  flex-shrink: 0;
+}

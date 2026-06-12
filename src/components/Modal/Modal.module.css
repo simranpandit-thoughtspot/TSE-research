@@ -16,7 +16,7 @@
   background-color: var(--rd-sys-color-background-overlay, rgba(29, 35, 47, 0.5));
   z-index: 1000;
   padding: var(--spacing-6);
-  animation: fadeIn var(--duration-fast, 150ms) var(--easing-decelerate, ease-out);
+  animation: fadeIn var(--duration-fast, 150ms) var(--easing-decelerate, ease-out) forwards;
 }
 
 @keyframes fadeIn {
@@ -51,7 +51,7 @@
   min-height: 230px;
   max-height: 690px;
   overflow: hidden;
-  animation: slideUp var(--duration-normal, 200ms) var(--easing-decelerate, ease-out);
+  animation: slideUp var(--duration-normal, 200ms) var(--easing-decelerate, ease-out) forwards;
 }
 
 /* Main content area wrapper */

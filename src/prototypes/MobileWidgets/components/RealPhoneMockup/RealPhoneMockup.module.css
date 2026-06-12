@@ -1,0 +1,39 @@
+.wrapper {
+  position: relative;
+  flex-shrink: 0;
+  /* Contain the widget to the phone frame bounds */
+  overflow: hidden;
+  border-radius: 0; /* image itself has the corners */
+}
+
+.phoneImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.widgetOverlay {
+  position: absolute;
+  z-index: 10;
+  /* Widget sits on the screen — adds authentic drop shadow */
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.35)) drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+}
+
+.widgetLabel {
+  position: absolute;
+  z-index: 11;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}

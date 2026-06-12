@@ -13,7 +13,10 @@
 import React from 'react';
 import { ProjectMeta } from './registry-core';
 import EmailCustomisationThumbnail from './thumbnails/EmailCustomisation.svg';
+import VariablesDataTypeThumbnail from './thumbnails/VariablesDataType.svg';
 
+const DarkModeSplash = React.lazy(() => import('./DarkModeSplash'));
+const AgenticAdmin = React.lazy(() => import('./AgenticAdmin'));
 const SpotterHome = React.lazy(() => import('./SpotterHome'));
 const MobileWidgets = React.lazy(() => import('./MobileWidgets'));
 const AdminPortal2 = React.lazy(() => import('./AdminPortal2'));
@@ -24,8 +27,43 @@ const HomepageV5 = React.lazy(() => import('./HomepageV5'));
 const EmailCustomisation = React.lazy(() => import('./EmailCustomisation'));
 const ImpersonationFlow = React.lazy(() => import('./ImpersonationFlow'));
 const RBAC = React.lazy(() => import('./RBAC'));
+const VariablesDataType = React.lazy(() => import('./VariablesDataType'));
 
 export const myRegistry: ProjectMeta[] = [
+  {
+    id: 'VariablesDataType',
+    name: 'Variables data type',
+    description: 'Admin variables list page — org-scope toggle, working search and filter, and a variables table. First page of a variables-creation flow (formula variable type).',
+    author: 'Simran Pandit',
+    lastModified: '2026-06-11',
+    thumbnail: VariablesDataTypeThumbnail,
+    component: VariablesDataType,
+    dsComponents: 8,
+    customComponents: 0,
+    section: 'mine',
+  },
+  {
+    id: 'DarkModeSplash',
+    name: 'Dark mode switch splash',
+    description: 'Three iterations of a dark-mode theme-switch splash animation — circular clip reveal, horizon rise/fall, and horizon v2. Pure HTML/GSAP embedded via iframe.',
+    author: 'Simran Pandit',
+    lastModified: '2026-06-10',
+    component: DarkModeSplash,
+    dsComponents: 0,
+    customComponents: 0,
+    section: 'mine',
+  },
+  {
+    id: 'AgenticAdmin',
+    name: 'Agentic Admin',
+    description: 'Agentic-first admin portal — command center with org health, task feed, and an AI agent bar for natural-language admin actions (add users, toggle feature flags, org health checks).',
+    author: 'Simran Pandit',
+    lastModified: '2026-05-26',
+    component: AgenticAdmin,
+    dsComponents: 4,
+    customComponents: 3,
+    section: 'mine',
+  },
   {
     id: 'SpotterHome',
     name: 'Spotter Home',

@@ -1,0 +1,104 @@
+.header {
+  height: 56px;
+  background: var(--rd-sys-color-background-base);
+  border-bottom: 1px solid var(--rd-sys-color-border-divider);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  flex-shrink: 0;
+  gap: 12px;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.logo:hover {
+  background: var(--rd-sys-color-background-subtle);
+}
+
+.spacer { flex: 1; }
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  border-radius: 999px;
+  background: var(--rd-sys-color-background-sunken);
+  width: 220px;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--rd-sys-color-content-secondary);
+}
+.search:hover { border-color: var(--rd-sys-color-border-hover); }
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--rd-sys-color-content-secondary);
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.iconBtn:hover { background: var(--rd-sys-color-background-subtle); }
+
+.bell {
+  position: relative;
+}
+.bellDot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  background: #E22B3D;
+  border-radius: 50%;
+  border: 1.5px solid white;
+}
+
+.orgBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-sys-color-content-primary);
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.orgBtn:hover { background: var(--rd-sys-color-background-subtle); }
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}

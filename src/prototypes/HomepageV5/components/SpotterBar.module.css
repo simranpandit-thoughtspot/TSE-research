@@ -1,0 +1,109 @@
+.bar {
+  width: 745px;
+  background: var(--rd-sys-color-background-base);
+  border: 1px solid var(--rd-sys-color-border-divider);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  padding: 16px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input {
+  font-size: 15px;
+  color: var(--rd-sys-color-content-secondary);
+  padding: 0 4px;
+  line-height: 1.5;
+  cursor: text;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toolBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  background: var(--rd-sys-color-background-sunken);
+  cursor: pointer;
+  color: var(--rd-sys-color-content-secondary);
+  transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+.toolBtn:hover {
+  background: var(--rd-sys-color-background-subtle);
+  border-color: var(--rd-sys-color-border-hover);
+}
+
+.dataModelBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  border-radius: 20px;
+  background: var(--rd-sys-color-background-sunken);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--rd-sys-color-content-secondary);
+  transition: background 0.15s;
+}
+.dataModelBtn:hover { background: var(--rd-sys-color-background-subtle); }
+
+.plusBtn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1.5px solid var(--rd-sys-color-border-divider);
+  background: transparent;
+  cursor: pointer;
+  color: var(--rd-sys-color-content-secondary);
+  font-size: 16px;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.plusBtn:hover { background: var(--rd-sys-color-background-subtle); }
+
+.spacer { flex: 1; }
+
+.filterBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--rd-sys-color-content-secondary);
+  transition: background 0.15s;
+}
+.filterBtn:hover { background: var(--rd-sys-color-background-subtle); }
+
+.sendBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  background: var(--rd-sys-color-content-brand);
+  cursor: pointer;
+  color: white;
+  transition: opacity 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+.sendBtn:hover { opacity: 0.85; transform: scale(1.05); }
