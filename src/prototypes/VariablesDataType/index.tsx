@@ -14,8 +14,8 @@ import { systemColors, referenceColors } from '../../tokens/colors';
 import { spacing } from '../../tokens/spacing';
 import { fontSize, fontWeight } from '../../tokens/typography';
 import { variables, VariableRow } from './data/mockData';
-import { SegmentedControl } from '../../components/SegmentedControl';
 import { CreateVariableModal } from './components/CreateVariableModal';
+import { VariableDetailModal } from './components/VariableDetailModal';
 
 /**
  * VariablesDataType
@@ -127,7 +127,7 @@ export const VariablesDataType: React.FC = () => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [iteration, setIteration] = useState<'1' | '2'>('1');
+  const [detailVariable, setDetailVariable] = useState<VariableRow | null>(null);
 
   const filteredData = useMemo(() => {
     return variables.filter((row) => {
@@ -188,7 +188,10 @@ export const VariablesDataType: React.FC = () => {
       label: 'Name',
       minWidth: '280px',
       render: (_, row) => (
-        <Link href="#" onClick={(e) => e.preventDefault()}>
+        <Link
+          href="#"
+          onClick={(e) => { e.preventDefault(); setDetailVariable(row as unknown as VariableRow); }}
+        >
           {row.name}
         </Link>
       ),
@@ -265,21 +268,6 @@ export const VariablesDataType: React.FC = () => {
             </p>
           </Vertical>
 
-          {/* Iteration toggle */}
-          <Horizontal align="center" gap={spacing.C}>
-            <span style={{ fontSize: fontSize.sm, color: systemColors.light['content-secondary'] }}>
-              Prototype iteration:
-            </span>
-            <SegmentedControl
-              options={[
-                { id: '1', label: 'Iteration 1' },
-                { id: '2', label: 'Iteration 2' },
-              ]}
-              value={iteration}
-              onChange={(v) => setIteration(v as '1' | '2')}
-            />
-          </Horizontal>
-
           {/* Toolbar */}
           <Horizontal justify="space-between" align="center">
             <Horizontal gap={spacing.C} align="center">
@@ -349,7 +337,13 @@ export const VariablesDataType: React.FC = () => {
     <CreateVariableModal
       isOpen={createModalOpen}
       onClose={() => setCreateModalOpen(false)}
-      iteration={iteration}
+      adminScope={orgScope as 'all' | 'primary'}
+    />
+
+    <VariableDetailModal
+      isOpen={detailVariable !== null}
+      onClose={() => setDetailVariable(null)}
+      variable={detailVariable}
     />
   </>
   );

@@ -11,6 +11,7 @@ import { Divider } from '../../../components/Divider';
 import { Link } from '../../../components/Link';
 import { Icon } from '../../../components/icons';
 import { SearchInput } from '../../../components/SearchInput';
+import { Alert } from '../../../components/Alert';
 import { Horizontal, Vertical } from '../../../components/Layout';
 import { systemColors } from '../../../tokens/colors';
 import { spacing } from '../../../tokens/spacing';
@@ -33,23 +34,138 @@ const emptyUserRow = (): UserRow => ({ id: nextId(), orgId: '', userId: '', valu
 
 // ─── Mock options ─────────────────────────────────────────────────────────────
 
+/** Hardcoded primary-org name shown in the segmented control tab when adminScope = 'primary' */
+const PRIMARY_ORG_NAME = 'Acme Corp';
+
 const ORG_OPTIONS = [
-  { id: 'primary-org', label: 'Primary Org' },
-  { id: 'secondary-org', label: 'Secondary Org' },
-  { id: 'tertiary-org', label: 'Tertiary Org' },
+  { id: 'acme-corp', label: 'Acme Corp' },
+  { id: 'technova', label: 'TechNova Inc' },
+  { id: 'globalfinance', label: 'GlobalFinance Ltd' },
+  { id: 'healthfirst', label: 'HealthFirst Systems' },
+  { id: 'retailmax', label: 'RetailMax Group' },
+  { id: 'datastream', label: 'DataStream Analytics' },
+  { id: 'cloudventure', label: 'CloudVenture Co' },
+  { id: 'pinnacle', label: 'Pinnacle Industries' },
+  { id: 'bluestar', label: 'BlueStar Enterprises' },
+  { id: 'novapulse', label: 'NovaPulse Technologies' },
+  { id: 'meridian', label: 'Meridian Solutions' },
+  { id: 'vertex-capital', label: 'Vertex Capital' },
+  { id: 'skybridge', label: 'SkyBridge Networks' },
+  { id: 'quantum', label: 'Quantum Dynamics' },
+  { id: 'atlas', label: 'Atlas Consulting' },
+  { id: 'horizon-media', label: 'Horizon Media' },
+  { id: 'ironcore', label: 'IronCore Systems' },
+  { id: 'silverline', label: 'Silverline Corp' },
+  { id: 'nexus', label: 'Nexus Partners' },
+  { id: 'zenith', label: 'Zenith Strategies' },
 ];
 
 const USER_OPTIONS = [
-  { id: 'abhishek', label: 'Abhishek' },
-  { id: 'catherine', label: 'Catherine' },
-  { id: 'daniel', label: 'Daniel' },
-  { id: 'damain', label: 'Damain' },
-  { id: 'reshma', label: 'Reshma' },
+  { id: 'u01', label: 'Aarav Sharma' },
+  { id: 'u02', label: 'Abigail Turner' },
+  { id: 'u03', label: 'Abhishek Patel' },
+  { id: 'u04', label: 'Adam Mitchell' },
+  { id: 'u05', label: 'Akira Tanaka' },
+  { id: 'u06', label: 'Alejandro Ruiz' },
+  { id: 'u07', label: 'Alicia Chen' },
+  { id: 'u08', label: 'Amanda Foster' },
+  { id: 'u09', label: 'Amir Hassan' },
+  { id: 'u10', label: 'Andrea Costa' },
+  { id: 'u11', label: 'Ankit Verma' },
+  { id: 'u12', label: 'Anna Kowalski' },
+  { id: 'u13', label: 'Arjun Nair' },
+  { id: 'u14', label: 'Ayesha Khan' },
+  { id: 'u15', label: 'Benjamin Clark' },
+  { id: 'u16', label: 'Bhavya Reddy' },
+  { id: 'u17', label: 'Carlos Mendez' },
+  { id: 'u18', label: 'Catherine Lee' },
+  { id: 'u19', label: 'Chiara Romano' },
+  { id: 'u20', label: 'Christine Hall' },
+  { id: 'u21', label: 'Daniel Wong' },
+  { id: 'u22', label: 'David Okonkwo' },
+  { id: 'u23', label: 'Deepak Malhotra' },
+  { id: 'u24', label: 'Elena Vasquez' },
+  { id: 'u25', label: 'Emily Davis' },
+  { id: 'u26', label: 'Ethan Brooks' },
+  { id: 'u27', label: 'Farhan Ali' },
+  { id: 'u28', label: 'Fatima Al-Rashid' },
+  { id: 'u29', label: 'Gabriel Santos' },
+  { id: 'u30', label: 'Gaurav Gupta' },
+  { id: 'u31', label: 'Grace Thompson' },
+  { id: 'u32', label: 'Hannah Mueller' },
+  { id: 'u33', label: 'Haruto Sato' },
+  { id: 'u34', label: 'Isabelle Dubois' },
+  { id: 'u35', label: 'Ishan Desai' },
+  { id: 'u36', label: 'James Williams' },
+  { id: 'u37', label: 'Jasmine Rodriguez' },
+  { id: 'u38', label: 'Jason Kim' },
+  { id: 'u39', label: 'Jennifer Martinez' },
+  { id: 'u40', label: 'Jonas Weber' },
+  { id: 'u41', label: 'Karan Mehta' },
+  { id: 'u42', label: 'Karen Wilson' },
+  { id: 'u43', label: 'Kenji Nakamura' },
+  { id: 'u44', label: 'Kevin O\'Brien' },
+  { id: 'u45', label: 'Kofi Mensah' },
+  { id: 'u46', label: 'Laura Sanchez' },
+  { id: 'u47', label: 'Leah Cooper' },
+  { id: 'u48', label: 'Li Wei' },
+  { id: 'u49', label: 'Lucas Bernard' },
+  { id: 'u50', label: 'Manisha Joshi' },
+  { id: 'u51', label: 'Maria Fernandez' },
+  { id: 'u52', label: 'Mark Johnson' },
+  { id: 'u53', label: 'Mei Ling' },
+  { id: 'u54', label: 'Michael Brown' },
+  { id: 'u55', label: 'Mohamed Ibrahim' },
+  { id: 'u56', label: 'Natasha Ivanova' },
+  { id: 'u57', label: 'Neha Kapoor' },
+  { id: 'u58', label: 'Nicholas Taylor' },
+  { id: 'u59', label: 'Nisha Pillai' },
+  { id: 'u60', label: 'Olivia Harris' },
+  { id: 'u61', label: 'Palak Shah' },
+  { id: 'u62', label: 'Pedro Alves' },
+  { id: 'u63', label: 'Poonam Singh' },
+  { id: 'u64', label: 'Priya Krishnan' },
+  { id: 'u65', label: 'Rachel Green' },
+  { id: 'u66', label: 'Rahul Saxena' },
+  { id: 'u67', label: 'Raj Bhatia' },
+  { id: 'u68', label: 'Ravi Chandran' },
+  { id: 'u69', label: 'Rebecca Moore' },
+  { id: 'u70', label: 'Reshma Acharya' },
+  { id: 'u71', label: 'Ricardo Gomez' },
+  { id: 'u72', label: 'Robert Anderson' },
+  { id: 'u73', label: 'Rohit Agarwal' },
+  { id: 'u74', label: 'Ryan Thompson' },
+  { id: 'u75', label: 'Sakura Yamamoto' },
+  { id: 'u76', label: 'Sameer Hussain' },
+  { id: 'u77', label: 'Sarah Johnson' },
+  { id: 'u78', label: 'Shira Cohen' },
+  { id: 'u79', label: 'Shreya Banerjee' },
+  { id: 'u80', label: 'Sofia Petrov' },
+  { id: 'u81', label: 'Srinivas Rao' },
+  { id: 'u82', label: 'Stephanie Clark' },
+  { id: 'u83', label: 'Sunita Dhingra' },
+  { id: 'u84', label: 'Tanya Osei' },
+  { id: 'u85', label: 'Thomas Müller' },
+  { id: 'u86', label: 'Timothy Allen' },
+  { id: 'u87', label: 'Usha Ramakrishnan' },
+  { id: 'u88', label: 'Valentina Cruz' },
+  { id: 'u89', label: 'Vikram Yadav' },
+  { id: 'u90', label: 'Vishal Tiwari' },
+  { id: 'u91', label: 'William Parker' },
+  { id: 'u92', label: 'Xiao Lin' },
+  { id: 'u93', label: 'Yamini Bose' },
+  { id: 'u94', label: 'Yash Chauhan' },
+  { id: 'u95', label: 'Zara Ahmed' },
+  { id: 'u96', label: 'Zheng Wei' },
+  { id: 'u97', label: 'Zoey Martin' },
+  { id: 'u98', label: 'Aditya Kumar' },
+  { id: 'u99', label: 'Bernadette Walsh' },
+  { id: 'u100', label: 'Chirag Pandey' },
 ];
 
 const PURPOSE_OPTIONS = [
   { id: 'connection' as VariablePurpose, label: 'Connection Property' },
-  { id: 'formula' as VariablePurpose, label: 'Formula Mapping' },
+  { id: 'formula' as VariablePurpose, label: 'Formula Variable' },
   { id: 'table' as VariablePurpose, label: 'Table Mapping' },
 ];
 
@@ -72,56 +188,6 @@ const getUserLabel = (userId: string) =>
 
 // ─── Shared pieces ────────────────────────────────────────────────────────────
 
-const FieldLabel: React.FC<{ children: React.ReactNode; info?: boolean }> = ({
-  children,
-  info,
-}) => (
-  <Horizontal gap={spacing.A} align="center">
-    <span
-      style={{
-        fontSize: fontSize.sm,
-        fontWeight: fontWeight.medium,
-        color: systemColors.light['content-primary'],
-        lineHeight: '18px',
-      }}
-    >
-      {children}
-    </span>
-    {info && (
-      <Icon
-        name="info-circle"
-        size="s"
-        color={systemColors.light['content-tertiary']}
-      />
-    )}
-  </Horizontal>
-);
-
-const SectionLabel: React.FC<{ children: React.ReactNode; info?: boolean }> = ({
-  children,
-  info,
-}) => (
-  <Horizontal gap={spacing.B} align="center">
-    <span
-      style={{
-        fontSize: '18px',
-        fontWeight: fontWeight.semibold,
-        color: systemColors.light['content-primary'],
-        lineHeight: '24px',
-        letterSpacing: '-0.4px',
-      }}
-    >
-      {children}
-    </span>
-    {info && (
-      <Icon
-        name="info-circle"
-        size="s"
-        color={systemColors.light['content-tertiary']}
-      />
-    )}
-  </Horizontal>
-);
 
 const ColHeader: React.FC<{ children: React.ReactNode; info?: boolean }> = ({
   children,
@@ -175,9 +241,9 @@ const tableWrapperStyle: React.CSSProperties = {
 
 // ─── Step 2 table variants ────────────────────────────────────────────────────
 
-// Figma-specified column widths for org-mapping (total 740px):
-// Col 1 (Org name): 311px | Col 2 (Variable values): flex-1 (~366px) | Col 3 (action): 63px
-const ORG_COL1 = 311;
+// Figma-specified column widths for org-mapping (node 274:107204):
+// Col 1 (Org name): flex-1 | Col 2 (Variable values): 366px fixed | Col 3 (action): 63px
+const ORG_COL2 = 366;
 const ORG_COL3 = 63;
 
 /** Org-mapping table: Org name | Variable values (;-separated) | X */
@@ -186,11 +252,16 @@ const OrgMappingTable: React.FC<{
   onRowChange: (id: string, field: keyof OrgRow, val: string) => void;
   onRowRemove: (id: string) => void;
   onAddRow: () => void;
-  /** Hide the bottom "+ Add new row" button — used in iteration 2 where it's in the toolbar */
+  /** Hide the bottom "+ Add new row" button — used when toolbar owns it */
   hideAddRow?: boolean;
-  /** Optional search filter to highlight/filter visible rows */
+  /** Optional search filter */
   searchQuery?: string;
-}> = ({ rows, onRowChange, onRowRemove, onAddRow, hideAddRow, searchQuery }) => {
+  rowErrors?: Record<string, { value?: string }>;
+  /** Primary-org mode: single fixed row, org name shown read-only in col 1 */
+  isPrimaryOrg?: boolean;
+  /** Name of the primary org to display in col 1 when isPrimaryOrg is true */
+  primaryOrgName?: string;
+}> = ({ rows, onRowChange, onRowRemove, onAddRow, hideAddRow, searchQuery, rowErrors, isPrimaryOrg, primaryOrgName }) => {
   const visibleRows = searchQuery
     ? rows.filter((r) => {
         const label = getOrgLabel(r.orgId).toLowerCase();
@@ -198,15 +269,55 @@ const OrgMappingTable: React.FC<{
       })
     : rows;
 
+  // Primary-org: 2-column table — col 1 = read-only org name, col 2 = value input
+  if (isPrimaryOrg) {
+    const row = rows[0];
+    const rowErr = rowErrors?.[row.id] ?? {};
+    return (
+      <div style={tableWrapperStyle}>
+        <div style={tableHeaderStyle}>
+          <div style={{ flex: 1 }}>
+            <ColHeader>Org name</ColHeader>
+          </div>
+          <div style={{ flex: `0 0 ${ORG_COL2}px` }}>
+            <ColHeader info>
+              Variable values (use ; for separation for multiple values)
+            </ColHeader>
+          </div>
+          <div style={{ width: ORG_COL3, flexShrink: 0 }} />
+        </div>
+        <div style={tableRowStyle}>
+          <div style={{ flex: 1 }}>
+            <TextInput
+              value={primaryOrgName ?? ''}
+              readOnly
+              onChange={() => {}}
+            />
+          </div>
+          <div style={{ flex: `0 0 ${ORG_COL2}px` }}>
+            <TextInput
+              placeholder="Enter value"
+              value={row.value}
+              onChange={(e) => onRowChange(row.id, 'value', e.target.value)}
+              error={!!rowErr.value}
+              errorMessage={rowErr.value}
+            />
+          </div>
+          <div style={{ width: ORG_COL3, flexShrink: 0 }} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Vertical gap={spacing.C}>
       <div style={tableWrapperStyle}>
         {/* Header */}
         <div style={tableHeaderStyle}>
-          <div style={{ flex: `0 0 ${ORG_COL1}px` }}>
+          <div style={{ flex: 1 }}>
             <ColHeader>Org name</ColHeader>
           </div>
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: `0 0 ${ORG_COL2}px` }}>
             <ColHeader info>
               Variable values (use ; for separation for multiple values)
             </ColHeader>
@@ -218,24 +329,38 @@ const OrgMappingTable: React.FC<{
         {visibleRows.map((row) => {
           const usedOrgIds = rows.filter((r) => r.id !== row.id && r.orgId).map((r) => r.orgId);
           const availableOrgs = ORG_OPTIONS.filter((o) => !usedOrgIds.includes(o.id));
+          const rowErr = rowErrors?.[row.id] ?? {};
           return (
             <div key={row.id} style={tableRowStyle}>
-              <div style={{ flex: `0 0 ${ORG_COL1}px` }}>
-                <Select
-                  options={availableOrgs}
-                  value={row.orgId}
-                  onChange={(v) => onRowChange(row.id, 'orgId', v)}
-                  placeholder="Select org"
-                  searchable
-                  searchPlaceholder="Search"
-                  fullWidth
-                />
-              </div>
+              {/* Col 1: org name — read-only display once selected, Select when empty */}
               <div style={{ flex: 1 }}>
+                {row.orgId ? (
+                  <TextInput
+                    value={getOrgLabel(row.orgId)}
+                    readOnly
+                    onChange={() => {}}
+                  />
+                ) : (
+                  <Select
+                    options={availableOrgs}
+                    value={row.orgId}
+                    onChange={(v) => onRowChange(row.id, 'orgId', v)}
+                    placeholder="Select org"
+                    searchable
+                    searchPlaceholder="Search"
+                    size="large"
+                    fullWidth
+                  />
+                )}
+              </div>
+              {/* Col 2: variable value */}
+              <div style={{ flex: `0 0 ${ORG_COL2}px` }}>
                 <TextInput
                   placeholder="Enter value"
                   value={row.value}
                   onChange={(e) => onRowChange(row.id, 'value', e.target.value)}
+                  error={!!rowErr.value}
+                  errorMessage={rowErr.value}
                 />
               </div>
               <div style={{ width: ORG_COL3, flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
@@ -262,7 +387,7 @@ const OrgMappingTable: React.FC<{
           icon="plus"
           iconPosition="leading"
           size="small"
-          onClick={onAddRow}
+          onClick={() => onAddRow()}
           style={{ alignSelf: 'flex-start' }}
         >
           Add new row
@@ -276,24 +401,29 @@ const OrgMappingTable: React.FC<{
 const USER_COL4_CROSS_ONLY = 57;
 const USER_COL4_PLUS_CROSS = 68;
 
-/** User-mapping table: Org Name | User Name | Variable value | [+] | X */
+/** User-mapping table: [Org Name |] User Name | Variable value | [+] | X */
 const UserMappingTable: React.FC<{
   rows: UserRow[];
   onRowChange: (id: string, field: keyof UserRow, val: string) => void;
   onRowRemove: (id: string) => void;
-  onAddRow: () => void;
+  /** orgId is forwarded so the new row inherits the clicked row's org */
+  onAddRow: (orgId?: string) => void;
   hideAddRow?: boolean;
-  /** Hide the inline + button inside each row (iteration 2) */
+  /** Hide the inline + button inside each row */
   hideRowAddButton?: boolean;
   searchQuery?: string;
-}> = ({ rows, onRowChange, onRowRemove, onAddRow, hideAddRow, hideRowAddButton, searchQuery }) => {
+  rowErrors?: Record<string, { value?: string }>;
+  /** Primary-org mode: hide org column */
+  isPrimaryOrg?: boolean;
+}> = ({ rows, onRowChange, onRowRemove, onAddRow, hideAddRow, hideRowAddButton, searchQuery, rowErrors, isPrimaryOrg }) => {
   const actionColWidth = hideRowAddButton ? USER_COL4_CROSS_ONLY : USER_COL4_PLUS_CROSS;
 
   const visibleRows = searchQuery
     ? rows.filter((r) => {
-        const orgLabel = getOrgLabel(r.orgId).toLowerCase();
         const userLabel = getUserLabel(r.userId).toLowerCase();
         const q = searchQuery.toLowerCase();
+        if (isPrimaryOrg) return userLabel.includes(q) || r.userId === '';
+        const orgLabel = getOrgLabel(r.orgId).toLowerCase();
         return orgLabel.includes(q) || userLabel.includes(q) || r.orgId === '';
       })
     : rows;
@@ -303,9 +433,11 @@ const UserMappingTable: React.FC<{
       <div style={tableWrapperStyle}>
         {/* Header */}
         <div style={tableHeaderStyle}>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <ColHeader>Org Name</ColHeader>
-          </div>
+          {!isPrimaryOrg && (
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <ColHeader>Org Name</ColHeader>
+            </div>
+          )}
           <div style={{ flex: 1, minWidth: 0 }}>
             <ColHeader>User Name</ColHeader>
           </div>
@@ -317,29 +449,35 @@ const UserMappingTable: React.FC<{
 
         {/* Rows */}
         {visibleRows.map((row) => {
-          const usedOrgIds = rows.filter((r) => r.id !== row.id && r.orgId).map((r) => r.orgId);
-          const availableOrgs = ORG_OPTIONS.filter((o) => !usedOrgIds.includes(o.id));
+          // Users already assigned in other rows are hidden from this row's dropdown
+          const usedUserIds = rows.filter((r) => r.id !== row.id && r.userId).map((r) => r.userId);
+          const availableUsers = USER_OPTIONS.filter((u) => !usedUserIds.includes(u.id));
+          const rowErr = rowErrors?.[row.id] ?? {};
           return (
             <div key={row.id} style={tableRowStyle}>
+              {!isPrimaryOrg && (
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <Select
+                    options={ORG_OPTIONS}
+                    value={row.orgId}
+                    onChange={(v) => onRowChange(row.id, 'orgId', v)}
+                    placeholder="Select org"
+                    searchable
+                    searchPlaceholder="Search"
+                    size="large"
+                    fullWidth
+                  />
+                </div>
+              )}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <Select
-                  options={availableOrgs}
-                  value={row.orgId}
-                  onChange={(v) => onRowChange(row.id, 'orgId', v)}
-                  placeholder="Select org"
-                  searchable
-                  searchPlaceholder="Search"
-                  fullWidth
-                />
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <Select
-                  options={USER_OPTIONS}
+                  options={availableUsers}
                   value={row.userId}
                   onChange={(v) => onRowChange(row.id, 'userId', v)}
                   placeholder="Select user"
                   searchable
                   searchPlaceholder="Search"
+                  size="large"
                   fullWidth
                 />
               </div>
@@ -348,6 +486,8 @@ const UserMappingTable: React.FC<{
                   placeholder="Enter value"
                   value={row.value}
                   onChange={(e) => onRowChange(row.id, 'value', e.target.value)}
+                  error={!!rowErr.value}
+                  errorMessage={rowErr.value}
                 />
               </div>
               <div style={{ width: actionColWidth, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -359,7 +499,7 @@ const UserMappingTable: React.FC<{
                       icon="plus"
                       iconOnly
                       aria-label="Add row"
-                      onClick={onAddRow}
+                      onClick={() => onAddRow(row.orgId)}
                     >
                       Add
                     </Button>
@@ -397,7 +537,7 @@ const UserMappingTable: React.FC<{
           icon="plus"
           iconPosition="leading"
           size="small"
-          onClick={onAddRow}
+          onClick={() => onAddRow()}
           style={{ alignSelf: 'flex-start' }}
         >
           Add new row
@@ -407,172 +547,22 @@ const UserMappingTable: React.FC<{
   );
 };
 
-// ─── Step 3 — Review cards ────────────────────────────────────────────────────
-
-const ChevronIcon: React.FC<{ expanded: boolean }> = ({ expanded }) => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    style={{
-      transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
-      transition: 'transform 0.2s ease',
-      flexShrink: 0,
-    }}
-    aria-hidden="true"
-  >
-    <path
-      d="M6 4L10 8L6 12"
-      stroke={systemColors.light['content-secondary']}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const ReviewCard: React.FC<{
-  title: string;
-  isExpanded: boolean;
-  onToggle: () => void;
-  children: React.ReactNode;
-}> = ({ title, isExpanded, onToggle, children }) => (
-  <div
-    style={{
-      backgroundColor: systemColors.light['background-sunken'],
-      border: `1px solid ${systemColors.light['border-divider']}`,
-      borderRadius: 12,
-      overflow: 'hidden',
-    }}
-  >
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={onToggle}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onToggle();
-        }
-      }}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: spacing.C,
-        padding: `${spacing.D}px`,
-        cursor: 'pointer',
-        outline: 'none',
-      }}
-    >
-      <ChevronIcon expanded={isExpanded} />
-      <span
-        style={{
-          fontSize: fontSize.sm,
-          fontWeight: fontWeight.semibold,
-          color: systemColors.light['content-primary'],
-          lineHeight: '20px',
-        }}
-      >
-        {title}
-      </span>
-    </div>
-
-    {isExpanded && (
-      <>
-        <Divider spacing="none" />
-        <div style={{ padding: `${spacing.D}px` }}>
-          {children}
-        </div>
-      </>
-    )}
-  </div>
-);
-
-/** Mini read-only table for org-only review (org name → variable value) */
-const OrgReviewMiniTable: React.FC<{ rows: { value: string }[] }> = ({ rows }) => (
-  <div
-    style={{
-      border: `1px solid ${systemColors.light['border-divider']}`,
-      borderRadius: 8,
-      overflow: 'hidden',
-      backgroundColor: systemColors.light['background-base'],
-    }}
-  >
-    <div style={tableHeaderStyle}>
-      <div style={{ flex: 1 }}>
-        <ColHeader info>Variable values (use ; for separation for multiple values)</ColHeader>
-      </div>
-    </div>
-    {rows.map((row, i) => (
-      <div
-        key={i}
-        style={{
-          ...tableRowStyle,
-          backgroundColor: systemColors.light['background-base'],
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <TextInput value={row.value} readOnly placeholder="—" onChange={() => {}} />
-        </div>
-      </div>
-    ))}
-  </div>
-);
-
-/** Mini read-only table for user review (user name | variable value) */
-const UserReviewMiniTable: React.FC<{ rows: { userId: string; value: string }[] }> = ({
-  rows,
-}) => (
-  <div
-    style={{
-      border: `1px solid ${systemColors.light['border-divider']}`,
-      borderRadius: 8,
-      overflow: 'hidden',
-      backgroundColor: systemColors.light['background-base'],
-    }}
-  >
-    <div style={tableHeaderStyle}>
-      <div style={{ flex: 1 }}>
-        <ColHeader>User name</ColHeader>
-      </div>
-      <div style={{ flex: 1 }}>
-        <ColHeader info>Variable values (use ; for separation for multiple values)</ColHeader>
-      </div>
-    </div>
-    {rows.map((row, i) => (
-      <div
-        key={i}
-        style={{
-          ...tableRowStyle,
-          backgroundColor: systemColors.light['background-base'],
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <TextInput value={getUserLabel(row.userId)} readOnly placeholder="—" onChange={() => {}} />
-        </div>
-        <div style={{ flex: 1 }}>
-          <TextInput value={row.value} readOnly placeholder="—" onChange={() => {}} />
-        </div>
-      </div>
-    ))}
-  </div>
-);
 
 // ─── Props & component ────────────────────────────────────────────────────────
 
 export interface CreateVariableModalProps {
   isOpen: boolean;
   onClose: () => void;
-  iteration?: '1' | '2';
+  /** 'all' = super-admin across all orgs (default); 'primary' = org admin in their own org */
+  adminScope?: 'all' | 'primary';
 }
 
 export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
   isOpen,
   onClose,
-  iteration = '1',
+  adminScope = 'all',
 }) => {
+  const isPrimaryOrg = adminScope === 'primary';
   // ── Step 1 state ──────────────────────────────────────────────────────────
   const [step, setStep] = useState(1);
   const [name, setName] = useState('');
@@ -588,12 +578,91 @@ export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
   const [userRows, setUserRows] = useState<UserRow[]>([emptyUserRow()]);
   const [step2Search, setStep2Search] = useState('');
 
-  // ── Step 3 state ──────────────────────────────────────────────────────────
-  const [reviewTab, setReviewTab] = useState<ScopeTab>('org');
-  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set(['primary-org']));
+  // ── Validation error state ─────────────────────────────────────────────────
+  // Only value-field data-type errors are stored per-row (shown inline).
+  // Required-field validation shows a single section banner instead.
+  type OrgRowErr  = { value?: string };
+  type UserRowErr = { value?: string };
+  const [nameError,       setNameError]       = useState('');
+  const [step2BannerError, setStep2BannerError] = useState('');
+  const [orgRowErrors,  setOrgRowErrors]  = useState<Record<string, OrgRowErr>>({});
+  const [userRowErrors, setUserRowErrors] = useState<Record<string, UserRowErr>>({});
 
-  const totalSteps = iteration === '2' ? 3 : 2;
-  const canProceed = name.trim().length > 0 && purpose !== null;
+  const totalSteps = 2;
+
+  // ── Step navigation with validation ──────────────────────────────────────
+
+  const handleStep1Next = () => {
+    if (!name.trim()) {
+      setNameError('Variable name is required');
+      return;
+    }
+    setNameError('');
+    setStep(2);
+  };
+
+  const validateStep2 = (): boolean => {
+    let hasEmpty = false;
+    const newOrgErrors: Record<string, OrgRowErr> = {};
+    const newUserErrors: Record<string, UserRowErr> = {};
+
+    if (!userOnly) {
+      orgRows.forEach((row) => {
+        // In primary-org mode there's no org selector — only the value is required
+        const orgRequired = !isPrimaryOrg && !row.orgId;
+        if (orgRequired || !row.value.trim()) {
+          hasEmpty = true;
+        } else {
+          const typeErr = validateValue(row.value, dataType);
+          if (typeErr) newOrgErrors[row.id] = { value: typeErr };
+        }
+      });
+    }
+
+    if (bothScopes || userOnly) {
+      userRows.forEach((row) => {
+        // In primary-org mode org column is hidden — only userId + value are required
+        const orgRequired = !isPrimaryOrg && !row.orgId;
+        if (orgRequired || !row.userId || !row.value.trim()) {
+          hasEmpty = true;
+        } else {
+          const typeErr = validateValue(row.value, dataType);
+          if (typeErr) newUserErrors[row.id] = { value: typeErr };
+        }
+      });
+    }
+
+    setOrgRowErrors(newOrgErrors);
+    setUserRowErrors(newUserErrors);
+
+    if (hasEmpty) {
+      setStep2BannerError('Fill in all required fields to proceed');
+      return false;
+    }
+
+    const hasTypeErrors =
+      Object.keys(newOrgErrors).length > 0 || Object.keys(newUserErrors).length > 0;
+    setStep2BannerError('');
+    return !hasTypeErrors;
+  };
+
+  const handleStep2Proceed = () => {
+    if (!validateStep2()) return;
+    handleClose();
+  };
+
+  // Validate a value string against the chosen data type; returns '' if valid.
+  const validateValue = (val: string, dt: string): string => {
+    const v = val.trim();
+    if (!v) return '';
+    switch (dt) {
+      case 'INT':     return /^-?\d+$/.test(v)             ? '' : `Enter a valid ${dt} value`;
+      case 'FLOAT':   return /^-?\d+(\.\d+)?$/.test(v)     ? '' : `Enter a valid ${dt} value`;
+      case 'BOOLEAN': return /^(true|false|0|1)$/i.test(v) ? '' : 'Enter true or false';
+      case 'DATE':    return isNaN(Date.parse(v))           ? 'Enter a valid date (YYYY-MM-DD)' : '';
+      default:        return '';
+    }
+  };
 
   const handleClose = () => {
     setStep(1);
@@ -607,34 +676,53 @@ export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
     setOrgRows([emptyOrgRow()]);
     setUserRows([emptyUserRow()]);
     setStep2Search('');
-    setReviewTab('org');
-    setExpandedCards(new Set(['primary-org']));
+    setNameError('');
+    setStep2BannerError('');
+    setOrgRowErrors({});
+    setUserRowErrors({});
     onClose();
   };
 
-  const toggleCard = (id: string) => {
-    setExpandedCards((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-
   // ── Step 2 helpers ────────────────────────────────────────────────────────
-  const updateOrgRow = (id: string, field: keyof OrgRow, val: string) =>
+  const updateOrgRow = (id: string, field: keyof OrgRow, val: string) => {
     setOrgRows((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: val } : r)));
-  const removeOrgRow = (id: string) =>
+    setStep2BannerError('');
+    if (field === 'value') {
+      setOrgRowErrors((prev) => {
+        const typeErr = validateValue(val, dataType);
+        const rowErr: OrgRowErr = typeErr ? { value: typeErr } : {};
+        return { ...prev, [id]: rowErr };
+      });
+    }
+  };
+  const removeOrgRow = (id: string) => {
     setOrgRows((prev) => prev.filter((r) => r.id !== id));
-  const addOrgRow = () => setOrgRows((prev) => [...prev, emptyOrgRow()]);
+    setOrgRowErrors((prev) => { const next = { ...prev }; delete next[id]; return next; });
+  };
   const addOrgRowTop = () => setOrgRows((prev) => [emptyOrgRow(), ...prev]);
 
-  const updateUserRow = (id: string, field: keyof UserRow, val: string) =>
+  const updateUserRow = (id: string, field: keyof UserRow, val: string) => {
     setUserRows((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: val } : r)));
-  const removeUserRow = (id: string) =>
+    setStep2BannerError('');
+    if (field === 'value') {
+      setUserRowErrors((prev) => {
+        const typeErr = validateValue(val, dataType);
+        const rowErr: UserRowErr = typeErr ? { value: typeErr } : {};
+        return { ...prev, [id]: rowErr };
+      });
+    }
+  };
+  const removeUserRow = (id: string) => {
     setUserRows((prev) => prev.filter((r) => r.id !== id));
-  const addUserRow = () => setUserRows((prev) => [...prev, emptyUserRow()]);
-  const addUserRowTop = () => setUserRows((prev) => [emptyUserRow(), ...prev]);
+    setUserRowErrors((prev) => { const next = { ...prev }; delete next[id]; return next; });
+  };
+  // orgId is optional: when provided the new row inherits that org (row-level + click);
+  // when omitted the new row copies the org from the top row.
+  const addUserRowTop = (orgId?: string) =>
+    setUserRows((prev) => {
+      const defaultOrg = orgId ?? (prev.length > 0 ? prev[0].orgId : '');
+      return [{ ...emptyUserRow(), orgId: defaultOrg }, ...prev];
+    });
 
   // ── Step 2 scope mode ─────────────────────────────────────────────────────
   const bothScopes = purpose === 'formula' && scopeOrg && scopeUser;
@@ -685,8 +773,6 @@ export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
             <Checkbox label="Org" checked={scopeOrg} onChange={setScopeOrg} />
             <Checkbox label="User" checked={scopeUser} onChange={setScopeUser} />
           </Vertical>
-          <Divider spacing="none" />
-          <SensitiveBlock />
         </Vertical>
       );
     }
@@ -694,98 +780,49 @@ export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
   };
 
   // ─────────────────────────────────────────────────────────────────────────
-  // Step 2 — Iteration 1 (current 2-step flow)
+  // Step 2 — 3-step flow with search toolbar
   // ─────────────────────────────────────────────────────────────────────────
 
-  const renderStep2ContentV1 = () => {
-    const scopeLabel = (
-      <Horizontal gap={spacing.A} align="center">
-        <span style={{ fontSize: fontSize.sm, fontWeight: fontWeight.medium, color: systemColors.light['content-primary'] }}>
-          Scope mapping
-        </span>
-        <Icon name="info-circle" size="s" color={systemColors.light['content-tertiary']} />
-      </Horizontal>
-    );
-
-    if (bothScopes) {
-      return (
-        <Vertical gap={spacing.E}>
-          {scopeLabel}
-          <SegmentedControl
-            options={[
-              { id: 'org', label: 'Org Mapping' },
-              { id: 'user', label: 'User Mapping' },
-            ]}
-            value={mappingTab}
-            onChange={(v) => setMappingTab(v as ScopeTab)}
-          />
-          {mappingTab === 'org' ? (
-            <OrgMappingTable rows={orgRows} onRowChange={updateOrgRow} onRowRemove={removeOrgRow} onAddRow={addOrgRow} />
-          ) : (
-            <UserMappingTable rows={userRows} onRowChange={updateUserRow} onRowRemove={removeUserRow} onAddRow={addUserRow} />
-          )}
-        </Vertical>
-      );
-    }
-
-    if (userOnly) {
-      return (
-        <Vertical gap={spacing.E}>
-          {scopeLabel}
-          <UserMappingTable rows={userRows} onRowChange={updateUserRow} onRowRemove={removeUserRow} onAddRow={addUserRow} />
-        </Vertical>
-      );
-    }
-
-    return (
-      <Vertical gap={spacing.E}>
-        {scopeLabel}
-        <OrgMappingTable rows={orgRows} onRowChange={updateOrgRow} onRowRemove={removeOrgRow} onAddRow={addOrgRow} />
-      </Vertical>
-    );
-  };
-
-  // ─────────────────────────────────────────────────────────────────────────
-  // Step 2 — Iteration 2 (3-step flow, with search toolbar)
-  // ─────────────────────────────────────────────────────────────────────────
-
-  const renderStep2ContentV2 = () => {
+  const renderStep2Content = () => {
     const activeTable = bothScopes && mappingTab === 'user' ? 'user' : userOnly ? 'user' : 'org';
+    // In primary-org mode, org tab has a single fixed row — no "Add new row"
+    const showAddRow = !(isPrimaryOrg && activeTable === 'org');
     const addRow = activeTable === 'user' ? addUserRowTop : addOrgRowTop;
 
     const toolbar = (
       <Horizontal justify="space-between" align="center">
-        <div style={{ width: 200 }}>
-          <SearchInput
-            placeholder="Search"
-            value={step2Search}
-            onChange={(e) => setStep2Search(e.target.value)}
-          />
-        </div>
-        <Button variant="tertiary" icon="plus" iconPosition="leading" size="small" onClick={addRow}>
-          Add new row
-        </Button>
+        <Horizontal gap={10} align="center">
+          <div style={{ width: 200 }}>
+            <SearchInput
+              placeholder="Search"
+              value={step2Search}
+              onChange={(e) => setStep2Search(e.target.value)}
+            />
+          </div>
+          {bothScopes && (
+            <SegmentedControl
+              options={[
+                { id: 'org', label: isPrimaryOrg ? PRIMARY_ORG_NAME : 'Org' },
+                { id: 'user', label: 'User' },
+              ]}
+              value={mappingTab}
+              onChange={(v) => {
+                setMappingTab(v as ScopeTab);
+                setStep2Search('');
+              }}
+            />
+          )}
+        </Horizontal>
+        {showAddRow && (
+          <Button variant="tertiary" icon="plus" iconPosition="leading" size="small" onClick={() => addRow()}>
+            Add new row
+          </Button>
+        )}
       </Horizontal>
     );
 
     return (
       <Vertical gap={spacing.D}>
-        <SectionLabel info>Scope Mapping</SectionLabel>
-
-        {bothScopes && (
-          <SegmentedControl
-            options={[
-              { id: 'org', label: 'Org Mapping' },
-              { id: 'user', label: 'User Mapping' },
-            ]}
-            value={mappingTab}
-            onChange={(v) => {
-              setMappingTab(v as ScopeTab);
-              setStep2Search('');
-            }}
-          />
-        )}
-
         {toolbar}
 
         {activeTable === 'user' ? (
@@ -797,6 +834,8 @@ export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
             hideAddRow
             hideRowAddButton
             searchQuery={step2Search}
+            rowErrors={userRowErrors}
+            isPrimaryOrg={isPrimaryOrg}
           />
         ) : (
           <OrgMappingTable
@@ -806,147 +845,12 @@ export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
             onAddRow={addOrgRowTop}
             hideAddRow
             searchQuery={step2Search}
+            rowErrors={orgRowErrors}
+            isPrimaryOrg={isPrimaryOrg}
+            primaryOrgName={PRIMARY_ORG_NAME}
           />
         )}
       </Vertical>
-    );
-  };
-
-  // ─────────────────────────────────────────────────────────────────────────
-  // Step 3 — Review (Iteration 2 only)
-  // ─────────────────────────────────────────────────────────────────────────
-
-  const renderStep3Content = () => {
-    // Group user rows by org
-    const userRowsByOrg = userRows.reduce<Record<string, UserRow[]>>((acc, row) => {
-      const key = row.orgId || '__unassigned__';
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(row);
-      return acc;
-    }, {});
-
-    // Collect all org IDs that appear in any row
-    const allOrgIds = bothScopes
-      ? Array.from(new Set([
-          ...orgRows.map((r) => r.orgId).filter(Boolean),
-          ...userRows.map((r) => r.orgId).filter(Boolean),
-        ]))
-      : userOnly
-      ? Array.from(new Set(userRows.map((r) => r.orgId).filter(Boolean)))
-      : orgRows.map((r) => r.orgId).filter(Boolean);
-
-    const orgCardsContent = (
-      <Vertical gap={spacing.C}>
-        {orgRows
-          .filter((r) => r.orgId)
-          .map((row) => (
-            <ReviewCard
-              key={row.id}
-              title={getOrgLabel(row.orgId)}
-              isExpanded={expandedCards.has(row.id)}
-              onToggle={() => toggleCard(row.id)}
-            >
-              <OrgReviewMiniTable rows={[{ value: row.value }]} />
-            </ReviewCard>
-          ))}
-        {orgRows.filter((r) => r.orgId).length === 0 && (
-          <span style={{ fontSize: fontSize.sm, color: systemColors.light['content-secondary'] }}>
-            No org values assigned
-          </span>
-        )}
-      </Vertical>
-    );
-
-    const userCardsContent = (
-      <Vertical gap={spacing.C}>
-        {allOrgIds.map((orgId) => {
-          const orgLabel = getOrgLabel(orgId);
-          const cardId = `review-user-${orgId}`;
-          const rows = userRowsByOrg[orgId] ?? [];
-          return (
-            <ReviewCard
-              key={orgId}
-              title={orgLabel}
-              isExpanded={expandedCards.has(cardId)}
-              onToggle={() => toggleCard(cardId)}
-            >
-              {rows.length > 0 ? (
-                <UserReviewMiniTable rows={rows.map((r) => ({ userId: r.userId, value: r.value }))} />
-              ) : (
-                <span style={{ fontSize: fontSize.sm, color: systemColors.light['content-secondary'] }}>
-                  No user values assigned
-                </span>
-              )}
-            </ReviewCard>
-          );
-        })}
-        {allOrgIds.length === 0 && (
-          <span style={{ fontSize: fontSize.sm, color: systemColors.light['content-secondary'] }}>
-            No user values assigned
-          </span>
-        )}
-      </Vertical>
-    );
-
-    // Tab bar styles
-    const tabBarStyle: React.CSSProperties = {
-      display: 'flex',
-      borderBottom: `1px solid ${systemColors.light['border-divider']}`,
-      marginBottom: spacing.D,
-    };
-    const tabStyle = (active: boolean): React.CSSProperties => ({
-      padding: `6px ${spacing.C}px`,
-      fontSize: fontSize.sm,
-      fontWeight: fontWeight.regular,
-      color: active ? systemColors.light['content-brand'] : systemColors.light['content-primary'],
-      border: 'none',
-      borderBottom: active ? `2px solid ${systemColors.light['content-brand']}` : '2px solid transparent',
-      marginBottom: -1,
-      cursor: 'pointer',
-      background: 'none',
-      outline: 'none',
-      lineHeight: '20px',
-    });
-
-    // Org-only: no tabs, just org cards
-    if (!bothScopes && !userOnly) {
-      return (
-        <div style={{ overflowY: 'auto', maxHeight: '100%' }}>
-          {orgCardsContent}
-        </div>
-      );
-    }
-
-    // User-only: no tabs, just user cards
-    if (userOnly) {
-      return (
-        <div style={{ overflowY: 'auto', maxHeight: '100%' }}>
-          {userCardsContent}
-        </div>
-      );
-    }
-
-    // Both: tabs
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
-        <div style={tabBarStyle}>
-          <button
-            style={tabStyle(reviewTab === 'org')}
-            onClick={() => setReviewTab('org')}
-          >
-            Org Mapping
-          </button>
-          <button
-            style={tabStyle(reviewTab === 'user')}
-            onClick={() => setReviewTab('user')}
-          >
-            User Mapping
-          </button>
-        </div>
-        <div style={{ overflowY: 'auto', flex: 1 }}>
-          {reviewTab === 'org' ? orgCardsContent : userCardsContent}
-        </div>
-      </div>
     );
   };
 
@@ -959,14 +863,13 @@ export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
       <Link href="#" onClick={(e) => { e.preventDefault(); handleClose(); }}>
         Cancel
       </Link>
-      <Button variant="primary" disabled={!canProceed} onClick={() => setStep(2)}>
+      <Button variant="primary" disabled={purpose === null} onClick={handleStep1Next}>
         Next
       </Button>
     </Horizontal>
   );
 
-  // Iteration 1: step 2 footer has "Save"
-  const step2FooterV1 = (
+  const step2Footer = (
     <Horizontal justify="space-between" align="center" style={{ width: '100%' }}>
       <Link href="#" onClick={(e) => { e.preventDefault(); handleClose(); }}>
         Cancel
@@ -975,41 +878,7 @@ export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
         <Button variant="tertiary" onClick={() => setStep(1)}>
           Back
         </Button>
-        <Button variant="primary" onClick={handleClose}>
-          Save
-        </Button>
-      </Horizontal>
-    </Horizontal>
-  );
-
-  // Iteration 2: step 2 footer has "Next" → goes to step 3
-  const step2FooterV2 = (
-    <Horizontal justify="space-between" align="center" style={{ width: '100%' }}>
-      <Link href="#" onClick={(e) => { e.preventDefault(); handleClose(); }}>
-        Cancel
-      </Link>
-      <Horizontal gap={spacing.C} align="center">
-        <Button variant="tertiary" onClick={() => setStep(1)}>
-          Back
-        </Button>
-        <Button variant="primary" onClick={() => { setStep(3); setExpandedCards(new Set()); }}>
-          Next
-        </Button>
-      </Horizontal>
-    </Horizontal>
-  );
-
-  // Iteration 2: step 3 footer has "Save"
-  const step3Footer = (
-    <Horizontal justify="space-between" align="center" style={{ width: '100%' }}>
-      <Link href="#" onClick={(e) => { e.preventDefault(); handleClose(); }}>
-        Cancel
-      </Link>
-      <Horizontal gap={spacing.C} align="center">
-        <Button variant="tertiary" onClick={() => setStep(2)}>
-          Back
-        </Button>
-        <Button variant="primary" onClick={handleClose}>
+        <Button variant="primary" onClick={handleStep2Proceed}>
           Save
         </Button>
       </Horizontal>
@@ -1020,25 +889,13 @@ export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
   // Active footer
   // ─────────────────────────────────────────────────────────────────────────
 
-  const activeFooter =
-    step === 1
-      ? step1Footer
-      : step === 2
-      ? iteration === '2'
-        ? step2FooterV2
-        : step2FooterV1
-      : step3Footer;
+  const activeFooter = step === 1 ? step1Footer : step2Footer;
 
   // ─────────────────────────────────────────────────────────────────────────
   // Step title
   // ─────────────────────────────────────────────────────────────────────────
 
-  const modalTitle =
-    step === 1
-      ? 'Add variable details'
-      : step === 2
-      ? step2Title
-      : 'Review values';
+  const modalTitle = step === 1 ? 'Add variable details' : step2Title;
 
   // ─────────────────────────────────────────────────────────────────────────
   // Render
@@ -1061,7 +918,13 @@ export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
         /* ── Step 1 ── */
         <Vertical gap={spacing.F}>
           <div style={{ width: 325 }}>
-            <TextInput label="Name" value={name} onChange={(e) => setName(e.target.value)} />
+            <TextInput
+              label="Name"
+              value={name}
+              onChange={(e) => { setName(e.target.value); if (e.target.value.trim()) setNameError(''); }}
+              error={!!nameError}
+              errorMessage={nameError}
+            />
           </div>
 
           <Vertical gap={spacing.C}>
@@ -1120,12 +983,21 @@ export const CreateVariableModal: React.FC<CreateVariableModalProps> = ({
             </Vertical>
           </Vertical>
         </Vertical>
-      ) : step === 2 ? (
-        /* ── Step 2 ── */
-        iteration === '2' ? renderStep2ContentV2() : renderStep2ContentV1()
       ) : (
-        /* ── Step 3 (Iteration 2 only) ── */
-        renderStep3Content()
+        /* ── Step 2 ── */
+        <Vertical gap={spacing.C}>
+          {step2BannerError && (
+            <Alert
+              status="failure"
+              variant="section"
+              message={step2BannerError}
+              dismissible
+              onDismiss={() => setStep2BannerError('')}
+              className={styles.bannerFullWidth}
+            />
+          )}
+          {renderStep2Content()}
+        </Vertical>
       )}
     </Modal>
   );
