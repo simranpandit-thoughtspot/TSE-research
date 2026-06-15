@@ -1,0 +1,316 @@
+.root {
+  padding: 32px 40px 24px;
+  background: var(--rd-sys-color-background-sunken, #F9FAFB);
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.header {
+  margin-bottom: 28px;
+}
+
+.greeting {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--rd-sys-color-content-primary, #111827);
+  margin: 0 0 4px;
+}
+
+.subline {
+  font-size: 13.5px;
+  color: var(--rd-sys-color-content-secondary, #6B7280);
+  margin: 0;
+}
+
+/* ── KPI Row ── */
+
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.kpiCard {
+  background: #FFFFFF;
+  border: 1px solid var(--rd-sys-color-border-default, #E5E7EB);
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.15s ease;
+}
+
+.kpiCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.kpiIconRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.kpiIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.kpiIcon.blue { background: #EFF4FF; color: #2770EF; }
+.kpiIcon.green { background: #F0FDF4; color: #16A34A; }
+.kpiIcon.amber { background: #FFFBEB; color: #D97706; }
+.kpiIcon.purple { background: #F5F3FF; color: #7C3AED; }
+
+.kpiBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+
+.kpiBadge.alert {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.kpiBadge.pending {
+  background: #FFFBEB;
+  color: #D97706;
+}
+
+.kpiValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--rd-sys-color-content-primary, #111827);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.kpiLabel {
+  font-size: 12.5px;
+  color: var(--rd-sys-color-content-secondary, #6B7280);
+}
+
+/* ── Middle Row ── */
+
+.midRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.panel {
+  background: #FFFFFF;
+  border: 1px solid var(--rd-sys-color-border-default, #E5E7EB);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--rd-sys-color-border-divider, #F3F4F6);
+}
+
+.panelTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rd-sys-color-content-primary, #111827);
+}
+
+.panelCount {
+  font-size: 11.5px;
+  font-weight: 600;
+  background: #EFF4FF;
+  color: #2770EF;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+/* ── Task Feed ── */
+
+.taskList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.taskItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--rd-sys-color-border-divider, #F3F4F6);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.taskItem:last-child {
+  border-bottom: none;
+}
+
+.taskItem:hover {
+  background: #F9FAFB;
+}
+
+.taskDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.taskDot.high { background: #EF4444; }
+.taskDot.medium { background: #F59E0B; }
+.taskDot.low { background: #D1D5DB; }
+
+.taskBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.taskTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-sys-color-content-primary, #111827);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.taskDetail {
+  font-size: 12px;
+  color: var(--rd-sys-color-content-secondary, #6B7280);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.taskTime {
+  font-size: 11.5px;
+  color: #9CA3AF;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── Audit Log ── */
+
+.auditList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.auditItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--rd-sys-color-border-divider, #F3F4F6);
+}
+
+.auditItem:last-child {
+  border-bottom: none;
+}
+
+.auditTypeChip {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.auditTypeChip.user { background: #EFF4FF; color: #2770EF; }
+.auditTypeChip.feature { background: #F5F3FF; color: #7C3AED; }
+.auditTypeChip.org { background: #F0FDF4; color: #16A34A; }
+.auditTypeChip.config { background: #F9FAFB; color: #6B7280; }
+
+.auditBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.auditAction {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--rd-sys-color-content-primary, #111827);
+  margin-bottom: 1px;
+}
+
+.auditTarget {
+  font-size: 11.5px;
+  color: var(--rd-sys-color-content-secondary, #6B7280);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.auditTime {
+  font-size: 11.5px;
+  color: #9CA3AF;
+  flex-shrink: 0;
+}
+
+/* ── Suggested Prompts ── */
+
+.suggestedSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.suggestedLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.suggestedChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  background: #FFFFFF;
+  border: 1px solid var(--rd-sys-color-border-default, #E5E7EB);
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-sys-color-content-primary, #374151);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.chip:hover {
+  border-color: #2770EF;
+  color: #2770EF;
+  background: #F0F5FF;
+  box-shadow: 0 2px 8px rgba(39, 112, 239, 0.12);
+}
+
+.chipIcon {
+  font-size: 14px;
+  line-height: 1;
+}

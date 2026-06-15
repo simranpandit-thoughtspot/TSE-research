@@ -1,0 +1,8 @@
+.fixedModal {
+  height: 690px;
+}
+
+.bannerFullWidth {
+  max-width: none !important;
+  width: 100%;
+}

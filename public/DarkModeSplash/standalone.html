@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dark Mode Switch — Content Area</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: #111214;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Scale wrapper: JS computes the scale to fill the viewport */
+    .scale-wrap {
+      transform-origin: center center;
+      flex-shrink: 0;
+    }
+
+    /* Watermark label */
+    .ca-label {
+      position: fixed;
+      top: 16px;
+      left: 20px;
+      font-family: var(--font, system-ui, sans-serif);
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.04em;
+      pointer-events: none;
+    }
+
+    /* Back link */
+    .ca-back {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      font-family: var(--font, system-ui, sans-serif);
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      padding: 4px 10px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 5px;
+    }
+
+    .ca-back:hover { color: white; border-color: rgba(255,255,255,0.4); }
+
+    /* Dimensions badge */
+    .ca-dims {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,0.25);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<span class="ca-label">Content Area — 788 × 380</span>
+<a class="ca-back" href="index.html">← Prototype view</a>
+<div class="ca-dims">788 × 380 px</div>
+
+<div class="scale-wrap" id="scale-wrap">
+  <!-- Same content-area markup as index.html (extracted) -->
+  <div class="content-area" id="content-area">
+
+    <svg width="0" height="0" style="position:absolute;overflow:hidden">
+      <defs>
+        <clipPath id="reveal-clip" clipPathUnits="userSpaceOnUse">
+          <circle id="reveal-circle" cx="762" cy="22" r="0"/>
+        </clipPath>
+      </defs>
+    </svg>
+
+    <!-- Light layer -->
+    <div class="theme-layer layer-light" id="layer-light">
+      <div class="ts-shell">
+        <header class="ts-topbar">
+          <svg class="ts-brand-mark" viewBox="0 0 24 24"><path d="M23.711 0H0V4.392H23.711V0Z"/><path d="M23.711 5.856H14.702V10.248H23.711V5.856Z"/><path d="M5.756 5.856H0V10.248H5.756C7.907 10.248 9.66 12 9.66 14.151V23.711H14.052V14.151C14.052 9.578 10.329 5.856 5.756 5.856Z"/><path d="M19.211 16.627C17.178 16.627 15.524 18.28 15.524 20.313C15.524 22.346 17.178 24 19.211 24C21.244 24 22.898 22.346 22.898 20.313C22.898 18.28 21.244 16.627 19.211 16.627Z"/></svg>
+          <div class="ts-topbar-right">
+            <div class="ts-search"><svg width="11" height="11" viewBox="0 0 18 18" fill="currentColor"><path d="M7.7 13.2a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11Zm0-1.8a3.7 3.7 0 1 0 0-7.4 3.7 3.7 0 0 0 0 7.4Zm3.8.9 1.3-1.3 4 4-1.3 1.3-4-4Z"/></svg>Search in your library</div>
+            <button class="ts-icon-btn"><svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 1.5C4.5 1.5 3 3.5 3 5.5v3L1.5 10h11L11 8.5V5.5C11 3.5 9.5 1.5 7 1.5ZM5.5 11a1.5 1.5 0 0 0 3 0"/></svg></button>
+            <div class="ts-org-pill"><img src="assets/user-avatar.png" alt="" class="ts-avatar">Royal Enfield</div>
+            <button class="ts-icon-btn" style="padding:0;"><img src="assets/user-avatar.png" alt="" class="ts-avatar" style="width:22px;height:22px;border-radius:50%;"></button>
+          </div>
+        </header>
+        <main class="ts-home">
+          <div class="ts-radiance-wrap"><div class="radiance-local" data-radiance-appearance="light" data-radiance-layout="top-wash" data-radiance-variant="dynamic-subtle" data-radiance-intensity="subtle" data-radiance-speed="1.86" id="radiance-light"></div></div>
+          <div class="ts-hero">
+            <div class="ts-spotter-row"><img src="assets/spotter-avatar.png" alt="" class="ts-spotter-icon"><h1 class="ts-spotter-h1">Hi! I'm Spotter, your AI data analyst</h1></div>
+            <p class="ts-spotter-sub">Let's make sense of your data together</p>
+            <div class="ts-query">
+              <div class="ts-query-placeholder">Ask me a question. Use '@' to select columns and values.</div>
+              <div class="ts-query-foot">
+                <div class="ts-query-left">
+                  <div class="ts-mode-toggle"><button class="ts-mode-btn active"><svg width="12" height="12" viewBox="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="14" height="2" rx="1"/></svg></button><button class="ts-mode-btn"><svg width="12" height="12" viewBox="0 0 18 18" fill="currentColor"><path d="M8.8 1.5 10.4 6l4.6 1.7-4.6 1.7-1.6 4.6-1.7-4.6-4.6-1.7L7.1 6l1.7-4.5Z"/></svg></button></div>
+                  <div class="ts-model-pill">GTMRevOps</div>
+                  <button class="ts-plus-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M5.25 5.25V1h1.5v4.25H11v1.5H6.75V11h-1.5V6.75H1v-1.5z"/></svg></button>
+                </div>
+                <div style="display:flex;align-items:center;gap:5px;"><div class="ts-send"><svg width="12" height="12" viewBox="0 0 18 18" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15.5V3.2m0 0L4.1 8.1M9 3.2l4.9 4.9"/></svg></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ts-panels">
+            <div class="ts-panel ts-recents-panel"><div class="ts-panel-head">Recents</div><div class="ts-panel-body"><div class="ts-recent-row">Quarterly profit dashboard</div><div class="ts-recent-row">Customer attrition by team</div></div></div>
+            <div class="ts-panel ts-watch-panel"><div class="ts-panel-head">Watchlist<span class="ts-add-kpi">+ Add KPI</span></div><div class="ts-panel-body"><div class="ts-watch-row"><div><div class="ts-watch-name">Total Revenue by Product</div><div class="ts-watch-cadence">WoW</div></div><div class="ts-watch-val"><div>88.888M</div><div class="ts-watch-trend is-up">↑ 20.74%</div></div></div></div></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Dark layer -->
+    <div class="theme-layer layer-dark dark-layer" id="layer-dark" style="clip-path: url(#reveal-clip)">
+      <div class="ts-shell">
+        <header class="ts-topbar">
+          <svg class="ts-brand-mark" viewBox="0 0 24 24"><path d="M23.711 0H0V4.392H23.711V0Z"/><path d="M23.711 5.856H14.702V10.248H23.711V5.856Z"/><path d="M5.756 5.856H0V10.248H5.756C7.907 10.248 9.66 12 9.66 14.151V23.711H14.052V14.151C14.052 9.578 10.329 5.856 5.756 5.856Z"/><path d="M19.211 16.627C17.178 16.627 15.524 18.28 15.524 20.313C15.524 22.346 17.178 24 19.211 24C21.244 24 22.898 22.346 22.898 20.313C22.898 18.28 21.244 16.627 19.211 16.627Z"/></svg>
+          <div class="ts-topbar-right">
+            <div class="ts-search"><svg width="11" height="11" viewBox="0 0 18 18" fill="currentColor"><path d="M7.7 13.2a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11Zm0-1.8a3.7 3.7 0 1 0 0-7.4 3.7 3.7 0 0 0 0 7.4Zm3.8.9 1.3-1.3 4 4-1.3 1.3-4-4Z"/></svg>Search in your library</div>
+            <div class="ts-org-pill"><img src="assets/user-avatar.png" alt="" class="ts-avatar">Royal Enfield</div>
+            <button class="ts-icon-btn" style="padding:0;"><img src="assets/user-avatar.png" alt="" class="ts-avatar" style="width:22px;height:22px;border-radius:50%;"></button>
+          </div>
+        </header>
+        <main class="ts-home">
+          <div class="ts-radiance-wrap"><div class="radiance-local" data-radiance-appearance="dark" data-radiance-layout="top-wash" data-radiance-variant="dynamic-subtle" data-radiance-intensity="subtle" data-radiance-dark-glow="subtle" data-radiance-speed="1.72" id="radiance-dark"></div></div>
+          <div class="ts-hero">
+            <div class="ts-spotter-row"><img src="assets/spotter-avatar.png" alt="" class="ts-spotter-icon"><h1 class="ts-spotter-h1">Hi! I'm Spotter, your AI data analyst</h1></div>
+            <p class="ts-spotter-sub">Let's make sense of your data together</p>
+            <div class="ts-query">
+              <div class="ts-query-placeholder">Ask me a question. Use '@' to select columns and values.</div>
+              <div class="ts-query-foot">
+                <div class="ts-query-left">
+                  <div class="ts-model-pill">GTMRevOps</div>
+                </div>
+                <div style="display:flex;gap:5px;"><div class="ts-send"><svg width="12" height="12" viewBox="0 0 18 18" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15.5V3.2m0 0L4.1 8.1M9 3.2l4.9 4.9"/></svg></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ts-panels">
+            <div class="ts-panel ts-recents-panel"><div class="ts-panel-head">Recents</div><div class="ts-panel-body"><div class="ts-recent-row">Quarterly profit dashboard</div></div></div>
+            <div class="ts-panel ts-watch-panel"><div class="ts-panel-head">Watchlist</div><div class="ts-panel-body"><div class="ts-watch-row"><div><div class="ts-watch-name">Total Revenue by Product</div></div><div class="ts-watch-val"><div>88.888M</div><div class="ts-watch-trend is-up">↑ 20.74%</div></div></div></div></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay-layer" id="overlay-layer">
+      <div class="ts-dropdown" id="dropdown-light" style="opacity:0;transform:scale(0.95)">
+        <div class="ts-dd-head"><img src="assets/user-avatar.png" alt="" class="ts-dd-avatar"><div class="ts-dd-name">Eliška Pedersen</div><div class="ts-dd-email">EliskaPed123@apple.com</div></div>
+        <div class="ts-dd-items">
+          <div class="ts-dd-item">Profile</div>
+          <div class="ts-dd-item" id="appearance-item-light" style="position:relative">
+            Appearance
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4.5 3 7.5 6 4.5 9"/></svg>
+            <div class="ts-submenu" id="submenu-light" style="opacity:0;transform:scaleX(0.92);transform-origin:top right">
+              <div class="ts-sm-item" id="sm-light-light">Light mode<svg class="ts-check" id="check-light-light" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3.5 3.5L12 3"/></svg></div>
+              <div class="ts-sm-item" id="sm-light-dark">Dark mode</div>
+              <div class="ts-sm-item">System</div>
+            </div>
+          </div>
+          <div class="ts-dd-item">Sign out</div>
+        </div>
+      </div>
+      <div class="ts-dropdown dropdown-dark" id="dropdown-dark" style="opacity:0;transform:scale(0.95)">
+        <div class="ts-dd-head"><img src="assets/user-avatar.png" alt="" class="ts-dd-avatar"><div class="ts-dd-name">Eliška Pedersen</div><div class="ts-dd-email">EliskaPed123@apple.com</div></div>
+        <div class="ts-dd-items">
+          <div class="ts-dd-item">Profile</div>
+          <div class="ts-dd-item" id="appearance-item-dark" style="background:var(--sec-action,#303136);position:relative">
+            Appearance
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4.5 3 7.5 6 4.5 9"/></svg>
+            <div class="ts-submenu dropdown-dark" id="submenu-dark" style="opacity:0;transform:scaleX(0.92);transform-origin:top right">
+              <div class="ts-sm-item" id="sm-dark-light">Light mode</div>
+              <div class="ts-sm-item" id="sm-dark-dark" style="background:var(--sec-action,#303136)">Dark mode<svg class="ts-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3.5 3.5L12 3"/></svg></div>
+              <div class="ts-sm-item">System</div>
+            </div>
+          </div>
+          <div class="ts-dd-item">Sign out</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cursor-dot" id="cursor-dot" style="left:762px;top:22px;opacity:0"></div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="assets/radiance-renderer.js"></script>
+<script src="animation.js"></script>
+<script>
+  /* Scale the 788×380 content area to fill the viewport */
+  function scaleToViewport() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const scaleX = vw / 788;
+    const scaleY = vh / 380;
+    const scale = Math.min(scaleX, scaleY) * 0.92; // 8% breathing room
+    document.getElementById('scale-wrap').style.transform = `scale(${scale})`;
+  }
+  scaleToViewport();
+  window.addEventListener('resize', scaleToViewport);
+</script>
+</body>
+</html>

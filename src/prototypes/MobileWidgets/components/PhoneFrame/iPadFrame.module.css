@@ -1,0 +1,269 @@
+/* ═══════════════════════════════════════════════════════════════
+   iPad Pro 12.9" — Silver Titanium — Landscape — 800×598px
+   Screen: 764×562px (18px bezel each side)
+   Status: 28px · Grid: 18px margin · 6×121px cols · 5×87px rows
+   Dock: 72px at bottom of screen
+   ══════════════════════════════════════════════════════════════ */
+
+.ipad {
+  position: relative;
+  width: 800px;
+  height: 598px;
+  background: linear-gradient(170deg,
+    #D4D4D8 0%,
+    #BABABC 15%,
+    #A8A8AC 35%,
+    #B2B2B6 55%,
+    #BCBCC0 75%,
+    #CACACA 100%
+  );
+  border-radius: 24px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.55),
+    0 0 0 2.5px rgba(0,0,0,0.22),
+    0 40px 100px rgba(0,0,0,0.30),
+    0 20px 40px rgba(0,0,0,0.22),
+    0 6px 16px rgba(0,0,0,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    inset 0 -1px 0 rgba(0,0,0,0.12);
+  flex-shrink: 0;
+}
+
+.ipadScreen {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.25);
+}
+
+/* iPadOS 17 — blue/teal ocean gradient wallpaper */
+.ipadWallpaper {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 380px 200px at 108% -5%, rgba(180,230,255,0.75) 0%, rgba(100,180,255,0.35) 40%, transparent 65%),
+    radial-gradient(ellipse 280px 320px at -8% 110%, #1A5EAF 0%, rgba(20,90,190,0.45) 40%, transparent 65%),
+    linear-gradient(155deg,
+      #081E42 0%,
+      #0C2E5A 14%,
+      #104272 28%,
+      #135A96 42%,
+      #1878BB 55%,
+      #0EA4C2 68%,
+      #0BBFCC 80%,
+      #12D2D8 92%,
+      #22DFDF 100%
+    );
+}
+
+/* ── Status bar ──────────────────────────────────────────────── */
+.ipadStatus {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 15;
+}
+
+.ipadStatusTime {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  letter-spacing: -0.3px;
+}
+
+.statusIcons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.battPct {
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* ── Widget overlay (absolutely placed via inline style) ─────── */
+.widgetOverlay {
+  position: absolute;
+  z-index: 10;
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.38));
+}
+
+/* Label below widget */
+.widgetLabel {
+  position: absolute;
+  z-index: 11;
+  font-size: 9px;
+  color: rgba(255,255,255,0.88);
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── App icon grid ────────────────────────────────────────────── */
+/* Each icon is absolutely placed at the cell top-left (x,y via inline style).
+   The wrap spans the full cell (121×87) and centers contents. */
+.appIconWrap {
+  position: absolute;
+  width: 121px;
+  height: 87px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.appIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(0,0,0,0.12),
+    0 2px 8px rgba(0,0,0,0.28);
+}
+
+.iconLabel {
+  font-size: 9px;
+  color: white;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.55);
+  line-height: 1.2;
+  width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Page dots ────────────────────────────────────────────────── */
+.pageDots {
+  position: absolute;
+  bottom: 88px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  z-index: 5;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+}
+
+.dotActive {
+  background: rgba(255,255,255,0.9);
+}
+
+/* ── iPad Dock ────────────────────────────────────────────────── */
+.ipadDock {
+  position: absolute;
+  bottom: 10px;
+  left: 90px;
+  right: 90px;
+  height: 72px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.20);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 0.5px solid rgba(255,255,255,0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 16px;
+  z-index: 15;
+}
+
+.dockIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(0,0,0,0.12),
+    0 2px 8px rgba(0,0,0,0.28);
+  flex-shrink: 0;
+}
+
+.dockSep {
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,0.32);
+  flex-shrink: 0;
+}
+
+/* ── Home indicator ───────────────────────────────────────────── */
+.homeIndicator {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.45);
+  z-index: 20;
+}
+
+/* ── Hardware buttons (on the top/right edges of the iPad body) ─ */
+.btn {
+  position: absolute;
+  background: linear-gradient(180deg, #C8C8CC, #A8A8AC, #C0C0C4);
+}
+
+/* Power/top button — top-right area of top edge */
+.btnPower {
+  top: -4px;
+  right: 72px;
+  width: 64px;
+  height: 4px;
+  border-radius: 2px 2px 0 0;
+}
+
+/* Volume Up — top edge, further from right */
+.btnVolUp {
+  top: -4px;
+  right: 178px;
+  width: 40px;
+  height: 4px;
+  border-radius: 2px 2px 0 0;
+}
+
+/* Volume Down — top edge, leftmost */
+.btnVolDown {
+  top: -4px;
+  right: 226px;
+  width: 40px;
+  height: 4px;
+  border-radius: 2px 2px 0 0;
+}

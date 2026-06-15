@@ -84,14 +84,16 @@ const LoadingState: React.FC = () => {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    minHeight: '100vh',
+    height: '100vh',
+    overflow: 'hidden',
     position: 'relative',
     fontFamily: '"Plain", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   },
 
   // Project Container
   projectContainer: {
-    minHeight: '100vh',
+    height: '100%',
+    overflow: 'hidden',
   },
 
   // Loading

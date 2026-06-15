@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dark Mode Switch — Radiant Play</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Prototype shell resets ────────────────────────────────── */
+    html, body {
+      width: 100%; height: 100%;
+      margin: 0; padding: 0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden;
+      background: #f0f2f4;
+    }
+
+    /* ── Full-viewport stage — fills browser window natively ─────── */
+    .proto-stage {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+      /* Scale to fit viewport */
+      transform-origin: top left;
+    }
+
+    /* ── ThoughtSpot background UI ─────────────────────────────── */
+    .ts-bg {
+      position: absolute;
+      inset: 0;
+      background: #f6f8fa;
+      display: grid;
+      grid-template-rows: 60px 1fr;
+      grid-template-columns: 232px 1fr;
+    }
+
+    /* BG topbar */
+    .bg-topbar {
+      grid-column: 1 / -1;
+      background: #ffffff;
+      border-bottom: 1px solid #eaedf2;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 16px;
+    }
+
+    .bg-brand {
+      width: 20px; height: 20px;
+      fill: #1d232f;
+      flex-shrink: 0;
+    }
+
+    .bg-search {
+      flex: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      height: 34px;
+      border-radius: 99px;
+      background: #f0f2f4;
+      border: 1px solid #eaedf2;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 8px;
+      color: #777e8b;
+      font-size: 13px;
+    }
+
+    .bg-topbar-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bg-icon {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: #f0f2f4;
+      display: flex; align-items: center; justify-content: center;
+      color: #777e8b;
+      font-size: 12px;
+    }
+
+    .bg-org {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px 4px 4px;
+      border-radius: 99px;
+      background: #f0f2f4;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1d232f;
+    }
+
+    .bg-avatar-sm {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* BG sidebar */
+    .bg-sidebar {
+      background: #ffffff;
+      border-right: 1px solid #eaedf2;
+      padding: 20px 0;
+      overflow: hidden;
+    }
+
+    .bg-sidebar-title {
+      font-size: 17px;
+      font-weight: 500;
+      color: #1d232f;
+      padding: 0 20px 12px;
+    }
+
+    .bg-nav-item {
+      padding: 7px 20px;
+      font-size: 13.5px;
+      color: #1d232f;
+      cursor: default;
+    }
+
+    .bg-nav-item.active {
+      color: #2770ef;
+      font-weight: 500;
+      background: rgba(39,112,239,0.08);
+    }
+
+    .bg-nav-section {
+      padding: 16px 20px 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: #777e8b;
+    }
+
+    .bg-nav-item.fav::before {
+      content: "⬡ ";
+      color: #a5acb9;
+    }
+
+    /* BG content */
+    .bg-content {
+      padding: 32px 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .bg-panel {
+      border: 1px solid #eaedf2;
+      border-radius: 10px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .bg-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid #eaedf2;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1d232f;
+    }
+
+    .bg-panel-body { padding: 8px 14px; }
+
+    .bg-row {
+      padding: 6px 0;
+      font-size: 12.5px;
+      color: #1d232f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f0f2f4;
+    }
+
+    .bg-row:last-child { border-bottom: 0; }
+
+    .bg-trend-up   { color: #06bf7f; font-size: 11px; }
+    .bg-trend-down { color: #e22b3d; font-size: 11px; }
+    .bg-send {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: #2770ef;
+      display: flex; align-items: center; justify-content: center;
+      position: absolute; right: 14px; bottom: 14px;
+    }
+
+    /* Spotter hero placeholder in bg */
+    .bg-spotter-section {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, rgba(165,102,255,0.08) 0%, rgba(88,150,255,0.10) 50%, rgba(255,118,154,0.07) 100%);
+      border: 1px solid #eaedf2;
+      border-radius: 10px;
+      padding: 28px 24px 52px;
+      position: relative;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .bg-spotter-title {
+      font-size: 26px;
+      font-weight: 500;
+      color: #1d232f;
+    }
+
+    .bg-spotter-sub { font-size: 14px; color: #777e8b; }
+
+    .bg-query-card {
+      width: 520px;
+      padding: 14px 16px;
+      border: 1px solid #eaedf2;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 13px;
+      color: #777e8b;
+      text-align: left;
+      position: relative;
+    }
+
+    /* ── Modal backdrop ─────────────────────────────────────────── */
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 18, 26, 0.52);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      z-index: 40;
+    }
+
+    /* ── Modal 788×660 ──────────────────────────────────────────── */
+    .modal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 788px;
+      height: 690px;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.06),
+        0 8px 32px rgba(0,0,0,0.20),
+        0 24px 80px rgba(0,0,0,0.16);
+      z-index: 50;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Animation area 788×380 ─────────────────────────────────── */
+    /* The content-area class from styles.css handles the internals */
+    /* Override box-shadow here since it's inside the modal */
+    .modal .content-area {
+      width: 788px;
+      height: 380px;
+      flex-shrink: 0;
+      border-radius: 0;
+      box-shadow: none;
+      /* Blue inset border matching the Figma spec */
+      outline: 8px solid #5c6fa8;
+      outline-offset: -8px;
+    }
+
+    /* ── Modal bottom card — styles live in styles.css ─────────── */
+
+    .modal-cta:hover { background: #1f5fd8; }
+
+    /* ── View toggle (floats outside the frame) ─────────────────── */
+    .view-toggle {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 2px;
+      background: rgba(0,0,0,0.7);
+      padding: 4px;
+      border-radius: 8px;
+      z-index: 9999;
+      backdrop-filter: blur(8px);
+    }
+
+    .view-btn {
+      padding: 5px 14px;
+      border: 0;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 120ms, color 120ms;
+    }
+
+    .view-btn.active {
+      background: rgba(255,255,255,0.15);
+      color: #ffffff;
+    }
+
+    .view-btn:hover:not(.active) { color: rgba(255,255,255,0.85); }
+  </style>
+</head>
+<body>
+
+<script>
+  /* Stage is 100vw × 100vh — no transform scaling needed */
+</script>
+
+<!-- ── 1440×960 Stage ────────────────────────────────────────────── -->
+<div class="proto-stage" id="proto-stage">
+
+  <!-- ── ThoughtSpot Background UI ────────────────────────────── -->
+  <div class="ts-bg">
+    <!-- Topbar -->
+    <div class="bg-topbar">
+      <svg class="bg-brand" viewBox="0 0 24 24">
+        <path d="M23.711 0H0V4.392H23.711V0Z"/>
+        <path d="M23.711 5.856H14.702V10.248H23.711V5.856Z"/>
+        <path d="M5.756 5.856H0V10.248H5.756C7.907 10.248 9.66 12 9.66 14.151V23.711H14.052V14.151C14.052 9.578 10.329 5.856 5.756 5.856Z"/>
+        <path d="M19.211 16.627C17.178 16.627 15.524 18.28 15.524 20.313C15.524 22.346 17.178 24 19.211 24C21.244 24 22.898 22.346 22.898 20.313C22.898 18.28 21.244 16.627 19.211 16.627Z"/>
+      </svg>
+      <div class="bg-search">
+        <svg width="14" height="14" viewBox="0 0 18 18" fill="currentColor"><path d="M7.7 13.2a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11Zm0-1.8a3.7 3.7 0 1 0 0-7.4 3.7 3.7 0 0 0 0 7.4Zm3.8.9 1.3-1.3 4 4-1.3 1.3-4-4Z"/></svg>
+        Search in your library
+      </div>
+      <div class="bg-topbar-right">
+        <div class="bg-icon">?</div>
+        <div class="bg-icon" style="position:relative">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 1.5C4.5 1.5 3 3.5 3 5.5v3L1.5 10h11L11 8.5V5.5C11 3.5 9.5 1.5 7 1.5ZM5.5 11a1.5 1.5 0 0 0 3 0"/></svg>
+          <span style="position:absolute;top:2px;right:2px;width:7px;height:7px;background:#e22b3d;border-radius:50%;border:1.5px solid #fff"></span>
+        </div>
+        <div class="bg-org">
+          <img src="assets/user-avatar.png" alt="" class="bg-avatar-sm">
+          Royal Enfield
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+        </div>
+        <img src="assets/user-avatar.png" alt="" class="bg-avatar-sm" style="width:30px;height:30px;border-radius:50%;">
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="bg-sidebar">
+      <div class="bg-sidebar-title">Insights</div>
+      <div class="bg-nav-item active">Home</div>
+      <div class="bg-nav-item">Spotter</div>
+      <div class="bg-nav-item">AgentSpot ↗</div>
+      <div class="bg-nav-item">Search data</div>
+      <div class="bg-nav-section">Library</div>
+      <div class="bg-nav-item">Liveboards</div>
+      <div class="bg-nav-item">Answers</div>
+      <div class="bg-nav-section">Analysis &amp; alerts</div>
+      <div class="bg-nav-item">Subscriptions</div>
+      <div class="bg-nav-item">SpotIQ analysis</div>
+      <div class="bg-nav-section">Collections</div>
+      <div class="bg-nav-section">Favourites</div>
+      <div class="bg-nav-item fav">Retails Sales</div>
+      <div class="bg-nav-item fav">Total sales, Total quantity pu…</div>
+      <div class="bg-nav-item fav">Cloud Clusters</div>
+      <div class="bg-nav-item fav">Sales by state and region</div>
+      <div class="bg-nav-item fav">Retails Sales</div>
+    </div>
+
+    <!-- Content -->
+    <div class="bg-content">
+      <div class="bg-spotter-section" style="position:relative">
+        <div style="font-size:22px;font-weight:500;color:#1d232f">Hi! I'm Spotter, your AI data analyst</div>
+        <div class="bg-spotter-sub">Let's make sense of your data together</div>
+        <div class="bg-query-card">Ask me a question. Use '@' to select columns and values.
+          <div class="bg-send">
+            <svg width="12" height="12" viewBox="0 0 18 18" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15.5V3.2m0 0L4.1 8.1M9 3.2l4.9 4.9"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-panel">
+        <div class="bg-panel-head">Watchlist <span style="font-size:12px;color:#2770ef;font-weight:400">+ Add KPI</span></div>
+        <div class="bg-panel-body">
+          <div class="bg-row"><span>Total Revenue by Product<br><small style="color:#a5acb9;font-size:11px">WoW</small></span><span style="text-align:right">88.888M<br><span class="bg-trend-up">↑ 20.74%</span></span></div>
+          <div class="bg-row"><span>Sessions by Traffic Source<br><small style="color:#a5acb9;font-size:11px">MoM</small></span><span style="text-align:right">10.07M<br><span class="bg-trend-up">↑ 20.74%</span></span></div>
+          <div class="bg-row"><span>Conversion Rate by Marketing<br><small style="color:#a5acb9;font-size:11px">WoW</small></span><span style="text-align:right">6.3%<br><span class="bg-trend-down">↓ 20.74%</span></span></div>
+          <div class="bg-row"><span>Avg. Session Duration<br><small style="color:#a5acb9;font-size:11px">MoM</small></span><span style="text-align:right">14.52M<br><span style="color:#a5acb9;font-size:11px">0%</span></span></div>
+          <div class="bg-row"><span>New Users by Last Week<br><small style="color:#a5acb9;font-size:11px">MoM</small></span><span style="text-align:right">575.124M<br><span class="bg-trend-down">↓ 20.74%</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Backdrop ────────────────────────────────────────────────── -->
+  <div class="modal-backdrop"></div>
+
+  <!-- ── Modal 788×660 ─────────────────────────────────────────── -->
+  <div class="modal">
+
+    <!-- Animation area 788×380 -->
+    <div class="content-area" id="content-area" style="border-radius:0;box-shadow:none;outline:8px solid #5c73a8;outline-offset:-8px;">
+
+      <!-- SVG clip definition -->
+      <svg width="0" height="0" style="position:absolute;overflow:hidden">
+        <defs>
+          <clipPath id="reveal-clip" clipPathUnits="userSpaceOnUse">
+            <circle id="reveal-circle" cx="762" cy="22" r="0"/>
+          </clipPath>
+        </defs>
+      </svg>
+
+      <!-- Light layer -->
+      <div class="theme-layer layer-light" id="layer-light">
+        <div class="ts-shell">
+          <header class="ts-topbar">
+            <svg class="ts-brand-mark" viewBox="0 0 24 24"><path d="M23.711 0H0V4.392H23.711V0Z"/><path d="M23.711 5.856H14.702V10.248H23.711V5.856Z"/><path d="M5.756 5.856H0V10.248H5.756C7.907 10.248 9.66 12 9.66 14.151V23.711H14.052V14.151C14.052 9.578 10.329 5.856 5.756 5.856Z"/><path d="M19.211 16.627C17.178 16.627 15.524 18.28 15.524 20.313C15.524 22.346 17.178 24 19.211 24C21.244 24 22.898 22.346 22.898 20.313C22.898 18.28 21.244 16.627 19.211 16.627Z"/></svg>
+            <div class="ts-topbar-right">
+              <div class="ts-search"><svg width="11" height="11" viewBox="0 0 18 18" fill="currentColor"><path d="M7.7 13.2a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11Zm0-1.8a3.7 3.7 0 1 0 0-7.4 3.7 3.7 0 0 0 0 7.4Zm3.8.9 1.3-1.3 4 4-1.3 1.3-4-4Z"/></svg>Search in your library</div>
+              <button class="ts-icon-btn"><span style="font-size:11px;font-weight:700;color:var(--secondary-text)">?</span></button>
+              <div class="ts-notif-wrap"><button class="ts-icon-btn"><svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 1.5C4.5 1.5 3 3.5 3 5.5v3L1.5 10h11L11 8.5V5.5C11 3.5 9.5 1.5 7 1.5ZM5.5 11a1.5 1.5 0 0 0 3 0"/></svg></button><span class="ts-notif-dot"></span></div>
+              <div class="ts-org-pill"><img src="assets/user-avatar.png" alt="" class="ts-avatar">Royal Enfield<svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 4.5 6 7.5 9 4.5"/></svg></div>
+                          </div>
+          </header>
+          <main class="ts-home">
+            <div class="ts-radiance-wrap"><div class="radiance-local" data-radiance-appearance="light" data-radiance-layout="top-wash" data-radiance-variant="dynamic-subtle" data-radiance-intensity="subtle" data-radiance-speed="1.86" id="radiance-light"></div></div>
+            <div class="ts-hero">
+              <div class="ts-spotter-row"><img src="assets/spotter-avatar.png" alt="" class="ts-spotter-icon"><h1 class="ts-spotter-h1">Hi! I'm Spotter, your AI data analyst</h1></div>
+              <p class="ts-spotter-sub">Let's make sense of your data together</p>
+              <div class="ts-query">
+                <div class="ts-query-placeholder">Ask me a question. Use '@' to select columns and values.</div>
+                <div class="ts-query-foot">
+                  <div class="ts-query-left">
+                    <div class="ts-mode-toggle"><button class="ts-mode-btn active"><svg width="12" height="12" viewBox="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="14" height="2" rx="1"/><path opacity=".4" d="M2.2 6.6h1.4v8H2.2zm3.8 0h1.4v8H6zm3.8 0H11v8H9.8zm3.8 0h1.4v8h-1.4z"/></svg></button><button class="ts-mode-btn"><svg width="12" height="12" viewBox="0 0 18 18" fill="currentColor"><path d="M8.8 1.5 10.4 6l4.6 1.7-4.6 1.7-1.6 4.6-1.7-4.6-4.6-1.7L7.1 6l1.7-4.5Z"/></svg></button></div>
+                    <div class="ts-model-pill">GTMRevOps <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 4.5 6 7.5 9 4.5"/></svg></div>
+                    <button class="ts-plus-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M5.25 5.25V1h1.5v4.25H11v1.5H6.75V11h-1.5V6.75H1v-1.5z"/></svg></button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:5px;"><button style="color:var(--secondary-text);background:none;border:0;cursor:pointer"><svg width="13" height="13" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M2.2 4.6h7.1m2.2 0h4.3M2.2 9h3.2m2.2 0h8.2M2.2 13.4h8.7m2.2 0h2.7"/><circle cx="10.5" cy="4.6" r="1.8" fill="currentColor"/><circle cx="6.6" cy="9" r="1.8" fill="currentColor"/><circle cx="12.2" cy="13.4" r="1.8" fill="currentColor"/></svg></button><div class="ts-send"><svg width="12" height="12" viewBox="0 0 18 18" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15.5V3.2m0 0L4.1 8.1M9 3.2l4.9 4.9"/></svg></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="ts-panels">
+              <div class="ts-panel ts-recents-panel"><div class="ts-panel-head">Recents</div><div class="ts-panel-body"><div class="ts-recent-row"><svg class="ts-recent-icon" viewBox="0 0 18 18" fill="currentColor"><path d="M8.8 1.5 10.4 6l4.6 1.7-4.6 1.7-1.6 4.6-1.7-4.6-4.6-1.7L7.1 6l1.7-4.5Zm5.5 9.1.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2ZM3.3 11.2l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5.5-1.4Z"/></svg><div><div class="ts-recent-name">Quarterly profit dashboard</div><div class="ts-recent-date">Today</div></div></div><div class="ts-recent-row"><svg class="ts-recent-icon" viewBox="0 0 18 18" fill="currentColor"><path d="M3 2h7.4v14H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Zm9 0h3a1 1 0 0 1 1 1v4H12V2Zm0 5.8h4V15a1 1 0 0 1-1 1h-3V7.8Z"/></svg><div><div class="ts-recent-name">Customer attrition by team</div><div class="ts-recent-date">Yesterday</div></div></div></div></div>
+              <div class="ts-panel ts-watch-panel"><div class="ts-panel-head">Watchlist<span class="ts-add-kpi"><svg width="9" height="9" viewBox="0 0 12 12" fill="currentColor"><path d="M5.25 5.25V1h1.5v4.25H11v1.5H6.75V11h-1.5V6.75H1v-1.5z"/></svg>Add KPI</span></div><div class="ts-panel-body"><div class="ts-watch-row"><div><div class="ts-watch-name">Total Revenue by Product</div><div class="ts-watch-cadence">WoW</div></div><div class="ts-watch-val"><div>88.888M</div><div class="ts-watch-trend is-up">↑ 20.74%</div></div></div><div class="ts-watch-row"><div><div class="ts-watch-name">Sessions by Traffic Source</div><div class="ts-watch-cadence">MoM</div></div><div class="ts-watch-val"><div>10.07M</div></div></div></div></div>
+            </div>
+          </main>
+        </div>
+      </div>
+
+      <!-- Dark layer -->
+      <div class="theme-layer layer-dark dark-layer" id="layer-dark" style="clip-path: url(#reveal-clip)">
+        <div class="ts-shell">
+          <header class="ts-topbar">
+            <svg class="ts-brand-mark" viewBox="0 0 24 24"><path d="M23.711 0H0V4.392H23.711V0Z"/><path d="M23.711 5.856H14.702V10.248H23.711V5.856Z"/><path d="M5.756 5.856H0V10.248H5.756C7.907 10.248 9.66 12 9.66 14.151V23.711H14.052V14.151C14.052 9.578 10.329 5.856 5.756 5.856Z"/><path d="M19.211 16.627C17.178 16.627 15.524 18.28 15.524 20.313C15.524 22.346 17.178 24 19.211 24C21.244 24 22.898 22.346 22.898 20.313C22.898 18.28 21.244 16.627 19.211 16.627Z"/></svg>
+            <div class="ts-topbar-right">
+              <div class="ts-search"><svg width="11" height="11" viewBox="0 0 18 18" fill="currentColor"><path d="M7.7 13.2a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11Zm0-1.8a3.7 3.7 0 1 0 0-7.4 3.7 3.7 0 0 0 0 7.4Zm3.8.9 1.3-1.3 4 4-1.3 1.3-4-4Z"/></svg>Search in your library</div>
+              <button class="ts-icon-btn"><span style="font-size:11px;font-weight:700">?</span></button>
+              <div class="ts-notif-wrap"><button class="ts-icon-btn"><svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 1.5C4.5 1.5 3 3.5 3 5.5v3L1.5 10h11L11 8.5V5.5C11 3.5 9.5 1.5 7 1.5ZM5.5 11a1.5 1.5 0 0 0 3 0"/></svg></button><span class="ts-notif-dot"></span></div>
+              <div class="ts-org-pill"><img src="assets/user-avatar.png" alt="" class="ts-avatar">Royal Enfield</div>
+                          </div>
+          </header>
+          <main class="ts-home">
+            <div class="ts-radiance-wrap"><div class="radiance-local" data-radiance-appearance="dark" data-radiance-layout="top-wash" data-radiance-variant="dynamic-subtle" data-radiance-intensity="subtle" data-radiance-dark-glow="subtle" data-radiance-speed="1.72" id="radiance-dark"></div></div>
+            <div class="ts-hero">
+              <div class="ts-spotter-row"><img src="assets/spotter-avatar.png" alt="" class="ts-spotter-icon"><h1 class="ts-spotter-h1">Hi! I'm Spotter, your AI data analyst</h1></div>
+              <p class="ts-spotter-sub">Let's make sense of your data together</p>
+              <div class="ts-query">
+                <div class="ts-query-placeholder">Ask me a question. Use '@' to select columns and values.</div>
+                <div class="ts-query-foot">
+                  <div class="ts-query-left"><div class="ts-model-pill">GTMRevOps</div><button class="ts-plus-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M5.25 5.25V1h1.5v4.25H11v1.5H6.75V11h-1.5V6.75H1v-1.5z"/></svg></button></div>
+                  <div style="display:flex;gap:5px;"><div class="ts-send"><svg width="12" height="12" viewBox="0 0 18 18" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15.5V3.2m0 0L4.1 8.1M9 3.2l4.9 4.9"/></svg></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="ts-panels">
+              <div class="ts-panel ts-recents-panel"><div class="ts-panel-head">Recents</div><div class="ts-panel-body"><div class="ts-recent-row"><svg class="ts-recent-icon" viewBox="0 0 18 18" fill="currentColor"><path d="M8.8 1.5 10.4 6l4.6 1.7-4.6 1.7-1.6 4.6-1.7-4.6-4.6-1.7L7.1 6l1.7-4.5Zm5.5 9.1.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2ZM3.3 11.2l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5.5-1.4Z"/></svg><div><div class="ts-recent-name">Quarterly profit dashboard</div><div class="ts-recent-date">Today</div></div></div><div class="ts-recent-row"><svg class="ts-recent-icon" viewBox="0 0 18 18" fill="currentColor"><path d="M3 2h7.4v14H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Zm9 0h3a1 1 0 0 1 1 1v4H12V2Zm0 5.8h4V15a1 1 0 0 1-1 1h-3V7.8Z"/></svg><div><div class="ts-recent-name">Customer attrition by team</div><div class="ts-recent-date">Yesterday</div></div></div></div></div>
+              <div class="ts-panel ts-watch-panel"><div class="ts-panel-head">Watchlist<span class="ts-add-kpi"><svg width="9" height="9" viewBox="0 0 12 12" fill="currentColor"><path d="M5.25 5.25V1h1.5v4.25H11v1.5H6.75V11h-1.5V6.75H1v-1.5z"/></svg>Add KPI</span></div><div class="ts-panel-body"><div class="ts-watch-row"><div><div class="ts-watch-name">Total Revenue by Product</div><div class="ts-watch-cadence">WoW</div></div><div class="ts-watch-val"><div>88.888M</div><div class="ts-watch-trend is-up">↑ 20.74 %</div></div></div><div class="ts-watch-row"><div><div class="ts-watch-name">Sessions by Traffic Source</div><div class="ts-watch-cadence">MoM</div></div><div class="ts-watch-val"><div>10.07M</div></div></div></div></div>
+            </div>
+          </main>
+        </div>
+        <!-- Dark dropdown lives INSIDE the dark layer — the circular clip-path
+             reveals it naturally as the mask expands from the avatar position.
+             No opacity:0 needed: when clip r=0 the whole dark layer is invisible. -->
+        <div class="ts-dropdown dropdown-dark" id="dropdown-dark">
+          <div class="ts-dd-head"><img src="assets/user-avatar.png" alt="" class="ts-dd-avatar"><div class="ts-dd-name">Eliška Pedersen</div><div class="ts-dd-email">EliskaPed123@apple.com</div></div>
+          <div class="ts-dd-items">
+            <div class="ts-dd-item">Profile</div>
+            <div class="ts-dd-item" id="appearance-item-dark" style="background:var(--sec-action,#303136);position:relative">
+              Appearance
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4.5 3 7.5 6 4.5 9"/></svg>
+              <!-- submenu visible at clip-time — Dark mode ✓ already selected -->
+              <div class="ts-submenu dropdown-dark" id="submenu-dark">
+                <div class="ts-sm-item" id="sm-dark-light">Light mode</div>
+                <div class="ts-sm-item" id="sm-dark-dark" style="background:var(--sec-action,#303136)">Dark mode<svg class="ts-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3.5 3.5L12 3"/></svg></div>
+                <div class="ts-sm-item">System</div>
+              </div>
+            </div>
+            <div class="ts-dd-item">Sign out</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overlay: light dropdown only — dark one is inside layer-dark above -->
+      <div class="overlay-layer" id="overlay-layer">
+        <div class="ts-dropdown" id="dropdown-light" style="opacity:0;transform:scale(0.95)">
+          <div class="ts-dd-head"><img src="assets/user-avatar.png" alt="" class="ts-dd-avatar"><div class="ts-dd-name">Eliška Pedersen</div><div class="ts-dd-email">EliskaPed123@apple.com</div></div>
+          <div class="ts-dd-items">
+            <div class="ts-dd-item">Profile</div>
+            <div class="ts-dd-item" id="appearance-item-light" style="position:relative">
+              Appearance
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4.5 3 7.5 6 4.5 9"/></svg>
+              <div class="ts-submenu" id="submenu-light" style="opacity:0;transform:scaleX(0.92);transform-origin:top right">
+                <div class="ts-sm-item" id="sm-light-light">Light mode<svg class="ts-check" id="check-light-light" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3.5 3.5L12 3"/></svg></div>
+                <div class="ts-sm-item" id="sm-light-dark">Dark mode</div>
+                <div class="ts-sm-item">System</div>
+              </div>
+            </div>
+            <div class="ts-dd-item">Sign out</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real arrow cursor — tip at element (0,0), hotspot aligns with left/top -->
+      <div id="cursor-dot" style="position:absolute;left:730px;top:22px;opacity:0;z-index:100;pointer-events:none;transform-origin:0 0;will-change:transform,opacity">
+        <svg width="14" height="16" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+             style="filter:drop-shadow(0 1px 2px rgba(0,0,0,0.45))">
+          <path d="M1 1 L1 19 L6 14 L9 22 L12 21 L9 13 L16 13 Z"
+                fill="white" stroke="#1d232f" stroke-width="1.4"
+                stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <!-- Click ripple ring -->
+      <div id="click-ripple" style="position:absolute;width:26px;height:26px;border-radius:50%;border:2px solid rgba(39,112,239,0.75);pointer-events:none;z-index:99;opacity:0;transform:translate(-50%,-50%) scale(0.2)"></div>
+
+    </div>
+    <!-- /content-area (animation) -->
+
+    <!-- Modal bottom card: left title + right description + close -->
+    <div class="modal-card">
+      <div class="modal-card-body">
+        <div class="modal-card-title">Switch to<br>Dark Mode</div>
+        <ul class="modal-card-desc">
+          <li>Dark mode is now available in ThoughtSpot. Reduce eye strain and tailor your workspace to any environment or lighting condition.</li>
+          <li>Switch themes anytime — click your <strong>profile avatar</strong> in the top-right corner, select <strong>Appearance</strong>, and choose Light, Dark, or System.</li>
+        </ul>
+      </div>
+      <div class="modal-card-foot">
+        <button class="modal-cta">Close</button>
+      </div>
+    </div>
+
+  </div>
+  <!-- /modal -->
+
+</div>
+<!-- /proto-stage -->
+
+<!-- View toggle — floats over the stage -->
+<div class="view-toggle">
+  <button class="view-btn active">Iteration 1 — Circular reveal</button>
+  <a class="view-btn" href="index-v2.html" style="text-decoration:none">Iteration 2 — Scale expand</a>
+  <a class="view-btn" href="index-v3.html" style="text-decoration:none">Iteration 3 — The Horizon</a>
+  <a class="view-btn" href="index-v4.html" style="text-decoration:none">Iteration 4 — Introducing</a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="assets/radiance-renderer.js"></script>
+<script src="animation.js"></script>
+</body>
+</html>

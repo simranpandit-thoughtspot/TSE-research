@@ -219,14 +219,7 @@ export const Modal: React.FC<ModalProps> = ({
             {children}
           </div>
 
-          {/* Footer */}
-          {footer && !isFullScreen && (
-            <div className={styles.footer}>
-              {footer}
-            </div>
-          )}
-
-          {/* Wizard Progress Bar */}
+          {/* Wizard Progress Bar — sits directly above the footer */}
           {showWizardProgress && (
             <div className={styles.wizardProgress}>
               {Array.from({ length: totalSteps! }, (_, i) => (
@@ -235,6 +228,13 @@ export const Modal: React.FC<ModalProps> = ({
                   className={`${styles.wizardStep} ${i < currentStep! ? styles.wizardStepActive : ''}`}
                 />
               ))}
+            </div>
+          )}
+
+          {/* Footer */}
+          {footer && !isFullScreen && (
+            <div className={styles.footer}>
+              {footer}
             </div>
           )}
         </div>
