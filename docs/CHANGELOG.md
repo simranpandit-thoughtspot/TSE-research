@@ -1,5 +1,9 @@
 # Changelog
 
+## 26.6.3a — 2026-06-15
+
+- feat(VariablesDataType): 2-step wizard, detail modal, edit modal, section banner
+
 ## 26.5.3d — 2026-05-19
 
 ### Highlights
