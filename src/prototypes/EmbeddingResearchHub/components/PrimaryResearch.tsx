@@ -8,16 +8,18 @@ import { shadows } from '../../../tokens/shadows';
 import { interviews, quadrantMeta, Interview } from '../data/primaryResearch';
 import { TSEmbeddingJourney } from './TSEmbeddingJourney';
 import { CustomerJourney } from './CustomerJourney';
+import { DiscordCommunity } from './DiscordCommunity';
 import styles from './PrimaryResearch.module.css';
 
 const c = systemColors.light;
 
-type SubTab = 'boards' | 'ts-embedding' | 'journey';
+type SubTab = 'boards' | 'ts-embedding' | 'journey' | 'discord';
 
 const SUB_TABS = [
   { id: 'boards', label: 'Interview boards' },
   { id: 'ts-embedding', label: 'TS Embedding' },
   { id: 'journey', label: 'Customer journey' },
+  { id: 'discord', label: 'Discord community' },
 ];
 
 type QuadrantKey = keyof typeof quadrantMeta;
@@ -144,6 +146,10 @@ export const PrimaryResearch: React.FC = () => {
       ) : tab === 'journey' ? (
         <div className={styles.body}>
           <CustomerJourney />
+        </div>
+      ) : tab === 'discord' ? (
+        <div className={styles.body}>
+          <DiscordCommunity />
         </div>
       ) : (
       <>
