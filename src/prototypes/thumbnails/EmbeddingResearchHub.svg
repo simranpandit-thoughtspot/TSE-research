@@ -1,0 +1,29 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="450" fill="#F6F8FA"/>
+  <rect x="60" y="60" width="680" height="330" rx="14" fill="white" stroke="#E3E7ED"/>
+  <rect x="60" y="60" width="680" height="48" rx="14" fill="#F0F2F6"/>
+  <circle cx="90" cy="84" r="10" fill="#2770EF"/>
+  <rect x="112" y="76" width="140" height="8" rx="4" fill="#B9C0CC"/>
+  <rect x="500" y="72" width="70" height="18" rx="9" fill="#2770EF"/>
+  <rect x="580" y="72" width="70" height="18" rx="9" fill="#E3E7ED"/>
+  <rect x="660" y="72" width="60" height="18" rx="9" fill="#E3E7ED"/>
+
+  <rect x="84" y="128" width="290" height="120" rx="10" fill="#EAF6EC"/>
+  <rect x="100" y="144" width="120" height="10" rx="5" fill="#3FA85C"/>
+  <rect x="100" y="164" width="240" height="8" rx="4" fill="#B9C0CC"/>
+  <rect x="100" y="180" width="200" height="8" rx="4" fill="#B9C0CC"/>
+
+  <rect x="390" y="128" width="326" height="120" rx="10" fill="#FBEAEA"/>
+  <rect x="406" y="144" width="120" height="10" rx="5" fill="#D65B5B"/>
+  <rect x="406" y="164" width="280" height="8" rx="4" fill="#B9C0CC"/>
+  <rect x="406" y="180" width="220" height="8" rx="4" fill="#B9C0CC"/>
+
+  <rect x="84" y="264" width="632" height="100" rx="10" fill="#F0F2F6"/>
+  <rect x="100" y="280" width="140" height="10" rx="5" fill="#6E7684"/>
+  <rect x="100" y="300" width="560" height="8" rx="4" fill="#CBD2DC"/>
+  <rect x="100" y="316" width="500" height="8" rx="4" fill="#CBD2DC"/>
+
+  <text x="400" y="425" fill="#1D232F" font-family="system-ui" font-size="18" text-anchor="middle" font-weight="500">
+    Embedding Research Hub
+  </text>
+</svg>

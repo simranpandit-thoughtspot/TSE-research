@@ -1,0 +1,102 @@
+.hero {
+  margin-bottom: 24px;
+}
+
+.calloutBox {
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.calloutTitle {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.calloutItem {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.sectionTitle {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.methodsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.methodCard {
+  border-radius: 12px;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  padding: 18px;
+  background-color: var(--rd-sys-color-background-base);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 140ms ease, border-color 140ms ease;
+}
+
+.methodCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--rd-sys-color-border-hover);
+}
+
+.methodBadge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.methodName {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.methodBody {
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.linksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.linkCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  padding: 12px 14px;
+  background-color: var(--rd-sys-color-background-base);
+  text-decoration: none;
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+
+.linkCard:hover {
+  border-color: var(--rd-sys-color-border-hover);
+  transform: translateY(-1px);
+}

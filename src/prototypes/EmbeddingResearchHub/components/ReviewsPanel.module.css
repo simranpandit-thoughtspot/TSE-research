@@ -1,0 +1,135 @@
+.layout {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    overflow: auto;
+    height: auto;
+  }
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 14px;
+}
+
+
+.companyList {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 96px; /* clear the floating bottom nav */
+}
+
+.companyItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  border-left: 3px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.companyItem:hover {
+  background-color: var(--rd-sys-color-background-ghost-hover);
+}
+
+.companyItemActive {
+  background-color: var(--rd-sys-color-background-information);
+  border-left-color: var(--rd-sys-color-border-brand);
+}
+
+.companyItemName {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rd-sys-color-content-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.companyItemCount {
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.right {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 4px 96px 4px;
+}
+
+.vendorHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.vendorHeaderMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.confidenceBadge {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.sentiment {
+  font-size: 12.5px;
+  line-height: 1.55;
+  font-style: italic;
+  margin: 0 0 16px 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+}
+
+.collage {
+  column-count: 2;
+  column-gap: 14px;
+}
+
+@media (max-width: 1200px) {
+  .collage {
+    column-count: 1;
+  }
+}
+
+.seeMoreWrap {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 16px 0;
+}
+
+.emptyState {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}

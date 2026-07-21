@@ -14,7 +14,9 @@ import React from 'react';
 import { ProjectMeta } from './registry-core';
 import EmailCustomisationThumbnail from './thumbnails/EmailCustomisation.svg';
 import VariablesDataTypeThumbnail from './thumbnails/VariablesDataType.svg';
+import EmbeddingResearchHubThumbnail from './thumbnails/EmbeddingResearchHub.svg';
 
+const EmbeddingResearchHub = React.lazy(() => import('./EmbeddingResearchHub'));
 const DarkModeSplash = React.lazy(() => import('./DarkModeSplash'));
 const AgenticAdmin = React.lazy(() => import('./AgenticAdmin'));
 const SpotterHome = React.lazy(() => import('./SpotterHome'));
@@ -30,6 +32,18 @@ const RBAC = React.lazy(() => import('./RBAC'));
 const VariablesDataType = React.lazy(() => import('./VariablesDataType'));
 
 export const myRegistry: ProjectMeta[] = [
+  {
+    id: 'EmbeddingResearchHub',
+    name: 'Embedding Research Hub',
+    description: 'Interactive research documentation platform for the TSE Embedding project — secondary research (15-competitor comparison, reviews), primary research (TSE SME interview insights), the </> tab audit, customer journey, and a problem-areas summary, all in one segmented workspace.',
+    author: 'Simran Pandit',
+    lastModified: '2026-07-20',
+    thumbnail: EmbeddingResearchHubThumbnail,
+    component: EmbeddingResearchHub,
+    dsComponents: 12,
+    customComponents: 10,
+    section: 'mine',
+  },
   {
     id: 'VariablesDataType',
     name: 'Variables data type',

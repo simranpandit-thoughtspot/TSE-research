@@ -1,0 +1,94 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+}
+
+.portalPreview {
+  position: fixed;
+  transform: translate(-50%, -100%);
+  z-index: 1000;
+  pointer-events: none;
+  animation: previewIn 120ms ease;
+}
+
+@keyframes previewIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% + 4px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%);
+  }
+}
+
+.card {
+  border-radius: 12px;
+  background-color: var(--rd-sys-color-background-base);
+  border: 1px solid var(--rd-sys-color-border-divider);
+  padding: 8px;
+}
+
+.frame {
+  border-radius: 8px;
+  height: 108px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--rd-sys-color-border-divider);
+}
+
+.frameBar {
+  height: 18px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  background-color: var(--rd-sys-color-background-base);
+}
+
+.frameDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--rd-sys-color-border-default);
+}
+
+.frameBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.playButton {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: var(--rd-sys-color-background-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.frameLabel {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.caption {
+  display: block;
+  font-size: 11px;
+  line-height: 1.4;
+  margin: 6px 2px 2px 2px;
+}
