@@ -1,51 +1,180 @@
-.hero {
-  margin-bottom: 24px;
-}
-
-.calloutBox {
-  border-radius: 12px;
-  padding: 20px;
+.deck {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  height: 100%;
+  min-height: 0;
 }
 
-.calloutTitle {
-  font-size: 13px;
+.stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chevronBtn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  background-color: var(--rd-sys-color-background-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.chevronBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: var(--rd-sys-color-border-hover);
+}
+
+.chevronBtn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.slideViewport {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.dots {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 0 2px 0;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--rd-sys-color-border-default);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 120ms ease, transform 120ms ease;
+}
+
+.dotActive {
+  background-color: var(--rd-sys-color-background-brand);
+  transform: scale(1.3);
+}
+
+/* --- Slide 1: intro / stats --- */
+
+.introTitle {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.introSubtitle {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 8px 0;
+  max-width: 640px;
+}
+
+.statsRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.statCard {
+  flex: 1 1 240px;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  background-color: var(--rd-sys-color-background-base);
+}
+
+.bigNumber {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.bigNumberCaption {
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
-.calloutItem {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
+.statLabel {
   font-size: 13px;
-  line-height: 1.5;
+  font-weight: 600;
+  line-height: 1.4;
 }
+
+.statSource {
+  font-size: 10.5px;
+  text-decoration: none;
+}
+
+.statSource:hover {
+  text-decoration: underline;
+}
+
+/* --- Slide 2: methods --- */
 
 .sectionTitle {
-  font-size: 15px;
+  font-size: 22px;
   font-weight: 700;
-  margin: 0 0 12px 0;
+  margin: 0 0 20px 0;
 }
 
 .methodsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
 }
 
 .methodCard {
-  border-radius: 12px;
+  flex: 1 1 240px;
+  max-width: 280px;
+  border-radius: 16px;
   border: 1px solid var(--rd-sys-color-border-divider);
-  padding: 18px;
+  padding: 24px 20px;
   background-color: var(--rd-sys-color-background-base);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
   transition: transform 140ms ease, border-color 140ms ease;
 }
 
@@ -55,48 +184,48 @@
 }
 
 .methodBadge {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
-  flex-shrink: 0;
 }
 
 .methodName {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   margin: 0;
 }
 
 .methodBody {
   font-size: 12.5px;
-  line-height: 1.5;
+  line-height: 1.55;
   margin: 0;
 }
 
-.linksGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 12px;
-}
-
-.linkCard {
+.learnMoreRow {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--rd-sys-color-border-divider);
-  padding: 12px 14px;
-  background-color: var(--rd-sys-color-background-base);
-  text-decoration: none;
-  transition: border-color 120ms ease, transform 120ms ease;
+  margin-top: 24px;
 }
 
-.linkCard:hover {
+.learnMoreLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  text-decoration: none;
+}
+
+.learnMoreLink:hover {
   border-color: var(--rd-sys-color-border-hover);
-  transform: translateY(-1px);
 }
