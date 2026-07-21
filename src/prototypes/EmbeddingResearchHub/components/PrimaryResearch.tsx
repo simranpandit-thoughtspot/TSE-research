@@ -2,12 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { Icon } from '../../../components/icons';
 import type { IconName } from '../../../components/icons';
 import { Button } from '../../../components/Button';
+import { Tabs } from '../../../components/Tabs';
 import { systemColors, referenceColors } from '../../../tokens/colors';
 import { shadows } from '../../../tokens/shadows';
 import { interviews, quadrantMeta, Interview } from '../data/primaryResearch';
+import { TSEmbeddingJourney } from './TSEmbeddingJourney';
 import styles from './PrimaryResearch.module.css';
 
 const c = systemColors.light;
+
+type SubTab = 'boards' | 'ts-embedding';
+
+const SUB_TABS = [
+  { id: 'boards', label: 'Interview boards' },
+  { id: 'ts-embedding', label: 'TS Embedding' },
+];
 
 type QuadrantKey = keyof typeof quadrantMeta;
 
@@ -57,6 +66,7 @@ const loadCards = (interview: Interview): EditableCard[] => {
 const openInNewTab = (url: string) => window.open(url, '_blank', 'noopener,noreferrer');
 
 export const PrimaryResearch: React.FC = () => {
+  const [tab, setTab] = useState<SubTab>('boards');
   const [activeId, setActiveId] = useState(interviews[0].id);
   const [cardsByInterview, setCardsByInterview] = useState<Record<string, EditableCard[]>>(() =>
     Object.fromEntries(interviews.map((iv) => [iv.id, loadCards(iv)])),
@@ -120,6 +130,17 @@ export const PrimaryResearch: React.FC = () => {
 
   return (
     <div className={styles.wrapper}>
+      <div className={styles.subnav}>
+        <p className={styles.subnavTitle}>Primary research</p>
+        <span className={styles.subnavDivider} style={{ backgroundColor: c['border-divider'] }} />
+        <Tabs tabs={SUB_TABS} activeTab={tab} onTabChange={(id) => setTab(id as SubTab)} />
+      </div>
+      {tab === 'ts-embedding' ? (
+        <div className={styles.body}>
+          <TSEmbeddingJourney />
+        </div>
+      ) : (
+      <>
       <div className={styles.picker}>
         {interviews.map((interview) => {
           const isActive = interview.id === activeId;
@@ -257,6 +278,8 @@ export const PrimaryResearch: React.FC = () => {
           })}
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 };

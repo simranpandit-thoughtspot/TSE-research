@@ -1,0 +1,366 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  gap: 8px;
+}
+
+/* --- Timeline --- */
+
+.timeline {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 4px 4px 12px 4px;
+  overflow-x: auto;
+}
+
+.timelineConnector {
+  flex: 1 1 16px;
+  height: 2px;
+  min-width: 12px;
+  margin-top: 15px;
+  transition: background-color 200ms ease;
+}
+
+.timelineNode {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  width: 92px;
+}
+
+.timelineDot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--rd-sys-color-border-divider);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 200ms ease, background-color 200ms ease, transform 160ms ease;
+}
+
+.timelineDotActive {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 4px var(--rd-ref-color-brand-10);
+}
+
+.timelineLabel {
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+}
+
+/* --- Stage (per-step screen) --- */
+
+.stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(240px, 340px) 1fr;
+  gap: 28px;
+  overflow: auto;
+  padding: 4px 4px 8px 4px;
+  animation: enter 360ms ease both;
+}
+
+@media (max-width: 860px) {
+  .screen {
+    grid-template-columns: 1fr;
+  }
+}
+
+.screen.back {
+  animation-name: enterBack;
+}
+
+@keyframes enter {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes enterBack {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.stepMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.stepCount {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stepTitle {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.stepGoal {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 4px 0;
+}
+
+.metaLabel {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 6px 0;
+}
+
+.metaBlock {
+  padding: 12px 0;
+  border-top: 1px solid var(--rd-sys-color-border-divider);
+}
+
+.activityList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.activityItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.metaRow {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rd-sys-color-border-divider);
+}
+
+.metaValue {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* --- Screenshot pane --- */
+
+.screenshotPane {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.screenshotFrame {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  background-color: var(--rd-sys-color-background-sunken);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.screenshotImg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.calloutMarker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  cursor: default;
+}
+
+.calloutLegend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 2px;
+}
+
+.legendRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.legendNumber {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.legendLabel {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+/* --- Footer nav --- */
+
+.footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--rd-sys-color-border-divider);
+}
+
+/* --- Completion screen --- */
+
+.completeScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  max-width: 560px;
+  margin: 0 auto;
+  padding-top: 12px;
+}
+
+.completeBadge {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.completeTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.completeBody {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 8px 0;
+}
+
+.completeVisual {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.stagePreviewCrop {
+  width: 100%;
+  max-width: 320px;
+  height: 96px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.stagePreviewImg {
+  width: 260%;
+  max-width: none;
+  transform: translate(-40%, -14%);
+}
+
+.completeVisualCaption {
+  font-size: 11px;
+}
+
+.checklist {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  text-align: left;
+  padding: 14px 0;
+  border-top: 1px solid var(--rd-sys-color-border-divider);
+  border-bottom: 1px solid var(--rd-sys-color-border-divider);
+  margin-bottom: 10px;
+}
+
+@media (max-width: 560px) {
+  .checklist {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checklistItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.tagline {
+  font-size: 14px;
+  font-weight: 700;
+  font-style: italic;
+  margin: 4px 0 12px 0;
+}
