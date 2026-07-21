@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Icon } from '../../../components/icons';
 import type { IconName } from '../../../components/icons';
 import { systemColors, referenceColors } from '../../../tokens/colors';
 import { shadows } from '../../../tokens/shadows';
 import { quadrantMeta } from '../data/primaryResearch';
-import { discordQuadrants, discordThemeFrequency, discordSummary } from '../data/discordCommunity';
+import { discordQuadrants, discordSummary } from '../data/discordCommunity';
 import styles from './DiscordCommunity.module.css';
 
 const c = systemColors.light;
@@ -20,21 +20,34 @@ const QUADRANT_STYLE: Record<QuadrantKey, { bg: string; fg: string; icon: IconNa
 
 const QUADRANT_ORDER: QuadrantKey[] = ['strengths', 'limitations', 'frustrations', 'opportunities'];
 
-const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
-  const pct = Math.max(0, Math.min(100, (rating / 5) * 100));
+const ProblemCarousel: React.FC = () => {
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  const scrollByCard = (dir: 1 | -1) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.querySelector<HTMLElement>(`.${styles.problemCard}`);
+    const step = (card?.offsetWidth ?? 280) + 12;
+    track.scrollBy({ left: step * dir, behavior: 'smooth' });
+  };
+
   return (
-    <span className={styles.starRating}>
-      <span className={styles.starRow}>
-        {[0, 1, 2, 3, 4].map((i) => (
-          <Icon key={i} name="star" size="xs" color={c['border-default']} />
+    <div className={styles.carousel}>
+      <button className={styles.carouselArrow} onClick={() => scrollByCard(-1)} aria-label="Previous problem statement">
+        <Icon name="chevron-left" size="s" color={c['content-secondary']} />
+      </button>
+      <div className={styles.carouselTrack} ref={trackRef}>
+        {discordSummary.problemStatements.map((p, i) => (
+          <div key={i} className={styles.problemCard} style={{ boxShadow: shadows.sm }}>
+            <span className={styles.problemNumber} style={{ color: c['content-brand'] }}>{String(i + 1).padStart(2, '0')}</span>
+            <p className={styles.problemText}>{p}</p>
+          </div>
         ))}
-      </span>
-      <span className={styles.starRowFill} style={{ width: `${pct}%` }}>
-        {[0, 1, 2, 3, 4].map((i) => (
-          <Icon key={i} name="star" size="xs" color={c['content-warning']} />
-        ))}
-      </span>
-    </span>
+      </div>
+      <button className={styles.carouselArrow} onClick={() => scrollByCard(1)} aria-label="Next problem statement">
+        <Icon name="chevron-right" size="s" color={c['content-secondary']} />
+      </button>
+    </div>
   );
 };
 
@@ -42,42 +55,8 @@ export const DiscordCommunity: React.FC = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.summaryCard}>
-        <p className={styles.summarySource} style={{ color: c['content-tertiary'] }}>
-          <Icon name="community" size="xs" color="currentColor" /> {discordSummary.source} · real customer implementation friction, not internal perspective
-        </p>
         <p className={styles.coreInsight}>&ldquo;{discordSummary.coreInsight}&rdquo;</p>
-        <p className={styles.synthesisText} style={{ color: c['content-secondary'] }}>{discordSummary.synthesis}</p>
-
-        <div className={styles.summaryGrid}>
-          <div className={styles.themeBlock}>
-            <p className={styles.blockLabel} style={{ color: c['content-tertiary'] }}>Theme frequency</p>
-            <div className={styles.themeList}>
-              {discordThemeFrequency.map((t) => (
-                <div key={t.theme} className={styles.themeRow}>
-                  <div className={styles.themeRowTop}>
-                    <span className={styles.themeName}>{t.theme}</span>
-                    <StarRating rating={t.rating} />
-                  </div>
-                  <p className={styles.themeEvidence} style={{ color: c['content-tertiary'] }}>{t.evidence}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className={styles.problemsBlock}>
-            <p className={styles.blockLabel} style={{ color: c['content-tertiary'] }}>Actionable problem statements</p>
-            <ol className={styles.problemsList}>
-              {discordSummary.problemStatements.map((p, i) => (
-                <li key={i} className={styles.problemItem}>{p}</li>
-              ))}
-            </ol>
-          </div>
-        </div>
-
-        <div className={styles.takeaway} style={{ backgroundColor: referenceColors.brand['10'] }}>
-          <Icon name="bulb" size="s" color={c['content-brand']} />
-          <p className={styles.takeawayText} style={{ color: c['content-primary'] }}>{discordSummary.keyTakeaway}</p>
-        </div>
+        <ProblemCarousel />
       </div>
 
       <div className={styles.boardHint} style={{ color: c['content-tertiary'] }}>
