@@ -3,18 +3,6 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  padding: 24px 24px 96px 24px;
-}
-
-.header {
-  flex-shrink: 0;
-  margin-bottom: 12px;
-}
-
-.title {
-  font-size: 18px;
-  font-weight: 700;
-  margin: 0;
 }
 
 .tableScroll {

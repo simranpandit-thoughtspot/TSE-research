@@ -5,7 +5,6 @@ import { BottomNav, SectionId } from './components/BottomNav';
 import { SecondaryResearch } from './components/SecondaryResearch';
 import { PrimaryResearch } from './components/PrimaryResearch';
 import { TabAudit } from './components/TabAudit';
-import { CustomerJourney } from './components/CustomerJourney';
 import { ProblemAreas } from './components/ProblemAreas';
 
 /**
@@ -13,8 +12,9 @@ import { ProblemAreas } from './components/ProblemAreas';
  *
  * Interactive research documentation platform for the TSE Embedding project.
  * Consolidates secondary research (market/competitors), primary research
- * (TSE SME interviews), the </> tab audit, the customer journey, and a
- * problem-areas summary into one segmented, slide-deck-style workspace.
+ * (TSE SME interviews, the customer journey, and the TS Embedding
+ * walkthrough), the </> tab audit, and a problem-areas summary into one
+ * segmented, slide-deck-style workspace.
  */
 export const EmbeddingResearchHub: React.FC = () => {
   const [activeSection, setActiveSection] = useState<SectionId>('secondary');
@@ -33,7 +33,6 @@ export const EmbeddingResearchHub: React.FC = () => {
         {activeSection === 'secondary' && <SecondaryResearch />}
         {activeSection === 'primary' && <PrimaryResearch />}
         {activeSection === 'tabAudit' && <TabAudit />}
-        {activeSection === 'journey' && <CustomerJourney />}
         {activeSection === 'problems' && <ProblemAreas />}
       </div>
 

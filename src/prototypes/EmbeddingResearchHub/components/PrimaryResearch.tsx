@@ -7,15 +7,17 @@ import { systemColors, referenceColors } from '../../../tokens/colors';
 import { shadows } from '../../../tokens/shadows';
 import { interviews, quadrantMeta, Interview } from '../data/primaryResearch';
 import { TSEmbeddingJourney } from './TSEmbeddingJourney';
+import { CustomerJourney } from './CustomerJourney';
 import styles from './PrimaryResearch.module.css';
 
 const c = systemColors.light;
 
-type SubTab = 'boards' | 'ts-embedding';
+type SubTab = 'boards' | 'ts-embedding' | 'journey';
 
 const SUB_TABS = [
   { id: 'boards', label: 'Interview boards' },
   { id: 'ts-embedding', label: 'TS Embedding' },
+  { id: 'journey', label: 'Customer journey' },
 ];
 
 type QuadrantKey = keyof typeof quadrantMeta;
@@ -138,6 +140,10 @@ export const PrimaryResearch: React.FC = () => {
       {tab === 'ts-embedding' ? (
         <div className={styles.body}>
           <TSEmbeddingJourney />
+        </div>
+      ) : tab === 'journey' ? (
+        <div className={styles.body}>
+          <CustomerJourney />
         </div>
       ) : (
       <>

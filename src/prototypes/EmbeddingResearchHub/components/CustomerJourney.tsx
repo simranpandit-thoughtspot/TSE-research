@@ -67,10 +67,6 @@ const ROWS: RowMeta[] = [
 export const CustomerJourney: React.FC = () => {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.header}>
-        <p className={styles.title}>Customer journey</p>
-      </div>
-
       <div className={styles.tableScroll}>
         <table className={styles.table}>
           <thead>

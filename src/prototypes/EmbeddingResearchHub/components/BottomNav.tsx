@@ -7,7 +7,7 @@ import styles from './BottomNav.module.css';
 
 const c = systemColors.light;
 
-export type SectionId = 'secondary' | 'primary' | 'tabAudit' | 'journey' | 'problems';
+export type SectionId = 'secondary' | 'primary' | 'tabAudit' | 'problems';
 
 interface NavItem {
   id: SectionId;
@@ -20,7 +20,6 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'secondary', label: 'Secondary research', icon: 'book' },
   { id: 'primary', label: 'Primary research', icon: 'microphone' },
   { id: 'tabAudit', label: 'Tab audit', glyph: '</>' },
-  { id: 'journey', label: 'Customer journey', icon: 'navigate' },
   { id: 'problems', label: 'Problem areas', icon: 'exclamation-point-circle' },
 ];
 
