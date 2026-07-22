@@ -20,7 +20,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'secondary', label: 'Secondary research', icon: 'book' },
   { id: 'primary', label: 'Primary research', icon: 'microphone' },
   { id: 'tabAudit', label: 'Tab audit', glyph: '</>' },
-  { id: 'problems', label: 'Problem areas', icon: 'exclamation-point-circle' },
+  { id: 'problems', label: 'Summary', icon: 'present' },
 ];
 
 interface BottomNavProps {

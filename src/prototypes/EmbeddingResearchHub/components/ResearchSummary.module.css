@@ -1,0 +1,536 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 32px 32px 104px 32px;
+  border-radius: 16px;
+}
+
+.stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.chevronBtn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 120ms ease;
+}
+
+.chevronBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.chevronBtn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.slideViewport {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide {
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-top: 16px;
+}
+
+.slideCounter {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+  max-width: 480px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 120ms ease;
+}
+
+.dot:hover {
+  transform: scale(1.3);
+}
+
+/* --- Shared text elements --- */
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sectionTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.sectionSubtitle {
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin: 0 0 12px 0;
+  max-width: 640px;
+}
+
+.blockLabel {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 8px 0;
+}
+
+.bigNumber {
+  font-size: 34px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.insightNote {
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin: 4px 0 0 0;
+}
+
+/* --- Cover --- */
+
+.coverTitle {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 12px 0 4px 0;
+  max-width: 720px;
+}
+
+.coverSubtitle {
+  font-size: 14.5px;
+  line-height: 1.6;
+  max-width: 620px;
+  margin: 0 0 20px 0;
+}
+
+.coverMeta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border-top: 1px solid;
+  padding-top: 16px;
+}
+
+.metaDot {
+  opacity: 0.5;
+}
+
+/* --- Personas --- */
+
+.personaGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.personaCard {
+  flex: 1 1 280px;
+  max-width: 320px;
+  border-radius: 16px;
+  border: 1px solid;
+  padding: 24px 20px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.personaIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.personaTitle {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.personaTagline {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.personaDesc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  margin: 0 0 12px 0;
+}
+
+.needsList {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.needsItem {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* --- Journey rail --- */
+
+.journeyRail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 8px;
+  max-width: 760px;
+}
+
+.journeyConnector {
+  width: 14px;
+  height: 1px;
+  flex-shrink: 0;
+}
+
+.journeyNode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 10px 8px;
+  width: 96px;
+}
+
+.journeyNumber {
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.journeyLabel {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* --- Journey insight --- */
+
+.insightGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  margin-top: 8px;
+  align-items: stretch;
+}
+
+.insightCard {
+  flex: 1 1 260px;
+  max-width: 360px;
+  border-radius: 16px;
+  border: 1px solid;
+  padding: 22px 20px;
+  text-align: left;
+}
+
+.insightCard:first-child {
+  text-align: center;
+}
+
+.touchpointList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.touchpointRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.touchpointName {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.touchpointCount {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* --- Interview grid --- */
+
+.interviewGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+@media (max-width: 700px) {
+  .interviewGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.interviewCard {
+  border-radius: 14px;
+  border: 1px solid;
+  padding: 16px 18px;
+  text-align: left;
+}
+
+.interviewName {
+  font-size: 14.5px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.interviewSubtitle {
+  font-size: 11.5px;
+  line-height: 1.4;
+  margin: 4px 0 10px 0;
+}
+
+.interviewCounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* --- Discord slide --- */
+
+.pullQuote {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.45;
+  max-width: 640px;
+  margin: 12px 0 16px 0;
+}
+
+.discordCountsRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+/* --- Problem statements --- */
+
+.problemList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.problemRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.problemIndex {
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.problemTitle {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.problemDesc {
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* --- Secondary research --- */
+
+.statsRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.statCard {
+  flex: 1 1 220px;
+  max-width: 280px;
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.statSource {
+  font-size: 10.5px;
+  margin-top: 6px;
+}
+
+.marketNotes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 660px;
+  margin-top: 16px;
+  text-align: left;
+}
+
+.marketNote {
+  font-size: 12.5px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* --- Risk --- */
+
+.riskList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.riskRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.riskBadge {
+  flex-shrink: 0;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+.riskTitle {
+  font-size: 13.5px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.riskEvidence {
+  font-size: 11.5px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* --- Takeaway --- */
+
+.takeaway {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-top: 12px;
+  max-width: 660px;
+  text-align: left;
+}
+
+.takeawayText {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+  margin: 0;
+}
