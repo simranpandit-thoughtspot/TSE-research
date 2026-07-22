@@ -182,6 +182,98 @@ export const interviews: Interview[] = [
       ],
     },
   },
+  {
+    id: 'interview-4',
+    title: 'Interview 4',
+    subtitle: 'John — technical architect, TSE deep-dive: event design, webhooks, and API-first',
+    recordingUrl: 'https://drive.google.com/file/d/1dxlANMK541EhRwE0rkFogB6Hoy-xrM5b/view?usp=sharing',
+    quadrants: {
+      strengths: [
+        {
+          label: 'Good baseline embedding experience',
+          text: '"At a high level, I actually think what we\'ve done is really good — if I want to just embed a live board, it\'s pretty straightforward to do that... I think it\'s actually a good implementation."',
+        },
+        {
+          label: 'Customization is generally solid',
+          text: '"I don\'t get a ton of push back on our customization options, honestly... I actually feel like our customization is pretty decent, especially now that you can use the theme builder inside of Playground."',
+        },
+        {
+          label: 'Scheduled Liveboard webhooks',
+          text: 'Built after a HIPAA-compliance customer (Wex) couldn\'t use ThoughtSpot\'s email service: "we built scheduled liveboard webhooks, which I love, I think they\'re great." "In my mind, everything you do in ThoughtSpot should have a webhook."',
+        },
+      ],
+      limitations: [
+        {
+          label: 'Documentation lags behind best practice',
+          text: 'Spotter Code and Claude Code still sometimes recommend filter rules for ABAC "even though that is the old approach... it should be suggesting variable values" — and brand-new customers copy the same deprecated pattern straight from docs. "Anything associated with filter rules should have a big red banner... this is deprecated, do not use."',
+        },
+        {
+          label: 'Inconsistent event payloads',
+          text: 'The filter-changed event payload is "this massive object that is very, very difficult to parse," while what you pass into the update-filters event "is a totally different payload." "If we had done this thoughtfully, the payloads for those would be exactly the same" — like Stripe, where the same functionality keeps the same payload shape.',
+        },
+        {
+          label: 'Implementations feel disconnected once nuanced',
+          text: '"Once you get more nuanced, there\'s a lot of pieces that feel disconnected... like one engineer built the filter-changed event and a totally different engineer built the update-filters event, and the two of them never talked about the relationship between the two."',
+        },
+        {
+          label: "Customization doesn't always ship with the feature",
+          text: 'When Spotter 3 launched, the ability to rename Spotter didn\'t propagate to its "thinking steps," which still said "Spotter is doing..." — "if we\'re going to allow customization, then anything we release should respect the customization."',
+        },
+        {
+          label: 'Two disconnected webhook services',
+          text: 'Legacy KPI-alert webhooks predate the newer webhook service that scheduled Liveboards use, and were "built only with TSA in mind" for a technical analyst — not for white-labeled embed. Setting one up means digging into an alert dialog with a raw "send to webhook" checkbox: "no embedded user is going to understand what a webhook is."',
+        },
+        {
+          label: 'No self-serve sandbox for higher-privilege features',
+          text: 'Free-trial users can\'t customize security settings, and there\'s no full self-serve instance the way "Salesforce does this" for developer accounts — deals only get a real test cluster once they clear a $75-100K threshold.',
+        },
+        {
+          label: 'Scale ceiling is a real constraint',
+          text: 'Clusters start raising concern around 3 million objects and show "really big performance slowdowns" at 4-5 million — forcing a $20M deal to split across ten clusters "is just not a great story for us," though John frames this as ThoughtSpot\'s core architecture, not an embedding-specific problem.',
+        },
+      ],
+      frustrations: [
+        {
+          label: 'Collections shipped with no API',
+          text: '"Collections got released with no API coverage at launch... we went to [the owner] and said what the hell man, we have all these embed customers who want to use this but they have no API to use it — it\'s not great." It was added back later, but only after pushback.',
+        },
+        {
+          label: 'Theme Builder gaps force CSS overrides',
+          text: 'Some visual changes "aren\'t supported by theme builder and we have to use the rules-unstable CSS overrides" — though John sees this as an acceptable, rational escape hatch rather than a gap worth closing with "15,000 variables" nobody could navigate.',
+        },
+        {
+          label: 'Concurrency issues mean manual SRE back-and-forth',
+          text: 'Handling concurrency at scale today "is just a back and forth with SRE, which is often difficult... it always feels like it takes way longer than it should."',
+        },
+      ],
+      opportunities: [
+        {
+          label: 'API-first releases',
+          text: '"Anything new we release, we should have an API for it... if anything, we should release an API without a UI first" — especially given "70% of our new revenue comes from embedded."',
+        },
+        {
+          label: 'Webhook coverage for metadata changes',
+          text: 'A metadata-change webhook would let a customer "automatically sync the new version of the liveboard to their git repo" the moment it changes in ThoughtSpot — turning today\'s manual pull-then-push into real CI/CD.',
+        },
+        {
+          label: 'Webhooks for permission/governance changes at scale',
+          text: 'A permission-change webhook would let an enterprise customer auto-enforce rules like "only one admin per cluster" without manually auditing every cluster — critical once a deal spans twenty clusters, not five.',
+        },
+        {
+          label: 'Consolidate onto one webhook service',
+          text: 'Migrate legacy KPI-alert webhooks onto the newer service that scheduled Liveboards use, so there is a single, embed-friendly webhook model instead of two.',
+        },
+        {
+          label: 'Self-serve developer sandboxes',
+          text: 'Let developers spin up a full instance — security settings included — the way a Salesforce developer account does, rather than waiting for deal size to unlock a real test cluster.',
+        },
+        {
+          label: 'Deprecation banners in documentation',
+          text: 'Flag deprecated patterns like filter rules directly in the docs so neither AI copilots (Spotter Code, Claude Code) nor new customers keep reaching for them.',
+        },
+      ],
+    },
+  },
 ];
 
 export const quadrantMeta = {
