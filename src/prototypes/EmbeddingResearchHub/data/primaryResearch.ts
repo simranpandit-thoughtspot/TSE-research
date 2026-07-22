@@ -26,7 +26,7 @@ export interface Interview {
 export const interviews: Interview[] = [
   {
     id: 'interview-1',
-    title: 'Interview 1',
+    title: 'Bill Back',
     subtitle: 'Hands-on walkthrough — Playground & Theme Builder, day-to-day use',
     recordingUrl: 'https://drive.google.com/file/d/1gcym9UcfY1n14Q9Vqh5C-Y2kPzFQllH8/view?usp=sharing',
     quadrants: {
@@ -73,7 +73,7 @@ export const interviews: Interview[] = [
   },
   {
     id: 'interview-2',
-    title: 'Interview 2',
+    title: 'Tri Tru',
     subtitle: 'Strategic view — embedding readiness, APIs, and enterprise deployment',
     recordingUrl: 'https://drive.google.com/file/d/12FwmCbIoUou-TchErV1Kgj5ppSbEMk6x/view?usp=sharing',
     quadrants: {
@@ -115,8 +115,8 @@ export const interviews: Interview[] = [
   },
   {
     id: 'interview-3',
-    title: 'Interview 3',
-    subtitle: 'Ron Dugger — overlay solutions engineer, Tableau-to-ThoughtSpot parity and white-labeling',
+    title: 'Ron Dugger',
+    subtitle: 'Overlay solutions engineer — Tableau-to-ThoughtSpot parity and white-labeling',
     recordingUrl: 'https://drive.google.com/file/d/1emE5f4KOxTuY9rADOxc73o_jFf0Mby8v/view?usp=sharing',
     quadrants: {
       strengths: [
@@ -184,8 +184,8 @@ export const interviews: Interview[] = [
   },
   {
     id: 'interview-4',
-    title: 'Interview 4',
-    subtitle: 'John — technical architect, TSE deep-dive: event design, webhooks, and API-first',
+    title: 'John Heggley',
+    subtitle: 'Technical architect — TSE deep-dive: event design, webhooks, and API-first',
     recordingUrl: 'https://drive.google.com/file/d/1dxlANMK541EhRwE0rkFogB6Hoy-xrM5b/view?usp=sharing',
     quadrants: {
       strengths: [
