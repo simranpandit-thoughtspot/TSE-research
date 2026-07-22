@@ -113,6 +113,75 @@ export const interviews: Interview[] = [
       ],
     },
   },
+  {
+    id: 'interview-3',
+    title: 'Interview 3',
+    subtitle: 'Ron Dugger — overlay solutions engineer, Tableau-to-ThoughtSpot parity and white-labeling',
+    recordingUrl: 'https://drive.google.com/file/d/1emE5f4KOxTuY9rADOxc73o_jFf0Mby8v/view?usp=sharing',
+    quadrants: {
+      strengths: [
+        {
+          label: 'Developer program & APIs',
+          text: 'Coming from nine years at Tableau in the same embedded-analytics role, moving to ThoughtSpot "was kind of a breath of fresh air once I really got deep into the APIs." "The ThoughtSpot developer program is absolutely better than what we had at Tableau... the APIs are much better, just better functionality, better coded in general."',
+        },
+        {
+          label: 'White-labeling and branding',
+          text: 'Prospects evaluating ThoughtSpot "absolutely love our ability to white label and brand and customize the content. The CSS variables, the rules unstable, in a lot of cases... those are definitely something that put us above our competition."',
+        },
+        {
+          label: 'AI-driven reimagining vs. replication',
+          text: 'When customers ask to replicate a Looker/Tableau report exactly, "we\'ve gotten a lot better about trying to change that conversation to... we\'re not in the business of replicating. We\'re in the business of leveraging our AI tooling to make your customers\' lives easier. So we do a lot of reimagining."',
+        },
+      ],
+      limitations: [
+        {
+          label: 'More clicks than competitors (TSA side)',
+          text: 'No product is perfect — "everyone kind of does embedding... and everyone has some gaps." Most of the gaps Ron sees are on the TSA side: "it takes a lot more clicks to create things in ThoughtSpot from a TSA standpoint than it does in other tools. That\'s the main feedback I get from customers."',
+        },
+        {
+          label: 'Cross-filtering feels decoupled',
+          text: 'Tableau\'s built-in action framework (URL actions, click actions) filters one viz from another "with no changes in the UI." ThoughtSpot can do similar cross-filtering — "we do have the capability, but it just looks almost a little bit decoupled... not as, I guess, from a control standpoint" — and the interaction visibly changes the UI (right-click → filter).',
+        },
+        {
+          label: 'Static tooltips',
+          text: '"Our tool tips are very static — like, you know, it\'s either you can turn something on or off, that\'s it. A lot of our embed customers... are asking we want to customize these tool tips and have them look a certain way. Um, so some of that\'s just product limitations like we just can\'t do that. Then the customer has to get over it."',
+        },
+        {
+          label: 'Customization stops at tooltips',
+          text: 'The customization ask "would not just be limited to tool tips — it can probably get extended to the buttons, the colors, the brand colors, everything."',
+        },
+      ],
+      frustrations: [
+        {
+          label: 'Replication expectations',
+          text: 'Customers migrating from Looker/Tableau frequently open with "I have this report that I\'ve created in Looker or Tableau, and we want to replicate exactly what we\'ve got in ThoughtSpot" — forcing the team to redirect the conversation away from feature-for-feature parity.',
+        },
+        {
+          label: 'Edge cases still need a solution engineer',
+          text: 'Most embedded opportunities are self-served by direct solution engineers with documentation, but Ron\'s overlay team still gets pulled in for one-off asks: codebase custom actions, authentication/user-onboarding automation, custom URL requirements, and CI/CD pipeline questions.',
+        },
+        {
+          label: 'No workaround for product limitations',
+          text: 'On tooltip customization specifically: "some of that\'s just product limitations like we just can\'t do that. Then the customer has to get over it."',
+        },
+      ],
+      opportunities: [
+        {
+          text: 'Bring ThoughtSpot\'s existing cross-filter capability up to the same seamless, no-UI-change feel as Tableau\'s action framework, instead of a visibly different right-click-to-filter interaction.',
+        },
+        {
+          text: 'Let embed customers configure tooltip appearance and behavior instead of a static on/off toggle.',
+        },
+        {
+          text: 'Extend the white-label customization surface beyond CSS variables to buttons, colors, and brand elements as a defined, discoverable set — not one-off product limitations.',
+        },
+        {
+          label: 'Close the TSA click-count gap',
+          text: 'Reduce the extra clicks required for TSA (self-service/analyst) workflows relative to Looker/Tableau — Ron sees more feedback on this gap than on TSE/embedding itself.',
+        },
+      ],
+    },
+  },
 ];
 
 export const quadrantMeta = {
