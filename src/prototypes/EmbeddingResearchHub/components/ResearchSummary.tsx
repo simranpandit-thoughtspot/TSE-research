@@ -23,6 +23,18 @@ import styles from './ResearchSummary.module.css';
 const c = systemColors.light;
 const frame = systemColors.dark;
 
+/**
+ * The deck is designed light and must stay light even when the app is in dark
+ * mode: the module CSS reads these variables for card/surface backgrounds, so
+ * pin them to light-theme tokens on the wrapper (descendants inherit them).
+ */
+const LIGHT_THEME_VARS = {
+  '--rd-sys-color-background-base': c['background-base'],
+  '--rd-sys-color-background-sunken': c['background-sunken'],
+  '--rd-sys-color-border-divider': c['border-divider'],
+  '--rd-sys-color-content-primary': c['content-primary'],
+} as React.CSSProperties;
+
 const DECK_TITLE = 'TSE Develop tab research';
 const DECK_AUTHORS = 'Simran & Tarun';
 const DECK_DATE = 'July 2026';
@@ -445,7 +457,7 @@ export const ResearchSummary: React.FC = () => {
   const { Component } = SLIDES[slide];
 
   return (
-    <div ref={wrapperRef} className={styles.wrapper} style={{ backgroundColor: frame['background-base'] }}>
+    <div ref={wrapperRef} className={styles.wrapper} style={{ ...LIGHT_THEME_VARS, backgroundColor: frame['background-base'] }}>
       <button
         className={styles.fsBtn}
         onClick={toggleFullscreen}
