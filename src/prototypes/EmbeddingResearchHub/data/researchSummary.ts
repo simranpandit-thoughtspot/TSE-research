@@ -118,7 +118,7 @@ export const problemStatements: ProblemStatement[] = [
   },
   {
     id: 'api-coverage',
-    title: 'API coverage lags the UI',
+    title: 'API coverage lags the feature',
     description:
       'New features (like Collections) have repeatedly shipped without an equivalent API, forcing embed customers into workarounds until coverage catches up.',
     risk: 'high',
@@ -126,7 +126,7 @@ export const problemStatements: ProblemStatement[] = [
   },
   {
     id: 'auth-setup',
-    title: 'Authentication & security setup is hard to predict',
+    title: 'Authentication & security setup is hard to predict & navigate',
     description:
       'Security prerequisites (CORS/CSP, trusted auth, SSO) surface late and inconsistently, and the first real blocker in the journey is exactly here.',
     risk: 'high',
@@ -163,6 +163,89 @@ export const problemStatements: ProblemStatement[] = [
       'Object-count limits and multi-iframe memory pressure are a small-customer non-issue today, but land squarely on the largest embed deals as they grow.',
     risk: 'low',
     evidence: "John's cluster object-count ceiling · Discord's performance theme (3.5/5)",
+  },
+];
+
+/**
+ * Develop-tab page adoption — funnel from "loaded the develop tab" (Home) to
+ * reaching each individual page. Last 30 days, prospects only (Email does not
+ * contain thoughtspot.com · Account Status = Customer), so it reflects real
+ * evaluators, not ThoughtSpot solution engineers. Source: product analytics funnels.
+ */
+export const pageAdoption = {
+  window: 'Last 30 days · prospects only (excludes ThoughtSpot SEs)',
+  baseLabel: 'Loaded the develop tab',
+  baseCount: 956,
+  steps: [
+    { page: 'Homepage / guide click', count: 267, rate: 27.93 },
+    { page: 'Security settings', count: 157, rate: 16.44 },
+    { page: 'Playground', count: 113, rate: 11.87 },
+    { page: 'Link settings', count: 61, rate: 6.41 },
+    { page: 'Custom actions', count: 54, rate: 5.67 },
+    { page: 'Theme Builder', count: 38, rate: 3.99 },
+    { page: 'Webhooks', count: 35, rate: 3.67 },
+    { page: 'Get started (docs)', count: 5, rate: 0.53 },
+  ],
+};
+
+/**
+ * Per-problem validation from secondary research — the community-intensity
+ * score comes from the Discord theme frequency (x / 5), and the competitor
+ * note summarizes whether rivals already solve it. Grounded in each problem's
+ * `evidence` string plus the competitor dataset.
+ */
+export const problemValidation: Record<string, { communityScore: number | null; competitorNote: string }> = {
+  customization: { communityScore: 5, competitorNote: 'Hex, Omni & Semaphor already go deeper' },
+  'api-coverage': { communityScore: 4.5, competitorNote: 'Looker, Power BI & Sigma ship broader APIs' },
+  'auth-setup': { communityScore: 4.5, competitorNote: 'Industry-wide; Power BI / Omni docs are deeper' },
+  documentation: { communityScore: null, competitorNote: 'Thin embed docs are common across the field' },
+  'enterprise-deployment': { communityScore: 4.5, competitorNote: 'CI/CD is weak across most vendors' },
+  'disconnected-implementation': { communityScore: 3.5, competitorNote: 'Sisense / Omni composable SDKs feel more unified' },
+  'scale-ceiling': { communityScore: 3.5, competitorNote: 'Multi-iframe memory hits Domo & Qlik too' },
+};
+
+export const secondaryOverview = {
+  vendors: 15,
+  communityThemes: 6,
+  reviewPlatforms: 'G2 · Capterra · TrustRadius · Reddit · HN',
+};
+
+/** One-line elaboration shown under each pain-point title on the pain-points slide. */
+export const painPointDetail: Record<string, string> = {
+  customization: 'Developers have to make manual code changes!',
+  'api-coverage': 'New features ship before their APIs do.',
+  'auth-setup': "Leads to loss of work — it doesn't get saved.",
+  documentation: 'Not well structured — really hard to find content inside.',
+  'enterprise-deployment': 'Dev → Test → Prod still relies on manual steps.',
+  'disconnected-implementation': 'Nuanced flows feel stitched together, not like one product.',
+  'scale-ceiling': 'Object-count and memory limits bite the biggest deals.',
+};
+
+export const opportunities = [
+  {
+    icon: 'schema' as const,
+    title: 'Navigation & architecture',
+    text: 'Rework the develop-tab IA so pages surface by intent — not a flat list only 28% ever click into.',
+  },
+  {
+    icon: 'agenda' as const,
+    title: 'Guided flow',
+    text: 'A step-by-step "get your first embed live" wizard covering auth, security, and the embed in one pass.',
+  },
+  {
+    icon: 'spotter' as const,
+    title: 'Agent-first experience',
+    text: 'Assume a coding agent — let it theme, authenticate, embed, and wire events without opening the UI.',
+  },
+  {
+    icon: 'cord' as const,
+    title: 'API-first architecture',
+    text: 'Ship an API before the UI; every action a user can take in the product should have an equivalent API.',
+  },
+  {
+    icon: 'explore' as const,
+    title: 'Non-linear workflow',
+    text: 'Let developers work in any order instead of a fixed recipe — and never lose in-progress Playground work.',
   },
 ];
 

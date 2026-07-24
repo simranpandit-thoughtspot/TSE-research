@@ -1,246 +1,263 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Icon } from '../../../components/icons';
 import type { IconName } from '../../../components/icons';
 import { systemColors, referenceColors } from '../../../tokens/colors';
+import { shadows } from '../../../tokens/shadows';
 import {
-  personas,
-  journeyInsight,
   interviewSnapshots,
-  discordCounts,
   problemStatements,
   businessImpact,
+  pageAdoption,
+  problemValidation,
+  painPointDetail,
+  secondaryOverview,
+  opportunities,
   RiskLevel,
 } from '../data/researchSummary';
-import { journeyStages } from '../data/customerJourney';
+import { discordSummary } from '../data/discordCommunity';
+import { interviews, quadrantMeta } from '../data/primaryResearch';
+import { CustomerJourney } from './CustomerJourney';
 import styles from './ResearchSummary.module.css';
 
-const c = systemColors.dark;
+/** Slides are light (dark navy text on a white surface); the frame around them is dark. */
+const c = systemColors.light;
+const frame = systemColors.dark;
 
-const RISK_META: Record<RiskLevel, { label: string; color: string; bg: string }> = {
-  high: { label: 'High risk', color: c['content-failure'], bg: referenceColors.red['20'] },
-  medium: { label: 'Medium risk', color: c['content-warning'], bg: referenceColors.yellow['20'] },
-  low: { label: 'Low risk', color: c['content-success'], bg: referenceColors.green['20'] },
-};
+const DECK_TITLE = 'TSE Develop tab research';
+const DECK_AUTHORS = 'Simran & Tarun';
+const DECK_DATE = 'July 2026';
 
-const PERSONA_ICON: Record<string, IconName> = {
-  'first-timer': 'magnifying-glass',
-  switcher: 'profile',
+/* Soft top gradient wash — peach → pink/purple → blue, fading downward. */
+const GRADIENT_WASH = [
+  `radial-gradient(58% 48% at 22% -4%, ${referenceColors.orange['30']}, transparent 70%)`,
+  `radial-gradient(52% 46% at 46% -6%, ${referenceColors.purple['30']}, transparent 72%)`,
+  `radial-gradient(64% 52% at 78% 2%, ${referenceColors.blue['30']}, transparent 74%)`,
+].join(', ');
+
+const RISK_META: Record<RiskLevel, { label: string; color: string }> = {
+  high: { label: 'High risk', color: c['content-failure'] },
+  medium: { label: 'Medium risk', color: c['content-warning'] },
+  low: { label: 'Low risk', color: c['content-success'] },
 };
 
 /* ---------------------------------------------------------------- */
 
+const BrandMark: React.FC = () => (
+  <div className={styles.brandMark}>
+    <svg width="20" height="20" viewBox="0 0 48 48" fill="none" aria-label="ThoughtSpot" xmlns="http://www.w3.org/2000/svg">
+      <path d="M47.4216 0H0V8.78311H47.4216V0Z" fill={c['content-primary']} />
+      <path d="M47.4216 11.7108H29.4035V20.4939H47.4216V11.7108Z" fill={c['content-primary']} />
+      <path d="M11.512 11.7108H0V20.4939H11.512C15.8132 20.4939 19.3192 23.9999 19.3192 28.3011V47.4216H28.1024V28.3011C28.1024 19.1566 20.6566 11.7108 11.512 11.7108Z" fill={c['content-primary']} />
+      <path d="M38.4216 33.253C34.3554 33.253 31.0481 36.5603 31.0481 40.6265C31.0481 44.6928 34.3554 48 38.4216 48C42.4879 48 45.7951 44.6928 45.7951 40.6265C45.7951 36.5603 42.4879 33.253 38.4216 33.253Z" fill={c['content-primary']} />
+    </svg>
+    <span className={styles.brandWord} style={{ color: c['content-primary'] }}>ThoughtSpot</span>
+  </div>
+);
+
+const SectionHeading: React.FC<{ title: string; subtitle?: string }> = ({ title, subtitle }) => (
+  <>
+    <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>{title}</h2>
+    {subtitle && <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>{subtitle}</p>}
+  </>
+);
+
+/* ----------------------------- Slides ----------------------------- */
+
 const CoverSlide: React.FC = () => (
-  <div className={styles.slide}>
-    <span className={styles.eyebrow} style={{ color: c['content-brand'] }}>TSE research summary</span>
-    <h1 className={styles.coverTitle} style={{ color: c['content-primary'] }}>The developer experience behind ThoughtSpot's highest-growth revenue line</h1>
+  <div className={styles.cover}>
+    <span className={styles.coverAuthors} style={{ color: c['content-secondary'] }}>{DECK_AUTHORS}</span>
+
+    <svg className={styles.coverLine} style={{ top: '4%', left: '30%', width: 260, height: 90 }} viewBox="0 0 260 90" fill="none">
+      <path d="M2 2 H150 V70 H250" stroke={c['content-brand']} strokeWidth="2" />
+      <rect x="245" y="65" width="10" height="10" fill={c['content-brand']} />
+    </svg>
+    <svg className={styles.coverLine} style={{ bottom: '2%', left: 0, width: 120, height: 130 }} viewBox="0 0 120 130" fill="none">
+      <path d="M110 2 H30 V120" stroke={c['content-brand']} strokeWidth="2" />
+      <rect x="25" y="118" width="10" height="10" fill={c['content-brand']} />
+    </svg>
+
+    <div className={styles.coverTitleWrap}>
+      <span className={styles.coverHighlight} style={{ backgroundColor: referenceColors.blue['30'] }} />
+      <h1 className={styles.coverTitle} style={{ color: c['content-primary'] }}>{DECK_TITLE}</h1>
+    </div>
     <p className={styles.coverSubtitle} style={{ color: c['content-secondary'] }}>
-      Embedded already drives 70%+ of new revenue and 25% of total ARR — growing ~100% YoY. This is the
-      full research trail behind why that experience matters, and where it breaks down today.
+      The developer experience behind embedded analytics
     </p>
-    <div className={styles.coverMeta} style={{ borderColor: c['border-divider'], color: c['content-secondary'] }}>
-      <span>Customer journey</span>
-      <span className={styles.metaDot}>·</span>
-      <span>{interviewSnapshots.length} SME interviews</span>
-      <span className={styles.metaDot}>·</span>
-      <span>Discord community research</span>
-      <span className={styles.metaDot}>·</span>
-      <span>15-vendor secondary research</span>
+  </div>
+);
+
+const WhatIsDevelopTabSlide: React.FC = () => (
+  <div className={styles.slide}>
+    <div className={styles.splitRow}>
+      <div className={styles.splitLeft}>
+        <span className={styles.kicker} style={{ color: c['content-brand'] }}>What is the develop tab?</span>
+        <p className={styles.bigStatement} style={{ color: c['content-primary'] }}>
+          Where customers embed ThoughtSpot into their own product — and embedding is our single biggest revenue engine.
+        </p>
+      </div>
+      <div className={styles.splitRight} style={{ alignItems: 'center' }}>
+        <p className={styles.heroStat} style={{ color: c['content-brand'] }}>70%+</p>
+        <p className={styles.heroStatCaption} style={{ color: c['content-primary'] }}>of new revenue comes from Embedded</p>
+        <svg className={styles.riseGraph} viewBox="0 0 320 120" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="riseFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={referenceColors.blue['40']} stopOpacity="0.55" />
+              <stop offset="100%" stopColor={referenceColors.blue['40']} stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path d="M0,112 C55,104 88,74 138,62 C188,50 214,30 262,20 L320,6 L320,120 L0,120 Z" fill="url(#riseFill)" />
+          <path d="M0,112 C55,104 88,74 138,62 C188,50 214,30 262,20 L320,6" fill="none" stroke={c['content-brand']} strokeWidth="3" strokeLinecap="round" />
+        </svg>
+        <p className={styles.statSource} style={{ color: c['content-tertiary'] }}>Source: {businessImpact.newRevenueSource}</p>
+      </div>
     </div>
   </div>
 );
 
-const PersonasSlide: React.FC = () => (
+const PageAdoptionSlide: React.FC = () => (
   <div className={styles.slide}>
-    <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>Two developers, two very different starting points</h2>
-    <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>
-      Every stage of the journey — and every problem statement later in this deck — lands differently
-      depending on which of these two a developer is.
-    </p>
-    <div className={styles.personaGrid}>
-      {personas.map((p) => (
-        <div key={p.id} className={styles.personaCard} style={{ borderColor: c['border-divider'] }}>
-          <div className={styles.personaIcon} style={{ backgroundColor: c['background-accent-blue'] }}>
-            <Icon name={PERSONA_ICON[p.id]} size="m" color={c['content-brand']} />
+    <SectionHeading
+      title="But page adoption drops off fast"
+      subtitle={`Of everyone who loads the develop tab, only a fraction reach each page. ${pageAdoption.window}.`}
+    />
+    <div className={styles.adoptionList}>
+      <div className={styles.adoptionRow}>
+        <span className={styles.adoptionLabel} style={{ color: c['content-primary'] }}>{pageAdoption.baseLabel}</span>
+        <div className={styles.adoptionTrack} style={{ backgroundColor: referenceColors.gray['20'] }}>
+          <div className={styles.adoptionFill} style={{ width: '100%', backgroundColor: c['content-brand'] }} />
+        </div>
+        <span className={styles.adoptionValue} style={{ color: c['content-primary'] }}>100% · {pageAdoption.baseCount}</span>
+      </div>
+      {pageAdoption.steps.map((s) => (
+        <div key={s.page} className={styles.adoptionRow}>
+          <span className={styles.adoptionLabel} style={{ color: c['content-secondary'] }}>{s.page}</span>
+          <div className={styles.adoptionTrack} style={{ backgroundColor: referenceColors.gray['20'] }}>
+            <div className={styles.adoptionFill} style={{ width: `${s.rate}%`, backgroundColor: referenceColors.purple['50'] }} />
           </div>
-          <p className={styles.personaTitle} style={{ color: c['content-primary'] }}>{p.title}</p>
-          <p className={styles.personaTagline} style={{ color: c['content-brand'] }}>{p.tagline}</p>
-          <p className={styles.personaDesc} style={{ color: c['content-secondary'] }}>{p.description}</p>
-          <p className={styles.blockLabel} style={{ color: c['content-tertiary'] }}>What they need</p>
-          <ul className={styles.needsList}>
-            {p.needs.map((n) => (
-              <li key={n} className={styles.needsItem} style={{ color: c['content-primary'] }}>{n}</li>
-            ))}
-          </ul>
+          <span className={styles.adoptionValue} style={{ color: c['content-primary'] }}>{s.rate}% · {s.count}</span>
         </div>
       ))}
     </div>
   </div>
 );
 
-const JourneySlide: React.FC = () => (
-  <div className={styles.slide}>
-    <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>The journey today, stage by stage</h2>
-    <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>
-      Ten stages from first search to a live embed in a customer's product — activities, pain points,
-      and opportunities mapped for each. Full detail lives in Primary research → Customer journey.
-    </p>
-    <div className={styles.journeyRail}>
-      {journeyStages.map((stage, i) => (
-        <React.Fragment key={stage.id}>
-          {i > 0 && <div className={styles.journeyConnector} style={{ backgroundColor: c['border-divider'] }} />}
-          <div className={styles.journeyNode} style={{ borderColor: c['border-divider'] }}>
-            <span className={styles.journeyNumber} style={{ color: c['content-brand'] }}>{String(i + 1).padStart(2, '0')}</span>
-            <span className={styles.journeyLabel} style={{ color: c['content-primary'] }}>{stage.title}</span>
-          </div>
-        </React.Fragment>
-      ))}
-    </div>
-  </div>
-);
+const NAME_GRADIENT = `linear-gradient(150deg, ${c['content-brand']}, color-mix(in srgb, ${c['content-brand']} 45%, black))`;
 
-const JourneyInsightSlide: React.FC = () => (
-  <div className={styles.slide}>
-    <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>The insight: linear, but tangled</h2>
-    <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>
-      Ten stages that could overlap instead run start to finish, one at a time. And the touch points
-      supporting them don't map cleanly either — the same touch point recurs across very different
-      needs, while a single need can span multiple touch points.
-    </p>
-    <div className={styles.insightGrid}>
-      <div className={styles.insightCard} style={{ borderColor: c['border-divider'] }}>
-        <p className={styles.bigNumber} style={{ color: c['content-brand'] }}>{journeyInsight.totalStages}</p>
-        <p className={styles.blockLabel} style={{ color: c['content-tertiary'] }}>Sequential stages</p>
-        <p className={styles.insightNote} style={{ color: c['content-secondary'] }}>
-          Discover through Maintain &amp; scale — run one after another even where nothing requires it.
-        </p>
-      </div>
-      <div className={styles.insightCard} style={{ borderColor: c['border-divider'] }}>
-        <p className={styles.blockLabel} style={{ color: c['content-tertiary'] }}>Touch points that recur across unrelated stages</p>
-        <div className={styles.touchpointList}>
-          {journeyInsight.repeatedTouchpoints.map((t) => (
-            <div key={t.touchpoint} className={styles.touchpointRow}>
-              <span className={styles.touchpointName} style={{ color: c['content-primary'] }}>{t.touchpoint}</span>
-              <span className={styles.touchpointCount} style={{ backgroundColor: c['background-accent-blue'], color: c['content-brand'] }}>
-                {t.count} stages
-              </span>
-            </div>
+const QUAD_ORDER = ['strengths', 'limitations', 'frustrations', 'opportunities'] as const;
+
+const QUAD_STYLE: Record<(typeof QUAD_ORDER)[number], { bg: string; fg: string }> = {
+  strengths: { bg: referenceColors.green['10'], fg: c['content-success'] },
+  limitations: { bg: referenceColors.gray['10'], fg: c['content-secondary'] },
+  frustrations: { bg: referenceColors.red['10'], fg: c['content-failure'] },
+  opportunities: { bg: referenceColors.yellow['10'], fg: c['content-warning'] },
+};
+
+const PrimaryResearchSlide: React.FC = () => {
+  const [openId, setOpenId] = useState<string | null>(null);
+  const active = interviews.find((iv) => iv.id === openId);
+
+  return (
+    <div className={styles.slide}>
+      <div className={styles.splitRow} style={{ maxWidth: 1200, alignItems: 'center' }}>
+        <div className={styles.splitLeft} style={{ flex: '0 0 300px' }}>
+          <h2 className={styles.sectionTitleLeft} style={{ color: c['content-primary'] }}>Primary research</h2>
+          <p className={styles.splitBody} style={{ color: c['content-secondary'] }}>
+            {interviewSnapshots.length} open, unstructured SME interviews to surface unfiltered pain points across the embedding journey.
+          </p>
+          <p className={styles.clickHint} style={{ color: c['content-tertiary'] }}>
+            <Icon name="info-circle" size="xs" color={c['content-tertiary']} />
+            Click a card to preview its strengths, limitations, frustrations &amp; opportunities.
+          </p>
+        </div>
+        <div className={styles.nameGrid}>
+          {interviewSnapshots.map((iv) => (
+            <button key={iv.id} className={styles.nameCard} style={{ boxShadow: shadows.sm, borderColor: c['border-divider'] }} onClick={() => setOpenId(iv.id)}>
+              <div className={styles.nameCardHead} style={{ backgroundImage: NAME_GRADIENT }}>
+                <span className={styles.nameCardName} style={{ color: frame['content-primary'] }}>{iv.title}</span>
+              </div>
+              <p className={styles.nameCardRole} style={{ color: c['content-secondary'] }}>{iv.subtitle}</p>
+            </button>
           ))}
         </div>
       </div>
-    </div>
-  </div>
-);
 
-const PrimaryResearchIntroSlide: React.FC = () => (
-  <div className={styles.slide}>
-    <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>Primary research: hearing it from the field</h2>
-    <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>
-      {interviewSnapshots.length} unstructured interviews with field SMEs so far — Tarun and I ran these as open
-      conversations, not surveys, specifically to surface unfiltered pain points. More are already in progress.
-    </p>
-    <div className={styles.interviewGrid}>
-      {interviewSnapshots.map((iv) => (
-        <div key={iv.id} className={styles.interviewCard} style={{ borderColor: c['border-divider'] }}>
-          <p className={styles.interviewName} style={{ color: c['content-primary'] }}>{iv.title}</p>
-          <p className={styles.interviewSubtitle} style={{ color: c['content-secondary'] }}>{iv.subtitle}</p>
-          <div className={styles.interviewCounts}>
-            <span style={{ color: c['content-success'] }}>{iv.counts.strengths} strengths</span>
-            <span style={{ color: c['content-tertiary'] }}>{iv.counts.limitations} limitations</span>
-            <span style={{ color: c['content-failure'] }}>{iv.counts.frustrations} frustrations</span>
-            <span style={{ color: c['content-warning'] }}>{iv.counts.opportunities} opportunities</span>
+      {active && (
+        <div className={styles.quadOverlay} onClick={() => setOpenId(null)}>
+          <div className={styles.quadPanel} style={{ boxShadow: shadows['2xl'] }} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.quadPanelHead} style={{ borderColor: c['border-divider'] }}>
+              <div>
+                <p className={styles.quadPanelName} style={{ color: c['content-primary'] }}>{active.title}</p>
+                <p className={styles.quadPanelRole} style={{ color: c['content-secondary'] }}>{active.subtitle}</p>
+              </div>
+              <button className={styles.quadClose} onClick={() => setOpenId(null)} aria-label="Close preview">
+                <Icon name="cross" size="s" color={c['content-secondary']} />
+              </button>
+            </div>
+            <div className={styles.quadGrid}>
+              {QUAD_ORDER.map((key) => {
+                const notes = active.quadrants[key];
+                const qs = QUAD_STYLE[key];
+                return (
+                  <div key={key} className={styles.quadCell} style={{ backgroundColor: qs.bg }}>
+                    <p className={styles.quadCellTitle} style={{ color: qs.fg }}>
+                      {quadrantMeta[key].label} · {notes.length}
+                    </p>
+                    <div className={styles.quadNoteList}>
+                      {notes.map((n, i) => (
+                        <p key={i} className={styles.quadNote} style={{ color: c['content-primary'] }}>
+                          {n.label ? <strong>{n.label} — </strong> : null}
+                          {n.text}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
-      ))}
+      )}
+    </div>
+  );
+};
+
+const JourneySlide: React.FC = () => (
+  <div className={`${styles.slide} ${styles.slideWide}`}>
+    <SectionHeading
+      title="We mapped the full customer journey"
+      subtitle="Ten stages from first search to a live embed — activities, pain points, opportunities, and product touch points for each."
+    />
+    <div className={styles.journeyBox} style={{ borderColor: c['border-divider'] }}>
+      <CustomerJourney />
     </div>
   </div>
 );
 
-const DiscordSlide: React.FC = () => (
+const PainPointsSlide: React.FC = () => (
   <div className={styles.slide}>
-    <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>...and hearing it from real customers</h2>
-    <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>
-      The Discord developer community isn't an internal SME perspective — it's unfiltered implementation
-      friction from people actually building on ThoughtSpot today.
-    </p>
-    <p className={styles.pullQuote} style={{ color: c['content-primary'] }}>
-      &ldquo;Developers are not struggling to embed ThoughtSpot — they are struggling to make ThoughtSpot
-      behave like their own product.&rdquo;
-    </p>
-    <div className={styles.discordCountsRow}>
-      <span style={{ color: c['content-success'] }}>{discordCounts.strengths} strengths</span>
-      <span style={{ color: c['content-tertiary'] }}>{discordCounts.limitations} limitations</span>
-      <span style={{ color: c['content-failure'] }}>{discordCounts.frustrations} frustrations</span>
-      <span style={{ color: c['content-warning'] }}>{discordCounts.opportunities} opportunities</span>
-    </div>
-  </div>
-);
-
-const ProblemStatementsSlide: React.FC = () => (
-  <div className={styles.slide}>
-    <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>Where every source agrees</h2>
-    <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>
-      Combining the customer journey, all {interviewSnapshots.length} SME interviews, and the Discord research — these {problemStatements.length} problem
-      statements are the common thread, not a one-off complaint.
-    </p>
-    <div className={styles.problemList}>
-      {problemStatements.map((p, i) => (
-        <div key={p.id} className={styles.problemRow} style={{ borderColor: c['border-divider'] }}>
-          <span className={styles.problemIndex} style={{ color: c['content-tertiary'] }}>{String(i + 1).padStart(2, '0')}</span>
-          <div className={styles.problemBody}>
-            <p className={styles.problemTitle} style={{ color: c['content-primary'] }}>{p.title}</p>
-            <p className={styles.problemDesc} style={{ color: c['content-secondary'] }}>{p.description}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-const SecondaryResearchSlide: React.FC = () => (
-  <div className={styles.slide}>
-    <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>How big is this, and who else has it</h2>
-    <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>
-      Secondary research benchmarked 15 embedded-analytics vendors — demos, playgrounds, features, and
-      independent review sentiment (G2, Capterra, TrustRadius, Reddit) — to see which pain points are
-      ThoughtSpot-specific and which are industry-wide.
-    </p>
-    <div className={styles.statsRow}>
-      <div className={styles.statCard} style={{ borderColor: c['border-divider'] }}>
-        <p className={styles.bigNumber} style={{ color: c['content-brand'] }}>15</p>
-        <p className={styles.insightNote} style={{ color: c['content-secondary'] }}>Vendors benchmarked, including Looker, Tableau, Sigma, Power BI, and Omni</p>
-      </div>
-      <div className={styles.statCard} style={{ borderColor: c['border-divider'] }}>
-        <p className={styles.bigNumber} style={{ color: c['content-brand'], fontSize: 24 }}>{businessImpact.marketSizeHeadline}</p>
-        <p className={styles.insightNote} style={{ color: c['content-secondary'] }}>{businessImpact.marketSizeCaption}</p>
-      </div>
-    </div>
-    <div className={styles.marketNotes}>
-      <p className={styles.marketNote} style={{ color: c['content-primary'] }}>
-        <strong>Industry-wide:</strong> iframe embeds feeling "bolted on" (Tableau, Sigma, Holistics, Domo), API coverage lagging new features, and thin embedding-specific docs all show up across the market — not unique to ThoughtSpot.
-      </p>
-      <p className={styles.marketNote} style={{ color: c['content-primary'] }}>
-        <strong>Where ThoughtSpot already leads:</strong> deep white-label theming is the strongest differentiator among the field — shared only with Hex, Semaphor, and Omni.
-      </p>
-    </div>
-  </div>
-);
-
-const RiskSlide: React.FC = () => (
-  <div className={styles.slide}>
-    <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>Prioritizing by risk</h2>
-    <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>
-      Risk here means how many independent sources hit the same problem, weighted by how often the
-      Discord community raised it — not a guess.
-    </p>
-    <div className={styles.riskList}>
-      {problemStatements.map((p) => {
+    <SectionHeading
+      title="The pain points"
+      subtitle={`${problemStatements.length} themes every source kept hitting — deduped across all ${interviewSnapshots.length} interviews.`}
+    />
+    <div className={styles.painGrid}>
+      {problemStatements.map((p, i) => {
         const risk = RISK_META[p.risk];
+        const hi = i === 0;
         return (
-          <div key={p.id} className={styles.riskRow} style={{ borderColor: c['border-divider'] }}>
-            <span className={styles.riskBadge} style={{ backgroundColor: risk.bg, color: risk.color }}>{risk.label}</span>
-            <div className={styles.riskBody}>
-              <p className={styles.riskTitle} style={{ color: c['content-primary'] }}>{p.title}</p>
-              <p className={styles.riskEvidence} style={{ color: c['content-tertiary'] }}>{p.evidence}</p>
+          <div
+            key={p.id}
+            className={`${styles.painCard} ${hi ? styles.painCardHi : ''}`}
+            style={hi ? { backgroundColor: c['background-brand'] } : { boxShadow: shadows.sm, borderColor: c['border-divider'] }}
+          >
+            <div className={styles.painNumCell}>
+              <span className={styles.painNum} style={{ color: hi ? frame['content-primary'] : c['content-primary'] }}>{String(i + 1).padStart(2, '0')}</span>
+              <span className={styles.painUnderline} style={{ backgroundColor: hi ? frame['content-primary'] : risk.color }} />
+            </div>
+            <div>
+              <p className={styles.painTitle} style={{ color: hi ? frame['content-primary'] : c['content-primary'] }}>{p.title}</p>
+              {painPointDetail[p.id] && (
+                <p className={styles.painDetail} style={{ color: hi ? frame['content-secondary'] : c['content-secondary'] }}>{painPointDetail[p.id]}</p>
+              )}
             </div>
           </div>
         );
@@ -249,85 +266,218 @@ const RiskSlide: React.FC = () => (
   </div>
 );
 
-const BusinessImpactSlide: React.FC = () => (
+const VALIDATE_SOURCES: { icon: IconName; big: string; title: string; caption: string }[] = [
+  { icon: 'community', big: String(secondaryOverview.communityThemes), title: 'Developer community', caption: 'recurring Discord themes in #develop' },
+  { icon: 'chart', big: String(secondaryOverview.vendors), title: 'Competitors', caption: 'embedded-analytics vendors benchmarked' },
+  { icon: 'star', big: '5', title: 'Public reviews', caption: secondaryOverview.reviewPlatforms },
+];
+
+const ValidateSlide: React.FC = () => (
   <div className={styles.slide}>
-    <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>Why this matters to the business</h2>
-    <div className={styles.statsRow}>
-      <div className={styles.statCard} style={{ borderColor: c['border-divider'] }}>
-        <Icon name="chart" size="l" color={c['content-brand']} />
-        <p className={styles.insightNote} style={{ color: c['content-primary'], fontWeight: 700, marginTop: 8 }}>{businessImpact.newRevenueShare}</p>
-        <p className={styles.statSource} style={{ color: c['content-tertiary'] }}>Source: {businessImpact.newRevenueSource}</p>
+    <div className={styles.splitRow}>
+      <div className={styles.diagramBox} style={{ borderColor: c['border-divider'] }}>
+        <div className={styles.diagramNode} style={{ borderColor: c['border-divider'], boxShadow: shadows.sm }}>
+          <Icon name="exclamation-point-circle" size="s" color={c['content-brand']} />
+          <span style={{ color: c['content-primary'] }}>{problemStatements.length} pain points</span>
+        </div>
+        <span className={styles.diagramStem} style={{ backgroundColor: c['border-default'] }} />
+        <div className={styles.diagramBranches}>
+          {VALIDATE_SOURCES.map((s) => (
+            <div key={s.title} className={styles.diagramLeaf} style={{ borderColor: c['border-divider'], boxShadow: shadows.xs }}>
+              <Icon name={s.icon} size="xs" color={c['content-brand']} />
+              <span style={{ color: c['content-primary'] }}>{s.title}</span>
+            </div>
+          ))}
+        </div>
+        <span className={styles.diagramStem} style={{ backgroundColor: c['border-default'] }} />
+        <div className={styles.diagramNode} style={{ backgroundColor: c['background-brand'], borderColor: 'transparent' }}>
+          <Icon name="checkmark-circle" size="s" color={frame['content-primary']} />
+          <span style={{ color: frame['content-primary'] }}>Validated</span>
+        </div>
       </div>
-      <div className={styles.statCard} style={{ borderColor: c['border-divider'] }}>
-        <Icon name="arrow-up-circle" size="l" color={c['content-success']} />
-        <p className={styles.insightNote} style={{ color: c['content-primary'], fontWeight: 700, marginTop: 8 }}>{businessImpact.arrShare}</p>
-        <p className={styles.statSource} style={{ color: c['content-tertiary'] }}>Source: {businessImpact.arrSource}</p>
+      <div className={styles.splitRight}>
+        <h2 className={styles.sectionTitleLeft} style={{ color: c['content-primary'] }}>Validating the pain points</h2>
+        <p className={styles.splitBody} style={{ color: c['content-secondary'] }}>
+          Every pain point pressure-tested against three independent sources — &ldquo;{discordSummary.coreInsight}&rdquo;
+        </p>
+        {VALIDATE_SOURCES.map((s) => (
+          <div key={s.title} className={styles.sourceCard} style={{ borderColor: c['border-divider'], boxShadow: shadows.xs }}>
+            <span className={styles.sourceBig} style={{ color: c['content-brand'] }}>{s.big}</span>
+            <div>
+              <p className={styles.sourceTitle} style={{ color: c['content-primary'] }}>{s.title}</p>
+              <p className={styles.sourceCaption} style={{ color: c['content-secondary'] }}>{s.caption}</p>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-    <div className={styles.takeaway} style={{ backgroundColor: c['background-accent-blue'] }}>
-      <Icon name="bulb" size="s" color={c['content-brand']} />
-      <p className={styles.takeawayText} style={{ color: c['content-primary'] }}>{businessImpact.framing}</p>
     </div>
   </div>
 );
 
-const ClosingSlide: React.FC = () => (
+const RiskSummarySlide: React.FC = () => {
+  const order: RiskLevel[] = ['high', 'medium', 'low'];
+  return (
+    <div className={styles.slide}>
+      <div className={styles.splitRow} style={{ alignItems: 'flex-start' }}>
+        <div className={styles.splitLeft} style={{ paddingTop: 4 }}>
+          <h2 className={styles.sectionTitleLeft} style={{ color: c['content-primary'] }}>Prioritized by risk</h2>
+          <p className={styles.splitBody} style={{ color: c['content-secondary'] }}>
+            Ranked by how many sources hit each problem, how loudly the community raised it, and whether rivals already solve it.
+          </p>
+          <div className={styles.riskCounts}>
+            {order.map((level) => {
+              const meta = RISK_META[level];
+              const n = problemStatements.filter((p) => p.risk === level).length;
+              return (
+                <div key={level} className={styles.riskCountRow}>
+                  <span className={styles.riskDot} style={{ backgroundColor: meta.color }} />
+                  <span style={{ color: c['content-primary'] }}><strong>{n}</strong> {meta.label.toLowerCase()}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className={styles.splitRight} style={{ gap: 8 }}>
+          {problemStatements.map((p, i) => {
+            const risk = RISK_META[p.risk];
+            const v = problemValidation[p.id];
+            const hi = i === 0;
+            return (
+              <div
+                key={p.id}
+                className={`${styles.rankRow} ${hi ? styles.rankRowHi : ''}`}
+                style={hi ? { backgroundColor: c['background-brand'] } : { borderColor: c['border-divider'], boxShadow: shadows.xs }}
+              >
+                <span className={styles.rankNum} style={{ color: hi ? frame['content-primary'] : c['content-tertiary'] }}>{String(i + 1).padStart(2, '0')}</span>
+                <span className={styles.rankAccent} style={{ backgroundColor: hi ? frame['content-primary'] : risk.color }} />
+                <p className={styles.rankTitle} style={{ color: hi ? frame['content-primary'] : c['content-primary'] }}>{p.title}</p>
+                {v?.communityScore != null && (
+                  <span
+                    className={styles.commPill}
+                    style={hi
+                      ? { backgroundColor: `color-mix(in srgb, ${frame['content-primary']} 22%, transparent)`, color: frame['content-primary'] }
+                      : { backgroundColor: referenceColors.blue['10'], color: c['content-brand'] }}
+                  >
+                    <Icon name="community" size="xs" color={hi ? frame['content-primary'] : c['content-brand']} />
+                    {v.communityScore}/5
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const OpportunitiesSlide: React.FC = () => (
   <div className={styles.slide}>
-    <h2 className={styles.coverTitle} style={{ fontSize: 28, color: c['content-primary'] }}>This is the current state — not the ceiling</h2>
-    <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'], maxWidth: 620 }}>
-      Every problem statement in this deck is grounded in the journey, {interviewSnapshots.length} field interviews, and real
-      developer conversations. The next step is turning the highest-risk items into a prioritized
-      roadmap.
+    <SectionHeading title="Opportunities" subtitle="Five directions the research points to — from fixing today's drop-off to an agent-first future." />
+    <div className={styles.oppGrid}>
+      {opportunities.map((o) => (
+        <div key={o.title} className={styles.oppCard} style={{ boxShadow: shadows.xs }}>
+          <div className={styles.cardIcon} style={{ backgroundColor: referenceColors.blue['10'], boxShadow: shadows.xs }}>
+            <Icon name={o.icon as IconName} size="m" color={c['content-brand']} />
+          </div>
+          <p className={styles.oppTitle} style={{ color: c['content-primary'] }}>{o.title}</p>
+          <p className={styles.oppText} style={{ color: c['content-secondary'] }}>{o.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const ThankYouSlide: React.FC = () => (
+  <div className={styles.slide}>
+    <h2 className={styles.closingTitle} style={{ color: c['content-primary'] }}>Thank you</h2>
+    <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>
+      {DECK_AUTHORS} · {DECK_DATE}
     </p>
   </div>
 );
 
+/* ----------------------------- Deck shell ----------------------------- */
+
 const SLIDES: { title: string; Component: React.FC }[] = [
   { title: 'Cover', Component: CoverSlide },
-  { title: 'Personas', Component: PersonasSlide },
-  { title: 'Journey', Component: JourneySlide },
-  { title: 'Journey insight', Component: JourneyInsightSlide },
-  { title: 'Primary research', Component: PrimaryResearchIntroSlide },
-  { title: 'Discord voice', Component: DiscordSlide },
-  { title: 'Problem statements', Component: ProblemStatementsSlide },
-  { title: 'Secondary research', Component: SecondaryResearchSlide },
-  { title: 'Risk', Component: RiskSlide },
-  { title: 'Business impact', Component: BusinessImpactSlide },
-  { title: 'Closing', Component: ClosingSlide },
+  { title: 'What is the develop tab', Component: WhatIsDevelopTabSlide },
+  { title: 'Page adoption', Component: PageAdoptionSlide },
+  { title: 'Primary research', Component: PrimaryResearchSlide },
+  { title: 'Customer journey', Component: JourneySlide },
+  { title: 'Pain points', Component: PainPointsSlide },
+  { title: 'Validation', Component: ValidateSlide },
+  { title: 'Risk summary', Component: RiskSummarySlide },
+  { title: 'Opportunities', Component: OpportunitiesSlide },
+  { title: 'Thank you', Component: ThankYouSlide },
 ];
 
 export const ResearchSummary: React.FC = () => {
   const [slide, setSlide] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const goPrev = () => setSlide((s) => Math.max(s - 1, 0));
   const goNext = () => setSlide((s) => Math.min(s + 1, SLIDES.length - 1));
+
+  const toggleFullscreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      wrapperRef.current?.requestFullscreen();
+    }
+  };
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') goPrev();
       if (e.key === 'ArrowRight') goNext();
     };
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
     window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    document.addEventListener('fullscreenchange', onFsChange);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('fullscreenchange', onFsChange);
+    };
   }, []);
 
   const { Component } = SLIDES[slide];
 
   return (
-    <div className={styles.wrapper} style={{ backgroundColor: c['background-base'] }}>
+    <div ref={wrapperRef} className={styles.wrapper} style={{ backgroundColor: frame['background-base'] }}>
+      <button
+        className={styles.fsBtn}
+        onClick={toggleFullscreen}
+        style={{ borderColor: frame['border-divider'], backgroundColor: frame['background-raised'], color: frame['content-secondary'] }}
+        aria-label={isFullscreen ? 'Exit full screen' : 'Enter full screen'}
+      >
+        <Icon name={isFullscreen ? 'fullscreen-undo' : 'fullscreen'} size="xs" color={frame['content-secondary']} />
+        {isFullscreen ? 'Exit' : 'Full screen'}
+      </button>
       <div className={styles.stage}>
-        <button className={styles.chevronBtn} style={{ borderColor: c['border-divider'], backgroundColor: c['background-raised'] }} onClick={goPrev} disabled={slide === 0} aria-label="Previous slide">
-          <Icon name="chevron-left" size="s" color={c['content-secondary']} />
+        <button className={styles.chevronBtn} style={{ borderColor: frame['border-divider'], backgroundColor: frame['background-raised'] }} onClick={goPrev} disabled={slide === 0} aria-label="Previous slide">
+          <Icon name="chevron-left" size="s" color={frame['content-secondary']} />
         </button>
-        <div className={styles.slideViewport}>
-          <Component />
+
+        <div className={`${styles.deckSurface} ${slide === 0 ? styles.deckSurfaceGrid : ''}`} style={{ boxShadow: shadows['2xl'] }}>
+          <div className={styles.gradientWash} style={{ backgroundImage: GRADIENT_WASH }} />
+          <div key={slide} className={styles.slideContent}>
+            <Component />
+          </div>
+          <div className={styles.deckFooter}>
+            <BrandMark />
+            <span className={styles.deckDate} style={{ color: c['content-secondary'] }}>{DECK_DATE}</span>
+          </div>
         </div>
-        <button className={styles.chevronBtn} style={{ borderColor: c['border-divider'], backgroundColor: c['background-raised'] }} onClick={goNext} disabled={slide === SLIDES.length - 1} aria-label="Next slide">
-          <Icon name="chevron-right" size="s" color={c['content-secondary']} />
+
+        <button className={styles.chevronBtn} style={{ borderColor: frame['border-divider'], backgroundColor: frame['background-raised'] }} onClick={goNext} disabled={slide === SLIDES.length - 1} aria-label="Next slide">
+          <Icon name="chevron-right" size="s" color={frame['content-secondary']} />
         </button>
       </div>
+
       <div className={styles.footer}>
-        <span className={styles.slideCounter} style={{ color: c['content-tertiary'] }}>
+        <span className={styles.slideCounter} style={{ color: frame['content-tertiary'] }}>
           {String(slide + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')} — {SLIDES[slide].title}
         </span>
         <div className={styles.dots}>
@@ -335,7 +485,7 @@ export const ResearchSummary: React.FC = () => {
             <button
               key={s.title}
               className={styles.dot}
-              style={{ backgroundColor: i === slide ? c['background-brand'] : c['border-divider'] }}
+              style={{ backgroundColor: i === slide ? frame['background-brand'] : frame['border-divider'] }}
               onClick={() => setSlide(i)}
               aria-label={`Go to slide ${i + 1}: ${s.title}`}
             />

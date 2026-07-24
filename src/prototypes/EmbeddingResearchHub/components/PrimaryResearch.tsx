@@ -152,7 +152,7 @@ export const PrimaryResearch: React.FC = () => {
           <DiscordCommunity />
         </div>
       ) : (
-      <>
+      <div className={styles.boardsLayout}>
       <div className={styles.picker}>
         {interviews.map((interview) => {
           const isActive = interview.id === activeId;
@@ -190,6 +190,7 @@ export const PrimaryResearch: React.FC = () => {
         })}
       </div>
 
+      <div className={styles.boardColumn}>
       <div className={styles.boardToolbar}>
         <p className={styles.boardHint} style={{ color: c['content-tertiary'] }}>
           Drag a note into another quadrant to re-tag it — it'll pick up that quadrant's color. Use + to add your own.
@@ -290,7 +291,8 @@ export const PrimaryResearch: React.FC = () => {
           })}
         </div>
       </div>
-      </>
+      </div>
+      </div>
       )}
     </div>
   );
