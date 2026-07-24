@@ -40,7 +40,7 @@ const CoverSlide: React.FC = () => (
     <div className={styles.coverMeta} style={{ borderColor: c['border-divider'], color: c['content-secondary'] }}>
       <span>Customer journey</span>
       <span className={styles.metaDot}>·</span>
-      <span>4 SME interviews</span>
+      <span>{interviewSnapshots.length} SME interviews</span>
       <span className={styles.metaDot}>·</span>
       <span>Discord community research</span>
       <span className={styles.metaDot}>·</span>
@@ -135,8 +135,8 @@ const PrimaryResearchIntroSlide: React.FC = () => (
   <div className={styles.slide}>
     <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>Primary research: hearing it from the field</h2>
     <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>
-      Four unstructured interviews with field SMEs — Tarun and I ran these as open conversations, not
-      surveys, specifically to surface unfiltered pain points. Two more are already in progress.
+      {interviewSnapshots.length} unstructured interviews with field SMEs so far — Tarun and I ran these as open
+      conversations, not surveys, specifically to surface unfiltered pain points. More are already in progress.
     </p>
     <div className={styles.interviewGrid}>
       {interviewSnapshots.map((iv) => (
@@ -179,7 +179,7 @@ const ProblemStatementsSlide: React.FC = () => (
   <div className={styles.slide}>
     <h2 className={styles.sectionTitle} style={{ color: c['content-primary'] }}>Where every source agrees</h2>
     <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'] }}>
-      Combining the customer journey, all four SME interviews, and the Discord research — these {problemStatements.length} problem
+      Combining the customer journey, all {interviewSnapshots.length} SME interviews, and the Discord research — these {problemStatements.length} problem
       statements are the common thread, not a one-off complaint.
     </p>
     <div className={styles.problemList}>
@@ -275,7 +275,7 @@ const ClosingSlide: React.FC = () => (
   <div className={styles.slide}>
     <h2 className={styles.coverTitle} style={{ fontSize: 28, color: c['content-primary'] }}>This is the current state — not the ceiling</h2>
     <p className={styles.sectionSubtitle} style={{ color: c['content-secondary'], maxWidth: 620 }}>
-      Every problem statement in this deck is grounded in the journey, four field interviews, and real
+      Every problem statement in this deck is grounded in the journey, {interviewSnapshots.length} field interviews, and real
       developer conversations. The next step is turning the highest-risk items into a prioritized
       roadmap.
     </p>

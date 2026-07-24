@@ -1,6 +1,6 @@
 /**
  * Research summary deck — synthesizes everything already gathered elsewhere
- * in this hub (customer journey, 4 SME interviews, Discord community
+ * in this hub (customer journey, the SME interviews, Discord community
  * research, and the 15-vendor secondary research) into one narrative.
  *
  * Every number here is derived from, or directly cites, data that already

@@ -274,6 +274,105 @@ export const interviews: Interview[] = [
       ],
     },
   },
+  {
+    id: 'interview-5',
+    title: 'Manikanta',
+    subtitle: 'Sales engineer — pre-sales evaluation flow, Playground UX, and documentation',
+    recordingUrl: 'https://drive.google.com/file/d/1DiuEtQQxH-3LTEfUhB541SHN8L_qd0qz/view?usp=sharing',
+    quadrants: {
+      strengths: [
+        {
+          label: 'Developer tab has improved a lot',
+          text: '"There are a lot more improvements... from a design standpoint we were not at a great point maybe one year, one and a half years ago... there have been very good improvements."',
+        },
+        {
+          label: 'One link gets a developer embedding',
+          text: '"I usually just share this link — to the Quickstart guide — and say, go start building or embedding in ThoughtSpot and follow this guide. And that usually gets them to a state where they can embed ThoughtSpot, right? No problems usually."',
+        },
+        {
+          label: "Renaming Liveboard to \"dashboard\" for embed audiences",
+          text: '"I like how we changed... from a live board, we started calling this dashboard. Liveboards is a ThoughtSpot-specific lingo, Spotter is a ThoughtSpot-specific language — industry doesn\'t care about it. I welcome this screen — this was not the case before."',
+        },
+        {
+          label: 'Dev Playground live preview is a competitive differentiator',
+          text: '"With other companies you have to switch between applications, figure out something is wrong, then refix it... ThoughtSpot, with our dev playground, you could just start making your changes here and we will show you live how changes could look — you don\'t have to switch. That is a differentiator we present in all of our demos."',
+        },
+        {
+          label: 'Fork-to-IDE option meets developers where they are',
+          text: 'The "fork" widget takes a developer directly into an editor they already use, like CodeSandbox — "a bit more familiar for them."',
+        },
+        {
+          label: 'Version history in Spotter Model/Viz lands well competitively',
+          text: '"Even I think 3 days ago I was showing that functionality in Spotter Model where you can go back to a version if you\'d like, and the guy was like, oh, Snowflake does not give us this in their agent — this is actually cool."',
+        },
+      ],
+      limitations: [
+        {
+          label: 'Playground is visually overwhelming for first-timers',
+          text: '"As a first-time user... I see like literally four different elements, and even one of it is actually overlapping my main content, which is the playground preview." "With Spotter Code it has become more busier for sure."',
+        },
+        {
+          label: 'No usage data to size the problem',
+          text: '"I don\'t know if you can grab the usage stats of the screen somehow — that\'ll give you a sense of how many customers are actually using it," since unassisted traffic (not walked through by a sales engineer) may be getting overwhelmed with nobody noticing.',
+        },
+        {
+          label: 'Even technical users need a refresher; legacy-stack developers struggle more',
+          text: '"Even a tech-savvy person may need... a quick refresher of hey, where do I click, what does this button do." A minority "very new to web development" on legacy, non-JS stacks "can\'t use the [SDK] playground" at all.',
+        },
+        {
+          label: 'No step-by-step onboarding wizard',
+          text: '"There is definitely room for improvement — maybe where we take them through like a step-by-step onboarding wizard... hey, what do you want to embed? What sort of edits do you want to make?"',
+        },
+        {
+          label: 'Documentation is overloaded and hard to search',
+          text: '"Documentation is a mess. It\'s just too many things... the search doesn\'t work." "It\'s all good content but too many things going on — overloaded. We need to simplify it somehow."',
+        },
+        {
+          label: 'No AI assistant on the docs site',
+          text: 'Points to a competitor (Omni) embedding a chat assistant directly into its dev docs — "could be useful just because of how much content we have." ThoughtSpot\'s current doc-site widget "does not do stuff at all."',
+        },
+      ],
+      frustrations: [
+        {
+          label: 'Skipping security settings can wipe in-progress work',
+          text: 'A developer who embeds first and only later realizes the domain isn\'t whitelisted has to leave Playground for Security settings — "come back and realize whatever I had done is now gone." Confirmed independently: "we used to get a lot of CORS errors... a lot of security-specific errors... because they missed the documentation."',
+        },
+        {
+          label: "Today's fix is a manual, person-dependent workaround",
+          text: 'The current mitigation is an email that explicitly tells developers to whitelist the app before embedding — "this only helps if someone like me is involved. If not, they will run into this issue."',
+        },
+        {
+          label: 'No way to revisit a past Playground session',
+          text: 'Unlike ChatGPT, Gemini, or Google Slides history, there\'s no way to return to an earlier Playground configuration — "I have never thought of this particular perspective, but I do think there is [a gap]... I have not personally heard that feedback."',
+        },
+        {
+          label: 'Forking to an external IDE gives up Spotter Code',
+          text: '"The pitfall here is they can\'t use Spotter Code like they do in our Playground. That\'s the trade-off we get."',
+        },
+      ],
+      opportunities: [
+        {
+          text: 'A guided, step-by-step onboarding wizard — "what do you want to embed?" and "what edits do you want to make?" — before dropping a new developer into the full Playground surface.',
+        },
+        {
+          text: 'Protect in-progress Playground work across a security-settings detour, instead of losing selections and customizations when a developer leaves to whitelist a domain and comes back.',
+        },
+        {
+          text: 'Bring the same "revert to a version" capability already shipped in Spotter Model/Viz to the embed Playground itself.',
+        },
+        {
+          text: 'An AI assistant embedded directly in the docs, mirroring what Omni already does in its dev docs, given "how much content we have."',
+        },
+        {
+          text: 'Instrument Playground usage so overwhelm — or the lack of it — among unassisted, self-serve developers can be measured instead of guessed at.',
+        },
+        {
+          label: 'Recruit real, recently-embedded developers as ongoing research sources',
+          text: 'Manikanta offered to connect a prospect who spent "around 4,000 minutes" in the free trial as a core developer — a direct pipeline for future primary research.',
+        },
+      ],
+    },
+  },
 ];
 
 export const quadrantMeta = {
