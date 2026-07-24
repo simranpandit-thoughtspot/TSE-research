@@ -373,6 +373,95 @@ export const interviews: Interview[] = [
       ],
     },
   },
+  {
+    id: 'interview-6',
+    title: 'Ashish',
+    subtitle: 'Design/product lead — owns design system, homepage, and now TSE; agentic-first embedding strategy',
+    recordingUrl: 'https://drive.google.com/file/d/1NR0NR6YNhE-AAmNm0uQ5HsfYZg0Czxyn/view?usp=sharing',
+    quadrants: {
+      strengths: [
+        {
+          label: 'Deep customization is already a real differentiator',
+          text: '"Customization toh hamara thoda USP hai" — deep, structured, design-token-based customization is something Ashish believes ThoughtSpot has genuinely caught up on, even against the toughest competitors on this axis, Omni and Sigma.',
+        },
+        {
+          label: 'Recent token-architecture cleanup unlocked real theming',
+          text: 'Shipping dark mode forced a full cleanup of the product\'s color token architecture — "bahut gandagi thi, kisi ne stray use kar rakha tha" (it was messy, with stray hardcoded usage). With that cleaned up, light and dark are now just two themes among many — a brand-new theme (Ashish\'s example: "a McDonald\'s theme") could be built easily.',
+        },
+        {
+          label: 'Structured token mapping already replaced manual re-coloring',
+          text: 'Setting a single primary brand color now cascades to every primary CTA, button, link, and text automatically — before, changing the brand color only updated the top bar, and every other element had to be recolored by hand, one at a time.',
+        },
+        {
+          label: 'Spotter Code as the path to "Bill-as-an-agent"',
+          text: 'Ashish is "very bullish" on Spotter Code specifically because it could let a developer complete theming, authentication, embedding, and event setup entirely through their own coding agent — never opening ThoughtSpot\'s UI at all.',
+        },
+      ],
+      limitations: [
+        {
+          label: 'The process is fundamentally linear today',
+          text: '"Poori journey linear hai" — developers keep documentation open in a side tab and follow it step by step: "ab yeh karna hai, ab yeh karna hai." It\'s built like a recipe to follow in order, not a tool you can use however you want — unlike Photoshop, where you know your export and can get there any way you like.',
+        },
+        {
+          label: 'The developer portal / Playground is intentionally shallow',
+          text: '"Yeh hamesha movie ka trailer tha, movie kabhi nahi tha" (it was always meant to be the trailer, never the movie) — Playground only exposes a couple of sample APIs by design. To do anything real, a developer always has to leave for documentation.',
+        },
+        {
+          label: "Documentation is vast, inconsistent, and doesn't stay current",
+          text: '"Woh abhi achi nahi hai, na woh hamesha latest rehta hai" (it isn\'t good right now, and it doesn\'t stay up to date either) — Ashish is direct that this is a documentation-team problem, not a design problem, and that an agent is only ever as good as the documentation it reads.',
+        },
+        {
+          label: 'No visibility into where people actually drop off',
+          text: '"Iske numbers toh Devarun ke paas honge, mere paas nahi hai" (the numbers for this would be with Devarun, not me) — Ashish doesn\'t have hard drop-off data himself, but is confident the free-trial-to-first-embed experience is worth optimizing regardless.',
+        },
+        {
+          label: 'Copy-pasted code is not truly packageable',
+          text: 'The code Playground hands back is plain JavaScript, not framework-specific — no "copy-paste here, put this there" instruction exists, so a developer has to figure out where and how to paste it, even before hitting the security-settings wall.',
+        },
+      ],
+      frustrations: [
+        {
+          label: 'Leaving Playground to fix security settings wipes your work',
+          text: 'Ashish walks through his own mental replay of a first embed: build a Liveboard, get the code, realize the domain isn\'t whitelisted, leave to fix CORS in Security settings, come back — "ab meri saari Playground reset ho gayi" (the whole Playground reset) — no draft was ever saved, so the work has to be redone from scratch.',
+        },
+        {
+          label: 'The CORS/security error only ever surfaces after you\'ve already left',
+          text: "A developer has no way to know security settings need attention while still inside Playground — the error only appears once the code is copy-pasted into their own environment and it fails there, which is exactly the moment they're most likely to give up.",
+        },
+        {
+          label: "Today's coding agents can name the problem but not fix it",
+          text: 'Ask a coding agent about a CORS failure today and it will say "this looks like a security setting issue, you need to fix it — I don\'t know how" — because it has no way to act on ThoughtSpot\'s settings unless the developer separately connects something like Spotter Code, which Ashish doubts most people will bother to do.',
+        },
+        {
+          label: 'No packaging or platform-specific guidance for the exported code',
+          text: 'The code copied out of Playground doesn\'t say which framework it targets or exactly where to paste it — "thoda sa dimaag aana padta hai" (you have to work it out yourself) — a small but real source of drop-off right at the first "aha" moment.',
+        },
+      ],
+      opportunities: [
+        {
+          label: 'Make the coding agent the primary implementation path',
+          text: 'Ashish\'s core thesis: assume every developer is using a coding agent — "yeh assumption toh karna hi padega" (we have to make this assumption) — since agent adoption keeps growing and building for humans-only will "cut us out" within six months.',
+        },
+        {
+          label: 'Design documentation and APIs for agents, not just humans',
+          text: 'Once an agent is the reader, API surface area and documentation length stop being liabilities — a human gets confused by three slightly different ways to do one thing, but an agent doesn\'t get "text fatigue" and can pick correctly if given enough context. Ashish: "hume us par double down karna chahiye" (we should double down on that).',
+        },
+        {
+          text: "Surface the security-settings error inside the developer's own environment — the minimum fix is that a failed embed should point straight at the setting to change and link the exact document, instead of leaving the developer to guess and go searching.",
+        },
+        {
+          text: 'Give the coding agent real capability to fix the security setting itself (via something like a Spotter Code integration), instead of only being able to name the problem.',
+        },
+        {
+          label: 'A concrete, checklist-style "get your first embed live" flow',
+          text: 'A prior attempt at exactly this was never finished. Ashish still thinks it\'s the highest-leverage fix: get authentication, security settings, and the embed itself right in one guided pass, so the developer gets a visible "heartbeat" that it\'s working — before customization or scale even enter the picture.',
+        },
+        {
+          text: "Let developers import their own design tokens instead of manually recreating them — consumption is already solved (any theme can now be rendered); the missing half is production: exporting tokens from a design system or Figma straight into Theme Builder.",
+        },
+      ],
+    },
+  },
 ];
 
 export const quadrantMeta = {
