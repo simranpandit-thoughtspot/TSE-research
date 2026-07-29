@@ -832,6 +832,110 @@ export interface ComparisonDimension {
   helper: string;
 }
 
+/** How ThoughtSpot sits against the best-in-class vendor on a dimension. */
+export type TsStanding = 'competitive' | 'mid-pack' | 'behind';
+
+/**
+ * Best-in-class verdict for one comparison dimension, from the July 2026 deep
+ * research pass over public reviews (G2 / Capterra / TrustRadius / Gartner Peer
+ * Insights) and developer community discussion (Reddit, Hacker News, vendor
+ * docs and forums). Claims were adversarially verified before being recorded.
+ *
+ * `winner: null` means the public evidence was too thin or too contaminated by
+ * vendor marketing to name a credible winner — we say so rather than guess.
+ */
+export interface BestInClass {
+  /** Competitor id that wins the dimension, or null when evidence is too thin. */
+  winner: string | null;
+  /** Why it wins, grounded in what real users and developers said. */
+  why: string;
+  /** Competitor id of the closest challenger, when the win is contested. */
+  runnerUp?: string;
+  /** Candid read on where ThoughtSpot lands — this is a gap analysis. */
+  tsStanding: TsStanding;
+  tsNote: string;
+  sources: SourceLink[];
+}
+
+export const TS_STANDING_LABEL: Record<TsStanding, string> = {
+  competitive: 'ThoughtSpot competitive',
+  'mid-pack': 'ThoughtSpot mid-pack',
+  behind: 'ThoughtSpot behind',
+};
+
+/**
+ * Deliberately excluded as sources: `embeddable.com/blog/...alternatives` and
+ * `omni.co/articles/best-white-label...`. Both are vendor content ranking their
+ * own product against rivals — exactly the marketing contamination this pass
+ * was meant to filter out.
+ */
+export const bestInClass: Partial<Record<keyof Competitor, BestInClass>> = {
+  demoPlayground: {
+    winner: 'powerbi',
+    why:
+      "Microsoft's dev sandbox is the only playground that needs no signup at all — it loads a sample dataset, runs live code against the real embed APIs, and hands back a copy-pasteable snippet.",
+    runnerUp: 'tableau',
+    tsStanding: 'behind',
+    tsNote:
+      'Functionally the richest playground here — six embed components, CSS-variable theming and an AI code assistant — but it is gated behind provisioning a trial with a business email, so nobody can evaluate anonymously. Rich, but not reachable.',
+    sources: [
+      { label: 'Power BI dev sandbox', url: 'https://playground.powerbi.com/dev-sandbox' },
+      { label: 'Tableau embedding playground', url: 'https://developer.salesforce.com/tableau/embedding-playground/overview' },
+    ],
+  },
+  embeddingMethods: {
+    winner: 'sigma',
+    why:
+      'Sigma is the only vendor documenting all four integration paths in parallel — no-code embed UI, REST API, JavaScript Embed API and a React SDK — with the SDK open-sourced alongside a runnable sample app.',
+    runnerUp: 'embeddable',
+    tsStanding: 'competitive',
+    tsNote:
+      'A genuine component-level SDK (Search, natural-language search, Spotter, Visualization, Liveboard, App) puts ThoughtSpot far ahead of the iframe-only tools — Looker and Superset both embed strictly through an iframe. The gap to Sigma is breadth of parallel paths, not SDK quality.',
+    sources: [
+      { label: 'Sigma React embed SDK', url: 'https://help.sigmacomputing.com/docs/embed-sdk-for-react' },
+      { label: 'Looker embed SDK (iframe-only)', url: 'https://github.com/looker-open-source/embed-sdk' },
+    ],
+  },
+  performance: {
+    winner: null,
+    why:
+      'No credible winner. Every cross-vendor embed-scale benchmark we found was published by a vendor about itself, and the only independent discussion is anecdotal — so naming a winner here would be guessing.',
+    tsStanding: 'mid-pack',
+    tsNote:
+      'Object-count ceilings and multi-iframe memory pressure are real and surfaced in our own interviews, but they are an industry-wide iframe problem that hits Domo and Qlik the same way — not a ThoughtSpot-specific deficit.',
+    sources: [
+      { label: 'HN: why not to use iframes for embedded dashboards', url: 'https://news.ycombinator.com/item?id=44603657' },
+      { label: 'TrustRadius embedded BI category', url: 'https://www.trustradius.com/embedded-business-intelligence' },
+    ],
+  },
+  multiTenancy: {
+    winner: 'looker',
+    why:
+      "Looker's signed embed payload declares external ID, group membership, a granular permissions array and user attributes per embed user, so a tenant is provisioned at token-mint time without pre-creating accounts.",
+    runnerUp: 'superset',
+    tsStanding: 'mid-pack',
+    tsNote:
+      'Org-based multi-tenancy covers the capability, but predictability is the gap — auth and security setup was the joint-loudest community theme (4.5/5) and reviewers consistently rate Power BI and Omni docs as deeper on this.',
+    sources: [
+      { label: 'Looker embed SDK — signed embed payload', url: 'https://github.com/looker-open-source/embed-sdk' },
+      { label: 'Superset RLS in guest token', url: 'https://github.com/apache/superset/discussions/30033' },
+    ],
+  },
+  customization: {
+    winner: 'embeddable',
+    why:
+      'Developers author their own React components and register them via a config file, so look and feel is governed by their code — there is no vendor chrome left to override or hide.',
+    runnerUp: 'metabase',
+    tsStanding: 'behind',
+    tsNote:
+      'CSS variables and per-action visibility controls are real and first-class, yet this is still our loudest pain point (5/5): developers keep hitting hardcoded UI they cannot reach and fall back to manual code changes. Reviewers put Hex, Omni and Semaphor deeper here.',
+    sources: [
+      { label: 'Embeddable — defining components', url: 'https://docs.embeddable.com/component-libraries/build-components/defining-components' },
+      { label: 'ThoughtSpot pros & cons (G2)', url: 'https://www.g2.com/products/thoughtspot/reviews?qs=pros-and-cons' },
+    ],
+  },
+};
+
 export interface DimensionGroup {
   title: string;
   icon: string;

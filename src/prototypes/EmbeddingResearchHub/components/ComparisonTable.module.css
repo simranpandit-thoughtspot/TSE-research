@@ -136,6 +136,27 @@
   z-index: 4;
 }
 
+/**
+ * ThoughtSpot column — pinned immediately right of the 220px dimension column
+ * so it stays visible as the comparison anchor. Needs an opaque background and
+ * a z-index above the scrolling cells, and a heavier right edge to read as a
+ * frozen boundary.
+ */
+.tsCell {
+  position: sticky;
+  /* Must equal the dimension column's rendered width (240px via .headerCell),
+     otherwise the pinned dimension column overlaps and clips this one. */
+  left: 240px;
+  z-index: 1;
+  background-color: var(--rd-sys-color-background-base);
+  border-right: 2px solid var(--rd-sys-color-border-default);
+}
+
+.headerRow th.tsCell {
+  z-index: 4;
+  background-color: var(--rd-sys-color-background-subtle);
+}
+
 .headerCell {
   padding: 14px 16px;
   text-align: left;
@@ -167,6 +188,8 @@
   min-width: 240px;
   padding: 14px 16px;
   vertical-align: top;
+  /* Opaque so scrolling columns can't show through the pinned ones. */
+  background-color: var(--rd-sys-color-background-base);
   border-bottom: 1px solid var(--rd-sys-color-border-divider);
   border-right: 1px solid var(--rd-sys-color-border-divider);
 }
@@ -192,4 +215,79 @@
   height: 6px;
   border-radius: 50%;
   margin-left: 6px;
+}
+
+/* --- Best-in-class verdicts (July 2026 research pass) --- */
+
+.standingChip {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 1px 7px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  cursor: help;
+}
+
+.winnerCell {
+  box-shadow: inset 2px 0 0 0 var(--rd-sys-color-content-success);
+}
+
+.noWinnerChip {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 1px 7px;
+  border: 1px dashed;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: help;
+}
+
+.bestBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 7px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: help;
+}
+
+.runnerUpBadge {
+  display: inline-block;
+  margin-bottom: 7px;
+  padding: 1px 7px;
+  border: 1px dashed;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: help;
+}
+
+.bestWhy {
+  font-size: 11.5px;
+  line-height: 1.45;
+  margin: 6px 0 0 0;
+  padding-top: 6px;
+  border-top: 1px dashed var(--rd-sys-color-border-divider);
+}
+
+.bestSource {
+  display: inline-block;
+  margin: 4px 6px 0 0;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-decoration: underline;
 }
