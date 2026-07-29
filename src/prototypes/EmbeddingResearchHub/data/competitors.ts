@@ -832,8 +832,12 @@ export interface ComparisonDimension {
   helper: string;
 }
 
-/** How ThoughtSpot sits against the best-in-class vendor on a dimension. */
-export type TsStanding = 'competitive' | 'mid-pack' | 'behind';
+/**
+ * How ThoughtSpot sits against the best-in-class vendor on a dimension.
+ * `unknown` means no evidence survived verification either way — we do not
+ * get to claim a position we cannot support.
+ */
+export type TsStanding = 'competitive' | 'mid-pack' | 'behind' | 'unknown';
 
 /**
  * Best-in-class verdict for one comparison dimension, from the July 2026 deep
@@ -861,77 +865,88 @@ export const TS_STANDING_LABEL: Record<TsStanding, string> = {
   competitive: 'ThoughtSpot competitive',
   'mid-pack': 'ThoughtSpot mid-pack',
   behind: 'ThoughtSpot behind',
+  unknown: 'ThoughtSpot unplaceable',
 };
 
 /**
- * Deliberately excluded as sources: `embeddable.com/blog/...alternatives` and
- * `omni.co/articles/best-white-label...`. Both are vendor content ranking their
- * own product against rivals — exactly the marketing contamination this pass
- * was meant to filter out.
+ * IMPORTANT SOURCING CAVEAT. This pass set out to rank vendors from public user
+ * reviews (G2 / Capterra / TrustRadius / Gartner Peer Insights) and community
+ * discussion (Reddit / Hacker News). It failed to: of 16 claims that survived
+ * 3-vote adversarial verification, **not one** came from a review platform or
+ * community thread. Every load-bearing claim below rests on vendor primary
+ * documentation, official repos, or npm/GitHub metadata. Review-platform pages
+ * were read but produced nothing specific enough about *embedding* to verify.
+ * Treat these as capability verdicts, not satisfaction verdicts.
+ *
+ * Coverage is also partial: only 7 of 15 vendors produced surviving evidence
+ * (ThoughtSpot, Metabase, Sigma, Looker, Power BI, Tableau, Superset).
+ * Holistics, Domo, Sisense, Qlik, Hex, Omni, Embeddable and Semaphor produced
+ * none — absence of a badge is not evidence against them.
+ *
+ * Vendor comparison blogs (`embeddable.com/blog/...alternatives`,
+ * `omni.co/articles/best-white-label...`) were excluded as sources: both rank
+ * their own product against rivals.
  */
 export const bestInClass: Partial<Record<keyof Competitor, BestInClass>> = {
   demoPlayground: {
-    winner: 'powerbi',
+    winner: 'metabase',
     why:
-      "Microsoft's dev sandbox is the only playground that needs no signup at all — it loads a sample dataset, runs live code against the real embed APIs, and hands back a copy-pasteable snippet.",
-    runnerUp: 'tableau',
-    tsStanding: 'behind',
+      'The only fully public, zero-login, zero-setup playground: a component picker, theme switcher, live panel emitting real SDK code and an events panel firing actual SDK callbacks — verified by loading it in a browser with no signup or licence gate.',
+    runnerUp: 'powerbi',
+    tsStanding: 'competitive',
     tsNote:
-      'Functionally the richest playground here — six embed components, CSS-variable theming and an AI code assistant — but it is gated behind provisioning a trial with a business email, so nobody can evaluate anonymously. Rich, but not reachable.',
+      'A real hosted Visual Embed Playground that auto-generates working embed code as you toggle features — genuinely strong. It loses only on this dimension’s own criterion: the full code-emitting surface needs a time-boxed trial instance, so nobody can evaluate anonymously.',
     sources: [
-      { label: 'Power BI dev sandbox', url: 'https://playground.powerbi.com/dev-sandbox' },
-      { label: 'Tableau embedding playground', url: 'https://developer.salesforce.com/tableau/embedding-playground/overview' },
+      { label: 'Metabase SDK playground', url: 'https://sdk-playground.metabase.com/' },
+      { label: 'Power BI dev sandbox (runner-up)', url: 'https://learn.microsoft.com/en-us/power-bi/developer/embedded/power-bi-playground' },
     ],
   },
   embeddingMethods: {
-    winner: 'sigma',
+    winner: 'metabase',
     why:
-      'Sigma is the only vendor documenting all four integration paths in parallel — no-code embed UI, REST API, JavaScript Embed API and a React SDK — with the SDK open-sourced alongside a runnable sample app.',
-    runnerUp: 'embeddable',
-    tsStanding: 'competitive',
+      "The only vendor verified to render individual components — charts, dashboards, collection browser, query builder — into the host app's own React tree, rather than wrapping an iframe.",
+    runnerUp: 'sigma',
+    tsStanding: 'behind',
     tsNote:
-      'A genuine component-level SDK (Search, natural-language search, Spotter, Visualization, Liveboard, App) puts ThoughtSpot far ahead of the iframe-only tools — Looker and Superset both embed strictly through an iframe. The gap to Sigma is breadth of parallel paths, not SDK quality.',
+      'Six embeddable surfaces with five view configs is genuinely more granular than dashboard-only embedding, and well ahead of Superset. But the Visual Embed SDK is iframe + postMessage underneath, like Sigma, Looker and Superset — so on true composability ThoughtSpot is architecturally behind, not competitive.',
     sources: [
-      { label: 'Sigma React embed SDK', url: 'https://help.sigmacomputing.com/docs/embed-sdk-for-react' },
-      { label: 'Looker embed SDK (iframe-only)', url: 'https://github.com/looker-open-source/embed-sdk' },
+      { label: 'Metabase embedded components', url: 'https://www.metabase.com/docs/latest/embedding/components' },
+      { label: 'Sigma React embed SDK (iframe-based)', url: 'https://help.sigmacomputing.com/docs/embed-sdk-for-react' },
     ],
   },
   performance: {
     winner: null,
     why:
-      'No credible winner. Every cross-vendor embed-scale benchmark we found was published by a vendor about itself, and the only independent discussion is anecdotal — so naming a winner here would be guessing.',
-    tsStanding: 'mid-pack',
+      'No credible winner. Not one claim about query speed, caching, concurrent-tenant behaviour or multi-iframe memory pressure survived verification — the single candidate was refuted 0-3. Naming a winner here would be a guess.',
+    tsStanding: 'unknown',
     tsNote:
-      'Object-count ceilings and multi-iframe memory pressure are real and surfaced in our own interviews, but they are an industry-wide iframe problem that hits Domo and Qlik the same way — not a ThoughtSpot-specific deficit.',
+      'Object-count ceilings and multi-iframe memory pressure came up in our own interviews and Discord, but no public cross-vendor evidence survived, so ThoughtSpot cannot honestly be placed against rivals on this dimension.',
     sources: [
-      { label: 'HN: why not to use iframes for embedded dashboards', url: 'https://news.ycombinator.com/item?id=44603657' },
-      { label: 'TrustRadius embedded BI category', url: 'https://www.trustradius.com/embedded-business-intelligence' },
+      { label: 'Looker embed SDK (candidate claim, refuted)', url: 'https://github.com/looker-open-source/embed-sdk' },
     ],
   },
   multiTenancy: {
     winner: 'looker',
     why:
-      "Looker's signed embed payload declares external ID, group membership, a granular permissions array and user attributes per embed user, so a tenant is provisioned at token-mint time without pre-creating accounts.",
-    runnerUp: 'superset',
-    tsStanding: 'mid-pack',
+      'Best-documented rather than proven-best: tenant scope is declared per embed user at session-mint time (external id, groups, permissions, models, user attributes, access filters), so a host provisions tenants at runtime with no per-tenant admin setup.',
+    tsStanding: 'unknown',
     tsNote:
-      'Org-based multi-tenancy covers the capability, but predictability is the gap — auth and security setup was the joint-loudest community theme (4.5/5) and reviewers consistently rate Power BI and Omni docs as deeper on this.',
+      'No ThoughtSpot multi-tenancy claim survived verification either way, so this is unplaceable on public evidence. Our own research does show auth and security setup as the joint-loudest community theme (4.5/5) — that is an internal signal, not a competitive ranking.',
     sources: [
-      { label: 'Looker embed SDK — signed embed payload', url: 'https://github.com/looker-open-source/embed-sdk' },
-      { label: 'Superset RLS in guest token', url: 'https://github.com/apache/superset/discussions/30033' },
+      { label: 'Looker signed embedding', url: 'https://docs.cloud.google.com/looker/docs/signed-embedding' },
+      { label: 'Looker row-level segmentation in embeds', url: 'https://docs.cloud.google.com/looker/docs/implementing-row-level-segmentation-in-embeds' },
     ],
   },
   customization: {
-    winner: 'embeddable',
+    winner: null,
     why:
-      'Developers author their own React components and register them via a config file, so look and feel is governed by their code — there is no vendor chrome left to override or hide.',
-    runnerUp: 'metabase',
+      'No credible winner. Capability breadth is verified for ThoughtSpot and theming for Metabase, but no comparative depth evidence exists — and the strongest available signals were vendor docs plus a competitor blog, exactly the contamination this pass was told to flag.',
     tsStanding: 'behind',
     tsNote:
-      'CSS variables and per-action visibility controls are real and first-class, yet this is still our loudest pain point (5/5): developers keep hitting hardcoded UI they cannot reach and fall back to manual code changes. Reviewers put Hex, Omni and Semaphor deeper here.',
+      'Public evidence cannot rank vendors here, so this standing comes from our own primary research rather than the market scan: customization is the loudest pain point across all six interviews and Discord (5/5), with developers still falling back to manual code changes.',
     sources: [
-      { label: 'Embeddable — defining components', url: 'https://docs.embeddable.com/component-libraries/build-components/defining-components' },
-      { label: 'ThoughtSpot pros & cons (G2)', url: 'https://www.g2.com/products/thoughtspot/reviews?qs=pros-and-cons' },
+      { label: 'ThoughtSpot style customization', url: 'https://developers.thoughtspot.com/docs/tutorials/style-customization/tutorial' },
+      { label: 'Metabase theming', url: 'https://www.metabase.com/docs/latest/embedding/sdk/introduction' },
     ],
   },
 };

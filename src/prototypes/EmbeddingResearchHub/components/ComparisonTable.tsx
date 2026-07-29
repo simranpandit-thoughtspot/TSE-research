@@ -23,7 +23,7 @@ const TS_ID = 'thoughtspot';
  * Includes every best-in-class winner (see `bestInClass`) so each dimension's
  * badge is visible without the reader having to widen the selection first.
  */
-const DEFAULT_SELECTED = [TS_ID, 'holistics', 'looker', 'powerbi', 'sigma', 'tableau', 'embeddable'];
+const DEFAULT_SELECTED = [TS_ID, 'metabase', 'looker', 'powerbi', 'sigma', 'tableau'];
 
 const CONFIDENCE_COLOR: Record<Competitor['confidence'], string> = {
   verified: c['content-success'],
@@ -41,6 +41,7 @@ const STANDING_COLOR: Record<TsStanding, string> = {
   competitive: c['content-success'],
   'mid-pack': c['content-warning'],
   behind: c['content-failure'],
+  unknown: c['content-tertiary'],
 };
 
 export const ComparisonTable: React.FC = () => {
