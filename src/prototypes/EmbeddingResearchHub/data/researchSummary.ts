@@ -189,6 +189,44 @@ export const pageAdoption = {
 };
 
 /**
+ * Free-trial → actually-embedded funnel. This is the headline drop-off: of
+ * everyone who signs up, only a sliver ever embeds ThoughtSpot in their own
+ * environment.
+ *
+ * Only the embed path is modelled here, and it is strictly monotonic. Two
+ * measures from the source diagram are deliberately excluded as funnel steps
+ * because they exceed the TSE cohort and therefore span both tracks:
+ * "Ask Spotter" (570) and "CRUD on objects" (165) — both are larger than the
+ * 536 TSE users, so they cannot sit inside the embed path. They are carried
+ * below as cross-track context instead.
+ *
+ * Percentages are computed against `baseCount` (all signups) so every step
+ * shares one denominator. The source diagram mixed denominators — "Playground
+ * run clicks 25.9%" was a share of TSE users, and "Ask Spotter 61.6%" /
+ * "Setup domain 16.7%" matched neither base — so they are recomputed here.
+ */
+export const trialFunnel = {
+  window: 'Free-trial cohort · signup through first working embed',
+  baseLabel: 'Signed up (free trial)',
+  baseCount: 1396,
+  /** The embed path — each step is a subset of the one above it. */
+  steps: [
+    { label: 'Landed in TSE (embedding track)', count: 536 },
+    { label: 'Set up a domain in the develop tab', count: 157 },
+    { label: 'Ran code in the Playground', count: 139 },
+    { label: 'Called the Visual Embed SDK', count: 120 },
+    { label: 'Actually embedded outside ThoughtSpot', count: 44 },
+  ],
+  /** Measured, but spanning both TSA and TSE — shown as context, not steps. */
+  crossTrack: [
+    { label: 'Asked Spotter', count: 570 },
+    { label: 'Did CRUD on objects', count: 165 },
+  ],
+  /** The other side of the signup split, for context. */
+  otherTrack: { label: 'Landed in TSA (analytics track)', count: 860 },
+};
+
+/**
  * Per-problem validation from secondary research — the community-intensity
  * score comes from the Discord theme frequency (x / 5), and the competitor
  * note summarizes whether rivals already solve it. Grounded in each problem's

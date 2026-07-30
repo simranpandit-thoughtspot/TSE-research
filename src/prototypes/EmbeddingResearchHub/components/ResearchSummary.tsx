@@ -8,6 +8,7 @@ import {
   problemStatements,
   businessImpact,
   pageAdoption,
+  trialFunnel,
   problemValidation,
   painPointDetail,
   secondaryOverview,
@@ -125,6 +126,96 @@ const WhatIsDevelopTabSlide: React.FC = () => (
     </div>
   </div>
 );
+
+const TrialFunnelSlide: React.FC = () => {
+  const { baseCount, steps } = trialFunnel;
+  const embedded = steps[steps.length - 1];
+  const pct = (n: number) => (n / baseCount) * 100;
+  const embedPct = pct(embedded.count);
+  const gapPct = 100 - embedPct;
+  /** 1-in-N is the line people repeat out loud, so compute it rather than hardcode. */
+  const oneInN = Math.round(baseCount / embedded.count);
+
+  return (
+    <div className={styles.slide}>
+      <SectionHeading
+        title="Almost nobody makes it to a live embed"
+        subtitle={`Free-trial cohort · every % is a share of all ${baseCount.toLocaleString()} signups.`}
+      />
+
+      <div className={styles.gapBanner} style={{ backgroundColor: c['background-failure'] }}>
+        <div className={styles.gapFigure}>
+          <span className={styles.gapPct} style={{ color: c['content-failure'] }}>{gapPct.toFixed(1)}%</span>
+          <span className={styles.gapPctLabel} style={{ color: c['content-failure'] }}>never embed</span>
+        </div>
+        <div className={styles.gapDivider} style={{ backgroundColor: c['content-failure'] }} />
+        <p className={styles.gapText} style={{ color: c['content-primary'] }}>
+          <strong>{baseCount.toLocaleString()}</strong> people signed up. <strong>{embedded.count}</strong> got ThoughtSpot
+          running in their own environment — <strong>{embedPct.toFixed(2)}%</strong>, or roughly <strong>1 in {oneInN}</strong>.
+        </p>
+      </div>
+
+      <div className={styles.funnel}>
+        <div className={styles.funnelRow}>
+          <span className={styles.funnelLabel} style={{ color: c['content-primary'] }}>{trialFunnel.baseLabel}</span>
+          <div className={styles.funnelBarWrap}>
+            <div className={styles.funnelBar} style={{ width: '100%', backgroundColor: c['content-brand'] }}>
+              <span className={styles.funnelBarText} style={{ color: frame['content-primary'] }}>{baseCount.toLocaleString()}</span>
+            </div>
+          </div>
+          <span className={styles.funnelPct} style={{ color: c['content-primary'] }}>100%</span>
+        </div>
+
+        {steps.map((s, i) => {
+          const p = pct(s.count);
+          const prev = i === 0 ? baseCount : steps[i - 1].count;
+          const dropped = prev - s.count;
+          const last = i === steps.length - 1;
+          return (
+            <div key={s.label} className={styles.funnelRow}>
+              <span className={styles.funnelLabel} style={{ color: last ? c['content-failure'] : c['content-secondary'] }}>
+                {s.label}
+              </span>
+              <div className={styles.funnelBarWrap}>
+                <div
+                  className={styles.funnelBar}
+                  style={{
+                    width: `${Math.max(p, 2)}%`,
+                    backgroundColor: last ? c['content-failure'] : referenceColors.purple['50'],
+                  }}
+                >
+                  {/* Narrow bars can't hold the number without clipping it. */}
+                  {p >= 12 && (
+                    <span className={styles.funnelBarText} style={{ color: frame['content-primary'] }}>{s.count}</span>
+                  )}
+                </div>
+                {p < 12 && (
+                  <span
+                    className={styles.funnelBarTextOutside}
+                    style={{ color: last ? c['content-failure'] : c['content-primary'] }}
+                  >
+                    {s.count}
+                  </span>
+                )}
+                <span className={styles.funnelDrop} style={{ color: c['content-tertiary'] }}>
+                  −{dropped.toLocaleString()} dropped
+                </span>
+              </div>
+              <span className={styles.funnelPct} style={{ color: last ? c['content-failure'] : c['content-primary'] }}>
+                {p.toFixed(p < 10 ? 2 : 1)}%
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      <p className={styles.funnelFootnote} style={{ color: c['content-tertiary'] }}>
+        The other {trialFunnel.otherTrack.count} signups took the analytics track. Asked Spotter ({trialFunnel.crossTrack[0].count})
+        {' '}and CRUD ({trialFunnel.crossTrack[1].count}) span both tracks, so they sit outside this funnel.
+      </p>
+    </div>
+  );
+};
 
 const PageAdoptionSlide: React.FC = () => (
   <div className={styles.slide}>
@@ -414,6 +505,7 @@ const ThankYouSlide: React.FC = () => (
 const SLIDES: { title: string; Component: React.FC }[] = [
   { title: 'Cover', Component: CoverSlide },
   { title: 'What is the develop tab', Component: WhatIsDevelopTabSlide },
+  { title: 'Trial to embed', Component: TrialFunnelSlide },
   { title: 'Page adoption', Component: PageAdoptionSlide },
   { title: 'Primary research', Component: PrimaryResearchSlide },
   { title: 'Customer journey', Component: JourneySlide },
