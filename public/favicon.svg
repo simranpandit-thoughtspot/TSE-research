@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="TSE research">
+  <!-- Green matches the Radiant reference token green.70 (#049160). -->
+  <rect width="512" height="512" rx="96" fill="#049160" />
+  <g fill="none" stroke="#FFFFFF" stroke-width="46" stroke-linejoin="miter" stroke-linecap="butt">
+    <path d="M186 178 L94 256 L186 334" />
+    <path d="M326 178 L418 256 L326 334" />
+  </g>
+  <path d="M292 128 L246 384 L206 384 L252 128 Z" fill="#FFFFFF" />
+</svg>
