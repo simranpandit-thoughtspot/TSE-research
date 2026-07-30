@@ -128,13 +128,21 @@ const WhatIsDevelopTabSlide: React.FC = () => (
 );
 
 const TrialFunnelSlide: React.FC = () => {
-  const { baseCount, steps } = trialFunnel;
+  const { baseCount, steps, split, objectTypes } = trialFunnel;
   const embedded = steps[steps.length - 1];
   const pct = (n: number) => (n / baseCount) * 100;
   const embedPct = pct(embedded.count);
-  const gapPct = 100 - embedPct;
+  const created = steps.find((s) => s.isContentCreation)!;
   /** 1-in-N is the line people repeat out loud, so compute it rather than hardcode. */
   const oneInN = Math.round(baseCount / embedded.count);
+
+  /**
+   * Band widths taper by rank, not by value. The real tail is almost flat
+   * (11.8% → 3.15%), so proportional widths would collapse the last four bands
+   * into an unreadable sliver. The taper carries the funnel silhouette; the
+   * count and true % printed in every band carry the quantities.
+   */
+  const width = (i: number, total: number) => 80 - (i / total) * 40;
 
   return (
     <div className={styles.slide}>
@@ -143,76 +151,88 @@ const TrialFunnelSlide: React.FC = () => {
         subtitle={`Free-trial cohort · every % is a share of all ${baseCount.toLocaleString()} signups.`}
       />
 
-      <div className={styles.gapBanner} style={{ backgroundColor: c['background-failure'] }}>
-        <div className={styles.gapFigure}>
-          <span className={styles.gapPct} style={{ color: c['content-failure'] }}>{gapPct.toFixed(1)}%</span>
-          <span className={styles.gapPctLabel} style={{ color: c['content-failure'] }}>never embed</span>
-        </div>
-        <div className={styles.gapDivider} style={{ backgroundColor: c['content-failure'] }} />
-        <p className={styles.gapText} style={{ color: c['content-primary'] }}>
-          <strong>{baseCount.toLocaleString()}</strong> people signed up. <strong>{embedded.count}</strong> got ThoughtSpot
-          running in their own environment — <strong>{embedPct.toFixed(2)}%</strong>, or roughly <strong>1 in {oneInN}</strong>.
-        </p>
-      </div>
-
-      <div className={styles.funnel}>
-        <div className={styles.funnelRow}>
-          <span className={styles.funnelLabel} style={{ color: c['content-primary'] }}>{trialFunnel.baseLabel}</span>
-          <div className={styles.funnelBarWrap}>
-            <div className={styles.funnelBar} style={{ width: '100%', backgroundColor: c['content-brand'] }}>
-              <span className={styles.funnelBarText} style={{ color: frame['content-primary'] }}>{baseCount.toLocaleString()}</span>
-            </div>
+      <div className={styles.funnelLayout}>
+        <div className={styles.funnelStack}>
+          {/* Signups — the mouth of the funnel */}
+          <div className={styles.band} style={{ width: '86%', backgroundColor: c['content-brand'] }}>
+            <span className={styles.bandLabel} style={{ color: frame['content-primary'] }}>{trialFunnel.baseLabel}</span>
+            <span className={styles.bandValue} style={{ color: frame['content-primary'] }}>
+              {baseCount.toLocaleString()} · 100%
+            </span>
           </div>
-          <span className={styles.funnelPct} style={{ color: c['content-primary'] }}>100%</span>
-        </div>
 
-        {steps.map((s, i) => {
-          const p = pct(s.count);
-          const prev = i === 0 ? baseCount : steps[i - 1].count;
-          const dropped = prev - s.count;
-          const last = i === steps.length - 1;
-          return (
-            <div key={s.label} className={styles.funnelRow}>
-              <span className={styles.funnelLabel} style={{ color: last ? c['content-failure'] : c['content-secondary'] }}>
-                {s.label}
-              </span>
-              <div className={styles.funnelBarWrap}>
-                <div
-                  className={styles.funnelBar}
-                  style={{
-                    width: `${Math.max(p, 2)}%`,
-                    backgroundColor: last ? c['content-failure'] : referenceColors.purple['50'],
-                  }}
-                >
-                  {/* Narrow bars can't hold the number without clipping it. */}
-                  {p >= 12 && (
-                    <span className={styles.funnelBarText} style={{ color: frame['content-primary'] }}>{s.count}</span>
-                  )}
-                </div>
-                {p < 12 && (
-                  <span
-                    className={styles.funnelBarTextOutside}
-                    style={{ color: last ? c['content-failure'] : c['content-primary'] }}
-                  >
-                    {s.count}
-                  </span>
-                )}
-                <span className={styles.funnelDrop} style={{ color: c['content-tertiary'] }}>
-                  −{dropped.toLocaleString()} dropped
+          {/* TSA / TSE is a split of the cohort, not a funnel stage */}
+          <div className={styles.splitPair}>
+            {split.map((s) => (
+              <div key={s.label} className={styles.splitBox} style={{ borderColor: c['border-default'] }}>
+                <span className={styles.splitLabel} style={{ color: c['content-secondary'] }}>
+                  {s.label} <span style={{ color: c['content-tertiary'] }}>· {s.sublabel}</span>
+                </span>
+                <span className={styles.splitValue} style={{ color: c['content-primary'] }}>
+                  {s.count} · {pct(s.count).toFixed(1)}%
                 </span>
               </div>
-              <span className={styles.funnelPct} style={{ color: last ? c['content-failure'] : c['content-primary'] }}>
-                {p.toFixed(p < 10 ? 2 : 1)}%
-              </span>
-            </div>
-          );
-        })}
-      </div>
+            ))}
+          </div>
 
-      <p className={styles.funnelFootnote} style={{ color: c['content-tertiary'] }}>
-        The other {trialFunnel.otherTrack.count} signups took the analytics track. Asked Spotter ({trialFunnel.crossTrack[0].count})
-        {' '}and CRUD ({trialFunnel.crossTrack[1].count}) span both tracks, so they sit outside this funnel.
-      </p>
+          {steps.map((s, i) => {
+            const p = pct(s.count);
+            const prev = i === 0 ? baseCount : steps[i - 1].count;
+            const dropped = prev - s.count;
+            const goal = !!s.isGoal;
+            return (
+              <React.Fragment key={s.label}>
+                <div className={styles.bandRow}>
+                  <div
+                    className={styles.band}
+                    style={{
+                      width: `${width(i + 1, steps.length + 1)}%`,
+                      backgroundColor: goal ? c['content-failure'] : referenceColors.purple['50'],
+                    }}
+                  >
+                    <span className={styles.bandLabel} style={{ color: frame['content-primary'] }}>
+                      {s.label}
+                      {s.note && <span className={styles.bandNote}> · {s.note}</span>}
+                    </span>
+                    <span className={styles.bandValue} style={{ color: frame['content-primary'] }}>
+                      {s.count} · {p.toFixed(p < 10 ? 2 : 1)}%
+                    </span>
+                  </div>
+                  <span className={styles.dropTick} style={{ color: c['content-tertiary'] }}>
+                    −{dropped.toLocaleString()} dropped
+                  </span>
+                </div>
+                {s.isContentCreation && (
+                  <div className={styles.objectChips}>
+                    {objectTypes.map((o) => (
+                      <span
+                        key={o}
+                        className={styles.objectChip}
+                        style={{ borderColor: c['border-divider'], color: c['content-secondary'] }}
+                      >
+                        {o}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
+
+        <aside className={styles.gapAside} style={{ backgroundColor: c['background-failure'] }}>
+          <span className={styles.gapPct} style={{ color: c['content-failure'] }}>{(100 - embedPct).toFixed(1)}%</span>
+          <span className={styles.gapPctLabel} style={{ color: c['content-failure'] }}>never embed</span>
+          <p className={styles.gapAsideText} style={{ color: c['content-primary'] }}>
+            <strong>{baseCount.toLocaleString()}</strong> signed up.<br />
+            <strong>{embedded.count}</strong> shipped a live embed.
+          </p>
+          <p className={styles.gapAsideBig} style={{ color: c['content-failure'] }}>1 in {oneInN}</p>
+          <p className={styles.gapAsideNote} style={{ color: c['content-secondary'] }}>
+            Only <strong>{pct(created.count).toFixed(1)}%</strong> ever create content.
+          </p>
+        </aside>
+      </div>
     </div>
   );
 };

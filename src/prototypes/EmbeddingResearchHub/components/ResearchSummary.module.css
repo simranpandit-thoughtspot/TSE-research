@@ -550,125 +550,205 @@
 
 /* --- Trial → embed funnel --- */
 
-.gapBanner {
+/* --- Trial → embed funnel --- */
+
+.funnelLayout {
   display: flex;
-  align-items: center;
-  gap: 18px;
+  align-items: stretch;
+  gap: 30px;
   width: 100%;
-  max-width: 880px;
-  margin-top: 2px;
-  padding: 10px 20px;
-  border-radius: 14px;
-}
-
-.gapFigure {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1;
-}
-
-.gapPct {
-  font-size: 44px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-}
-
-.gapPctLabel {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 4px;
-}
-
-.gapDivider {
-  flex-shrink: 0;
-  width: 2px;
-  align-self: stretch;
-  border-radius: 1px;
-  opacity: 0.25;
-}
-
-.gapText {
-  font-size: 15px;
-  line-height: 1.5;
-  margin: 0;
-  text-align: left;
-}
-
-.funnel {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  width: 100%;
-  max-width: 880px;
+  max-width: 1070px;
   margin-top: 10px;
 }
 
-.funnelRow {
-  display: grid;
-  grid-template-columns: 232px 1fr 62px;
-  align-items: center;
-  gap: 14px;
+@media (max-width: 900px) {
+  .funnelLayout {
+    flex-direction: column;
+  }
 }
 
-.funnelLabel {
-  font-size: 13px;
-  font-weight: 600;
-  text-align: right;
-  line-height: 1.3;
-}
-
-.funnelBarWrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.funnelStack {
+  flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
-.funnelBar {
-  height: 26px;
-  border-radius: 7px;
+/* Each stage occupies one row; the drop marker floats beside the band so it
+   costs no vertical space. */
+.bandRow {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Tapering band — the funnel silhouette */
+.band {
+  height: 32px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding-right: 9px;
-  transform-origin: left center;
-  animation: growBar 760ms cubic-bezier(0.22, 1, 0.36, 1) 160ms both;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 0 18px;
+  transform-origin: center top;
+  animation: bandIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.funnelBarText {
-  font-size: 12.5px;
+@keyframes bandIn {
+  from {
+    opacity: 0;
+    transform: scaleX(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .band {
+    animation: none;
+  }
+}
+
+.bandLabel {
+  font-size: 13.5px;
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bandNote {
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+.bandValue {
+  font-size: 13.5px;
+  font-weight: 800;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Drop marker — floated right of the band, out of the vertical flow */
+.dropTick {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1;
   white-space: nowrap;
 }
 
-.funnelBarTextOutside {
+/* TSA / TSE split of the signup cohort */
+.splitPair {
+  display: flex;
+  gap: 10px;
+  width: 86%;
+  margin: 1px 0;
+}
+
+.splitBox {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px dashed;
+  border-radius: 9px;
+  background-color: var(--rd-sys-color-background-base);
+}
+
+.splitLabel {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.splitValue {
   font-size: 12.5px;
   font-weight: 800;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-.funnelDrop {
-  font-size: 11px;
+/* Object types created in the content-creation stage */
+.objectChips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 1px 0 2px 0;
+}
+
+.objectChip {
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 10.5px;
   font-weight: 600;
-  white-space: nowrap;
+  background-color: var(--rd-sys-color-background-base);
 }
 
-.funnelPct {
-  font-size: 13.5px;
+/* The loud gap callout */
+.gapAside {
+  flex: 0 0 214px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 20px 18px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.gapPct {
+  font-size: 52px;
   font-weight: 800;
-  text-align: left;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
-.funnelFootnote {
-  font-size: 11px;
+.gapPctLabel {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gapAsideText {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 16px 0 0 0;
+}
+
+.gapAsideBig {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 14px 0 0 0;
+}
+
+.gapAsideNote {
+  font-size: 11.5px;
   line-height: 1.45;
-  max-width: 880px;
-  margin: 9px 0 0 0;
+  margin: 16px 0 0 0;
+  padding-top: 12px;
+  border-top: 1px dashed currentColor;
+  width: 100%;
 }
 
 /* --- Interview grid --- */

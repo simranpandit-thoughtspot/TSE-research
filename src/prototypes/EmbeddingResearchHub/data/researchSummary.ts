@@ -209,21 +209,26 @@ export const trialFunnel = {
   window: 'Free-trial cohort · signup through first working embed',
   baseLabel: 'Signed up (free trial)',
   baseCount: 1396,
-  /** The embed path — each step is a subset of the one above it. */
+  /**
+   * The funnel spine. TSA/TSE is a *split* of the signup cohort rather than a
+   * stage, so it is held separately in `split` below and the spine stays
+   * strictly monotonic: 1396 → 570 → 165 → 157 → 139 → 120 → 44.
+   */
   steps: [
-    { label: 'Landed in TSE (embedding track)', count: 536 },
-    { label: 'Set up a domain in the develop tab', count: 157 },
+    { label: 'Asked Spotter', count: 570, note: 'first question' },
+    { label: 'Created content', count: 165, note: 'CRUD', isContentCreation: true },
+    { label: 'Set up a domain', count: 157, note: 'develop tab' },
     { label: 'Ran code in the Playground', count: 139 },
     { label: 'Called the Visual Embed SDK', count: 120 },
-    { label: 'Actually embedded outside ThoughtSpot', count: 44 },
+    { label: 'Embedded in their app', count: 44, isGoal: true },
   ],
-  /** Measured, but spanning both TSA and TSE — shown as context, not steps. */
-  crossTrack: [
-    { label: 'Asked Spotter', count: 570 },
-    { label: 'Did CRUD on objects', count: 165 },
+  /** Where the signup cohort divides — shown side by side, not as a stage. */
+  split: [
+    { label: 'TSA users', sublabel: 'analytics', count: 860 },
+    { label: 'TSE users', sublabel: 'embedding', count: 536 },
   ],
-  /** The other side of the signup split, for context. */
-  otherTrack: { label: 'Landed in TSA (analytics track)', count: 860 },
+  /** Object types created during the content-creation stage. */
+  objectTypes: ['Liveboard', 'Table', 'Model', 'Answers'],
 };
 
 /**
