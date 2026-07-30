@@ -137,12 +137,20 @@ const TrialFunnelSlide: React.FC = () => {
   const oneInN = Math.round(baseCount / embedded.count);
 
   /**
-   * Band widths taper by rank, not by value. The real tail is almost flat
-   * (11.8% → 3.15%), so proportional widths would collapse the last four bands
-   * into an unreadable sliver. The taper carries the funnel silhouette; the
-   * count and true % printed in every band carry the quantities.
+   * Fills are centred and sized to the TRUE share, so the silhouette is a real
+   * funnel and the collapse is the visual. Labels and numbers sit outside the
+   * track, which is what makes honest proportional widths readable — a 3.15%
+   * sliver would never hold text.
    */
-  const width = (i: number, total: number) => 76 - (i / total) * 30;
+  const FILL_COLORS = [
+    c['content-brand'],
+    referenceColors.blue['50'],
+    referenceColors.purple['50'],
+    referenceColors.purple['50'],
+    referenceColors.purple['40'],
+    referenceColors.purple['40'],
+    c['content-failure'],
+  ];
 
   return (
     <div className={`${styles.slide} ${styles.slideWide}`}>
@@ -172,25 +180,29 @@ const TrialFunnelSlide: React.FC = () => {
 
         <div className={styles.funnelStack}>
           {/* Signups — the mouth of the funnel */}
-          <div className={styles.band} style={{ width: '82%', backgroundColor: c['content-brand'] }}>
-            <span className={styles.bandLabel} style={{ color: frame['content-primary'] }}>{trialFunnel.baseLabel}</span>
-            <span className={styles.bandValue} style={{ color: frame['content-primary'] }}>
-              {baseCount.toLocaleString()} · 100%
+          <div className={styles.fRow}>
+            <span className={styles.fLabel} style={{ color: c['content-primary'] }}>{trialFunnel.baseLabel}</span>
+            <div className={styles.fTrack} style={{ backgroundColor: referenceColors.gray['10'] }}>
+              <div className={styles.fFill} style={{ width: '100%', backgroundColor: FILL_COLORS[0] }} />
+            </div>
+            <span className={styles.fNums}>
+              <span className={styles.fCount} style={{ color: c['content-primary'] }}>{baseCount.toLocaleString()}</span>
+              <span className={styles.fPct} style={{ color: c['content-tertiary'] }}>100%</span>
             </span>
           </div>
 
-          {/* TSA / TSE is a split of the cohort, not a funnel stage */}
-          <div className={styles.splitPair}>
-            {split.map((s) => (
-              <div key={s.label} className={styles.splitBox} style={{ borderColor: c['border-default'] }}>
-                <span className={styles.splitLabel} style={{ color: c['content-secondary'] }}>
-                  {s.label} <span style={{ color: c['content-tertiary'] }}>· {s.sublabel}</span>
+          {/* TSA / TSE is a split of the cohort, not a stage — kept as one quiet line */}
+          <div className={styles.fRow}>
+            <span className={styles.fCaptionLeft} style={{ color: c['content-tertiary'] }}>splits into</span>
+            <div className={styles.fSplitLine}>
+              {split.map((sp) => (
+                <span key={sp.label} className={styles.fSplitItem} style={{ color: c['content-secondary'] }}>
+                  <span className={styles.fSplitDot} style={{ backgroundColor: c['border-default'] }} />
+                  {sp.label} <strong style={{ color: c['content-primary'] }}>{sp.count}</strong> · {pct(sp.count).toFixed(1)}%
                 </span>
-                <span className={styles.splitValue} style={{ color: c['content-primary'] }}>
-                  {s.count} · {pct(s.count).toFixed(1)}%
-                </span>
-              </div>
-            ))}
+              ))}
+            </div>
+            <span className={styles.fNums} />
           </div>
 
           {steps.map((s, i) => {
@@ -199,41 +211,38 @@ const TrialFunnelSlide: React.FC = () => {
             const dropped = prev - s.count;
             const goal = !!s.isGoal;
             return (
-              <React.Fragment key={s.label}>
-                <div className={styles.bandRow}>
+              <div key={s.label} className={styles.fRow}>
+                <span className={styles.fLabel} style={{ color: goal ? c['content-failure'] : c['content-primary'] }}>
+                  {s.label}
+                  {s.note && <span className={styles.fNote} style={{ color: c['content-tertiary'] }}> · {s.note}</span>}
+                  {s.isContentCreation && (
+                    <span className={styles.fSubCaption} style={{ color: c['content-tertiary'] }}>
+                      {objectTypes.join(' · ')}
+                    </span>
+                  )}
+                </span>
+                <div className={styles.fTrack} style={{ backgroundColor: referenceColors.gray['10'] }}>
                   <div
-                    className={styles.band}
-                    style={{
-                      width: `${width(i + 1, steps.length + 1)}%`,
-                      backgroundColor: goal ? c['content-failure'] : referenceColors.purple['50'],
-                    }}
-                  >
-                    <span className={styles.bandLabel} style={{ color: frame['content-primary'] }}>
-                      {s.label}
-                      {s.note && <span className={styles.bandNote}> · {s.note}</span>}
-                    </span>
-                    <span className={styles.bandValue} style={{ color: frame['content-primary'] }}>
-                      {s.count} · {p.toFixed(p < 10 ? 2 : 1)}%
-                    </span>
-                  </div>
-                  <span className={styles.dropTick} style={{ color: c['content-tertiary'] }}>
-                    −{dropped.toLocaleString()} dropped
+                    className={styles.fFill}
+                    style={{ width: `${Math.max(p, 0.9)}%`, backgroundColor: FILL_COLORS[i + 1] }}
+                  />
+                  {/* The empty remainder of the track *is* the loss, so label it there. */}
+                  <span className={styles.fLost} style={{ color: c['content-tertiary'] }}>
+                    −{dropped.toLocaleString()}
                   </span>
                 </div>
-                {s.isContentCreation && (
-                  <div className={styles.objectChips}>
-                    {objectTypes.map((o) => (
-                      <span
-                        key={o}
-                        className={styles.objectChip}
-                        style={{ borderColor: c['border-divider'], color: c['content-secondary'] }}
-                      >
-                        {o}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </React.Fragment>
+                <span className={styles.fNums}>
+                  <span
+                    className={`${styles.fCount} ${goal ? styles.fCountGoal : ''}`}
+                    style={{ color: goal ? c['content-failure'] : c['content-primary'] }}
+                  >
+                    {s.count}
+                  </span>
+                  <span className={styles.fPct} style={{ color: goal ? c['content-failure'] : c['content-tertiary'] }}>
+                    {p.toFixed(p < 10 ? 2 : 1)}%
+                  </span>
+                </span>
+              </div>
             );
           })}
         </div>

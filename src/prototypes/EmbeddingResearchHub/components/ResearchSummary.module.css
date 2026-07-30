@@ -582,7 +582,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 11px;
 }
 
 /* Heading + loud gap column on the left */
@@ -595,133 +596,136 @@
   text-align: left;
 }
 
-/* Each stage occupies one row; the drop marker floats beside the band so it
-   costs no vertical space. */
-.bandRow {
-  position: relative;
+/* --- Funnel rows: label | proportional track | numbers --- */
+
+.fRow {
+  display: grid;
+  grid-template-columns: 208px 1fr 92px;
+  align-items: center;
+  gap: 18px;
   width: 100%;
+}
+
+.fLabel {
+  display: flex;
+  flex-direction: column;
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: right;
+}
+
+.fNote {
+  font-weight: 500;
+}
+
+.fSubCaption {
+  font-size: 10.5px;
+  font-weight: 500;
+  margin-top: 3px;
+}
+
+.fCaptionLeft {
+  font-size: 11px;
+  font-weight: 600;
+  font-style: italic;
+  text-align: right;
+}
+
+/* The track is the whole cohort; the fill is this stage's true share, centred
+   so the stack reads as a funnel and the empty space reads as the loss. */
+.fTrack {
+  position: relative;
+  height: 34px;
+  border-radius: 9px;
   display: flex;
   justify-content: center;
-}
-
-/* Tapering band — the funnel silhouette */
-.band {
-  height: 42px;
-  border-radius: 11px;
-  /* The taper width is a target, not a cap — never clip the label. */
-  min-width: fit-content;
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 0 20px;
-  transform-origin: center top;
-  animation: bandIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  overflow: hidden;
 }
 
-@keyframes bandIn {
+.fFill {
+  height: 100%;
+  border-radius: 9px;
+  min-width: 4px;
+  transform-origin: center;
+  animation: fillIn 720ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+}
+
+@keyframes fillIn {
   from {
-    opacity: 0;
-    transform: scaleX(0.9);
+    transform: scaleX(0.04);
+    opacity: 0.4;
   }
   to {
-    opacity: 1;
     transform: scaleX(1);
+    opacity: 1;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .band {
+  .fFill {
     animation: none;
   }
 }
 
-.bandLabel {
-  font-size: 16px;
-  font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.bandNote {
-  font-weight: 500;
-  opacity: 0.75;
-}
-
-.bandValue {
-  font-size: 16px;
-  font-weight: 800;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-/* Drop marker — floated right of the band, out of the vertical flow */
-.dropTick {
+/* Loss marker sits in the empty part of the track it describes */
+.fLost {
   position: absolute;
-  right: 0;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
+  font-size: 10.5px;
+  font-weight: 700;
   white-space: nowrap;
+  pointer-events: none;
 }
 
-/* TSA / TSE split of the signup cohort */
-.splitPair {
+/* Numbers pulled out of the bar */
+.fNums {
   display: flex;
-  gap: 10px;
-  width: 82%;
-  margin: 1px 0;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
 }
 
-.splitBox {
-  flex: 1;
-  min-width: 0;
+.fCount {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.fCountGoal {
+  font-size: 22px;
+}
+
+.fPct {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* TSA / TSE split — one quiet line, not two boxes */
+.fSplitLine {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  height: 38px;
-  padding: 0 16px;
-  border: 1px dashed;
-  min-width: fit-content;
-  border-radius: 9px;
-  background-color: var(--rd-sys-color-background-base);
-}
-
-.splitLabel {
-  font-size: 13.5px;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.splitValue {
-  font-size: 14.5px;
-  font-weight: 800;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-/* Object types created in the content-creation stage */
-.objectChips {
-  display: flex;
-  flex-wrap: wrap;
+  gap: 20px;
   justify-content: center;
-  gap: 6px;
-  margin: 1px 0 2px 0;
+  flex-wrap: wrap;
 }
 
-.objectChip {
-  border: 1px solid;
-  border-radius: 999px;
-  padding: 3px 12px;
-  font-size: 12px;
+.fSplitItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
   font-weight: 600;
-  background-color: var(--rd-sys-color-background-base);
+  white-space: nowrap;
+}
+
+.fSplitDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
 }
 
 /* The loud gap callout */
