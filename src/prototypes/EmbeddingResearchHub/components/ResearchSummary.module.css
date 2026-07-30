@@ -1237,72 +1237,6 @@
   margin: 0;
 }
 
-/* --- Pain point cards (numbered, Image E) --- */
-
-.painGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  width: 100%;
-  max-width: 940px;
-  margin-top: 6px;
-}
-
-@media (max-width: 760px) {
-  .painGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.painCard {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  border-radius: 14px;
-  border: 1px solid var(--rd-sys-color-border-divider);
-  background-color: var(--rd-sys-color-background-base);
-  padding: 10px 16px;
-  text-align: left;
-}
-
-.painCardHi {
-  border: 1px solid transparent;
-}
-
-.painNumCell {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  width: 40px;
-}
-
-.painNum {
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.painUnderline {
-  width: 26px;
-  height: 4px;
-  border-radius: 2px;
-}
-
-.painTitle {
-  font-size: 14.5px;
-  font-weight: 700;
-  line-height: 1.25;
-  margin: 0;
-}
-
-.painDetail {
-  font-size: 12px;
-  line-height: 1.35;
-  margin: 4px 0 0 0;
-}
-
 /* --- Validation diagram (slide 7 left) --- */
 
 .diagramBox {
@@ -1440,4 +1374,215 @@
   font-weight: 700;
   line-height: 1.3;
   margin: 0;
+}
+
+/* --- Pain point cards --- */
+
+.painGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 14px;
+}
+
+@media (max-width: 820px) {
+  .painGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.painCard {
+  position: relative;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: start;
+  column-gap: 14px;
+  border-radius: 15px;
+  border: 1px solid var(--rd-sys-color-border-divider);
+  background-color: var(--rd-sys-color-background-base);
+  padding: 13px 18px 13px 22px;
+  text-align: left;
+  overflow: hidden;
+}
+
+/* Risk colour as a left edge — scannable without a key on every card */
+.painEdge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+}
+
+.painNum {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.painBody {
+  min-width: 0;
+}
+
+.painTitle {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0;
+  /* Room for the risk word parked at the top right */
+  padding-right: 74px;
+}
+
+.painDetail {
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 6px 0 0 0;
+}
+
+.painRisk {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Risk split — occupies the gap left by an odd number of cards */
+.painLegend {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 9px;
+  border: 1px dashed;
+  border-radius: 15px;
+  padding: 13px 20px;
+  text-align: left;
+}
+
+.painLegendTitle {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.painLegendRows {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.painLegendRow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13.5px;
+}
+
+.painLegendDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* --- Embedding flow + loopholes --- */
+
+.flowRow {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  max-width: 1120px;
+  margin-top: 18px;
+}
+
+@media (max-width: 900px) {
+  .flowRow {
+    flex-wrap: wrap;
+  }
+}
+
+.flowCol {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flowArrow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  /* Sit level with the step card, not the whole column */
+  height: 92px;
+}
+
+.flowStep {
+  position: relative;
+  width: 100%;
+  border: 1px solid;
+  border-radius: 14px;
+  background-color: var(--rd-sys-color-background-base);
+  padding: 14px 14px 13px 14px;
+  min-height: 92px;
+  text-align: left;
+}
+
+.flowIndex {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.flowStepTitle {
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 4px 0 0 0;
+}
+
+.flowStepDetail {
+  font-size: 11px;
+  line-height: 1.4;
+  margin: 5px 0 0 0;
+}
+
+/* Dashed tether from the step down to its loophole */
+.flowTether {
+  width: 2px;
+  height: 16px;
+  opacity: 0.45;
+}
+
+.flowLeak {
+  width: 100%;
+  border: 1px dashed;
+  border-radius: 12px;
+  padding: 11px 13px 12px 13px;
+  text-align: left;
+}
+
+.flowLeakLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.flowLeakText {
+  font-size: 11.5px;
+  line-height: 1.45;
+  margin: 6px 0 0 0;
 }

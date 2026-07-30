@@ -9,6 +9,7 @@ import {
   businessImpact,
   pageAdoption,
   trialFunnel,
+  embeddingFlow,
   problemValidation,
   painPointDetail,
   secondaryOverview,
@@ -370,38 +371,97 @@ const JourneySlide: React.FC = () => (
   </div>
 );
 
-const PainPointsSlide: React.FC = () => (
-  <div className={styles.slide}>
+const EmbeddingFlowSlide: React.FC = () => (
+  <div className={`${styles.slide} ${styles.slideWide}`}>
     <SectionHeading
-      title="The pain points"
-      subtitle={`${problemStatements.length} themes every source kept hitting — deduped across all ${interviewSnapshots.length} interviews.`}
+      title="How embedding actually works — and where it leaks"
+      subtitle="The path every developer walks, with the loophole each stage introduces. Every leak traces to a problem statement on the next slide."
     />
-    <div className={styles.painGrid}>
-      {problemStatements.map((p, i) => {
-        const risk = RISK_META[p.risk];
-        const hi = i === 0;
-        return (
-          <div
-            key={p.id}
-            className={`${styles.painCard} ${hi ? styles.painCardHi : ''}`}
-            style={hi ? { backgroundColor: c['background-brand'] } : { boxShadow: shadows.sm, borderColor: c['border-divider'] }}
-          >
-            <div className={styles.painNumCell}>
-              <span className={styles.painNum} style={{ color: hi ? frame['content-primary'] : c['content-primary'] }}>{String(i + 1).padStart(2, '0')}</span>
-              <span className={styles.painUnderline} style={{ backgroundColor: hi ? frame['content-primary'] : risk.color }} />
+    <div className={styles.flowRow}>
+      {embeddingFlow.map((s, i) => (
+        <React.Fragment key={s.step}>
+          {i > 0 && (
+            <span className={styles.flowArrow} aria-hidden="true">
+              <Icon name="chevron-right" size="s" color={c['content-tertiary']} />
+            </span>
+          )}
+          <div className={styles.flowCol}>
+            <div className={styles.flowStep} style={{ borderColor: c['border-default'], boxShadow: shadows.xs }}>
+              <span className={styles.flowIndex} style={{ color: c['content-brand'] }}>{i + 1}</span>
+              <p className={styles.flowStepTitle} style={{ color: c['content-primary'] }}>{s.step}</p>
+              <p className={styles.flowStepDetail} style={{ color: c['content-tertiary'] }}>{s.detail}</p>
             </div>
-            <div>
-              <p className={styles.painTitle} style={{ color: hi ? frame['content-primary'] : c['content-primary'] }}>{p.title}</p>
-              {painPointDetail[p.id] && (
-                <p className={styles.painDetail} style={{ color: hi ? frame['content-secondary'] : c['content-secondary'] }}>{painPointDetail[p.id]}</p>
-              )}
+            <span className={styles.flowTether} style={{ backgroundColor: c['content-failure'] }} />
+            <div
+              className={styles.flowLeak}
+              style={{ borderColor: c['content-failure'], backgroundColor: c['background-failure'] }}
+            >
+              <span className={styles.flowLeakLabel} style={{ color: c['content-failure'] }}>
+                <Icon name="exclamation-point-circle" size="xs" color={c['content-failure']} />
+                Loophole
+              </span>
+              <p className={styles.flowLeakText} style={{ color: c['content-primary'] }}>{s.loophole}</p>
             </div>
           </div>
-        );
-      })}
+        </React.Fragment>
+      ))}
     </div>
   </div>
 );
+
+const PainPointsSlide: React.FC = () => {
+  const order: RiskLevel[] = ['high', 'medium', 'low'];
+  return (
+    <div className={`${styles.slide} ${styles.slideWide}`}>
+      <SectionHeading
+        title="The pain points"
+        subtitle={`${problemStatements.length} themes every source kept hitting — deduped across all ${interviewSnapshots.length} interviews.`}
+      />
+      <div className={styles.painGrid}>
+        {problemStatements.map((p, i) => {
+          const risk = RISK_META[p.risk];
+          return (
+            <div
+              key={p.id}
+              className={styles.painCard}
+              style={{ boxShadow: shadows.sm, borderColor: c['border-divider'] }}
+            >
+              {/* Risk lives in the left edge so the cards stay scannable by colour. */}
+              <span className={styles.painEdge} style={{ backgroundColor: risk.color }} />
+              <span className={styles.painNum} style={{ color: c['content-tertiary'] }}>
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div className={styles.painBody}>
+                <p className={styles.painTitle} style={{ color: c['content-primary'] }}>{p.title}</p>
+                {painPointDetail[p.id] && (
+                  <p className={styles.painDetail} style={{ color: c['content-secondary'] }}>{painPointDetail[p.id]}</p>
+                )}
+              </div>
+              <span className={styles.painRisk} style={{ color: risk.color }}>{p.risk}</span>
+            </div>
+          );
+        })}
+
+        {/* Fills the odd-numbered gap with the risk split rather than dead space. */}
+        <div className={styles.painLegend} style={{ borderColor: c['border-divider'] }}>
+          <span className={styles.painLegendTitle} style={{ color: c['content-tertiary'] }}>By risk</span>
+          <div className={styles.painLegendRows}>
+            {order.map((level) => {
+              const meta = RISK_META[level];
+              const n = problemStatements.filter((x) => x.risk === level).length;
+              return (
+                <span key={level} className={styles.painLegendRow} style={{ color: c['content-secondary'] }}>
+                  <span className={styles.painLegendDot} style={{ backgroundColor: meta.color }} />
+                  <strong style={{ color: c['content-primary'] }}>{n}</strong> {meta.label.toLowerCase()}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const VALIDATE_SOURCES: { icon: IconName; big: string; title: string; caption: string }[] = [
   { icon: 'community', big: String(secondaryOverview.communityThemes), title: 'Developer community', caption: 'recurring Discord themes in #develop' },
@@ -543,6 +603,7 @@ const SLIDES: { title: string; Component: React.FC }[] = [
   { title: 'Page adoption', Component: PageAdoptionSlide },
   { title: 'Primary research', Component: PrimaryResearchSlide },
   { title: 'Customer journey', Component: JourneySlide },
+  { title: 'Embedding flow', Component: EmbeddingFlowSlide },
   { title: 'Pain points', Component: PainPointsSlide },
   { title: 'Validation', Component: ValidateSlide },
   { title: 'Risk summary', Component: RiskSummarySlide },

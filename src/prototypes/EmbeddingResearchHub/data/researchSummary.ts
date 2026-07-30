@@ -232,6 +232,55 @@ export const trialFunnel = {
 };
 
 /**
+ * The actual path a developer walks to embed ThoughtSpot, and where it leaks.
+ *
+ * Stages are the real SDK flow (provision → secure → install → embed →
+ * customise → promote). Every loophole traces to a problem statement above, so
+ * this slide and the pain-points slide can never drift apart — `problemId`
+ * points at the entry in `problemStatements` that carries the evidence.
+ */
+export interface EmbeddingFlowStage {
+  step: string;
+  detail: string;
+  loophole: string;
+  /** id in `problemStatements` carrying the evidence for this loophole. */
+  problemId: string;
+}
+
+export const embeddingFlow: EmbeddingFlowStage[] = [
+  {
+    step: 'Provision & authenticate',
+    detail: 'Developer access, CORS/CSP, trusted auth or SSO',
+    loophole: 'Security prerequisites surface late, and a dropped session loses work that was never saved.',
+    problemId: 'auth-setup',
+  },
+  {
+    step: 'Install the SDK',
+    detail: 'visual-embed-sdk, then init() with an auth type',
+    loophole: 'Docs trail deprecations, so developers copy patterns that no longer work.',
+    problemId: 'documentation',
+  },
+  {
+    step: 'Embed a surface',
+    detail: 'Liveboard, Search, Spotter, Viz or full app',
+    loophole: 'Six surfaces, but all iframe-based — nothing renders into the host app’s own component tree.',
+    problemId: 'disconnected-implementation',
+  },
+  {
+    step: 'Customise & wire events',
+    detail: 'CSS variables, visibleActions, Host/EmbedEvent',
+    loophole: 'Hardcoded UI can’t be reached, so teams fall back to manual code changes — and new features ship before their APIs.',
+    problemId: 'customization',
+  },
+  {
+    step: 'Promote & scale',
+    detail: 'Dev → Test → Prod via TML and GUID remapping',
+    loophole: 'Still manual with no real CI/CD, and object-count and iframe-memory ceilings land on the biggest deals.',
+    problemId: 'enterprise-deployment',
+  },
+];
+
+/**
  * Per-problem validation from secondary research — the community-intensity
  * score comes from the Discord theme frequency (x / 5), and the competitor
  * note summarizes whether rivals already solve it. Grounded in each problem's
