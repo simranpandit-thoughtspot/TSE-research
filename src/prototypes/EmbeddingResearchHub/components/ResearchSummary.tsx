@@ -142,19 +142,37 @@ const TrialFunnelSlide: React.FC = () => {
    * into an unreadable sliver. The taper carries the funnel silhouette; the
    * count and true % printed in every band carry the quantities.
    */
-  const width = (i: number, total: number) => 80 - (i / total) * 40;
+  const width = (i: number, total: number) => 76 - (i / total) * 30;
 
   return (
-    <div className={styles.slide}>
-      <SectionHeading
-        title="Almost nobody makes it to a live embed"
-        subtitle={`Free-trial cohort · every % is a share of all ${baseCount.toLocaleString()} signups.`}
-      />
-
+    <div className={`${styles.slide} ${styles.slideWide}`}>
       <div className={styles.funnelLayout}>
+        {/* Heading + the loud gap live on the left so the funnel gets the
+            full height of the slide on the right. */}
+        <div className={styles.funnelIntro}>
+          <h2 className={styles.sectionTitleLeft} style={{ color: c['content-primary'] }}>
+            Almost nobody makes it to a live embed
+          </h2>
+          <p className={styles.splitBody} style={{ color: c['content-secondary'] }}>
+            Free-trial cohort · every % is a share of all {baseCount.toLocaleString()} signups.
+          </p>
+
+          <div className={styles.gapAside} style={{ backgroundColor: c['background-failure'] }}>
+            <span className={styles.gapPct} style={{ color: c['content-failure'] }}>{(100 - embedPct).toFixed(1)}%</span>
+            <span className={styles.gapPctLabel} style={{ color: c['content-failure'] }}>never embed</span>
+            <p className={styles.gapAsideText} style={{ color: c['content-primary'] }}>
+              <strong>{baseCount.toLocaleString()}</strong> signed up · <strong>{embedded.count}</strong> shipped a live embed
+            </p>
+            <p className={styles.gapAsideBig} style={{ color: c['content-failure'] }}>1 in {oneInN}</p>
+            <p className={styles.gapAsideNote} style={{ color: c['content-secondary'] }}>
+              Only <strong>{pct(created.count).toFixed(1)}%</strong> ever create content.
+            </p>
+          </div>
+        </div>
+
         <div className={styles.funnelStack}>
           {/* Signups — the mouth of the funnel */}
-          <div className={styles.band} style={{ width: '86%', backgroundColor: c['content-brand'] }}>
+          <div className={styles.band} style={{ width: '82%', backgroundColor: c['content-brand'] }}>
             <span className={styles.bandLabel} style={{ color: frame['content-primary'] }}>{trialFunnel.baseLabel}</span>
             <span className={styles.bandValue} style={{ color: frame['content-primary'] }}>
               {baseCount.toLocaleString()} · 100%
@@ -219,19 +237,6 @@ const TrialFunnelSlide: React.FC = () => {
             );
           })}
         </div>
-
-        <aside className={styles.gapAside} style={{ backgroundColor: c['background-failure'] }}>
-          <span className={styles.gapPct} style={{ color: c['content-failure'] }}>{(100 - embedPct).toFixed(1)}%</span>
-          <span className={styles.gapPctLabel} style={{ color: c['content-failure'] }}>never embed</span>
-          <p className={styles.gapAsideText} style={{ color: c['content-primary'] }}>
-            <strong>{baseCount.toLocaleString()}</strong> signed up.<br />
-            <strong>{embedded.count}</strong> shipped a live embed.
-          </p>
-          <p className={styles.gapAsideBig} style={{ color: c['content-failure'] }}>1 in {oneInN}</p>
-          <p className={styles.gapAsideNote} style={{ color: c['content-secondary'] }}>
-            Only <strong>{pct(created.count).toFixed(1)}%</strong> ever create content.
-          </p>
-        </aside>
       </div>
     </div>
   );
