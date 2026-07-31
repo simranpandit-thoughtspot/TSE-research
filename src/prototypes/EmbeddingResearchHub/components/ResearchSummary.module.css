@@ -1586,3 +1586,220 @@
   line-height: 1.45;
   margin: 6px 0 0 0;
 }
+
+/* --- Product page clicks --- */
+
+.clickLegend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.clickLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.clickLegendDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.clickList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  max-width: 980px;
+  margin-top: 12px;
+}
+
+.clickRow {
+  display: grid;
+  grid-template-columns: 186px 1fr 62px;
+  align-items: center;
+  gap: 14px;
+}
+
+.clickLabel {
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clickTrack {
+  height: 20px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.clickFill {
+  height: 100%;
+  border-radius: 6px;
+  min-width: 3px;
+  transform-origin: left center;
+  animation: growBar 700ms cubic-bezier(0.22, 1, 0.36, 1) 100ms both;
+}
+
+.clickCount {
+  font-size: 13px;
+  font-weight: 800;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Embed surfaces + errors --- */
+
+.surfaceRow {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+  max-width: 1020px;
+  margin-top: 18px;
+}
+
+@media (max-width: 900px) {
+  .surfaceRow {
+    flex-direction: column;
+  }
+}
+
+.surfacePanel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  border-radius: 16px;
+  background-color: var(--rd-sys-color-background-base);
+  padding: 18px 20px 20px 20px;
+  text-align: left;
+}
+
+.surfacePanelTitle {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.surfacePanelNote {
+  font-size: 11.5px;
+  font-weight: 600;
+  margin: 5px 0 0 0;
+}
+
+.surfaceCode {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+}
+
+.donutWrap {
+  position: relative;
+  align-self: center;
+  width: 150px;
+  height: 150px;
+  margin: 10px 0 4px 0;
+}
+
+.donut {
+  width: 100%;
+  height: 100%;
+}
+
+.donutCentre {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donutTotal {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.donutTotalLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 3px;
+}
+
+.surfaceLegend {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.surfaceLegendRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.surfaceLegendRow strong {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.errList {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.errRow {
+  display: grid;
+  grid-template-columns: 106px 1fr 54px;
+  align-items: center;
+  gap: 10px;
+}
+
+.errName {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.errTrack {
+  height: 16px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.errFill {
+  height: 100%;
+  border-radius: 5px;
+  transform-origin: left center;
+  animation: growBar 700ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+}
+
+.errVal {
+  font-size: 12px;
+  font-weight: 800;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

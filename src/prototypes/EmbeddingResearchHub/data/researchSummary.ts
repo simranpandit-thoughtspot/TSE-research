@@ -232,6 +232,70 @@ export const trialFunnel = {
 };
 
 /**
+ * Develop-tab usage among paying customers, mirroring the free-trial funnel's
+ * stage order but with REST API in place of Ask Spotter / content creation.
+ *
+ * IMPORTANT: these are page *clicks*, not unique users. Each stage is measured
+ * independently, so this ranks where attention goes — it is not a cohort
+ * funnel and the stages are not subsets of one another. Percentages are
+ * therefore expressed against the busiest page, not a population.
+ */
+export const productPageClicks = {
+  window: 'Last 30 days · paying customers',
+  caveat: 'Page clicks, not unique users — stages are measured independently, so this ranks attention rather than tracking a cohort.',
+  pages: [
+    { page: 'REST Playground v2.0', count: 6961, group: 'api' as const },
+    { page: 'Security settings', count: 4835, group: 'setup' as const },
+    { page: 'Playground', count: 2028, group: 'build' as const },
+    { page: 'Links settings', count: 1407, group: 'setup' as const },
+    { page: 'Guide', count: 1242, group: 'learn' as const },
+    { page: 'Styles', count: 877, group: 'customise' as const },
+    { page: 'Custom actions', count: 814, group: 'customise' as const },
+    { page: 'Theme Builder', count: 814, group: 'customise' as const },
+    { page: 'Home', count: 505, group: 'learn' as const },
+    { page: 'Webhooks', count: 480, group: 'build' as const },
+    { page: 'REST Playground v1', count: 413, group: 'api' as const },
+    { page: 'GraphQL v2.0', count: 254, group: 'api' as const },
+    { page: 'Get started – REST API', count: 19, group: 'learn' as const },
+    { page: 'Create actions', count: 13, group: 'learn' as const },
+  ],
+};
+
+/**
+ * Which embed surfaces customers actually run, by distinct cluster.
+ * A cluster running two surfaces is counted under both, so the parts sum to
+ * more clusters than exist — treat 2,028 as surface-adoptions, not customers.
+ */
+export const embedTypeUsage = {
+  window: 'Last 30 days',
+  total: 2028,
+  caveat: 'Distinct clusters per surface — a cluster running two surfaces is counted in both.',
+  types: [
+    { type: '(not set)', count: 731 },
+    { type: 'Pinboard', count: 446 },
+    { type: 'Viz', count: 348 },
+    { type: 'Search', count: 270 },
+    { type: 'Full App', count: 233 },
+  ],
+};
+
+/** Clusters hitting EmbedEvent.Error — daily average over the window. */
+export const embedErrors = {
+  window: 'Last 30 days',
+  metric: 'EmbedEvent.Error',
+  clustersAffected: 215,
+  top: [
+    { cluster: 'thrivelearning', avg: 1155.5 },
+    { cluster: 'clearco', avg: 766.3 },
+    { cluster: 'gomotive', avg: 336.3 },
+    { cluster: 'ts-cloud', avg: 311.4 },
+    { cluster: 'navan-embed', avg: 293.1 },
+    { cluster: 'taxdome', avg: 288.5 },
+    { cluster: 'cwt', avg: 179.9 },
+  ],
+};
+
+/**
  * The actual path a developer walks to embed ThoughtSpot, and where it leaks.
  *
  * Stages are the real SDK flow (provision → secure → install → embed →

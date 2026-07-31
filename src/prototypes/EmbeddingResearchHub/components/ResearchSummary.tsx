@@ -9,6 +9,9 @@ import {
   businessImpact,
   pageAdoption,
   trialFunnel,
+  productPageClicks,
+  embedTypeUsage,
+  embedErrors,
   embeddingFlow,
   problemValidation,
   painPointDetail,
@@ -246,6 +249,155 @@ const TrialFunnelSlide: React.FC = () => {
               </div>
             );
           })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const GROUP_COLOR: Record<string, string> = {
+  api: c['content-brand'],
+  setup: referenceColors.purple['50'],
+  build: referenceColors.teal['50'],
+  customise: referenceColors.orange['50'],
+  learn: referenceColors.gray['50'],
+};
+
+const GROUP_LABEL: Record<string, string> = {
+  api: 'API',
+  setup: 'Setup',
+  build: 'Build',
+  customise: 'Customise',
+  learn: 'Learn',
+};
+
+const ProductClicksSlide: React.FC = () => {
+  const { pages } = productPageClicks;
+  const top = pages[0].count;
+  const groups = ['api', 'setup', 'build', 'customise', 'learn'];
+
+  return (
+    <div className={`${styles.slide} ${styles.slideWide}`}>
+      <SectionHeading
+        title="In production, the REST Playground is the develop tab"
+        subtitle={`${productPageClicks.window}. ${productPageClicks.caveat}`}
+      />
+      <div className={styles.clickLegend}>
+        {groups.map((g) => (
+          <span key={g} className={styles.clickLegendItem} style={{ color: c['content-secondary'] }}>
+            <span className={styles.clickLegendDot} style={{ backgroundColor: GROUP_COLOR[g] }} />
+            {GROUP_LABEL[g]}
+          </span>
+        ))}
+      </div>
+      <div className={styles.clickList}>
+        {pages.map((p) => {
+          const share = (p.count / top) * 100;
+          return (
+            <div key={p.page} className={styles.clickRow}>
+              <span className={styles.clickLabel} style={{ color: c['content-primary'] }}>{p.page}</span>
+              <div className={styles.clickTrack} style={{ backgroundColor: referenceColors.gray['10'] }}>
+                <div
+                  className={styles.clickFill}
+                  style={{ width: `${Math.max(share, 0.6)}%`, backgroundColor: GROUP_COLOR[p.group] }}
+                />
+              </div>
+              <span className={styles.clickCount} style={{ color: c['content-primary'] }}>
+                {p.count.toLocaleString()}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const EmbedSurfacesSlide: React.FC = () => {
+  const { types, total } = embedTypeUsage;
+  const R = 54;
+  const CIRC = 2 * Math.PI * R;
+  const DONUT_COLORS = [
+    referenceColors.gray['40'],
+    referenceColors.orange['50'],
+    referenceColors.teal['50'],
+    referenceColors.yellow['50'],
+    referenceColors.purple['50'],
+  ];
+  let offset = 0;
+  const maxErr = embedErrors.top[0].avg;
+
+  return (
+    <div className={`${styles.slide} ${styles.slideWide}`}>
+      <SectionHeading
+        title="What they embed — and what keeps breaking"
+        subtitle={`${embedTypeUsage.window}. ${embedTypeUsage.caveat}`}
+      />
+      <div className={styles.surfaceRow}>
+        <div className={styles.surfacePanel} style={{ borderColor: c['border-divider'] }}>
+          <p className={styles.surfacePanelTitle} style={{ color: c['content-primary'] }}>Embed surfaces in use</p>
+          <div className={styles.donutWrap}>
+            <svg viewBox="0 0 140 140" className={styles.donut} aria-hidden="true">
+              {types.map((t, i) => {
+                const frac = t.count / total;
+                const dash = frac * CIRC;
+                const seg = (
+                  <circle
+                    key={t.type}
+                    cx="70"
+                    cy="70"
+                    r={R}
+                    fill="none"
+                    stroke={DONUT_COLORS[i]}
+                    strokeWidth="20"
+                    strokeDasharray={`${dash} ${CIRC - dash}`}
+                    strokeDashoffset={-offset}
+                    transform="rotate(-90 70 70)"
+                  />
+                );
+                offset += dash;
+                return seg;
+              })}
+            </svg>
+            <div className={styles.donutCentre}>
+              <span className={styles.donutTotal} style={{ color: c['content-primary'] }}>{total.toLocaleString()}</span>
+              <span className={styles.donutTotalLabel} style={{ color: c['content-tertiary'] }}>adoptions</span>
+            </div>
+          </div>
+          <div className={styles.surfaceLegend}>
+            {types.map((t, i) => (
+              <span key={t.type} className={styles.surfaceLegendRow} style={{ color: c['content-secondary'] }}>
+                <span className={styles.clickLegendDot} style={{ backgroundColor: DONUT_COLORS[i] }} />
+                {t.type}
+                <strong style={{ color: c['content-primary'] }}>{t.count}</strong>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.surfacePanel} style={{ borderColor: c['border-divider'] }}>
+          <p className={styles.surfacePanelTitle} style={{ color: c['content-primary'] }}>
+            Clusters hitting <code className={styles.surfaceCode}>{embedErrors.metric}</code>
+          </p>
+          <p className={styles.surfacePanelNote} style={{ color: c['content-failure'] }}>
+            <strong>{embedErrors.clustersAffected}</strong> clusters affected · daily average
+          </p>
+          <div className={styles.errList}>
+            {embedErrors.top.map((e) => (
+              <div key={e.cluster} className={styles.errRow}>
+                <span className={styles.errName} style={{ color: c['content-primary'] }}>{e.cluster}</span>
+                <div className={styles.errTrack} style={{ backgroundColor: referenceColors.gray['10'] }}>
+                  <div
+                    className={styles.errFill}
+                    style={{ width: `${(e.avg / maxErr) * 100}%`, backgroundColor: c['content-failure'] }}
+                  />
+                </div>
+                <span className={styles.errVal} style={{ color: c['content-failure'] }}>
+                  {e.avg.toLocaleString()}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -600,6 +752,8 @@ const SLIDES: { title: string; Component: React.FC }[] = [
   { title: 'Cover', Component: CoverSlide },
   { title: 'What is the develop tab', Component: WhatIsDevelopTabSlide },
   { title: 'Trial to embed', Component: TrialFunnelSlide },
+  { title: 'Product clicks', Component: ProductClicksSlide },
+  { title: 'Embed surfaces', Component: EmbedSurfacesSlide },
   { title: 'Page adoption', Component: PageAdoptionSlide },
   { title: 'Primary research', Component: PrimaryResearchSlide },
   { title: 'Customer journey', Component: JourneySlide },
