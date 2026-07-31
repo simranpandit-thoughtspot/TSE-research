@@ -279,6 +279,62 @@ export const embedTypeUsage = {
   ],
 };
 
+/**
+ * SDK initialisations by auth type. This is the "actually embedding" number,
+ * and it is orders of magnitude larger than anything in the develop-tab funnel
+ * — which is the point: real embedding does not flow through the develop tab.
+ */
+export const sdkInit = {
+  window: 'Last 30 days',
+  overall: '4.04M',
+  overallRaw: 4_040_000,
+  byAuthType: [
+    { type: 'AuthServerCookieless', label: '3.63M', raw: 3_630_000 },
+    { type: 'AuthServer', label: '179.2K', raw: 179_200 },
+    { type: 'SSO_SAML', label: '89.45K', raw: 89_450 },
+    { type: 'EmbeddedSSO', label: '76.19K', raw: 76_190 },
+    { type: '(not set)', label: '26.38K', raw: 26_380 },
+    { type: 'None', label: '22.31K', raw: 22_310 },
+    { type: 'SAMLRedirect', label: '13.46K', raw: 13_460 },
+    { type: 'Basic', label: '5,811', raw: 5_811 },
+    { type: 'SSO_OIDC', label: '53', raw: 53 },
+    { type: 'TrustedAuthToken', label: '23', raw: 23 },
+  ],
+};
+
+/**
+ * The develop-tab funnel for paying customers, in the same stage order as the
+ * free-trial funnel with REST API in place of Ask Spotter / content creation.
+ *
+ * Stages 1–6 are unique users and strictly monotonic (956 → 38). The last two
+ * stages are deliberately measured differently and are NOT subsets — REST API
+ * is page clicks and the embed total is SDK initialisations. They are kept in
+ * the sequence because that is the story: the develop-tab funnel collapses,
+ * while actual embedding runs at a scale the funnel never touches.
+ */
+export const productFunnel = {
+  window: 'Last 30 days · paying customers',
+  baseLabel: 'Loaded the develop tab',
+  baseCount: 956,
+  split: [
+    { label: 'Home guide', count: 267 },
+    { label: 'Get started docs', count: 5 },
+  ],
+  /** Unique users, each a subset of the one above. */
+  steps: [
+    { label: 'Security settings', count: 157 },
+    { label: 'Playground', count: 113 },
+    { label: 'Link settings', count: 61 },
+    { label: 'Custom actions', count: 54 },
+    { label: 'Theme Builder', count: 38 },
+  ],
+  /** Different unit, different scale — shown outside the funnel taper. */
+  beyond: [
+    { label: 'REST API', value: '6,961', unit: 'page clicks', note: 'REST Playground v2.0' },
+    { label: 'Actually embedded', value: '4.04M', unit: 'SDK inits', note: 'outside ThoughtSpot', isScale: true },
+  ],
+};
+
 /** Clusters hitting EmbedEvent.Error — daily average over the window. */
 export const embedErrors = {
   window: 'Last 30 days',
