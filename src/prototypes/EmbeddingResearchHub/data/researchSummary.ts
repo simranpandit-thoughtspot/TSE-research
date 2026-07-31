@@ -352,6 +352,54 @@ export const embedErrors = {
 };
 
 /**
+ * Production numbers — the counterweight to the trial funnel.
+ *
+ * The trial cohort barely embeds (3.15%), but in production embedding runs at
+ * enormous scale: 4.04M SDK inits in 30 days. The gap is an onboarding problem,
+ * not a product-capability one.
+ *
+ * IMPORTANT: `pages` is a ranked distribution, not a nested funnel. Each count
+ * is independent page views, so a row is NOT a subset of the row above it —
+ * they are rendered funnel-style because they happen to descend, and the
+ * percentages are shares of the top page, not conversion rates.
+ */
+export const productionNumbers = {
+  window: 'Production · last 30 days',
+  sdkInitTotal: 4_040_000,
+  sdkInitLabel: 'SDK inits',
+  /** Auth mix behind those inits — cookieless dominates. */
+  authTypes: [
+    { type: 'AuthServerCookieless', count: 3_630_000 },
+    { type: 'AuthServer', count: 179_200 },
+    { type: 'SSO_SAML', count: 89_450 },
+    { type: 'EmbeddedSSO', count: 76_190 },
+    { type: '(not set)', count: 26_380 },
+    { type: 'None', count: 22_310 },
+    { type: 'SAMLRedirect', count: 13_460 },
+    { type: 'Basic', count: 5_811 },
+    { type: 'SSO_OIDC', count: 53 },
+    { type: 'TrustedAuthToken', count: 23 },
+  ],
+  /** Develop-tab page views, in the order product analytics ranks them. */
+  pages: [
+    { page: 'REST Playground v2.0', count: 6961, isEntry: true },
+    { page: 'Security settings', count: 4835 },
+    { page: 'Playground', count: 2028 },
+    { page: 'Links settings', count: 1407 },
+    { page: 'Guide', count: 1242 },
+    { page: 'Styles', count: 877 },
+    { page: 'Custom actions', count: 814 },
+    { page: 'Theme Builder', count: 814 },
+    { page: 'Home', count: 505 },
+    { page: 'Webhooks', count: 480 },
+    { page: 'REST Playground v1', count: 413 },
+    { page: 'GraphQL v2.0', count: 254 },
+    { page: 'Get started – REST API', count: 19 },
+    { page: 'Create actions', count: 13 },
+  ],
+};
+
+/**
  * The actual path a developer walks to embed ThoughtSpot, and where it leaks.
  *
  * Stages are the real SDK flow (provision → secure → install → embed →
