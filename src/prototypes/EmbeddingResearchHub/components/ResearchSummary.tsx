@@ -9,10 +9,10 @@ import {
   businessImpact,
   trialFunnel,
   productPageClicks,
+  productionNumbers,
   embedTypeUsage,
   embedErrors,
   sdkInit,
-  productFunnel,
   embeddingFlow,
   problemValidation,
   painPointDetail,
@@ -292,51 +292,71 @@ const GROUP_COLOR: Record<string, string> = {
   learn: referenceColors.gray['50'],
 };
 
-const GROUP_LABEL: Record<string, string> = {
-  api: 'API',
-  setup: 'Setup',
-  build: 'Build',
-  customise: 'Customise',
-  learn: 'Learn',
-};
-
-const ProductClicksSlide: React.FC = () => {
-  const { pages } = productPageClicks;
-  const top = pages[0].count;
-  const groups = ['api', 'setup', 'build', 'customise', 'learn'];
+const ProductNumbersFunnelSlide: React.FC = () => {
+  /* Only the stages drawn on the embedding funnel diagram. */
+  const stages = productPageClicks.pages.filter((p) => p.marked);
+  const top = stages[0].count;
+  const sdkInits = productionNumbers.sdkInitTotal;
 
   return (
     <div className={`${styles.slide} ${styles.slideWide}`}>
-      <SectionHeading
-        title="In production, the REST Playground is the develop tab"
-        subtitle={`${productPageClicks.window}. ${productPageClicks.caveat}`}
-      />
-      <div className={styles.clickLegend}>
-        {groups.map((g) => (
-          <span key={g} className={styles.clickLegendItem} style={{ color: c['content-secondary'] }}>
-            <span className={styles.clickLegendDot} style={{ backgroundColor: GROUP_COLOR[g] }} />
-            {GROUP_LABEL[g]}
-          </span>
-        ))}
-      </div>
-      <div className={styles.clickList}>
-        {pages.map((p) => {
-          const share = (p.count / top) * 100;
-          return (
-            <div key={p.page} className={styles.clickRow}>
-              <span className={styles.clickLabel} style={{ color: c['content-primary'] }}>{p.page}</span>
-              <div className={styles.clickTrack} style={{ backgroundColor: referenceColors.gray['10'] }}>
-                <div
-                  className={styles.clickFill}
-                  style={{ width: `${Math.max(share, 0.6)}%`, backgroundColor: GROUP_COLOR[p.group] }}
-                />
+      <div className={styles.funnelLayout}>
+        <div className={styles.funnelIntro}>
+          <h2 className={styles.sectionTitleLeft} style={{ color: c['content-primary'] }}>Product numbers</h2>
+          <p className={styles.splitBody} style={{ color: c['content-secondary'] }}>
+            {productPageClicks.window}. The develop tab in production, stage by stage.
+          </p>
+
+          <div className={styles.gapAside} style={{ backgroundColor: referenceColors.blue['10'] }}>
+            <span className={styles.gapPct} style={{ color: c['content-brand'] }}>
+              {(sdkInits / 1_000_000).toFixed(2)}M
+            </span>
+            <span className={styles.gapPctLabel} style={{ color: c['content-brand'] }}>SDK inits</span>
+            <p className={styles.gapAsideText} style={{ color: c['content-primary'] }}>
+              Embedding happens at real scale here — the same SDK only <strong>44</strong> trial users ever reached.
+            </p>
+            <p className={styles.gapAsideNote} style={{ color: c['content-secondary'] }}>
+              {productPageClicks.caveat}
+            </p>
+          </div>
+        </div>
+
+        <div className={styles.funnelStack}>
+          {stages.map((p, i) => {
+            const share = (p.count / top) * 100;
+            const prev = i === 0 ? null : stages[i - 1].count;
+            const dropped = prev === null ? null : prev - p.count;
+            return (
+              <div key={p.page} className={styles.fRow}>
+                <span className={styles.fLabel} style={{ color: c['content-primary'] }}>
+                  {p.page}
+                  {p.alias && (
+                    <span className={styles.fNote} style={{ color: c['content-tertiary'] }}> · {p.alias}</span>
+                  )}
+                </span>
+                <div className={styles.fTrack} style={{ backgroundColor: referenceColors.gray['10'] }}>
+                  <div
+                    className={styles.fFill}
+                    style={{ width: `${Math.max(share, 0.8)}%`, backgroundColor: GROUP_COLOR[p.group] }}
+                  />
+                  {dropped !== null && (
+                    <span className={styles.fLost} style={{ color: c['content-tertiary'] }}>
+                      −{dropped.toLocaleString()}
+                    </span>
+                  )}
+                </div>
+                <span className={styles.fNums}>
+                  <span className={styles.fCount} style={{ color: c['content-primary'] }}>
+                    {p.count.toLocaleString()}
+                  </span>
+                  <span className={styles.fPct} style={{ color: c['content-tertiary'] }}>
+                    {share.toFixed(share < 10 ? 1 : 0)}%
+                  </span>
+                </span>
               </div>
-              <span className={styles.clickCount} style={{ color: c['content-primary'] }}>
-                {p.count.toLocaleString()}
-              </span>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -437,101 +457,6 @@ const EmbedSurfacesSlide: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
-};
-
-const ProductNumbersSlide: React.FC = () => {
-  const { baseCount, steps, split, beyond } = productFunnel;
-  const pct = (n: number) => (n / baseCount) * 100;
-
-  return (
-    <div className={`${styles.slide} ${styles.slideWide}`}>
-      <SectionHeading
-        title="The product numbers"
-        subtitle={`${productFunnel.window}. Stages below are unique users; the two cards at the end are measured differently and sit outside the funnel.`}
-      />
-
-      <div className={styles.funnelStack} style={{ maxWidth: 980, marginTop: 10 }}>
-        <div className={styles.fRow}>
-          <span className={styles.fLabel} style={{ color: c['content-primary'] }}>{productFunnel.baseLabel}</span>
-          <div className={styles.fTrack} style={{ backgroundColor: referenceColors.gray['10'] }}>
-            <div className={styles.fFill} style={{ width: '100%', backgroundColor: c['content-brand'] }} />
-          </div>
-          <span className={styles.fNums}>
-            <span className={styles.fCount} style={{ color: c['content-primary'] }}>{baseCount}</span>
-            <span className={styles.fPct} style={{ color: c['content-tertiary'] }}>100%</span>
-          </span>
-        </div>
-
-        <div className={styles.fRow}>
-          <span className={styles.fCaptionLeft} style={{ color: c['content-tertiary'] }}>enters via</span>
-          <div className={styles.fSplitLine}>
-            {split.map((sp) => (
-              <span key={sp.label} className={styles.fSplitItem} style={{ color: c['content-secondary'] }}>
-                <span className={styles.fSplitDot} style={{ backgroundColor: c['border-default'] }} />
-                {sp.label} <strong style={{ color: c['content-primary'] }}>{sp.count}</strong> · {pct(sp.count).toFixed(1)}%
-              </span>
-            ))}
-          </div>
-          <span className={styles.fNums} />
-        </div>
-
-        {steps.map((s, i) => {
-          const p = pct(s.count);
-          const prev = i === 0 ? baseCount : steps[i - 1].count;
-          const dropped = prev - s.count;
-          return (
-            <div key={s.label} className={styles.fRow}>
-              <span className={styles.fLabel} style={{ color: c['content-primary'] }}>{s.label}</span>
-              <div className={styles.fTrack} style={{ backgroundColor: referenceColors.gray['10'] }}>
-                <div
-                  className={styles.fFill}
-                  style={{ width: `${Math.max(p, 1.2)}%`, backgroundColor: referenceColors.purple['50'] }}
-                />
-                <span className={styles.fLost} style={{ color: c['content-tertiary'] }}>−{dropped}</span>
-              </div>
-              <span className={styles.fNums}>
-                <span className={styles.fCount} style={{ color: c['content-primary'] }}>{s.count}</span>
-                <span className={styles.fPct} style={{ color: c['content-tertiary'] }}>{p.toFixed(1)}%</span>
-              </span>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Different unit and a different order of magnitude, so these break out
-          of the taper rather than pretending to continue it. */}
-      <div className={styles.beyondRow}>
-        {beyond.map((b) => (
-          <div
-            key={b.label}
-            className={`${styles.beyondCard} ${b.isScale ? styles.beyondCardScale : ''}`}
-            style={
-              b.isScale
-                ? { backgroundColor: c['background-success'], borderColor: c['content-success'] }
-                : { borderColor: c['border-divider'], backgroundColor: c['background-base'] }
-            }
-          >
-            <span
-              className={styles.beyondValue}
-              style={{ color: b.isScale ? c['content-success'] : c['content-primary'] }}
-            >
-              {b.value}
-            </span>
-            <span className={styles.beyondLabel} style={{ color: c['content-primary'] }}>{b.label}</span>
-            <span className={styles.beyondUnit} style={{ color: c['content-tertiary'] }}>
-              {b.unit} · {b.note}
-            </span>
-            {b.isScale && (
-              <span className={styles.beyondPunch} style={{ color: c['content-success'] }}>
-                38 reached Theme Builder — real embedding never passes through the develop tab
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
-
     </div>
   );
 };
@@ -857,9 +782,8 @@ const SLIDES: { title: string; Component: React.FC }[] = [
   { title: 'Cover', Component: CoverSlide },
   { title: 'What is the develop tab', Component: WhatIsDevelopTabSlide },
   { title: 'Trial to embed', Component: TrialFunnelSlide },
-  { title: 'Product clicks', Component: ProductClicksSlide },
+  { title: 'Product numbers', Component: ProductNumbersFunnelSlide },
   { title: 'Embed surfaces', Component: EmbedSurfacesSlide },
-  { title: 'Product numbers', Component: ProductNumbersSlide },
   { title: 'Primary research', Component: PrimaryResearchSlide },
   { title: 'Customer journey', Component: JourneySlide },
   { title: 'Embedding flow', Component: EmbeddingFlowSlide },

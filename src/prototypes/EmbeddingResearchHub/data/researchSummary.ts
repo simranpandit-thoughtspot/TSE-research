@@ -243,20 +243,25 @@ export const trialFunnel = {
 export const productPageClicks = {
   window: 'Last 30 days · paying customers',
   caveat: 'Page clicks, not unique users — stages are measured independently, so this ranks attention rather than tracking a cohort.',
+  /**
+   * `marked: true` are the stages drawn on the embedding funnel diagram. Pages
+   * without it are measured but sit outside that flow (Styles, Home, Webhooks,
+   * REST Playground v1, GraphQL, Create actions), so the funnel slide hides them.
+   */
   pages: [
-    { page: 'REST Playground v2.0', count: 6961, group: 'api' as const },
-    { page: 'Security settings', count: 4835, group: 'setup' as const },
-    { page: 'Playground', count: 2028, group: 'build' as const },
-    { page: 'Links settings', count: 1407, group: 'setup' as const },
-    { page: 'Guide', count: 1242, group: 'learn' as const },
+    { page: 'REST Playground v2.0', count: 6961, group: 'api' as const, marked: true, alias: 'REST API' },
+    { page: 'Security settings', count: 4835, group: 'setup' as const, marked: true },
+    { page: 'Playground', count: 2028, group: 'build' as const, marked: true },
+    { page: 'Links settings', count: 1407, group: 'setup' as const, marked: true },
+    { page: 'Guide', count: 1242, group: 'learn' as const, marked: true, alias: 'Home guide' },
     { page: 'Styles', count: 877, group: 'customise' as const },
-    { page: 'Custom actions', count: 814, group: 'customise' as const },
-    { page: 'Theme Builder', count: 814, group: 'customise' as const },
+    { page: 'Custom actions', count: 814, group: 'customise' as const, marked: true },
+    { page: 'Theme Builder', count: 814, group: 'customise' as const, marked: true },
     { page: 'Home', count: 505, group: 'learn' as const },
     { page: 'Webhooks', count: 480, group: 'build' as const },
     { page: 'REST Playground v1', count: 413, group: 'api' as const },
     { page: 'GraphQL v2.0', count: 254, group: 'api' as const },
-    { page: 'Get started – REST API', count: 19, group: 'learn' as const },
+    { page: 'Get started – REST API', count: 19, group: 'learn' as const, marked: true, alias: 'Get started docs' },
     { page: 'Create actions', count: 13, group: 'learn' as const },
   ],
 };
